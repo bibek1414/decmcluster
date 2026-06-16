@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DECM Cluster Information Management and Data Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef3f8;
+    color: #222;
+}
+
+/* HEADER */
+.header {
+    background: linear-gradient(90deg, #06356f, #0b5fa5);
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    align-items: center;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.logo-box {
+    width: 72px;
+    height: 72px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #06356f;
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    border: 3px solid #d9ecff;
+}
+
+.header-title h1 {
+    margin: 0;
+    font-size: 34px;
+    letter-spacing: 0.3px;
+}
+
+.header-title p {
+    margin: 6px 0 0;
+    font-size: 14px;
+}
+
+/* NAV */
+.nav {
+    background: #123f85;
+    padding: 12px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav i {
+    margin-right: 6px;
+}
+
+/* HERO */
+.hero {
+    background: linear-gradient(rgba(4, 46, 91, 0.88), rgba(4, 46, 91, 0.88)),
+    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+    background-size: cover;
+    background-position: center;
+    padding: 38px 30px;
+    color: white;
+}
+
+.hero h2 {
+    margin: 0 0 10px;
+    font-size: 26px;
+}
+
+.hero p {
+    max-width: 1080px;
+    line-height: 1.65;
+    font-size: 15px;
+}
+
+/* MAIN */
+.main {
+    padding: 24px;
+}
+
+.top-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 300px;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.panel {
+    background: white;
+    border-radius: 10px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+}
+
+.panel h2 {
+    margin-top: 0;
+    color: #06356f;
+}
+
+.panel p {
+    line-height: 1.65;
+    font-size: 14px;
+}
+
+/* LOGIN */
+.login-box h3 {
+    margin-top: 0;
+    color: #06356f;
+}
+
+.login-box label {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 9px;
+    margin: 6px 0 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    background: #06356f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-note {
+    font-size: 12px;
+    color: #555;
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+/* QUICK LINKS */
+.quick-links {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.quick-link {
+    background: #eef6ff;
+    padding: 13px;
+    border-radius: 8px;
+    text-align: center;
+    color: #06356f;
+    font-weight: bold;
+    font-size: 12px;
+    border: 1px solid #d8e9f9;
+}
+
+.quick-link i {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 7px;
+}
+
+/* DASHBOARD */
+.dashboard-title {
+    background: #06356f;
+    color: white;
+    padding: 13px 18px;
+    border-radius: 8px 8px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.dashboard {
+    background: white;
+    padding: 18px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 170px 1.05fr 1.45fr;
+    gap: 16px;
+    align-items: start;
+}
+
+/* SIDE MENU */
+.side-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.menu-item {
+    background: #173f8f;
+    color: white;
+    padding: 12px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: bold;
+    font-size: 12.5px;
+    min-height: 46px;
+}
+
+.menu-item i {
+    font-size: 19px;
+    width: 24px;
+}
+
+/* KEY FIGURES */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.stat-card {
+    border: 1px solid #d5dce8;
+    border-radius: 8px;
+    padding: 10px 8px;
+    text-align: left;
+    background: #fbfdff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 72px;
+}
+
+.stat-icon {
+    width: 36px;
+    height: 36px;
+    background: #eef6ff;
+    border-radius: 8px;
+    color: #0b5fa5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.stat-number {
+    font-size: 21px;
+    color: #06356f;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 12px;
+    margin-top: 4px;
+    color: #333;
+}
+
+/* VISUAL BOXES */
+.visual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.visual-box {
+    border: 1px solid #d5dce8;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fdfdfd;
+}
+
+.box-title {
+    background: #173f8f;
+    color: white;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.map-placeholder {
+    height: 165px;
+    background:
+        radial-gradient(circle at 25% 40%, rgba(255,90,90,0.75) 0 5px, transparent 6px),
+        radial-gradient(circle at 55% 35%, rgba(255,90,90,0.75) 0 5px, transparent 6px),
+        radial-gradient(circle at 70% 55%, rgba(255,90,90,0.75) 0 5px, transparent 6px),
+        radial-gradient(circle at 42% 70%, rgba(255,90,90,0.75) 0 5px, transparent 6px),
+        linear-gradient(135deg, #dceeff, #e7f7e7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #06356f;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chart-placeholder {
+    height: 165px;
+    padding: 14px 16px;
+    font-size: 12px;
+}
+
+.bar {
+    height: 13px;
+    background: #ef8b72;
+    margin: 6px 0 9px;
+    border-radius: 3px;
+}
+
+.bar.one { width: 92%; }
+.bar.two { width: 75%; }
+.bar.three { width: 63%; }
+.bar.four { width: 50%; }
+.bar.five { width: 38%; }
+
+/* COMPACT HISTORICAL EVENTS */
+.history-compact {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 12px;
+}
+
+.history-item {
+    background: #f3f7fb;
+    border: 1px solid #d9e4ef;
+    border-radius: 7px;
+    padding: 10px;
+    text-align: center;
+}
+
+.history-year {
+    font-size: 16px;
+    font-weight: bold;
+    color: #06356f;
+}
+
+.history-name {
+    font-size: 11.5px;
+    margin-top: 5px;
+    min-height: 28px;
+}
+
+.history-level {
+    margin-top: 6px;
+    font-size: 11px;
+    color: #555;
+}
+
+/* TABLES */
+.lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.table-box {
+    border: 1px solid #d5dce8;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+th {
+    background: #27364a;
+    color: white;
+    padding: 8px;
+    text-align: left;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* MODULES */
+.modules {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 24px;
+}
+
+.module-card {
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+    border-top: 4px solid #0b5fa5;
+}
+
+.module-card i {
+    font-size: 27px;
+    color: #06356f;
+}
+
+.module-card h3 {
+    color: #06356f;
+    margin-bottom: 8px;
+}
+
+.module-card p {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.module-card ul {
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* FOOTER */
+.footer {
+    background: #06356f;
+    color: white;
+    padding: 18px;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 13px;
+}
+
+@media(max-width: 1150px) {
+    .top-grid,
+    .dashboard-grid,
+    .visual-grid,
+    .lower-grid,
+    .modules,
+    .quick-links,
+    .history-compact {
+        grid-template-columns: 1fr;
+    }
+
+    .header-title h1 {
+        font-size: 26px;
+    }
+
+    .header {
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <div class="logo-area">
+        <div class="logo-box">
+            DECM<br>LOGO
+        </div>
+        <div class="header-title">
+            <h1>DECM Cluster Information Management and Data Portal</h1>
+            <p>Vanuatu | NDMO, IOM and DECM Cluster Partners</p>
+        </div>
+    </div>
+</div>
+
+<div class="nav">
+    <a href="#"><i class="fa fa-home"></i>Home</a>
+    <a href="#"><i class="fa fa-chart-line"></i>Dashboard</a>
+    <a href="#"><i class="fa fa-map-location-dot"></i>Mapping</a>
+    <a href="#"><i class="fa fa-clipboard-list"></i>Assessment Tools</a>
+    <a href="#"><i class="fa fa-file-lines"></i>Reports</a>
+    <a href="#"><i class="fa fa-book"></i>SOPs</a>
+    <a href="#"><i class="fa fa-graduation-cap"></i>Training</a>
+    <a href="#"><i class="fa fa-users"></i>Partners</a>
+    <a href="#"><i class="fa fa-link"></i>Useful Links</a>
+</div>
+
+<div class="hero">
+    <h2>Displacement, Evacuation Centre and Response Information System</h2>
+    <p>
+        This portal is a dummy interface for the DECM Cluster Vanuatu information management system.
+        It supports standardized data collection, evacuation centre tracking, village assessments,
+        service mapping, post-distribution monitoring, response tracking, dashboard analysis,
+        partner coordination, project updates, SOPs, training resources and historical disaster data management.
+    </p>
+</div>
+
+<div class="main">
+
+    <div class="top-grid">
+        <div class="panel">
+            <h2>Portal Overview</h2>
+            <p>
+                The DECM Cluster Information Management and Data Portal provides a central platform for managing
+                displacement-related information across preparedness, emergency response, recovery and durable
+                solutions work in Vanuatu. It can be used by NDMO, IOM, provincial authorities and cluster partners
+                to collect, validate, analyze, export and share operational information in a consistent format.
+            </p>
+            <p>
+                The portal can later be connected with KoboToolbox, web forms, dashboards, GIS maps, user-based access,
+                evacuation centre databases, historical disaster datasets and partner response tracking tools.
+            </p>
+
+            <div class="quick-links">
+                <div class="quick-link"><i class="fa fa-house-flood-water"></i>EC Tracking</div>
+                <div class="quick-link"><i class="fa fa-database"></i>Data Registry</div>
+                <div class="quick-link"><i class="fa fa-map"></i>GIS Mapping</div>
+                <div class="quick-link"><i class="fa fa-chart-pie"></i>Analysis</div>
+                <div class="quick-link"><i class="fa fa-file-circle-check"></i>SOPs</div>
+                <div class="quick-link"><i class="fa fa-file-export"></i>Export Data</div>
+            </div>
+        </div>
+
+        <div class="panel login-box">
+            <h3><i class="fa fa-lock"></i> User Login</h3>
+
+            <label>Email / Username</label>
+            <input type="text" placeholder="user@organization.org">
+
+            <label>Password</label>
+            <input type="password" placeholder="Enter password">
+
+            <button>Login</button>
+
+            <div class="login-note">
+                Dummy login section for future role-based access: Admin, Information Manager, Data Officer,
+                Provincial Officer, Partner User and Viewer.
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-title">
+        <i class="fa fa-chart-column"></i> Dummy Displacement Tracking Dashboard - Vanuatu
+    </div>
+
+    <div class="dashboard">
+        <div class="dashboard-grid">
+
+            <div class="side-menu">
+                <div class="menu-item"><i class="fa fa-list"></i>Summary</div>
+                <div class="menu-item"><i class="fa fa-house-flood-water"></i>Evacuation Centres</div>
+                <div class="menu-item"><i class="fa fa-users"></i>Displacement</div>
+                <div class="menu-item"><i class="fa fa-house-chimney-crack"></i>Shelter</div>
+                <div class="menu-item"><i class="fa fa-faucet"></i>WASH</div>
+                <div class="menu-item"><i class="fa fa-shield-heart"></i>Protection</div>
+                <div class="menu-item"><i class="fa fa-hand-holding-heart"></i>Basic Services</div>
+                <div class="menu-item"><i class="fa fa-truck"></i>Response Tracking</div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-people-roof"></i></div>
+                    <div>
+                        <div class="stat-number">12,450</div>
+                        <div class="stat-label">Estimated IDPs</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-location-dot"></i></div>
+                    <div>
+                        <div class="stat-number">86</div>
+                        <div class="stat-label">Evacuation Centres</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-house-user"></i></div>
+                    <div>
+                        <div class="stat-number">2,340</div>
+                        <div class="stat-label">Affected HHs</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-map-pin"></i></div>
+                    <div>
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Villages Assessed</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-house-chimney-crack"></i></div>
+                    <div>
+                        <div class="stat-number">1,120</div>
+                        <div class="stat-label">Shelter Needs</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-hand-holding-heart"></i></div>
+                    <div>
+                        <div class="stat-number">64%</div>
+                        <div class="stat-label">Access to Basic Services</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-child-reaching"></i></div>
+                    <div>
+                        <div class="stat-number">4,980</div>
+                        <div class="stat-label">Children Affected</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-wheelchair"></i></div>
+                    <div>
+                        <div class="stat-number">355</div>
+                        <div class="stat-label">Persons with Disabilities</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-handshake-angle"></i></div>
+                    <div>
+                        <div class="stat-number">28</div>
+                        <div class="stat-label">Active Partners</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa fa-truck-medical"></i></div>
+                    <div>
+                        <div class="stat-number">67%</div>
+                        <div class="stat-label">Response Coverage</div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="visual-grid">
+                    <div class="visual-box">
+                        <div class="box-title">Location of Evacuation Centres</div>
+                        <div class="map-placeholder">Vanuatu Map</div>
+                    </div>
+
+                    <div class="visual-box">
+                        <div class="box-title">Sector Summary by Province</div>
+                        <div class="chart-placeholder">
+                            <div>Shefa - Shelter / WASH / Protection</div>
+                            <div class="bar one"></div>
+                            <div>Sanma - Shelter / Basic Services</div>
+                            <div class="bar two"></div>
+                            <div>Tafea - Evacuation Centre Support</div>
+                            <div class="bar three"></div>
+                            <div>Malampa - Service Mapping</div>
+                            <div class="bar four"></div>
+                            <div>Penama - Response Tracking</div>
+                            <div class="bar five"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-box">
+                    <div class="box-title">Historical Events Snapshot</div>
+                    <div class="history-compact">
+                        <div class="history-item">
+                            <div class="history-year">2015</div>
+                            <div class="history-name">TC Pam</div>
+                            <div class="history-level">High Impact</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-year">2017</div>
+                            <div class="history-name">Ambae Volcano</div>
+                            <div class="history-level">Displacement</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-year">2020</div>
+                            <div class="history-name">TC Harold</div>
+                            <div class="history-level">Severe</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-year">2023</div>
+                            <div class="history-name">TC Judy/Kevin</div>
+                            <div class="history-level">Multi-island</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-year">2024</div>
+                            <div class="history-name">Earthquake</div>
+                            <div class="history-level">Urban Impact</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lower-grid">
+                    <div class="table-box">
+                        <div class="box-title">Evacuation Centre List / Sites</div>
+                        <table>
+                            <tr>
+                                <th>Province</th>
+                                <th>Site Name</th>
+                                <th>Status</th>
+                                <th>HHs</th>
+                            </tr>
+                            <tr>
+                                <td>Shefa</td>
+                                <td>Port Vila Area Council Hall</td>
+                                <td>Open</td>
+                                <td>220</td>
+                            </tr>
+                            <tr>
+                                <td>Sanma</td>
+                                <td>Luganville Community Centre</td>
+                                <td>Open</td>
+                                <td>185</td>
+                            </tr>
+                            <tr>
+                                <td>Tafea</td>
+                                <td>Isangel School Compound</td>
+                                <td>Monitoring</td>
+                                <td>95</td>
+                            </tr>
+                            <tr>
+                                <td>Malampa</td>
+                                <td>Lakatoro Church Hall</td>
+                                <td>Open</td>
+                                <td>130</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-box">
+                        <div class="box-title">Response Tracking Summary</div>
+                        <table>
+                            <tr>
+                                <th>Sector</th>
+                                <th>Partner</th>
+                                <th>Coverage</th>
+                            </tr>
+                            <tr>
+                                <td>Shelter/NFI</td>
+                                <td>IOM / Partners</td>
+                                <td>68%</td>
+                            </tr>
+                            <tr>
+                                <td>WASH</td>
+                                <td>Cluster Partners</td>
+                                <td>54%</td>
+                            </tr>
+                            <tr>
+                                <td>Protection</td>
+                                <td>DECM Partners</td>
+                                <td>46%</td>
+                            </tr>
+                            <tr>
+                                <td>Access to Basic Services</td>
+                                <td>NDMO / Partners</td>
+                                <td>64%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modules">
+        <div class="module-card">
+            <i class="fa fa-clipboard-list"></i>
+            <h3>Assessment Tools</h3>
+            <p>Future data collection tools can be managed here.</p>
+            <ul>
+                <li>Village Assessment</li>
+                <li>Post Distribution Monitoring</li>
+                <li>Service Mapping</li>
+                <li>Evacuation Centre Monitoring</li>
+            </ul>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-book-open-reader"></i>
+            <h3>Capacity Building & Training</h3>
+            <p>
+                Training materials for field teams, enumerators, provincial officers and cluster partners.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-file-circle-check"></i>
+            <h3>SOPs & Guidance</h3>
+            <p>
+                Standard operating procedures, data-sharing protocols, validation workflows and reporting templates.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-diagram-project"></i>
+            <h3>Project Updates</h3>
+            <p>
+                Track project progress, field activities, implementation milestones and key DECM deliverables.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-globe"></i>
+            <h3>Web Forms</h3>
+            <p>
+                Online forms for provincial focal points, field monitors, area councils and partners.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-user-gear"></i>
+            <h3>User Management</h3>
+            <p>
+                Manage access by role: admin, information manager, data officer, partner focal point and viewer.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-chart-line"></i>
+            <h3>Dashboards & Reports</h3>
+            <p>
+                Operational dashboards, situation reports, data quality summaries and historical displacement analysis.
+            </p>
+        </div>
+
+        <div class="module-card">
+            <i class="fa fa-link"></i>
+            <h3>Useful Links</h3>
+            <p>
+                KoboToolbox, DHIS2, ArcGIS, ReliefWeb, HDX, NDMO resources and IOM resources.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    © 2026 DECM Cluster Information Management and Data Portal | Vanuatu | NDMO, IOM and DECM Cluster Partners
+</div>
+
+</body>
+</html>
