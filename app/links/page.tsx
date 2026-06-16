@@ -29,7 +29,7 @@ export default function LinksPage() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">External Database Links</h3>
+          <h3 className="text-xs font-bold text-muted-foreground">External Database Links</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {externalLinks.map((link, idx) => (
               <div key={idx} className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 transition-all flex flex-col justify-between gap-3">

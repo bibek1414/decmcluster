@@ -30,7 +30,7 @@ export default function TrainingPage() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Available Modules</h3>
+          <h3 className="text-xs font-bold text-muted-foreground">Available Modules</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {modules.map((mod, idx) => (
               <div key={idx} className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors flex items-center justify-between gap-4">

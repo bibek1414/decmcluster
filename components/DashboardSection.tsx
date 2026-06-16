@@ -300,7 +300,7 @@ export default function DashboardSection() {
 
                   {/* Map stats legend */}
                   <div className="space-y-3.5 w-full">
-                    <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                    <h4 className="text-[11px] font-bold text-muted-foreground">
                       Provinces & Active Sites
                     </h4>
                     <div className="space-y-2">

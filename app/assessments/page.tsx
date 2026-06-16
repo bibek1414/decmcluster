@@ -24,7 +24,7 @@ export default function AssessmentsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="border-0 sm:border border-border rounded-none sm:rounded-xl p-0 sm:p-5 bg-transparent sm:bg-muted/30 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Mobile Survey Forms</h3>
+            <h3 className="text-xs font-bold text-muted-foreground">Mobile Survey Forms</h3>
             <p className="text-xs text-muted-foreground">
               Assessments are configured using KoboToolbox. Scan the code on-site or use the web forms to submit data offline.
             </p>
@@ -46,7 +46,7 @@ export default function AssessmentsPage() {
           </div>
 
           <div className="border-0 sm:border border-border rounded-none sm:rounded-xl p-0 sm:p-5 bg-transparent sm:bg-muted/30 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Data Import & Schema</h3>
+            <h3 className="text-xs font-bold text-muted-foreground">Data Import & Schema</h3>
             <p className="text-xs text-muted-foreground">
               Upload CSV/Excel spreadsheets manually to process raw assessment reports.
             </p>

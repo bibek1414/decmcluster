@@ -3,7 +3,7 @@ import { Users } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Active Partners — DECM Cluster Vanuatu",
+  title: "Cluster Focal Points — DECM Cluster Vanuatu",
   description: "Evacuation management agency focal points and cluster partners.",
 };
 
@@ -23,13 +23,13 @@ export default function PartnersPage() {
             <Users className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-primary">Active Partners</h2>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-primary">Cluster Focal Points</h2>
             <p className="text-xs text-muted-foreground mt-1">Evacuation management agency focal points and cluster partners</p>
           </div>
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Cluster Focal Points</h3>
+          <h3 className="text-xs font-bold text-muted-foreground">Cluster Focal Points</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {partners.map((partner, idx) => (
               <div key={idx} className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors">

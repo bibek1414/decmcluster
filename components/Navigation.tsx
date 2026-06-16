@@ -29,7 +29,7 @@ export default function Navigation() {
     { id: "reports", label: "Reports", icon: FileText, path: "/reports" },
     { id: "sops", label: "SOPs", icon: BookOpen, path: "/sops" },
     { id: "training", label: "Training", icon: GraduationCap, path: "/training" },
-    { id: "partners", label: "Partners", icon: Users, path: "/partners" },
+    { id: "partners", label: "Cluster Focal Points", icon: Users, path: "/partners" },
     { id: "links", label: "Useful Links", icon: LinkIcon, path: "/links" },
   ];
 

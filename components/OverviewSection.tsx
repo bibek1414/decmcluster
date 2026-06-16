@@ -39,7 +39,7 @@ export default function OverviewSection() {
       </div>
 
       <div className="mt-8">
-        <h3 className="text-xs font-bold text-muted-foreground mb-4 uppercase tracking-wider">
+        <h3 className="text-xs font-bold text-muted-foreground mb-4">
           Quick Access Portal Links
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">

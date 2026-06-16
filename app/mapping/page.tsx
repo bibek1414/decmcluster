@@ -50,7 +50,7 @@ export default function MappingPage() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Map Controls & Layers</h3>
+            <h3 className="text-xs font-bold text-muted-foreground">Map Controls & Layers</h3>
             <div className="space-y-2.5">
               {[
                 { label: "Evacuation Center Locations", desc: "Coordinates of all 86 registered sites", active: true },

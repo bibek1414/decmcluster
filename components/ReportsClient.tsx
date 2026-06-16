@@ -33,7 +33,7 @@ export default function ReportsClient() {
 
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Available Publications</h3>
+          <h3 className="text-xs font-bold text-muted-foreground">Available Publications</h3>
           <div className="flex gap-2">
             <Input 
               type="text" 
