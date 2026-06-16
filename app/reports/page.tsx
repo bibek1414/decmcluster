@@ -1,4 +1,3 @@
-import React from "react";
 import ReportsClient from "@/components/ReportsClient";
 import type { Metadata } from "next";
 

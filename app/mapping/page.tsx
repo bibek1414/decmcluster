@@ -1,4 +1,3 @@
-import React from "react";
 import { Map, Globe2 } from "lucide-react";
 import type { Metadata } from "next";
 

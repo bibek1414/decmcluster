@@ -1,4 +1,3 @@
-import React from "react";
 import { Link as LinkIcon, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 

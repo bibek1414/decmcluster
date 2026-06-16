@@ -1,10 +1,10 @@
-import React from "react";
 import DashboardSection from "@/components/DashboardSection";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard — DECM Cluster Vanuatu",
-  description: "Displacement tracking, evacuation centres, and sector summaries for Vanuatu.",
+  description:
+    "Displacement tracking, evacuation centres, and sector summaries for Vanuatu.",
 };
 
 export default function DashboardPage() {

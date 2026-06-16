@@ -1,4 +1,3 @@
-import React from "react";
 import { ClipboardList, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";

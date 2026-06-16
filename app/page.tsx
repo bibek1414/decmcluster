@@ -1,4 +1,3 @@
-import React from "react";
 import Hero from "@/components/Hero";
 import OverviewSection from "@/components/OverviewSection";
 import LoginCard from "@/components/LoginCard";
