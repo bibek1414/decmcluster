@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, ClipboardList, ShieldCheck, Settings } from "lucide-react";
+import { BookOpen, ClipboardList, ShieldCheck, Settings, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -39,8 +39,8 @@ export default function SopsPage() {
                   <h3 className="text-sm font-bold text-foreground">{sop.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed mt-2">{sop.desc}</p>
                 </div>
-                <button className="text-xs text-primary font-extrabold hover:underline text-left cursor-pointer">
-                  Read SOP Document →
+                <button className="text-xs text-primary font-extrabold hover:underline text-left cursor-pointer inline-flex items-center gap-1">
+                  Read SOP Document <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
             );
