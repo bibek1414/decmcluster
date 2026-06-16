@@ -2,7 +2,9 @@ import React from "react";
 
 export function Logo({ className = "w-10 h-10" }: { className?: string }) {
   return (
-    <div className={`relative flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-800 text-white shadow-md shadow-blue-500/10 border border-blue-400/20 ${className}`}>
+    <div
+      className={`relative flex items-center justify-center rounded-xl bg-primary text-white border border-border/20 ${className}`}
+    >
       {/* Abstract Grid Icon */}
       <svg
         className="w-3/5 h-3/5"

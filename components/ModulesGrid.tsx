@@ -9,6 +9,7 @@ import {
   FileLineChart, 
   ExternalLink 
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function ModulesGrid() {
   const modules = [
@@ -16,7 +17,7 @@ export default function ModulesGrid() {
       title: "Assessment Tools",
       desc: "Standardized displacement and evacuation site validation assessment forms.",
       icon: ClipboardList,
-      color: "border-blue-600 text-blue-600",
+      color: "border-t-blue-600 text-blue-600 dark:border-t-blue-500",
       items: [
         "Village Level Assessments",
         "Post Distribution Monitoring",
@@ -28,7 +29,7 @@ export default function ModulesGrid() {
       title: "Capacity Building & Training",
       desc: "Training curriculum, field guidelines, and manuals for teams and enumerators.",
       icon: GraduationCap,
-      color: "border-emerald-600 text-emerald-600",
+      color: "border-t-emerald-600 text-emerald-600 dark:border-t-emerald-500",
       items: [
         "Enumerator Training Manual",
         "Displacement Tracking Standards",
@@ -40,7 +41,7 @@ export default function ModulesGrid() {
       title: "SOPs & Guidance",
       desc: "Standard operating procedures, data sharing protocols, and governance frameworks.",
       icon: BookOpen,
-      color: "border-indigo-600 text-indigo-600",
+      color: "border-t-indigo-600 text-indigo-600 dark:border-t-indigo-500",
       items: [
         "DECM Data Sharing Agreement",
         "Site Management Guidelines",
@@ -52,7 +53,7 @@ export default function ModulesGrid() {
       title: "Project Updates",
       desc: "Live tracker for field implementation, key milestones, and cluster tasks.",
       icon: Calendar,
-      color: "border-amber-600 text-amber-600",
+      color: "border-t-amber-600 text-amber-600 dark:border-t-amber-500",
       items: [
         "Provincial Deployment Plan",
         "2026 Quarter Deliverables",
@@ -64,7 +65,7 @@ export default function ModulesGrid() {
       title: "Web Forms",
       desc: "Browser-based online entry portals for field enumerators and focal points.",
       icon: Globe,
-      color: "border-violet-600 text-violet-600",
+      color: "border-t-violet-600 text-violet-600 dark:border-t-violet-500",
       items: [
         "Mobile-friendly Web Forms",
         "Direct Kobo Integrations",
@@ -76,7 +77,7 @@ export default function ModulesGrid() {
       title: "User Management",
       desc: "Control administrative role-based access for NDMO, IOM, and partners.",
       icon: UserRoundCheck,
-      color: "border-sky-600 text-sky-600",
+      color: "border-t-sky-600 text-sky-600 dark:border-t-sky-500",
       items: [
         "Partner Registry",
         "Role Assignment Panel",
@@ -88,7 +89,7 @@ export default function ModulesGrid() {
       title: "Dashboards & Reports",
       desc: "Public and restricted reports, statistics, and situation analysis sheets.",
       icon: FileLineChart,
-      color: "border-rose-600 text-rose-700",
+      color: "border-t-rose-650 text-rose-600 dark:border-t-rose-500",
       items: [
         "DECM Situation Updates",
         "Bi-annual Displacement Trends",
@@ -100,7 +101,7 @@ export default function ModulesGrid() {
       title: "Useful Links",
       desc: "Direct access keys to global partner directories and database networks.",
       icon: ExternalLink,
-      color: "border-slate-600 text-slate-600",
+      color: "border-t-muted-foreground/60 text-muted-foreground",
       items: [
         "KoboToolbox Server",
         "DHIS2 Vanuatu Health Portal",
@@ -112,12 +113,12 @@ export default function ModulesGrid() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-slate-200 pb-3">
-        <h2 className="text-xl sm:text-2xl font-extrabold text-blue-900 flex items-center gap-2">
-          <span className="w-1.5 h-6 bg-blue-600 rounded-full"></span>
+      <div className="border-b border-border pb-3">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-primary flex items-center gap-2">
+          <span className="w-1.5 h-6 bg-primary rounded-full"></span>
           Cluster Management Modules
         </h2>
-        <p className="text-xs text-slate-500 mt-1">Select and configure key database features and partner tools below</p>
+        <p className="text-xs text-muted-foreground mt-1">Select and configure key database features and partner tools below</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -126,32 +127,35 @@ export default function ModulesGrid() {
           return (
             <div 
               key={index} 
-              className={`bg-white rounded-2xl p-6 border-t-4 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 flex flex-col justify-between ${mod.color}`}
+              className={cn(
+                "bg-card text-card-foreground rounded-2xl p-6 border border-border border-t-4 flex flex-col justify-between transition-colors duration-300",
+                mod.color
+              )}
             >
               <div>
                 <div className="flex items-center justify-between mb-3.5">
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <Icon className="w-6 h-6" />
+                  <div className="p-2.5 rounded-xl bg-muted border border-border">
+                    <Icon className="w-6 h-6 text-foreground" />
                   </div>
-                  <span className="text-[10px] font-bold text-slate-400">
+                  <span className="text-[10px] font-bold text-muted-foreground">
                     Module {index + 1}
                   </span>
                 </div>
                 
-                <h3 className="text-base font-extrabold text-blue-950 mb-2">
+                <h3 className="text-base font-extrabold text-foreground mb-2">
                   {mod.title}
                 </h3>
                 
-                <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                <p className="text-xs text-muted-foreground leading-relaxed mb-4">
                   {mod.desc}
                 </p>
               </div>
 
               {mod.items && (
-                <ul className="space-y-1.5 border-t border-slate-100 pt-4">
+                <ul className="space-y-1.5 border-t border-border pt-4">
                   {mod.items.map((item, itemIdx) => (
-                    <li key={itemIdx} className="text-xs text-slate-600 hover:text-blue-900 transition-colors flex items-center gap-1.5 font-medium">
-                      <span className="w-1 h-1 rounded-full bg-slate-400"></span>
+                    <li key={itemIdx} className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 font-medium">
+                      <span className="w-1 h-1 rounded-full bg-muted-foreground/40"></span>
                       <span>{item}</span>
                     </li>
                   ))}
