@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AssessmentsPage() {
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
-      <div className="bg-card text-card-foreground rounded-2xl p-6 md:p-8 border border-border space-y-6">
+      <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
         <div className="border-b border-border pb-4 flex items-center gap-3">
           <div className="p-3 rounded-xl bg-primary/10 text-primary">
             <ClipboardList className="w-6 h-6" />
@@ -23,7 +23,7 @@ export default function AssessmentsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="border border-border rounded-xl p-5 bg-muted/30 space-y-4">
+          <div className="border-0 sm:border border-border rounded-none sm:rounded-xl p-0 sm:p-5 bg-transparent sm:bg-muted/30 space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Mobile Survey Forms</h3>
             <p className="text-xs text-muted-foreground">
               Assessments are configured using KoboToolbox. Scan the code on-site or use the web forms to submit data offline.
@@ -45,7 +45,7 @@ export default function AssessmentsPage() {
             </div>
           </div>
 
-          <div className="border border-border rounded-xl p-5 bg-muted/30 space-y-4">
+          <div className="border-0 sm:border border-border rounded-none sm:rounded-xl p-0 sm:p-5 bg-transparent sm:bg-muted/30 space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Data Import & Schema</h3>
             <p className="text-xs text-muted-foreground">
               Upload CSV/Excel spreadsheets manually to process raw assessment reports.

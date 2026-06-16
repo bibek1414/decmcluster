@@ -41,7 +41,7 @@ export default function LoginCard() {
   };
 
   return (
-    <div className="bg-card text-card-foreground rounded-2xl p-6 border border-border flex flex-col justify-between h-full transition-colors duration-300">
+    <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 border-0 sm:border border-border flex flex-col justify-between h-full transition-colors duration-300">
       <div>
         <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
           <h3 className="text-lg font-bold text-primary flex items-center gap-2">

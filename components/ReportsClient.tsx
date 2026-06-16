@@ -20,7 +20,7 @@ export default function ReportsClient() {
   );
 
   return (
-    <div className="bg-card text-card-foreground rounded-2xl p-6 md:p-8 border border-border space-y-6">
+    <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
       <div className="border-b border-border pb-4 flex items-center gap-3">
         <div className="p-3 rounded-xl bg-primary/10 text-primary">
           <FileText className="w-6 h-6" />

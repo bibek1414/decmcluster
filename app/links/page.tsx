@@ -17,7 +17,7 @@ export default function LinksPage() {
 
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
-      <div className="bg-card text-card-foreground rounded-2xl p-6 md:p-8 border border-border space-y-6">
+      <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
         <div className="border-b border-border pb-4 flex items-center gap-3">
           <div className="p-3 rounded-xl bg-primary/10 text-primary">
             <LinkIcon className="w-6 h-6" />

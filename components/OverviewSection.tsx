@@ -20,7 +20,7 @@ export default function OverviewSection() {
   ];
 
   return (
-    <div className="bg-card text-card-foreground rounded-2xl p-6 md:p-8 border border-border transition-colors duration-300">
+    <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border transition-colors duration-300">
       <h2 className="text-xl sm:text-2xl font-extrabold text-primary mb-4 flex items-center gap-2">
         <span className="w-1.5 h-6 bg-primary rounded-full"></span>
         Portal Overview
