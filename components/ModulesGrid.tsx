@@ -19,10 +19,18 @@ export default function ModulesGrid() {
       icon: ClipboardList,
       color: "border-t-blue-600 text-blue-600 dark:border-t-blue-500",
       items: [
-        "Village Level Assessments",
-        "Post Distribution Monitoring",
-        "Rapid Service Mapping",
-        "Evacuation Centre Auditing"
+        { 
+          name: "0. Evacuation Centre Assessment Form", 
+          path: "/assesments/0  Evacuation Centre Assessment Form.pdf",
+          excelPath: "/csv/Evacuation Center Master List.xlsx" 
+        },
+        { name: "1. Damage Assessment Form (Community V2)", path: "/assesments/1 Damage Assessment Form_ Community_Assessment_form_V2.pdf" },
+        { name: "2. Rapid Assessment Form (Area Council)", path: "/assesments/2. Rapid Assessment Form- AreaCouncil_Assessment_Form.pdf" },
+        { name: "3. Vanuatu Earthquake Displacement Tracking Matrix Form - Flow Monitoring", path: "/assesments/3. Vanuatu Earthquake Displacement Tracking Matrix Form - Flow Monitoring.pdf" },
+        { name: "4. Displacement Profile - Phone Survey", path: "/assesments/4. Displacement Profile - Phone Survey.pdf" },
+        { name: "5. IOM Vanuatu - Baseline Village Assessment v1", path: "/assesments/5. IOM Vanuatu - Baseline Village Assessment v1.pdf" },
+        { name: "6. DECM Cluster - Service Monitoring Tool 2026", path: "/assesments/6. DECM Cluster - Service Monitoring Tool 2026.pdf" },
+        { name: "7. Durable Solution & Relocation Survey", path: "/assesments/7. Durable Solution &amp; Relocation Survey_Vanuatu.pdf" }
       ]
     },
     {
@@ -103,10 +111,10 @@ export default function ModulesGrid() {
       icon: ExternalLink,
       color: "border-t-muted-foreground/60 text-muted-foreground",
       items: [
-        "KoboToolbox Server",
-        "DHIS2 Vanuatu Health Portal",
-        "Humanitarian Data Exchange (HDX)",
-        "ReliefWeb Vanuatu Listings"
+        { name: "KoboToolbox Server", path: "https://kobo.humanitarianresponse.info" },
+        { name: "HDX Data - Vanuatu", path: "https://data.humdata.org/m/group/vut" },
+        { name: "IOM DTM Portal", path: "https://dtm.iom.int/" },
+        { name: "Global CCCM Cluster", path: "https://www.cccmcluster.org/" }
       ]
     }
   ];
@@ -153,12 +161,33 @@ export default function ModulesGrid() {
 
               {mod.items && (
                 <ul className="space-y-1.5 border-t border-border pt-4">
-                  {mod.items.map((item, itemIdx) => (
-                    <li key={itemIdx} className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 font-medium">
-                      <span className="w-1 h-1 rounded-full bg-muted-foreground/40"></span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
+                  {mod.items.map((item, itemIdx) => {
+                    const isObject = typeof item === "object";
+                    const name = isObject ? (item as any).name : item;
+                    const path = isObject ? (item as any).path : null;
+                    const excelPath = isObject ? (item as any).excelPath : null;
+
+                    return (
+                      <li key={itemIdx} className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 font-medium">
+                        <span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0"></span>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                          {path ? (
+                            <a href={path} download className="hover:underline flex items-center gap-1">
+                              {name}
+                              <span className="text-[10px] text-primary/60 font-bold">(PDF)</span>
+                            </a>
+                          ) : (
+                            <span>{name}</span>
+                          )}
+                          {excelPath && (
+                            <a href={excelPath} download className="text-[10px] text-green-600 hover:underline font-bold border-l border-border pl-2">
+                              XLSX
+                            </a>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
