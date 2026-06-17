@@ -12,7 +12,7 @@ import {
 export default function OverviewSection() {
   const quickLinks = [
     { label: "EC Tracking", icon: Tent, path: "/dashboard" },
-    { label: "Data Registry", icon: Database, path: "/assessments" },
+    { label: "Data Registry", icon: Database, path: "/assessments-tools" },
     { label: "GIS Mapping", icon: Map, path: "/mapping" },
     { label: "Analysis", icon: PieChart, path: "/dashboard" },
     { label: "SOPs", icon: FileCheck, path: "/sops" },

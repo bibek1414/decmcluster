@@ -17,7 +17,7 @@ export default function Header() {
             <Logo className="w-14 h-14" />
             <div>
               <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
-                DECM Cluster Information Management
+                DECM Cluster Information Management and Data Portal
               </h1>
               <p className="text-xs sm:text-sm text-primary-foreground/85 font-medium flex items-center gap-1.5 mt-0.5">
                 <span>Vanuatu</span>
