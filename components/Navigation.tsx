@@ -98,7 +98,7 @@ export default function Navigation() {
                   <Link
                     key={item.id}
                     href={item.path}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all duration-200 cursor-pointer ${
                       isActive
                         ? "bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/20"
                         : "text-primary-foreground/80 hover:bg-primary-foreground/5 hover:text-primary-foreground border border-transparent"
