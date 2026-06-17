@@ -24,6 +24,9 @@ export default function Navigation() {
   const pathname = usePathname();
   const { isLoggedIn, user, logout } = useAuth();
 
+  const isAdminPath = pathname?.startsWith("/assement");
+  if (isAdminPath) return null;
+
   const navItems = [
     { id: "home", label: "Home", icon: Home, path: "/" },
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
