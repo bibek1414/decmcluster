@@ -52,25 +52,49 @@ export default function AssessmentsPage() {
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
-        
         <PageHeader
-          title="Assessment Tools"
+          title="Displacement Data"
           description={
             <div className="flex flex-col gap-0.5">
               <span>Field survey forms, data schemas and mobile templates</span>
               <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
-                {items.length} total · {items.filter((a) => a.status === "Completed").length} completed
+                {items.length} total ·{" "}
+                {items.filter((a) => a.status === "Completed").length} completed
               </span>
             </div>
           }
           actions={
-            <div className="flex gap-2">
-              <Button variant="outline" className="cursor-pointer font-bold border-green-600/20 text-green-700 hover:bg-green-50 hover:text-green-800" asChild>
-                <a href="/csv/Evacuation Center Master List.xlsx" download="Evacuation Center Master List.xlsx">
-                  <FileText className="mr-1.5 h-4 w-4" /> Download Master List (Excel)
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                className="cursor-pointer font-bold border-green-600/20 text-green-700 hover:bg-green-50 hover:text-green-800"
+                asChild
+              >
+                <a
+                  href="/csv/Evacuation Center Master List.xlsx"
+                  download="Evacuation Center Master List.xlsx"
+                >
+                  <FileText className="mr-1.5 h-4 w-4" /> Download Master List
+                  (Excel)
                 </a>
               </Button>
-              <Button className="cursor-pointer font-bold" onClick={() => setIsCreateOpen(true)}>
+              <Button
+                variant="outline"
+                className="cursor-pointer font-bold border-blue-600/20 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
+                asChild
+              >
+                <a
+                  href="/response-tracking/Response Tracking Tool 5W DECM Cluster.xlsx"
+                  download="5W Response Data.xlsx"
+                >
+                  <FileText className="mr-1.5 h-4 w-4" /> Download 5W Response
+                  data
+                </a>
+              </Button>
+              <Button
+                className="cursor-pointer font-bold"
+                onClick={() => setIsCreateOpen(true)}
+              >
                 <Plus className="mr-1.5 h-4 w-4" /> New Assessment
               </Button>
             </div>
@@ -95,7 +119,10 @@ export default function AssessmentsPage() {
             title="No assessments found"
             description="Try adjusting your filters or create your first assessment to get started."
             action={
-              <Button onClick={() => setIsCreateOpen(true)} className="cursor-pointer font-bold">
+              <Button
+                onClick={() => setIsCreateOpen(true)}
+                className="cursor-pointer font-bold"
+              >
                 <Plus className="mr-1.5 h-4 w-4" /> New Assessment
               </Button>
             }
@@ -114,7 +141,9 @@ export default function AssessmentsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
           <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Create New Assessment</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Create New Assessment
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
