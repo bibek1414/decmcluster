@@ -9,10 +9,11 @@ export default function ReportsClient() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const reportsList = [
-    { title: "DECM Monthly Displacement Situation Report (June 2026)", size: "2.4 MB", date: "June 12, 2026" },
-    { title: "Vanuatu Evacuation Centre Audit & Wash Quality Index (Q2)", size: "4.8 MB", date: "May 28, 2026" },
-    { title: "TC Harold Displacement Longitudinal Study - 6 Years On", size: "12.1 MB", date: "April 15, 2026" },
-    { title: "Standardized Shelter Kit Distribution Audit Summary", size: "1.1 MB", date: "March 02, 2026" }
+    { title: "Humanitarian Standards", size: "1.8 MB", date: "June 17, 2026", path: "/CAMP-EN_0.pdf" },
+    { title: "DECM Monthly Displacement Situation Report (June 2026)", size: "2.4 MB", date: "June 12, 2026", path: "#" },
+    { title: "Vanuatu Evacuation Centre Audit & Wash Quality Index (Q2)", size: "4.8 MB", date: "May 28, 2026", path: "#" },
+    { title: "TC Harold Displacement Longitudinal Study - 6 Years On", size: "12.1 MB", date: "April 15, 2026", path: "#" },
+    { title: "Standardized Shelter Kit Distribution Audit Summary", size: "1.1 MB", date: "March 02, 2026", path: "#" }
   ];
 
   const filteredReports = reportsList.filter(rep =>
@@ -53,8 +54,10 @@ export default function ReportsClient() {
                   <h4 className="text-xs sm:text-sm font-bold text-foreground">{rep.title}</h4>
                   <p className="text-[10px] text-muted-foreground mt-1">Published: {rep.date} | Size: {rep.size}</p>
                 </div>
-                <Button variant="outline" size="sm" className="shrink-0 cursor-pointer">
-                  Download PDF
+                <Button variant="outline" size="sm" className="shrink-0 cursor-pointer" asChild>
+                  <a href={rep.path} download={rep.title}>
+                    Download PDF
+                  </a>
                 </Button>
               </div>
             ))

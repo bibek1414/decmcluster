@@ -10,7 +10,10 @@ export default function LinksPage() {
   const externalLinks = [
     { name: "KoboToolbox Server", url: "https://kobo.humanitarianresponse.info", desc: "Access project forms directly on the humanitarian Kobo cluster server." },
     { name: "DHIS2 Vanuatu Health Portal", url: "https://dhis2.gov.vu", desc: "National health data coordination portal including emergency facility tracking." },
-    { name: "Humanitarian Data Exchange (HDX)", url: "https://data.humdata.org/group/vut", desc: "Open repository of shared datasets specifically tagged for Vanuatu response." },
+    { name: "HDX Data - Vanuatu", url: "https://data.humdata.org/m/group/vut", desc: "Open repository of shared datasets specifically tagged for Vanuatu response." },
+    { name: "IOM DTM", url: "https://dtm.iom.int/", desc: "IOM Displacement Tracking Matrix - tracking and monitoring displacement and population mobility." },
+    { name: "Global CCCM cluster", url: "https://www.cccmcluster.org/", desc: "Camp Coordination and Camp Management cluster global resources and tools." },
+    { name: "IASC Framework - Durable Solutions", url: "https://interagencystandingcommittee.org/other/iasc-framework-durable-solutions-internally-displaced-persons", desc: "IASC Framework on Durable Solutions for Internally Displaced Persons." },
     { name: "ReliefWeb Vanuatu Listings", url: "https://reliefweb.int/country/vut", desc: "Real-time updates, situation analysis documents and alerts from global feeds." }
   ];
 
