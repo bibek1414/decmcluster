@@ -1,28 +1,18 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Filter, Plus, Search, ClipboardList, X } from "lucide-react";
+import { Plus, Search, ClipboardList, X, FileText } from "lucide-react";
 import { PageHeader } from "@/components/assessment/page-header";
 import { AssessmentCard } from "@/components/assessment/assessment-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/assessment/empty-state";
-import { CardSkeleton } from "@/components/assessment/skeletons";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { assessments as initial, type Assessment, type AssessmentStatus } from "@/lib/mock-data";
+import { assessments as initial, type Assessment } from "@/lib/mock-data";
 import { toast } from "sonner";
 
 export default function AssessmentsPage() {
   const [items, setItems] = useState<Assessment[]>(initial);
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<"all" | AssessmentStatus>("all");
-  const [loading, setLoading] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
@@ -30,15 +20,9 @@ export default function AssessmentsPage() {
   const filtered = useMemo(() => {
     return items.filter((a) => {
       const matchesQuery = a.name.toLowerCase().includes(query.toLowerCase());
-      const matchesStatus = status === "all" || a.status === status;
-      return matchesQuery && matchesStatus;
+      return matchesQuery;
     });
-  }, [items, query, status]);
-
-  const onDelete = (id: string) => {
-    setItems((s) => s.filter((a) => a.id !== id));
-    toast.success("Assessment deleted successfully");
-  };
+  }, [items, query]);
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,9 +64,16 @@ export default function AssessmentsPage() {
             </div>
           }
           actions={
-            <Button className="cursor-pointer font-bold" onClick={() => setIsCreateOpen(true)}>
-              <Plus className="mr-1.5 h-4 w-4" /> New Assessment
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" className="cursor-pointer font-bold border-green-600/20 text-green-700 hover:bg-green-50 hover:text-green-800" asChild>
+                <a href="/csv/Evacuation Center Master List.xlsx" download="Evacuation Center Master List.xlsx">
+                  <FileText className="mr-1.5 h-4 w-4" /> Download Master List (Excel)
+                </a>
+              </Button>
+              <Button className="cursor-pointer font-bold" onClick={() => setIsCreateOpen(true)}>
+                <Plus className="mr-1.5 h-4 w-4" /> New Assessment
+              </Button>
+            </div>
           }
         />
 
@@ -96,27 +87,9 @@ export default function AssessmentsPage() {
               className="h-9 pl-9 w-full bg-background"
             />
           </div>
-          <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
-            <SelectTrigger className="h-9 w-[160px] bg-background">
-              <Filter className="mr-1.5 h-3.5 w-3.5 text-muted-foreground" />
-              <SelectValue placeholder="All statuses" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="Completed">Completed</SelectItem>
-              <SelectItem value="Processing">Processing</SelectItem>
-              <SelectItem value="Failed">Failed</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <CardSkeleton key={i} />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
+        {filtered.length === 0 ? (
           <EmptyState
             icon={ClipboardList}
             title="No assessments found"
@@ -130,7 +103,7 @@ export default function AssessmentsPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((a) => (
-              <AssessmentCard key={a.id} a={a} onDelete={onDelete} />
+              <AssessmentCard key={a.id} a={a} />
             ))}
           </div>
         )}
