@@ -14,36 +14,36 @@ export default function Header() {
     <header className="bg-primary text-primary-foreground border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Logo className="w-14 h-14" />
-            <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <Logo className="w-14 h-14 flex-shrink-0" />
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight truncate">
                 DECM Cluster Information Management and Data Portal
               </h1>
-              <p className="text-xs sm:text-sm text-primary-foreground/85 font-medium flex items-center gap-1.5 mt-0.5">
+              <p className="text-xs sm:text-sm text-primary-foreground/85 font-medium flex items-center gap-1.5 mt-0.5 whitespace-nowrap">
                 <span>Vanuatu</span>
-                <span className="w-1 h-1 rounded-full bg-primary-foreground/35"></span>
-                <span>NDMO, IOM & Cluster Partners</span>
+                <span className="w-1 h-1 rounded-full bg-primary-foreground/35 flex-shrink-0"></span>
+                <span className="truncate">NDMO, IOM & Cluster Partners</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-6 self-start md:self-auto flex-wrap">
-            <div className="flex flex-col gap-1">
-              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold text-center">
+          <div className="flex items-center gap-6 self-start md:self-auto flex-shrink-0">
+            <div className="flex flex-col gap-1 flex-shrink-0">
+              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold text-center whitespace-nowrap">
                 Co-lead
               </span>
               <div className="flex items-center gap-2">
-                <div>
+                <div className="flex-shrink-0">
                   <Image
                     src="/nationaldisaster.jpeg"
                     alt="National Disaster"
                     width={60}
-                    height={20}
+                    height={40}
                     className="w-auto object-contain"
                   />
                 </div>
-                <div className="bg-white">
+                <div className="bg-white flex-shrink-0">
                   <Image
                     src="/iom.png"
                     alt="IOM"
@@ -55,11 +55,11 @@ export default function Header() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-1">
-              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold">
+            <div className="flex flex-col gap-1 flex-shrink-0">
+              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold whitespace-nowrap">
                 Supported by
               </span>
-              <div>
+              <div className="flex-shrink-0">
                 <Image
                   src="/australinaaid.png"
                   alt="Australian Aid"
