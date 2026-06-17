@@ -23,22 +23,30 @@ export default function AssessmentsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="border-0 sm:border border-border rounded-none sm:rounded-xl p-0 sm:p-5 bg-transparent sm:bg-muted/30 space-y-4">
-            <h3 className="text-xs font-bold text-muted-foreground">Mobile Survey Forms</h3>
+            <h3 className="text-xs font-bold text-muted-foreground">Downloadable Assessment Forms</h3>
             <p className="text-xs text-muted-foreground">
-              Assessments are configured using KoboToolbox. Scan the code on-site or use the web forms to submit data offline.
+              Download the official DECM Cluster assessment forms in PDF format for offline use and field surveys.
             </p>
             <div className="space-y-2">
               {[
-                "Village Rapid Assessment Form (V1.4)",
-                "Evacuation Centre Capacity Form (V2.1)",
-                "Post-Distribution Monitoring Checklist",
-                "Basic WASH Assessment Survey"
+                { name: "Evacuation Centre Assessment Form", path: "/assesments/0  Evacuation Centre Assessment Form.pdf" },
+                { name: "Damage Assessment Form (Community V2)", path: "/assesments/1 Damage Assessment Form_ Community_Assessment_form_V2.pdf" },
+                { name: "Rapid Assessment Form (Area Council)", path: "/assesments/2. Rapid Assessment Form- AreaCouncil_Assessment_Form.pdf" },
+                { name: "Displacement Tracking Matrix Form", path: "/assesments/3. Vanuatu Earthquake Displacement Tracking Matrix Form - Flow Monitoring.pdf" },
+                { name: "Displacement Profile - Phone Survey", path: "/assesments/4. Displacement Profile - Phone Survey.pdf" },
+                { name: "Baseline Village Assessment v1", path: "/assesments/5. IOM Vanuatu - Baseline Village Assessment v1.pdf" },
+                { name: "Service Monitoring Tool 2026", path: "/assesments/6. DECM Cluster - Service Monitoring Tool 2026.pdf" },
+                { name: "Durable Solution & Relocation Survey", path: "/assesments/7. Durable Solution &amp; Relocation Survey_Vanuatu.pdf" },
               ].map((form, idx) => (
                 <div key={idx} className="p-3 rounded-lg bg-card border border-border flex items-center justify-between text-xs font-bold text-card-foreground">
-                  <span>{form}</span>
-                  <button className="text-[10px] text-primary hover:underline font-extrabold cursor-pointer">
-                    Get XLSForm
-                  </button>
+                  <span className="truncate mr-2">{form.name}</span>
+                  <a 
+                    href={form.path} 
+                    download 
+                    className="text-[10px] text-primary hover:underline font-extrabold cursor-pointer whitespace-nowrap"
+                  >
+                    Download PDF
+                  </a>
                 </div>
               ))}
             </div>

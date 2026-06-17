@@ -1,26 +1,20 @@
 import React from "react";
+import Image from "next/image";
 
 export function Logo({ className = "w-10 h-10" }: { className?: string }) {
   return (
     <div
-      className={`relative flex items-center justify-center rounded-xl bg-primary text-white border border-border/20 ${className}`}
+      className={`relative flex items-center justify-center rounded-xl bg-white overflow-hidden border border-border/20 shadow-sm ${className}`}
     >
-      {/* Abstract Grid Icon */}
-      <svg
-        className="w-3/5 h-3/5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-        <circle cx="12" cy="7" r="1" className="fill-white animate-pulse" />
-      </svg>
-      {/* Decorative pulse ring */}
-      <span className="absolute -inset-0.5 rounded-xl border border-blue-400/30 animate-ping opacity-25"></span>
+      <Image
+        src="/decmlogo.jpeg"
+        alt="DECM Cluster Logo"
+        width={80}
+        height={80}
+        priority
+        className="w-full h-full object-contain p-1"
+      />
     </div>
   );
 }
+

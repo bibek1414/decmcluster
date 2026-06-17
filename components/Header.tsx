@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { Logo } from "@/components/ui/logo";
 
 export default function Header() {
@@ -27,9 +28,46 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 self-start md:self-auto">
-            <div className="px-3 py-1.5 rounded-full bg-primary-foreground/10 border border-primary-foreground/25 flex items-center gap-2 text-xs text-primary-foreground/90">
-              <span>Live Portal Database</span>
+          <div className="flex items-center gap-6 self-start md:self-auto flex-wrap">
+            <div className="flex flex-col gap-1">
+              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold text-center">
+                Co-lead
+              </span>
+              <div className="flex items-center gap-2">
+                <div>
+                  <Image
+                    src="/nationaldisaster.jpeg"
+                    alt="National Disaster"
+                    width={60}
+                    height={20}
+                    className="w-auto object-contain"
+                  />
+                </div>
+                <div className="bg-white">
+                  <Image
+                    src="/iom.png"
+                    alt="IOM"
+                    width={70}
+                    height={40}
+                    className="w-auto object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold">
+                Supported by
+              </span>
+              <div>
+                <Image
+                  src="/australinaaid.png"
+                  alt="Australian Aid"
+                  width={70}
+                  height={30}
+                  className="w-auto object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
