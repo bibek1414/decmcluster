@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,18 +19,21 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full  flex flex-col font-sans">
-        {/* Header Panel */}
-        <Header />
+        <Providers>
+          {/* Header Panel */}
+          <Header />
 
-        {/* Main Navigation */}
-        <Navigation />
+          {/* Main Navigation */}
+          <Navigation />
 
-        {/* Main Container */}
-        <main className="flex-grow">{children}</main>
+          {/* Main Container */}
+          <main className="flex-grow">{children}</main>
 
-        {/* Footer Panel */}
-        <Footer />
+          {/* Footer Panel */}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
 }
+
