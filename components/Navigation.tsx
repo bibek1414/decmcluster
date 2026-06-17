@@ -28,7 +28,7 @@ export default function Navigation() {
     { id: "home", label: "Home", icon: Home, path: "/" },
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { id: "mapping", label: "Mapping", icon: Map, path: "/mapping" },
-    { id: "assessments", label: "Assessment Tools", icon: ClipboardList, path: "/assessments" },
+    { id: "assessments", label: "Assessment Tools", icon: ClipboardList, path: isLoggedIn ? "/assement" : "/assessments" },
     { id: "reports", label: "Reports", icon: FileText, path: "/reports" },
     { id: "sops", label: "SOPs", icon: BookOpen, path: "/sops" },
     { id: "training", label: "Training", icon: GraduationCap, path: "/training" },

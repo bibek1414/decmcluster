@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("decm_auth_user", JSON.stringify(resolvedUser));
       }
 
-      router.push("/dashboard");
+      router.push("/assement");
     },
   });
 
