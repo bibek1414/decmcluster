@@ -102,7 +102,7 @@ export default function LoginCard() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="user@organization.org"
+                  placeholder="decmcluster@gmail.com"
                   className="w-full pl-9 h-10 rounded-xl border border-input bg-background text-foreground"
                 />
               </div>
@@ -168,7 +168,7 @@ export default function LoginCard() {
 
       {!isLoggedIn && (
         <div className="mt-4 text-[11px] text-muted-foreground leading-normal bg-muted p-2.5 rounded-lg border border-border">
-          <strong>Note:</strong> Select a role above to simulate different level views. This portal uses role-based access for NDMO & partners.
+          <strong>Note:</strong> For demo use: <b>decmcluster@gmail.com</b> / <b>Decm@321</b>. Select a role above to simulate different level views.
         </div>
       )}
     </div>
