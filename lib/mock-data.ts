@@ -15,7 +15,7 @@ export interface Assessment {
 export const assessments: Assessment[] = [
   {
     id: "asm_01",
-    name: "1. Evaluation Centre Data",
+    name: "1. Evacuation Centre Data",
     status: "Completed",
     createdAt: "2026-06-10T10:30:00Z",
     totalRecords: 1284,
@@ -26,7 +26,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_02",
-    name: "2. Evaluation Centre Data",
+    name: "2. Community Level Damage Assessment Data",
     status: "Completed",
     createdAt: "2026-06-14T08:15:00Z",
     totalRecords: 526,
@@ -37,7 +37,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_03",
-    name: "3. Evaluation Centre Data",
+    name: "3. Area Council Rapid Assessment Data",
     status: "Completed",
     createdAt: "2026-06-08T14:00:00Z",
     totalRecords: 3290,
@@ -48,7 +48,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_04",
-    name: "4. Evaluation Centre Data",
+    name: "4. Displacement Tracking Matrix Data",
     status: "Completed",
     createdAt: "2026-06-12T09:45:00Z",
     totalRecords: 0,
@@ -59,7 +59,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_05",
-    name: "5. Evaluation Centre Data",
+    name: "5. Displacement Profile Data",
     status: "Completed",
     createdAt: "2026-06-02T16:20:00Z",
     totalRecords: 842,
@@ -70,7 +70,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_06",
-    name: "6. Evaluation Centre Data",
+    name: "6. Baseline Village Assessment Data",
     status: "Completed",
     createdAt: "2026-06-15T11:00:00Z",
     totalRecords: 312,
@@ -81,7 +81,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_07",
-    name: "7. Evaluation Centre Data",
+    name: "7. Service Monitoring Tool Data",
     status: "Completed",
     createdAt: "2026-06-16T10:00:00Z",
     totalRecords: 150,
@@ -92,7 +92,7 @@ export const assessments: Assessment[] = [
   },
   {
     id: "asm_08",
-    name: "8. Evaluation Centre Data",
+    name: "8. Durable Solution & Relocation Data",
     status: "Completed",
     createdAt: "2026-06-17T09:00:00Z",
     totalRecords: 45,
