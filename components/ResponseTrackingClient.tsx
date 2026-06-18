@@ -16,27 +16,27 @@ export default function ResponseTrackingClient() {
 
   const trackingList = [
     {
-      title: "Sw Reporting Templates",
-      format: "TBA",
-      size: "—",
-      date: "TBA",
-      path: "#",
-      isAvailable: false,
+      title: "5w Reporting Templates",
+      format: "XLSX",
+      size: "61 KB",
+      date: "June 18, 2026",
+      path: "/response-tracking/Response%20Tracking%20Tool%205W%20DECM%20Cluster.xlsx",
+      isAvailable: true,
     },
     {
       title: "Situation Report Templates",
       format: "PPTX",
       size: "4.8 MB",
       date: "June 12, 2026",
-      path: "/response-tracking/Displacement-Evacuation-Center-Management-DECM-Cluster Sitrep Template.pptx",
+      path: "/response-tracking/Displacement-Evacuation-Center-Management-DECM-Cluster%20Sitrep%20Template.pptx",
       isAvailable: true,
     },
     {
-      title: "SW Response data",
+      title: "5W Response data",
       format: "XLSX",
       size: "60 KB",
       date: "June 12, 2026",
-      path: "/response-tracking/Response Tracking Tool 5W DECM Cluster.xlsx",
+      path: "/response-tracking/Response%20Tracking%20Tool%205W%20DECM%20Cluster.xlsx",
       isAvailable: true,
     },
   ];
