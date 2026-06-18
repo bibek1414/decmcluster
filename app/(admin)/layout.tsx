@@ -3,7 +3,14 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ClipboardList, Home, LogOut, Menu, X, ShieldAlert } from "lucide-react";
+import {
+  ClipboardList,
+  Home,
+  LogOut,
+  Menu,
+  X,
+  ShieldAlert,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
@@ -29,7 +36,9 @@ export default function AdminLayout({
       <div className="flex flex-col items-center justify-center min-h-[400px] py-24 animate-fadeIn">
         <div className="flex flex-col items-center gap-3 bg-card border border-border p-8 rounded-2xl shadow-sm">
           <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-          <p className="text-xs text-muted-foreground font-semibold">Verifying secure session...</p>
+          <p className="text-xs text-muted-foreground font-semibold">
+            Verifying secure session...
+          </p>
         </div>
       </div>
     );
@@ -42,7 +51,7 @@ export default function AdminLayout({
   const menuItems = [
     {
       id: "assessments",
-      label: "Assessment Tools",
+      label: "Assessment Database",
       icon: ClipboardList,
       path: "/assement",
       active: pathname === "/assement" || pathname?.startsWith("/assement/"),
