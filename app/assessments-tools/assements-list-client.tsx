@@ -4,7 +4,7 @@ import React from "react";
 import { ClipboardList } from "lucide-react";
 import { useAssessments } from "@/hooks/use-assessments";
 import { siteConfig } from "@/config/site";
-import { EmptyState } from "@/components/assessment/empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 
 export default function AssessmentsListClient() {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");

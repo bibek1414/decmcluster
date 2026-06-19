@@ -1,8 +1,8 @@
-import Hero from "@/components/Hero";
-import OverviewSection from "@/components/OverviewSection";
+import Hero from "@/components/layout/hero";
+import OverviewSection from "@/components/dashboard/overview-section";
 import LoginCard from "@/components/auth/login-card";
-import DashboardSection from "@/components/DashboardSection";
-import ModulesGrid from "@/components/ModulesGrid";
+import DashboardSection from "@/components/dashboard/dashboard-section";
+import ModulesGrid from "@/components/dashboard/modules-grid";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

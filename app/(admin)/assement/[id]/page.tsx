@@ -4,10 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Calendar, Database, Download, FileSpreadsheet, Trash2, User, Clock } from "lucide-react";
-import { PageHeader } from "@/components/assessment/page-header";
+import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { StatusBadge } from "@/components/assessment/status-badge";
+import { StatusBadge } from "@/components/(admin)/assessment/status-badge";
 import { getAssessment } from "@/lib/mock-data";
 import { toast } from "sonner";
 

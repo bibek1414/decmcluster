@@ -4,8 +4,8 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { PageHeader } from "@/components/assessment/page-header";
-import { CsvViewer } from "@/components/assessment/csv-viewer";
+import { PageHeader } from "@/components/(admin)/assessment/page-header";
+import { CsvViewer } from "@/components/(admin)/assessment/csv-viewer";
 import { Button } from "@/components/ui/button";
 import { generateCsvData, getAssessment } from "@/lib/mock-data";
 

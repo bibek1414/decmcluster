@@ -2,11 +2,11 @@
 
 import React, { useMemo, useState } from "react";
 import { Plus, Search, ClipboardList, X, FileText } from "lucide-react";
-import { PageHeader } from "@/components/assessment/page-header";
-import { AssessmentCard } from "@/components/assessment/assessment-card";
+import { PageHeader } from "@/components/(admin)/assessment/page-header";
+import { AssessmentCard } from "@/components/(admin)/assessment/assessment-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { EmptyState } from "@/components/assessment/empty-state";
+import { EmptyState } from "@/components/shared/empty-state";
 import { assessments as initial, type Assessment } from "@/lib/mock-data";
 import { toast } from "sonner";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Download, FileSpreadsheet } from "lucide-react";
+import { FileText, FileSpreadsheet } from "lucide-react";
 import { type Assessment } from "@/lib/mock-data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

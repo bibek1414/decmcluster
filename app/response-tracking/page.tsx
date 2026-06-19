@@ -1,4 +1,4 @@
-import ResponseTrackingClient from "@/components/ResponseTrackingClient";
+import ResponseTrackingClient from "@/components/response-tracking/response-tracking-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

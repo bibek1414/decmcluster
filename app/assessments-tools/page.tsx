@@ -1,7 +1,7 @@
 import { ClipboardList, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
-import AssessmentsListClient from "./AssessmentsListClient";
+import AssessmentsListClient from "./assements-list-client";
 
 export const metadata: Metadata = {
   title: "Assessment Tools — DECM Cluster Vanuatu",
