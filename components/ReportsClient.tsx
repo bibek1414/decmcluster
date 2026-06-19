@@ -1,23 +1,40 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileText, Download } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useReports } from "@/hooks/useReports";
+import { siteConfig } from "@/config/site";
 
 export default function ReportsClient() {
   const [searchQuery, setSearchQuery] = useState("");
+  const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+  const { data: reports, isLoading, error } = useReports();
 
-  const reportsList = [
-    { title: "Humanitarian Standards", size: "1.8 MB", date: "June 17, 2026", path: "/CAMP-EN_0.pdf" },
-    { title: "DECM Monthly Displacement Situation Report (June 2026)", size: "2.4 MB", date: "June 12, 2026", path: "#" },
-    { title: "Vanuatu Evacuation Centre Audit & Wash Quality Index (Q2)", size: "4.8 MB", date: "May 28, 2026", path: "#" },
-    { title: "TC Harold Displacement Longitudinal Study - 6 Years On", size: "12.1 MB", date: "April 15, 2026", path: "#" },
-    { title: "Standardized Shelter Kit Distribution Audit Summary", size: "1.1 MB", date: "March 02, 2026", path: "#" }
-  ];
+  const getFileUrl = (urlPath?: string | null) => {
+    if (!urlPath) return "";
+    if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) {
+      return urlPath;
+    }
+    return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
+  };
 
-  const filteredReports = reportsList.filter(rep =>
-    rep.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const formatDate = (dateStr: string) => {
+    try {
+      const date = new Date(dateStr);
+      return new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
+  const filteredReports = (reports || []).filter((rep) =>
+    rep.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -27,17 +44,23 @@ export default function ReportsClient() {
           <FileText className="w-6 h-6" />
         </div>
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-primary">Situation Reports & Publications</h2>
-          <p className="text-xs text-muted-foreground mt-1">Download monthly sitreps and displacement trackers</p>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-primary">
+            Situation Reports & Publications
+          </h2>
+          <p className="text-xs text-muted-foreground mt-1">
+            Download monthly sitreps and displacement trackers
+          </p>
         </div>
       </div>
 
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-          <h3 className="text-xs font-bold text-muted-foreground">Available Publications</h3>
+          <h3 className="text-xs font-bold text-muted-foreground">
+            Available Publications
+          </h3>
           <div className="flex gap-2">
-            <Input 
-              type="text" 
+            <Input
+              type="text"
               placeholder="Search reports..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -46,27 +69,58 @@ export default function ReportsClient() {
           </div>
         </div>
 
-        <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
-          {filteredReports.length > 0 ? (
-            filteredReports.map((rep, idx) => (
-              <div key={idx} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-muted/30 transition-colors">
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-foreground">{rep.title}</h4>
-                  <p className="text-[10px] text-muted-foreground mt-1">Published: {rep.date} | Size: {rep.size}</p>
+        {isLoading ? (
+          <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 h-[72px]"
+              >
+                <div className="space-y-2 w-2/3">
+                  <div className="h-4 bg-muted rounded w-3/4" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
                 </div>
-                <Button variant="outline" size="sm" className="shrink-0 cursor-pointer" asChild>
-                  <a href={rep.path} download={rep.title}>
+                <div className="h-8 bg-muted rounded w-28 shrink-0" />
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center border border-red-200/50 bg-red-50/50 text-red-700 text-xs rounded-xl font-medium dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-400">
+            Failed to load reports: {(error as Error).message}
+          </div>
+        ) : filteredReports.length > 0 ? (
+          <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
+            {filteredReports.map((rep) => (
+              <div
+                key={rep.id}
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-muted/30 transition-colors"
+              >
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-foreground">
+                    {rep.name}
+                  </h4>
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    Published: {formatDate(rep.created_at)}
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0 cursor-pointer font-bold"
+                  asChild
+                >
+                  <a href={getFileUrl(rep.file)} download={rep.name}>
                     Download PDF
                   </a>
                 </Button>
               </div>
-            ))
-          ) : (
-            <div className="p-8 text-center text-muted-foreground text-xs">
-              No reports match your search criteria.
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
+            No reports match your search criteria.
+          </div>
+        )}
       </div>
     </div>
   );
