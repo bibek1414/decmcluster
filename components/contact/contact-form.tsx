@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Mail, Phone, User, Send, CheckCircle2 } from "lucide-react";
-import { useContactMutation } from "@/hooks/useContact";
+import { useContactMutation } from "@/hooks/use-contact";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";

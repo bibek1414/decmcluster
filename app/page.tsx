@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import OverviewSection from "@/components/OverviewSection";
-import LoginCard from "@/components/LoginCard";
+import LoginCard from "@/components/auth/login-card";
 import DashboardSection from "@/components/DashboardSection";
 import ModulesGrid from "@/components/ModulesGrid";
 import type { Metadata } from "next";

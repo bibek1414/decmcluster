@@ -11,7 +11,7 @@ import {
   X,
   ShieldAlert,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 

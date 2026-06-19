@@ -1,4 +1,4 @@
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { contactService, ContactPayload } from "@/services/contact";
 
 export function useContactMutation() {

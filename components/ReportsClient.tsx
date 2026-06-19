@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useReports } from "@/hooks/useReports";
+import { useReports } from "@/hooks/use-reports";
 import { siteConfig } from "@/config/site";
 
 export default function ReportsClient() {

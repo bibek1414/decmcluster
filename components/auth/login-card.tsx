@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Lock, Unlock, User, CheckCircle2, ShieldAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginCard() {
   const { user, isLoggedIn, isLoading: isAuthLoading, loginMutation, logout } = useAuth();
@@ -152,4 +152,3 @@ export default function LoginCard() {
     </div>
   );
 }
-

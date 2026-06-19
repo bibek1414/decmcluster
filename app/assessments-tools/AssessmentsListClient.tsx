@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ClipboardList } from "lucide-react";
-import { useAssessments } from "@/hooks/useAssessments";
+import { useAssessments } from "@/hooks/use-assessments";
 import { siteConfig } from "@/config/site";
 import { EmptyState } from "@/components/assessment/empty-state";
 

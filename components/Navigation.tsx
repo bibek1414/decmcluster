@@ -19,7 +19,7 @@ import {
   ChevronDown,
   User as UserIcon,
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
