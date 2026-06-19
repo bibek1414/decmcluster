@@ -10,41 +10,31 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useResponseTracking } from "@/hooks/use-response-tracking";
+import { useDebounce } from "@/hooks/use-debounce";
+import { siteConfig } from "@/config/site";
 
 export default function ResponseTrackingClient() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 300);
+  const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+  const { data: trackingList, isLoading, error } = useResponseTracking(debouncedSearch);
 
-  const trackingList = [
-    {
-      title: "5w Reporting Templates",
-      format: "XLSX",
-      size: "61 KB",
-      date: "June 18, 2026",
-      path: "/response-tracking/Response%20Tracking%20Tool%205W%20DECM%20Cluster.xlsx",
-      isAvailable: true,
-    },
-    {
-      title: "Situation Report Templates",
-      format: "PPTX",
-      size: "4.8 MB",
-      date: "June 12, 2026",
-      path: "/response-tracking/Displacement-Evacuation-Center-Management-DECM-Cluster%20Sitrep%20Template.pptx",
-      isAvailable: true,
-    },
-    {
-      title: "5W Response data",
-      format: "XLSX",
-      size: "60 KB",
-      date: "June 12, 2026",
-      path: "/response-tracking/Response%20Tracking%20Tool%205W%20DECM%20Cluster.xlsx",
-      isAvailable: true,
-    },
-  ];
+  const getFileExtension = (urlPath: string): string => {
+    if (!urlPath) return "FILE";
+    const parts = urlPath.split(".");
+    const ext = parts[parts.length - 1];
+    if (!ext) return "FILE";
+    const cleanExt = ext.split(/[?#]/)[0].toUpperCase();
+    return cleanExt;
+  };
 
   const getFormatIcon = (format: string) => {
     switch (format.toUpperCase()) {
+      case "XLS":
       case "XLSX":
         return FileSpreadsheet;
+      case "PPT":
       case "PPTX":
         return BarChart3;
       default:
@@ -52,9 +42,28 @@ export default function ResponseTrackingClient() {
     }
   };
 
-  const filteredList = trackingList.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const getFileUrl = (urlPath?: string | null) => {
+    if (!urlPath) return "";
+    if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) {
+      return urlPath;
+    }
+    return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
+  };
+
+  const formatDate = (dateStr: string) => {
+    try {
+      const date = new Date(dateStr);
+      return new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }).format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
+  const items = trackingList || [];
 
   return (
     <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
@@ -84,56 +93,63 @@ export default function ResponseTrackingClient() {
           </div>
         </div>
 
-        <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
-          {filteredList.length > 0 ? (
-            filteredList.map((item, idx) => {
-              const Icon = getFormatIcon(item.format);
+        {isLoading ? (
+          <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 h-[72px]"
+              >
+                <div className="space-y-2 w-2/3">
+                  <div className="h-4 bg-muted rounded w-3/4" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
+                </div>
+                <div className="h-8 bg-muted rounded w-28 shrink-0" />
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center border border-red-200/50 bg-red-50/50 text-red-700 text-xs rounded-xl font-medium dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-400">
+            Failed to load response tracking data: {(error as Error).message}
+          </div>
+        ) : items.length > 0 ? (
+          <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
+            {items.map((item) => {
+              const format = getFileExtension(item.file);
+              const Icon = getFormatIcon(format);
               return (
                 <div
-                  key={idx}
+                  key={item.id}
                   className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-muted/30 transition-colors"
                 >
                   <div className="flex items-start gap-3">
-                    <div
-                      className={item.isAvailable
-                        ? "p-2.5 rounded-xl border mt-0.5 bg-primary/10 border-primary/20 text-primary"
-                        : "p-2.5 rounded-xl border mt-0.5 bg-muted border-border text-muted-foreground"
-                      }
-                    >
+                    <div className="p-2.5 rounded-xl border mt-0.5 bg-primary/10 border-primary/20 text-primary">
                       <Icon className="w-4 h-4" />
                     </div>
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-foreground">
-                        {item.title}
+                        {item.name}
                       </h4>
                       <p className="text-[10px] text-muted-foreground mt-1">
-                        {item.isAvailable
-                          ? `Updated: ${item.date} | Size: ${item.size}`
-                          : `Status: TBA`}
+                        Updated: {formatDate(item.updated_at)}
                       </p>
                     </div>
                   </div>
-                  {item.isAvailable ? (
-                    <Button asChild variant="outline" size="sm" className="shrink-0 cursor-pointer">
-                      <a href={item.path} download className="flex items-center gap-1.5">
-                        <Download className="w-3.5 h-3.5" />
-                        Download {item.format}
-                      </a>
-                    </Button>
-                  ) : (
-                    <Button variant="ghost" size="sm" disabled className="shrink-0 text-[10px] italic">
-                      TBA
-                    </Button>
-                  )}
+                  <Button asChild variant="outline" size="sm" className="shrink-0 cursor-pointer font-bold">
+                    <a href={getFileUrl(item.file)} download className="flex items-center gap-1.5">
+                      <Download className="w-3.5 h-3.5" />
+                      Download {format}
+                    </a>
+                  </Button>
                 </div>
               );
-            })
-          ) : (
-            <div className="p-8 text-center text-muted-foreground text-xs">
-              No templates or tracking tools match your search criteria.
-            </div>
-          )}
-        </div>
+            })}
+          </div>
+        ) : (
+          <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
+            No templates or tracking tools match your search criteria.
+          </div>
+        )}
       </div>
     </div>
   );

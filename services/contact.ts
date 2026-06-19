@@ -1,11 +1,5 @@
 import { siteConfig } from "@/config/site";
-
-export interface ContactPayload {
-  full_name: string;
-  email?: string;
-  phone: string;
-  message: string;
-}
+import { ContactPayload } from "@/types/contact";
 
 export const contactService = {
   submit: async (payload: ContactPayload): Promise<any> => {

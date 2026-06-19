@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { reportService, ReportData } from "@/services/report";
+import { reportService } from "@/services/report";
+import { ReportData } from "@/types/report";
 
 export function useReports() {
   return useQuery<ReportData[]>({

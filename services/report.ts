@@ -1,12 +1,5 @@
 import { siteConfig } from "@/config/site";
-
-export interface ReportData {
-  id: number;
-  name: string;
-  file: string;
-  created_at: string;
-  updated_at: string;
-}
+import { ReportData } from "@/types/report";
 
 export const reportService = {
   list: async (): Promise<ReportData[]> => {

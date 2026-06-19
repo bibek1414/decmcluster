@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { assessmentService, AssessmentData } from "@/services/assessment";
+import { assessmentService } from "@/services/assessment";
+import { AssessmentData } from "@/types/assessment";
 
 export function useAssessments() {
   return useQuery<AssessmentData[]>({
