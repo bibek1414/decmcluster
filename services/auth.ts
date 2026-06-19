@@ -15,22 +15,6 @@ export class ApiError extends Error {
 
 export const authService = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    // START: STATIC FRONTEND LOGIN (FOR TESTING)
-    // To enable real backend, comment out this block
-    if (data.email === "decmcluster@gmail.com" && data.password === "Decm@321") {
-      // Simulate network delay
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      
-      return {
-        token: "static_mock_token_for_decm_cluster",
-        user: {
-          username: "DECM Cluster Admin",
-          email: "decmcluster@gmail.com",
-          role: data.role || "Admin",
-        },
-      } as LoginResponse;
-    }
-    // END: STATIC FRONTEND LOGIN
 
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const response = await fetch(`${baseUrl}/api/account/login/`, {
