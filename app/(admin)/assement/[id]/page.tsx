@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusBadge } from "@/components/(admin)/assessment/status-badge";
 import { getAssessment } from "@/lib/mock-data";
+import { getFilesForAssessment, stringifyCsv } from "@/lib/csv-storage";
 import { toast } from "sonner";
 
 export default function AssessmentDetailPage() {
@@ -47,7 +48,35 @@ export default function AssessmentDetailPage() {
   };
 
   const handleDownload = () => {
-    toast.success("CSV download started");
+    if (typeof window === "undefined") return;
+
+    const files = getFilesForAssessment(id);
+    if (files.length === 0) {
+      toast.error("No data versions available to download.");
+      return;
+    }
+
+    // Sort by createdAt descending to get the latest file version
+    const latestFile = [...files].sort((x, y) => 
+      new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
+    )[0];
+
+    try {
+      const csvContent = stringifyCsv(latestFile.headers, latestFile.rows);
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", latestFile.name);
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success(`Downloaded latest CSV: ${latestFile.name}`);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate CSV download");
+    }
   };
 
   return (
