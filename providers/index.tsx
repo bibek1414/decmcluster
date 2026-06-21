@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { QueryProvider } from "./QueryProvider";
-import { AuthProvider } from "./AuthProvider";
+import { QueryProvider } from "./query-provider";
+import { AuthProvider } from "./auth-provider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -11,5 +11,5 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     </QueryProvider>
   );
 }
-export { AuthProvider } from "./AuthProvider";
-export { QueryProvider } from "./QueryProvider";
+export { AuthProvider } from "./auth-provider";
+export { QueryProvider } from "./query-provider";

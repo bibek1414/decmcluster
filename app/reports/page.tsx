@@ -1,4 +1,4 @@
-import ReportsClient from "@/components/ReportsClient";
+import ReportsClient from "@/components/reports/reports-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -4,13 +4,12 @@ import React, { useState } from "react";
 import { Lock, Unlock, User, CheckCircle2, ShieldAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginCard() {
   const { user, isLoggedIn, isLoading: isAuthLoading, loginMutation, logout } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("Viewer");
   const [validationError, setValidationError] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
@@ -25,7 +24,7 @@ export default function LoginCard() {
     }
 
     setValidationError("");
-    loginMutation.mutate({ email: username, password, role });
+    loginMutation.mutate({ email: username, password });
   };
 
   const handleLogout = () => {
@@ -76,7 +75,7 @@ export default function LoginCard() {
                   Logged In As
                 </p>
                 <p className="text-sm font-extrabold text-primary">{user?.username || "user@decmvanuatu.org"}</p>
-                <p className="text-xs text-emerald-700 font-medium">Role: {user?.role || role}</p>
+                <p className="text-xs text-emerald-700 font-medium">Role: {user?.role || "Viewer"}</p>
               </div>
             </div>
             <div className="text-xs text-muted-foreground leading-relaxed bg-muted p-3 rounded-lg border border-border">
@@ -124,22 +123,6 @@ export default function LoginCard() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-muted-foreground mb-1">
-                Role (Simulated)
-              </label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-input focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none text-sm bg-background text-foreground transition-all"
-              >
-                <option value="Admin">Admin</option>
-                <option value="Information Manager">Information Manager</option>
-                <option value="Data Officer">Data Officer</option>
-                <option value="Partner User">Partner User</option>
-                <option value="Viewer">Viewer</option>
-              </select>
-            </div>
 
             {errorToShow && (
               <div className="flex items-center gap-1.5 text-xs text-rose-600 bg-rose-50 p-2 rounded-lg border border-rose-100">
@@ -166,12 +149,6 @@ export default function LoginCard() {
         )}
       </div>
 
-      {!isLoggedIn && (
-        <div className="mt-4 text-[11px] text-muted-foreground leading-normal bg-muted p-2.5 rounded-lg border border-border">
-          <strong>Note:</strong> For demo use: <b>decmcluster@gmail.com</b> / <b>Decm@321</b>. Select a role above to simulate different level views.
-        </div>
-      )}
     </div>
   );
 }
-

@@ -1,4 +1,4 @@
-import PartnersClient from "@/components/PartnersClient";
+import PartnersClient from "@/components/partners/partners-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

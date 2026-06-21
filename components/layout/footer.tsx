@@ -63,13 +63,22 @@ export default function Footer() {
                 For system inquiries, data validation questions, or user account requests, 
                 please reach out to the cluster coordinator.
               </p>
-              <div className="flex items-center gap-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border w-fit">
-                <Mail className="w-4 h-4 text-primary" />
+              <div className="flex flex-col sm:flex-row gap-2.5">
+                <div className="flex items-center gap-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border w-fit">
+                  <Mail className="w-4 h-4 text-primary" />
+                  <a 
+                    href="mailto:coord@decmvanuatu.org" 
+                    className="text-primary hover:underline font-semibold transition-colors duration-200"
+                  >
+                    coord@decmvanuatu.org
+                  </a>
+                </div>
                 <a 
-                  href="mailto:coord@decmvanuatu.org" 
-                  className="text-primary hover:underline font-semibold transition-colors duration-200"
+                  href="/contact" 
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline hover:text-primary/80 transition-colors py-2.5 px-3 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 w-fit cursor-pointer"
                 >
-                  coord@decmvanuatu.org
+                  <span>Contact Form</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
@@ -80,6 +89,7 @@ export default function Footer() {
         <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© 2026 DECM Cluster Vanuatu. All rights reserved.</p>
           <div className="flex gap-6">
+            <a href="/contact" className="hover:text-foreground transition-colors duration-200 font-semibold">Contact Us</a>
             <a href="#" className="hover:text-foreground transition-colors duration-200">Privacy Policy</a>
             <a href="#" className="hover:text-foreground transition-colors duration-200">Terms of Use</a>
             <a href="#" className="hover:text-foreground transition-colors duration-200">Data Guidelines</a>

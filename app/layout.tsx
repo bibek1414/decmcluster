@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import Providers from "@/components/Providers";
+import Header from "@/components/layout/header";
+import Navigation from "@/components/layout/navigation";
+import Footer from "@/components/layout/footer";
+import Providers from "@/providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,4 +36,3 @@ export default function RootLayout({
     </html>
   );
 }
-
