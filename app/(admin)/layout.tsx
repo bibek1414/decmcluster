@@ -51,7 +51,7 @@ export default function AdminLayout({
   const menuItems = [
     {
       id: "assessments",
-      label: "Assessment Database",
+      label: " Database",
       icon: ClipboardList,
       path: "/assement",
       active: pathname === "/assement" || pathname?.startsWith("/assement/"),

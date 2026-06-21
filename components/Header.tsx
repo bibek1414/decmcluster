@@ -28,9 +28,9 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex items-center gap-6 self-start md:self-auto flex-shrink-0">
+          <div className="flex items-start gap-6 self-start md:self-auto flex-shrink-0 bg-white">
             <div className="flex flex-col gap-1 flex-shrink-0">
-              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold text-center whitespace-nowrap">
+              <span className="text-sm uppercase tracking-wider text-primary font-bold text-center whitespace-nowrap">
                 Co-lead
               </span>
               <div className="flex items-center gap-2">
@@ -56,7 +56,7 @@ export default function Header() {
             </div>
 
             <div className="flex flex-col gap-1 flex-shrink-0">
-              <span className="text-sm uppercase tracking-wider text-primary-foreground/75 font-bold whitespace-nowrap">
+              <span className="text-sm uppercase tracking-wider text-primary font-bold whitespace-nowrap">
                 Supported by
               </span>
               <div className="flex-shrink-0">

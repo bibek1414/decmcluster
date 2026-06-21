@@ -81,7 +81,7 @@ export default function ModulesGrid() {
       ],
     },
     {
-      title: "Project Updates",
+      title: "Project Updates / Meeting Minutes",
       desc: "Live tracker for field implementation, key milestones, and cluster tasks.",
       icon: Calendar,
       color: "border-t-amber-600 text-amber-600 dark:border-t-amber-500",
