@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FileText, Map, Search, Eye } from "lucide-react";
+import { Map, Search, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useMapCategories } from "@/hooks/use-map-categories";
 import { useMapRegistry } from "@/hooks/use-map-registry";
@@ -13,6 +13,16 @@ export default function MapRegistry() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(searchQuery, 300);
+
+  // Slugify helper to get URL friendly slugs from category names
+  const slugify = (text: string) => {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  };
 
   // Fetch categories list
   const { data: categoriesData } = useMapCategories();
@@ -34,7 +44,7 @@ export default function MapRegistry() {
   const mapsList = mapsData?.results || [];
 
   const activeCategoryName = activeCategorySlug
-    ? categories.find((c) => c.slug === activeCategorySlug)?.name || "Selected Category"
+    ? categories.find((c) => slugify(c.name) === activeCategorySlug)?.name || "Selected Category"
     : "All Categories";
 
   return (
@@ -75,19 +85,22 @@ export default function MapRegistry() {
               All Categories
             </button>
             {/* Dynamic Categories */}
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategorySlug(cat.slug)}
-                className={`px-4 py-2 text-left rounded-xl text-xs font-bold transition-all duration-150 whitespace-nowrap cursor-pointer border border-border/80 ${
-                  activeCategorySlug === cat.slug
-                    ? "bg-primary text-white border-primary"
-                    : "bg-white text-black hover:bg-neutral-50"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const slug = slugify(cat.name);
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategorySlug(slug)}
+                  className={`px-4 py-2 text-left rounded-xl text-xs font-bold transition-all duration-150 whitespace-nowrap cursor-pointer border border-border/80 ${
+                    activeCategorySlug === slug
+                      ? "bg-primary text-white border-primary"
+                      : "bg-white text-black hover:bg-neutral-50"
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -161,28 +174,30 @@ export default function MapRegistry() {
                         key={mapItem.id}
                         className="border border-border bg-card hover:bg-muted/10 hover:border-primary/20 transition-all duration-200 rounded-2xl overflow-hidden flex flex-col justify-between h-[340px] shadow-sm group"
                       >
-                        {/* Map Image Placeholder / Mock Topographic Preview */}
+                        {/* Map Image Thumbnail or SVG Fallback */}
                         <div className="h-40 bg-muted/50 border-b border-border/80 relative flex items-center justify-center overflow-hidden">
-                          {/* Topographic mock lines */}
-                          <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
-                            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                              <defs>
-                                <pattern id="previewGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="1" />
-                                </pattern>
-                              </defs>
-                              <rect width="100%" height="100%" fill="url(#previewGrid)" />
-                            </svg>
-                          </div>
-                          
-                          {/* Animated abstract mapping circles/shapes representing land outlines */}
-                          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                            <div className="w-32 h-32 rounded-full border border-current animate-pulse duration-4000 scale-75" />
-                            <div className="w-24 h-24 rounded-full border border-current animate-pulse duration-3000" />
-                            <div className="w-16 h-16 rounded-full border border-current animate-pulse duration-2000 scale-125" />
-                          </div>
-
-                          <Map className="w-8 h-8 text-primary/40 group-hover:scale-110 transition-transform duration-200" />
+                          {mapItem.image ? (
+                            <img
+                              src={mapItem.image}
+                              alt={mapItem.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <>
+                              {/* Topographic mock lines */}
+                              <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
+                                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                                  <defs>
+                                    <pattern id="previewGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="1" />
+                                    </pattern>
+                                  </defs>
+                                  <rect width="100%" height="100%" fill="url(#previewGrid)" />
+                                </svg>
+                              </div>
+                              <Map className="w-8 h-8 text-primary/40 group-hover:scale-110 transition-transform duration-200" />
+                            </>
+                          )}
 
                           {/* Category Badge on thumbnail top-right */}
                           {mapItem.category_name && (
@@ -202,13 +217,13 @@ export default function MapRegistry() {
                               Published: <span className="text-foreground">{formattedDate}</span>
                             </p>
                           </div>
-                          {mapItem.file && (
+                          {mapItem.image && (
                             <button
-                              onClick={() => window.open(mapItem.file, "_blank", "noopener,noreferrer")}
+                              onClick={() => window.open(mapItem.image, "_blank", "noopener,noreferrer")}
                               className="w-full py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer border-0 shadow-sm"
                             >
                               <Eye className="w-3.5 h-3.5" />
-                              <span>View PDF</span>
+                              <span>View Image</span>
                             </button>
                           )}
                         </div>
