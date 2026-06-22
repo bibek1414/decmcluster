@@ -13,6 +13,7 @@ import {
   FileText,
   BookOpen,
   FileSpreadsheet,
+  Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -140,6 +141,25 @@ export default function AdminLayout({
             >
               <FileSpreadsheet className="h-4 w-4 shrink-0" />
               <span>Situational Reports</span>
+            </Link>
+          </div>
+
+          {/* System Group */}
+          <div className="space-y-1.5">
+            <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+              System
+            </p>
+            <Link
+              href="/assement/users"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname === "/assement/users"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <Users className="h-4 w-4 shrink-0" />
+              <span>User Management</span>
             </Link>
           </div>
 

@@ -1,0 +1,382 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Plus, Search, Users, Trash2, X, Loader2, Eye, EyeOff } from "lucide-react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/use-auth";
+import { useAdminUsers } from "@/hooks/use-admin-users";
+import { useDebounce } from "@/hooks/use-debounce";
+import { userService } from "@/services/user";
+import { PageHeader } from "@/components/(admin)/assessment/page-header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Pagination } from "@/components/shared/pagination";
+import { EmptyState } from "@/components/shared/empty-state";
+import { toast } from "sonner";
+import { AlertDialog } from "@/components/ui/alert-dialog";
+
+export default function UsersClient() {
+  const { user, token } = useAuth();
+  const queryClient = useQueryClient();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const debouncedSearch = useDebounce(searchQuery, 300);
+
+  // Modal / Add form state
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("viewer");
+
+  // Delete State
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; email: string } | null>(null);
+
+  // Permission Flags
+  const isSuperAdmin = user?.role === "Superadmin";
+  const canAdd = isSuperAdmin;
+  const canDelete = isSuperAdmin;
+
+  // Reset page when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  // Fetch Users list
+  const { data, isLoading, isPlaceholderData, error } = useAdminUsers(page, token, debouncedSearch);
+  const usersList = data?.results || [];
+
+  // Create mutation
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      if (!firstName.trim()) throw new Error("First name is required");
+      if (!lastName.trim()) throw new Error("Last name is required");
+      if (!email.trim()) throw new Error("Email is required");
+      if (!password) throw new Error("Password is required");
+
+      const payload = {
+        email: email.trim(),
+        username: email.trim(), // Send email as username to satisfy standard serializer
+        password,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        role,
+      };
+
+      return userService.create(payload, token);
+    },
+    onSuccess: () => {
+      toast.success("User created successfully!");
+      setIsAddOpen(false);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+      setRole("viewer");
+      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to create user");
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return userService.delete(id, token);
+    },
+    onSuccess: () => {
+      toast.success("User deleted successfully!");
+      setDeleteTarget(null);
+      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to delete user");
+      setDeleteTarget(null);
+    },
+  });
+
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createMutation.mutate();
+  };
+
+  const handleDelete = (id: number, email: string) => {
+    setDeleteTarget({ id, email });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget.id);
+    }
+  };
+
+  const mapRoleLabel = (r: string) => {
+    const roleMap: Record<string, string> = {
+      superadmin: "Superadmin",
+      viewer: "Viewer",
+      data_enumerator: "Data Enumerator",
+      field_coordinator: "Field Coordinator",
+    };
+    return roleMap[r] || r;
+  };
+
+  return (
+    <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">
+      <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
+        <PageHeader
+          title="User Management"
+          description={
+            <div className="flex flex-col gap-0.5">
+              <span>View and manage users, roles, and access credentials</span>
+              {data && (
+                <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
+                  {data.count} total records
+                </span>
+              )}
+            </div>
+          }
+          actions={
+            canAdd && (
+              <Button onClick={() => setIsAddOpen(true)} className="cursor-pointer font-bold">
+                <Plus className="mr-1.5 h-4 w-4" /> Add User
+              </Button>
+            )
+          }
+        />
+
+        {/* Search Bar */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search users by name or email..."
+              className="h-9 pl-9 w-full bg-background"
+            />
+          </div>
+        </div>
+
+        {/* Loading / Error / Empty / List Grid */}
+        <div className="relative min-h-[200px]">
+          {isLoading || isPlaceholderData ? (
+            <div className="space-y-3 animate-pulse">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-14 bg-muted rounded-xl w-full" />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="p-8 text-center border border-red-200/50 bg-red-50/50 text-red-700 text-xs rounded-xl font-medium dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-400">
+              Failed to load users: {(error as Error).message}
+            </div>
+          ) : usersList.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title="No users found"
+              description="Register new staff or viewer roles to grant access to the system."
+              action={
+                canAdd ? (
+                  <Button onClick={() => setIsAddOpen(true)} className="cursor-pointer font-bold">
+                    <Plus className="mr-1.5 h-4 w-4" /> Add User
+                  </Button>
+                ) : undefined
+              }
+            />
+          ) : (
+            <div className="overflow-x-auto border border-border rounded-xl">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
+                    <th className="p-4 w-[35%]">Name</th>
+                    <th className="p-4 w-[35%]">Email</th>
+                    <th className="p-4 w-[15%]">Role</th>
+                    {canDelete && <th className="p-4 w-[15%] text-right">Actions</th>}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/60 text-xs">
+                  {usersList.map((item) => {
+                    const fullName = `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.username;
+                    return (
+                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
+                        <td className="p-4 font-bold text-foreground">
+                          <span className="truncate max-w-xs block">{fullName}</span>
+                        </td>
+                        <td className="p-4 text-muted-foreground font-semibold">
+                          {item.email || "—"}
+                        </td>
+                        <td className="p-4">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-primary text-white border border-primary capitalize">
+                            {mapRoleLabel(item.role)}
+                          </span>
+                        </td>
+                        {canDelete && (
+                          <td className="p-4 text-right">
+                            <div className="inline-flex items-center gap-2">
+                              {/* Prevent user from deleting themselves */}
+                              {user?.email !== item.email && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 px-2.5 font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-border/80 cursor-pointer gap-1"
+                                  onClick={() => handleDelete(item.id, item.email)}
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" /> Delete
+                                </Button>
+                              )}
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {data && (data.previous || data.next) && (
+          <Pagination
+            currentPage={page}
+            hasPrevious={!!data.previous}
+            hasNext={!!data.next}
+            onPageChange={(p) => setPage(p)}
+            isPlaceholderData={isPlaceholderData}
+          />
+        )}
+      </div>
+
+      {/* Add User Modal */}
+      {isAddOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-base font-bold text-foreground">Add New User</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsAddOpen(false)}
+                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <form onSubmit={handleAddSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-muted-foreground">First Name</label>
+                  <Input
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="John"
+                    className="w-full bg-background"
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-muted-foreground">Last Name</label>
+                  <Input
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Doe"
+                    className="w-full bg-background"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">Email Address</label>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="john.doe@gmail.com"
+                  className="w-full bg-background"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">Password</label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-background pr-10"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer focus:outline-none"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">User Role</label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full rounded-xl border border-input bg-background p-2.5 text-xs font-semibold focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer"
+                >
+                  <option value="superadmin">Superadmin</option>
+                  <option value="viewer">Viewer</option>
+                  <option value="data_enumerator">Data Enumerator</option>
+                  <option value="field_coordinator">Field Coordinator</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsAddOpen(false)}
+                  className="h-9 cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="h-9 font-bold cursor-pointer"
+                >
+                  {createMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Creating...
+                    </>
+                  ) : (
+                    "Create User"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <AlertDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete User Account"
+        description={`Are you sure you want to delete the user account for "${deleteTarget?.email}"? This action will permanently revoke their access.`}
+        isPending={deleteMutation.isPending}
+      />
+    </div>
+  );
+}
