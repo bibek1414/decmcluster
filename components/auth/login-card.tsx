@@ -79,7 +79,7 @@ export default function LoginCard() {
               </div>
             </div>
             <div className="text-xs text-muted-foreground leading-relaxed bg-muted p-3 rounded-lg border border-border">
-              Welcome back. You have access to {user?.role === "Admin" ? "all system panels, database configuration, and partner forms." : "viewing statistical data and maps."}
+              Welcome back. You have access to {user?.role === "Admin" || user?.role === "Superadmin" ? "all system panels, database configuration, and partner forms." : "viewing statistical data and maps."}
             </div>
             <Button
               onClick={handleLogout}

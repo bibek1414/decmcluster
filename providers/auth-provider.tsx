@@ -18,6 +18,35 @@ export interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const decodeJwt = (token: string) => {
+  try {
+    const base64Url = token.split(".")[1];
+    if (!base64Url) return null;
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error("Failed to decode JWT:", e);
+    return null;
+  }
+};
+
+const mapBackendRole = (role?: string): string => {
+  if (!role) return "Viewer";
+  const r = role.toLowerCase();
+  if (r === "superadmin") return "Superadmin";
+  if (r === "viewer") return "Viewer";
+  if (r === "data_enumerator") return "Data Enumerator";
+  if (r === "field_coordinator") return "Field Coordinator";
+  return role.charAt(0).toUpperCase() + role.slice(1).replace(/_/g, " ");
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -29,10 +58,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedToken = localStorage.getItem("decm_auth_token");
       const storedUser = localStorage.getItem("decm_auth_user");
 
-      if (storedToken && storedUser) {
+      if (storedToken) {
         setToken(storedToken);
         try {
-          setUser(JSON.parse(storedUser));
+          let parsedUser = storedUser ? JSON.parse(storedUser) : null;
+          const decoded = decodeJwt(storedToken);
+          if (decoded) {
+            parsedUser = {
+              username: decoded.username || parsedUser?.username || "user",
+              email: decoded.email || parsedUser?.email || "",
+              role: mapBackendRole(decoded.role || parsedUser?.role),
+            };
+            localStorage.setItem("decm_auth_user", JSON.stringify(parsedUser));
+          }
+          setUser(parsedUser);
         } catch (e) {
           console.error("Failed to parse stored user", e);
           localStorage.removeItem("decm_auth_token");
@@ -51,10 +90,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         throw new Error("No token returned from server");
       }
 
+      const decoded = decodeJwt(authToken);
       const resolvedUser: User = {
-        username: data.user?.username || data.username || credentials.email,
-        email: data.user?.email || data.email || credentials.email,
-        role: data.user?.role || data.role || credentials.role || "Viewer",
+        username: decoded?.username || data.user?.username || data.username || credentials.email,
+        email: decoded?.email || data.user?.email || data.email || credentials.email,
+        role: mapBackendRole(decoded?.role || data.user?.role || data.role || credentials.role),
       };
 
       setToken(authToken);
