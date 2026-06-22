@@ -10,6 +10,8 @@ import {
   Menu,
   X,
   ShieldAlert,
+  FileText,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -48,23 +50,6 @@ export default function AdminLayout({
     return null; // Redirects via useEffect
   }
 
-  const menuItems = [
-    {
-      id: "assessments",
-      label: " Database",
-      icon: ClipboardList,
-      path: "/assement",
-      active: pathname === "/assement" || pathname?.startsWith("/assement/"),
-    },
-    {
-      id: "portal",
-      label: "Go to Live Portal",
-      icon: Home,
-      path: "/dashboard",
-      active: false,
-    },
-  ];
-
   const handleLogout = () => {
     logout();
     router.push("/");
@@ -86,26 +71,57 @@ export default function AdminLayout({
           </div>
         </div>
 
-        {/* Navigation Items */}
-        <div className="space-y-1">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.id}
-                href={item.path}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  item.active
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                }`}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+        {/* Navigation Groups */}
+        <div className="space-y-5">
+          {/* Database Group */}
+          <div className="space-y-1.5">
+            <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+              Database
+            </p>
+            <Link
+              href="/assement"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname === "/assement" || (pathname?.startsWith("/assement/") && pathname !== "/assement/meeting-minutes" && pathname !== "/assement/sops")
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <ClipboardList className="h-4 w-4 shrink-0" />
+              <span>Displacement Data</span>
+            </Link>
+          </div>
+
+          {/* Coordination Group */}
+          <div className="space-y-1.5">
+            <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+              Coordination
+            </p>
+            <Link
+              href="/assement/meeting-minutes"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname === "/assement/meeting-minutes"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <FileText className="h-4 w-4 shrink-0" />
+              <span>Meeting Minutes</span>
+            </Link>
+          </div>
+
+          {/* Live Portal Link */}
+          <div className="pt-2 border-t border-border/40">
+            <Link
+              href="/dashboard"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent cursor-pointer"
+            >
+              <Home className="h-4 w-4 shrink-0" />
+              <span>Go to Live Portal</span>
+            </Link>
+          </div>
         </div>
       </div>
 
