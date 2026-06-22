@@ -68,19 +68,7 @@ export default function TrainingClient() {
         </div>
 
         <div className="relative">
-          {/* Active page change loading overlay */}
-          {isPlaceholderData && (
-            <div className="absolute inset-0 bg-background/30 backdrop-blur-[1px] flex items-center justify-center z-10 transition-opacity animate-fadeIn">
-              <div className="bg-card border border-border px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-2">
-                <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <span className="text-[10px] font-bold text-foreground">
-                  Updating...
-                </span>
-              </div>
-            </div>
-          )}
-
-          {isLoading ? (
+          {isLoading || isPlaceholderData ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-pulse">
               {[1, 2, 3, 4].map((i) => (
                 <div
