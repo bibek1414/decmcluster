@@ -109,6 +109,18 @@ export default function AdminLayout({
               <FileText className="h-4 w-4 shrink-0" />
               <span>Meeting Minutes</span>
             </Link>
+            <Link
+              href="/assement/sops"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname === "/assement/sops"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <BookOpen className="h-4 w-4 shrink-0" />
+              <span>SOPs</span>
+            </Link>
           </div>
 
           {/* Live Portal Link */}

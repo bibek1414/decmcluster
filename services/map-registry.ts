@@ -13,7 +13,7 @@ export const mapRegistryService = {
   },
   getMaps: async (page: number = 1, categorySlug?: string, search?: string): Promise<PaginatedResponse<MapData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    let url = `${baseUrl}/api/map/?page=${page}`;
+    let url = `${baseUrl}/api/map/?page=${page}&page_size=10`;
     if (categorySlug) {
       url += `&category=${encodeURIComponent(categorySlug)}`;
     }

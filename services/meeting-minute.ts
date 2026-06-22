@@ -5,7 +5,7 @@ import { PaginatedResponse } from "@/types/assessment-registry";
 export const meetingMinuteService = {
   list: async (page: number = 1, token: string | null, search?: string): Promise<PaginatedResponse<MeetingMinuteData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    let url = `${baseUrl}/api/meeting-minute/?page=${page}`;
+    let url = `${baseUrl}/api/meeting-minute/?page=${page}&page_size=10`;
     if (search && search.trim() !== "") {
       url += `&search=${encodeURIComponent(search)}`;
     }
