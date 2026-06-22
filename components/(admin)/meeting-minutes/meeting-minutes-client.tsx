@@ -14,6 +14,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { EmptyState } from "@/components/shared/empty-state";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 
 export default function MeetingMinutesClient() {
   const { user, token } = useAuth();
@@ -26,6 +27,7 @@ export default function MeetingMinutesClient() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadName, setUploadName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -77,10 +79,12 @@ export default function MeetingMinutesClient() {
     },
     onSuccess: () => {
       toast.success("Meeting minute deleted successfully!");
+      setDeleteTarget(null);
       queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to delete meeting minute");
+      setDeleteTarget(null);
     },
   });
 
@@ -90,8 +94,12 @@ export default function MeetingMinutesClient() {
   };
 
   const handleDelete = (id: number, name: string) => {
-    if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      deleteMutation.mutate(id);
+    setDeleteTarget({ id, name });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget.id);
     }
   };
 
@@ -185,9 +193,8 @@ export default function MeetingMinutesClient() {
 
                     return (
                       <tr key={item.id} className="hover:bg-muted/20 transition-colors">
-                        <td className="p-4 font-bold text-foreground flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-primary shrink-0" />
-                          <span className="truncate max-w-md">{item.name}</span>
+                        <td className="p-4 font-bold text-foreground">
+                          <span className="truncate max-w-md block">{item.name}</span>
                         </td>
                         <td className="p-4 text-muted-foreground font-semibold">{formattedDate}</td>
                         <td className="p-4 text-right">
@@ -297,6 +304,15 @@ export default function MeetingMinutesClient() {
           </div>
         </div>
       )}
+
+      <AlertDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Meeting Minute"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        isPending={deleteMutation.isPending}
+      />
     </div>
   );
 }

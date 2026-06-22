@@ -14,6 +14,7 @@ import { Pagination } from "@/components/shared/pagination";
 import { EmptyState } from "@/components/shared/empty-state";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 
 export default function SOPsClient() {
   const { user, token } = useAuth();
@@ -27,6 +28,7 @@ export default function SOPsClient() {
   const [uploadName, setUploadName] = useState("");
   const [uploadDescription, setUploadDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -83,10 +85,12 @@ export default function SOPsClient() {
     },
     onSuccess: () => {
       toast.success("SOP document deleted successfully!");
+      setDeleteTarget(null);
       queryClient.invalidateQueries({ queryKey: ["admin-sops-list"] });
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to delete SOP document");
+      setDeleteTarget(null);
     },
   });
 
@@ -96,8 +100,12 @@ export default function SOPsClient() {
   };
 
   const handleDelete = (id: number, name: string) => {
-    if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      deleteMutation.mutate(id);
+    setDeleteTarget({ id, name });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget.id);
     }
   };
 
@@ -192,9 +200,8 @@ export default function SOPsClient() {
 
                     return (
                       <tr key={item.id} className="hover:bg-muted/20 transition-colors">
-                        <td className="p-4 font-bold text-foreground flex items-center gap-2">
-                          <BookOpen className="w-4 h-4 text-primary shrink-0" />
-                          <span className="truncate max-w-xs">{item.name}</span>
+                        <td className="p-4 font-bold text-foreground">
+                          <span className="truncate max-w-xs block">{item.name}</span>
                         </td>
                         <td className="p-4 text-muted-foreground max-w-xs truncate font-medium">
                           {item.description || "—"}
@@ -318,6 +325,15 @@ export default function SOPsClient() {
           </div>
         </div>
       )}
+
+      <AlertDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete SOP Document"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        isPending={deleteMutation.isPending}
+      />
     </div>
   );
 }
