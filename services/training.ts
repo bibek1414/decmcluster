@@ -5,7 +5,7 @@ import { PaginatedResponse } from "@/types/assessment-registry";
 export const trainingService = {
   list: async (page: number = 1, search?: string): Promise<PaginatedResponse<TrainingData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    let url = `${baseUrl}/api/training/?page=${page}`;
+    let url = `${baseUrl}/api/training/?page=${page}&page_size=10`;
     if (search && search.trim() !== "") {
       url += `&search=${encodeURIComponent(search)}`;
     }
