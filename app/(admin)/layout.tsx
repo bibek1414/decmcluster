@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   FileText,
   BookOpen,
+  FileSpreadsheet,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -120,6 +121,25 @@ export default function AdminLayout({
             >
               <BookOpen className="h-4 w-4 shrink-0" />
               <span>SOPs</span>
+            </Link>
+          </div>
+
+          {/* Reports Group */}
+          <div className="space-y-1.5">
+            <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+              Reports
+            </p>
+            <Link
+              href="/assement/situational-reports"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname === "/assement/situational-reports"
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <FileSpreadsheet className="h-4 w-4 shrink-0" />
+              <span>Situational Reports</span>
             </Link>
           </div>
 
