@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 import AssessmentsListClient from "./assements-list-client";
 import AssessmentRegistryTable from "./assessment-registry-table";
+import { AssessmentStatsGrid } from "./assessment-stats-grid";
 
 export const metadata: Metadata = {
   title: "Assessment Tools — DECM Cluster Vanuatu",
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
 export default function AssessmentsPage() {
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
+      {/* 0. Statistics Grid */}
+      <AssessmentStatsGrid />
+
       {/* 1. Assessment Registry Section */}
       <AssessmentRegistryTable />
 
