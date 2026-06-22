@@ -12,6 +12,8 @@ import {
   Info,
   Layers,
 } from "lucide-react";
+import MapRegistry from "./map-registry";
+
 
 interface MapItem {
   id: string;
@@ -131,7 +133,8 @@ export default function MappingClient() {
   };
 
   return (
-    <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
+    <div className="space-y-8 flex flex-col">
+      <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
       {/* Header section */}
       <div className="border-b border-border pb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -659,6 +662,8 @@ export default function MappingClient() {
           </div>
         </div>
       </div>
+      </div>
+      <MapRegistry />
     </div>
   );
 }
