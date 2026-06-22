@@ -2,6 +2,7 @@ import { ClipboardList, FileSpreadsheet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 import AssessmentsListClient from "./assements-list-client";
+import AssessmentRegistryTable from "./assessment-registry-table";
 
 export const metadata: Metadata = {
   title: "Assessment Tools — DECM Cluster Vanuatu",
@@ -10,7 +11,11 @@ export const metadata: Metadata = {
 
 export default function AssessmentsPage() {
   return (
-    <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+    <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
+      {/* 1. Assessment Registry Section */}
+      <AssessmentRegistryTable />
+
+      {/* 2. Assessment Tools Section */}
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
         <div className="border-b border-border pb-4 flex items-center gap-3">
           <div className="p-3 rounded-xl bg-primary/10 text-primary">
