@@ -2,14 +2,12 @@
 
 import React, { useState } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
   Calendar,
   Layers,
   Activity,
 } from "lucide-react";
 import { useAssessmentRegistry } from "@/hooks/use-assessment-registry";
-import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/shared/pagination";
 import {
   Table,
   TableHeader,
@@ -44,18 +42,6 @@ export default function AssessmentRegistryTable() {
       .split(/[;,\r\n]+/)
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
-  };
-
-  const handlePrevPage = () => {
-    if (data?.previous) {
-      setPage((prev) => Math.max(prev - 1, 1));
-    }
-  };
-
-  const handleNextPage = () => {
-    if (data?.next) {
-      setPage((prev) => prev + 1);
-    }
   };
 
   return (
@@ -238,33 +224,13 @@ export default function AssessmentRegistryTable() {
 
         {/* Pagination Footer */}
         {data && (data.previous || data.next) && (
-          <div className="p-4 border-t border-border flex items-center justify-between bg-muted/10">
-            <div className="text-[11px] text-muted-foreground font-medium">
-              Page <strong className="text-foreground">{page}</strong>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePrevPage}
-                disabled={!data.previous || isPlaceholderData}
-                className="h-7 text-[11px] font-extrabold cursor-pointer flex items-center gap-1"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleNextPage}
-                disabled={!data.next || isPlaceholderData}
-                className="h-7 text-[11px] font-extrabold cursor-pointer flex items-center gap-1"
-              >
-                Next
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Button>
-            </div>
-          </div>
+          <Pagination
+            currentPage={page}
+            hasPrevious={!!data.previous}
+            hasNext={!!data.next}
+            onPageChange={(p) => setPage(p)}
+            isPlaceholderData={isPlaceholderData}
+          />
         )}
       </div>
     </div>
