@@ -21,6 +21,20 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
+const VALID_PATHS = [
+  "/",
+  "/dashboard",
+  "/mapping",
+  "/assessments-tools",
+  "/reports",
+  "/sops",
+  "/response-tracking",
+  "/training",
+  "/partners",
+  "/links",
+  "/contact"
+];
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -44,7 +58,9 @@ export default function Navigation() {
   }, []);
 
   const isAdminPath = pathname?.startsWith("/assement");
-  if (isAdminPath) return null;
+  const is404Path = pathname && !isAdminPath && !VALID_PATHS.includes(pathname);
+
+  if (isAdminPath || is404Path) return null;
 
   const navItems = [
     { id: "home", label: "Home", icon: Home, path: "/" },

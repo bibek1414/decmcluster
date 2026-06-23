@@ -5,11 +5,26 @@ import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/logo";
 import { Mail, ArrowRight } from "lucide-react";
 
+const VALID_PATHS = [
+  "/",
+  "/dashboard",
+  "/mapping",
+  "/assessments-tools",
+  "/reports",
+  "/sops",
+  "/response-tracking",
+  "/training",
+  "/partners",
+  "/links",
+  "/contact"
+];
+
 export default function Footer() {
   const pathname = usePathname();
   const isAdminPath = pathname?.startsWith("/assement");
+  const is404Path = pathname && !isAdminPath && !VALID_PATHS.includes(pathname);
 
-  if (isAdminPath) return null;
+  if (isAdminPath || is404Path) return null;
   return (
     <footer className="bg-card text-card-foreground border-t border-border mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
