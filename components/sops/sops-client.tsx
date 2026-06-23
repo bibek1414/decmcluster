@@ -7,17 +7,44 @@ import {
   ShieldCheck,
   Settings,
   ChevronRight,
+  Plus,
+  Trash2,
+  X,
+  Eye,
+  Loader2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useSops } from "@/hooks/use-sops";
 import { useDebounce } from "@/hooks/use-debounce";
 import { siteConfig } from "@/config/site";
 import { Pagination } from "@/components/shared/pagination";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/use-auth";
+import { sopService } from "@/services/sop";
+import { FileUpload } from "@/components/shared/file-upload";
+import { AlertDialog } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function SopsClient() {
+  const { user, token } = useAuth();
+  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(searchQuery, 300);
+
+  // Modal / Upload form state
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [uploadName, setUploadName] = useState("");
+  const [uploadDescription, setUploadDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
+
+  // Permission Flags
+  const isSuperAdmin = user?.role === "Superadmin";
+  const isViewer = user?.role === "Viewer";
+  const canAdd = isSuperAdmin || (!isViewer && !!user?.role);
+  const canDelete = isSuperAdmin;
 
   // Reset to first page when search query changes
   useEffect(() => {
@@ -29,6 +56,57 @@ export default function SopsClient() {
     page,
     debouncedSearch,
   );
+
+  // Upload mutation
+  const uploadMutation = useMutation({
+    mutationFn: async () => {
+      if (!uploadName.trim()) throw new Error("Please enter a name");
+      if (!selectedFile) throw new Error("Please select a file to upload");
+      return sopService.create(uploadName, uploadDescription, selectedFile, token);
+    },
+    onSuccess: () => {
+      toast.success("SOP document uploaded successfully!");
+      setIsUploadOpen(false);
+      setUploadName("");
+      setUploadDescription("");
+      setSelectedFile(null);
+      queryClient.invalidateQueries({ queryKey: ["sops-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to upload SOP document");
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return sopService.delete(id, token);
+    },
+    onSuccess: () => {
+      toast.success("SOP document deleted successfully!");
+      setDeleteTarget(null);
+      queryClient.invalidateQueries({ queryKey: ["sops-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to delete SOP document");
+      setDeleteTarget(null);
+    },
+  });
+
+  const handleUploadSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    uploadMutation.mutate();
+  };
+
+  const handleDelete = (id: number, name: string) => {
+    setDeleteTarget({ id, name });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      deleteMutation.mutate(deleteTarget.id);
+    }
+  };
 
   const getFileUrl = (urlPath?: string | null) => {
     if (!urlPath) return "";
@@ -80,14 +158,21 @@ export default function SopsClient() {
             </p>
           </div>
         </div>
-        {data && (
-          <span className="text-xs text-muted-foreground font-semibold bg-muted/50 border border-border px-3 py-1 rounded-full shrink-0 self-start sm:self-center">
-            Total SOPs:{" "}
-            <strong className="text-foreground font-extrabold">
-              {data.count}
-            </strong>
-          </span>
-        )}
+        <div className="flex flex-wrap items-center gap-3 shrink-0 self-start sm:self-center">
+          {data && (
+            <span className="text-xs text-muted-foreground font-semibold bg-muted/50 border border-border px-3 py-1 rounded-full shrink-0">
+              Total SOPs:{" "}
+              <strong className="text-foreground font-extrabold">
+                {data.count}
+              </strong>
+            </span>
+          )}
+          {canAdd && (
+            <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold h-9">
+              <Plus className="mr-1.5 h-4 w-4" /> Upload SOP
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-4">
@@ -147,11 +232,23 @@ export default function SopsClient() {
                   return (
                     <div
                       key={sop.id}
-                      className="p-5 rounded-xl border border-border  flex flex-col justify-between gap-4  transition-all duration-200 -sm"
+                      className="p-5 rounded-xl border border-border flex flex-col justify-between gap-4 transition-all duration-200 -sm relative"
                     >
                       <div>
-                        <div className="p-2.5 rounded-lg bg-card border border-border w-fit mb-3 text-primary">
-                          <Icon className="w-5 h-5" />
+                        <div className="flex justify-between items-start">
+                          <div className="p-2.5 rounded-lg bg-card border border-border w-fit mb-3 text-primary">
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          {canDelete && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-muted-foreground hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg transition-colors cursor-pointer"
+                              onClick={() => handleDelete(sop.id, sop.name)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
                         </div>
                         <h3 className="text-sm font-bold text-foreground">
                           {sop.name}
@@ -195,6 +292,91 @@ export default function SopsClient() {
           )}
         </div>
       </div>
+
+      {/* Upload Modal */}
+      {isUploadOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl text-left">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-base font-bold text-foreground">Upload SOP Document</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsUploadOpen(false)}
+                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <form onSubmit={handleUploadSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">Document Title</label>
+                <Input
+                  value={uploadName}
+                  onChange={(e) => setUploadName(e.target.value)}
+                  placeholder="e.g. Vanuatu Evacuation SOP 2026"
+                  className="w-full bg-background text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">Description</label>
+                <textarea
+                  value={uploadDescription}
+                  onChange={(e) => setUploadDescription(e.target.value)}
+                  placeholder="Summarize standard operating procedures and target sectors..."
+                  rows={3}
+                  className="w-full rounded-xl border border-input bg-background p-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">Select File (PDF, Excel, Word, etc.)</label>
+                <FileUpload
+                  selectedFile={selectedFile}
+                  onFileSelect={setSelectedFile}
+                  accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg"
+                  helperText="Drag & drop file here or click to browse"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsUploadOpen(false)}
+                  className="h-9 cursor-pointer text-xs"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={uploadMutation.isPending}
+                  className="h-9 font-bold cursor-pointer text-xs"
+                >
+                  {uploadMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
+                    </>
+                  ) : (
+                    "Upload"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <AlertDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        title="Delete SOP Document"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        isPending={deleteMutation.isPending}
+      />
     </div>
   );
 }

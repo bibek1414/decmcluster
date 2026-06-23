@@ -75,7 +75,7 @@ export const reportService = {
       }
     }
 
-    const res = await fetch(`${baseUrl}/api/report/admin/`, {
+    const res = await fetch(`${baseUrl}/api/report/`, {
       method: "POST",
       headers,
       body: formData,
@@ -109,7 +109,7 @@ export const reportService = {
       }
     }
 
-    const res = await fetch(`${baseUrl}/api/report/admin/${id}/`, {
+    const res = await fetch(`${baseUrl}/api/report/${id}/`, {
       method: "DELETE",
       headers,
     });

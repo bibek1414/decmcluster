@@ -69,7 +69,7 @@ export const sopService = {
       }
     }
 
-    const res = await fetch(`${baseUrl}/api/sop/admin/`, {
+    const res = await fetch(`${baseUrl}/api/sop/`, {
       method: "POST",
       headers,
       body: formData,
@@ -103,7 +103,7 @@ export const sopService = {
       }
     }
 
-    const res = await fetch(`${baseUrl}/api/sop/admin/${id}/`, {
+    const res = await fetch(`${baseUrl}/api/sop/${id}/`, {
       method: "DELETE",
       headers,
     });
