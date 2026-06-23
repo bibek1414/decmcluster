@@ -8,14 +8,14 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginCard() {
   const { user, isLoggedIn, isLoading: isAuthLoading, loginMutation, logout } = useAuth();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username) {
-      setValidationError("Please enter an email or username");
+    if (!email) {
+      setValidationError("Please enter your email");
       return;
     }
     if (!password) {
@@ -24,12 +24,12 @@ export default function LoginCard() {
     }
 
     setValidationError("");
-    loginMutation.mutate({ email: username, password });
+    loginMutation.mutate({ email, password });
   };
 
   const handleLogout = () => {
     logout();
-    setUsername("");
+    setEmail("");
     setPassword("");
   };
 
@@ -74,7 +74,7 @@ export default function LoginCard() {
                 <p className="text-xs text-muted-foreground font-semibold">
                   Logged In As
                 </p>
-                <p className="text-sm font-extrabold text-primary">{user?.username || "user@decmvanuatu.org"}</p>
+                <p className="text-sm font-extrabold text-primary">{user?.email || "user@decmvanuatu.org"}</p>
                 <p className="text-xs text-emerald-700 font-medium">Role: {user?.role || "Viewer"}</p>
               </div>
             </div>
@@ -93,14 +93,14 @@ export default function LoginCard() {
           <form onSubmit={handleLogin} className="space-y-3.5">
             <div>
               <label className="block text-xs font-bold text-muted-foreground mb-1">
-                Email / Username
+                Email Address
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="decmcluster@gmail.com"
                   className="w-full pl-9 h-10 rounded-xl border border-input bg-background text-foreground"
                 />

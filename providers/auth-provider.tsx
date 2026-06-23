@@ -65,7 +65,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const decoded = decodeJwt(storedToken);
           if (decoded) {
             parsedUser = {
-              username: decoded.username || parsedUser?.username || "user",
               email: decoded.email || parsedUser?.email || "",
               role: mapBackendRole(decoded.role || parsedUser?.role),
             };
@@ -92,7 +91,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const decoded = decodeJwt(authToken);
       const resolvedUser: User = {
-        username: decoded?.username || data.user?.username || data.username || credentials.email,
         email: decoded?.email || data.user?.email || data.email || credentials.email,
         role: mapBackendRole(decoded?.role || data.user?.role || data.role || credentials.role),
       };

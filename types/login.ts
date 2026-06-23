@@ -1,6 +1,5 @@
 export interface User {
-  username: string;
-  email?: string;
+  email: string;
   role: string;
 }
 
@@ -15,7 +14,6 @@ export interface LoginResponse {
   key?: string;
   access?: string;
   user?: User;
-  username?: string;
   role?: string;
   email?: string;
 }

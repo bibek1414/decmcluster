@@ -58,7 +58,6 @@ export default function UsersClient() {
 
       const payload = {
         email: email.trim(),
-        username: email.trim(), // Send email as username to satisfy standard serializer
         password,
         first_name: firstName.trim(),
         last_name: lastName.trim(),
@@ -198,7 +197,7 @@ export default function UsersClient() {
                 </thead>
                 <tbody className="divide-y divide-border/60 text-xs">
                   {usersList.map((item) => {
-                    const fullName = `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.username;
+                    const fullName = `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
                     return (
                       <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                         <td className="p-4 font-bold text-foreground">

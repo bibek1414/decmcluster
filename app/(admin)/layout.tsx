@@ -185,7 +185,7 @@ export default function AdminLayout({
           </div>
           <div className="min-w-0">
             <p className="truncate text-xs font-bold text-foreground">
-              {user?.username}
+              {user?.email}
             </p>
             <p className="truncate text-[10px] text-muted-foreground font-semibold">
               {user?.role}

@@ -121,7 +121,7 @@ export default function Navigation() {
                 >
                   <UserIcon className="w-3.5 h-3.5" />
                   <span>
-                    {user?.email || user?.username} ({user?.role})
+                    {user?.email} ({user?.role})
                   </span>
                   <ChevronDown className="w-3.5 h-3.5 text-primary-foreground/60" />
                 </button>
@@ -133,7 +133,7 @@ export default function Navigation() {
                         Signed in as
                       </p>
                       <p className="text-xs font-bold text-foreground truncate mt-0.5">
-                        {user?.email || user?.username}
+                        {user?.email}
                       </p>
                       <p className="text-[10px] text-muted-foreground mt-0.5">
                         Role: {user?.role}
@@ -213,7 +213,7 @@ export default function Navigation() {
               <div className="text-xs text-primary-foreground/75 font-semibold">
                 Logged in as:{" "}
                 <span className="text-primary-foreground font-bold">
-                  {user?.email || user?.username} ({user?.role})
+                  {user?.email} ({user?.role})
                 </span>
               </div>
               <Link
