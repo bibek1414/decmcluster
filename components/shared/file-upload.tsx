@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { UploadCloud, FileText, FileSpreadsheet, FileImage, File, X } from "lucide-react";
+import {
+  UploadCloud,
+  FileText,
+  FileSpreadsheet,
+  FileImage,
+  File,
+  X,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -64,7 +71,8 @@ export function FileUpload({
     const ext = fileName.split(".").pop()?.toLowerCase();
     if (ext === "pdf") return FileText;
     if (["xlsx", "xls", "csv"].includes(ext || "")) return FileSpreadsheet;
-    if (["png", "jpg", "jpeg", "svg", "webp"].includes(ext || "")) return FileImage;
+    if (["png", "jpg", "jpeg", "svg", "webp"].includes(ext || ""))
+      return FileImage;
     return File;
   };
 
@@ -90,11 +98,13 @@ export function FileUpload({
 
       {selectedFile ? (
         <div className="flex items-center gap-3 p-3.5 bg-muted/30 rounded-xl border border-border/80 w-full animate-fadeIn transition-all">
-          <div className="p-2.5 bg-background border border-border rounded-lg text-primary shadow-sm">
+          <div className="p-2.5 bg-background border border-border rounded-lg text-primary -sm">
             <FileIcon className="h-6 w-6" />
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-xs font-bold text-foreground truncate">{selectedFile.name}</p>
+            <p className="text-xs font-bold text-foreground truncate">
+              {selectedFile.name}
+            </p>
             <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">
               {formatFileSize(selectedFile.size)}
             </p>
@@ -118,14 +128,19 @@ export function FileUpload({
           onClick={onButtonClick}
           className={cn(
             "relative border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center gap-3 text-center cursor-pointer transition-all duration-300 bg-muted/10 hover:bg-muted/30 hover:border-muted-foreground/40",
-            isDragActive && "border-primary bg-primary/5 scale-[1.01]"
+            isDragActive && "border-primary bg-primary/5 scale-[1.01]",
           )}
         >
-          <div className={cn(
-            "p-3 rounded-full bg-background border border-border text-muted-foreground shadow-sm transition-all duration-300",
-            isDragActive && "scale-110 text-primary border-primary/30"
-          )}>
-            <UploadCloud className="h-6 w-6 animate-pulse" style={{ animationDuration: '3s' }} />
+          <div
+            className={cn(
+              "p-3 rounded-full bg-background border border-border text-muted-foreground -sm transition-all duration-300",
+              isDragActive && "scale-110 text-primary border-primary/30",
+            )}
+          >
+            <UploadCloud
+              className="h-6 w-6 animate-pulse"
+              style={{ animationDuration: "3s" }}
+            />
           </div>
           <div className="space-y-1">
             <p className="text-xs font-bold text-foreground">{helperText}</p>
