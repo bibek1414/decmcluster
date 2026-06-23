@@ -15,6 +15,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AlertDialog } from "@/components/ui/alert-dialog";
+import { FileUpload } from "@/components/shared/file-upload";
 
 export default function MeetingMinutesClient() {
   const { user, token } = useAuth();
@@ -269,11 +270,11 @@ export default function MeetingMinutesClient() {
 
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-muted-foreground">Select File (PDF, Excel, Word, etc.)</label>
-                <input
-                  type="file"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                  className="w-full text-xs text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border file:border-border file:text-xs file:font-bold file:bg-muted/50 file:text-foreground hover:file:bg-muted cursor-pointer"
+                <FileUpload
+                  selectedFile={selectedFile}
+                  onFileSelect={setSelectedFile}
                   accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg"
+                  helperText="Drag & drop file here or click to browse"
                 />
               </div>
 

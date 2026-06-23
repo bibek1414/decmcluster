@@ -20,7 +20,10 @@ export default function ReportsClient() {
   }, [debouncedSearch]);
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-  const { data, isLoading, isPlaceholderData, error } = useReports(page, debouncedSearch);
+  const { data, isLoading, isPlaceholderData, error } = useReports(
+    page,
+    debouncedSearch,
+  );
 
   const getFileUrl = (urlPath?: string | null) => {
     if (!urlPath) return "";
@@ -63,7 +66,10 @@ export default function ReportsClient() {
         </div>
         {data && (
           <span className="text-xs text-muted-foreground font-semibold bg-muted/50 border border-border px-3 py-1 rounded-full shrink-0 self-start sm:self-center">
-            Total Publications: <strong className="text-foreground font-extrabold">{data.count}</strong>
+            Total Publications:{" "}
+            <strong className="text-foreground font-extrabold">
+              {data.count}
+            </strong>
           </span>
         )}
       </div>
@@ -90,7 +96,9 @@ export default function ReportsClient() {
             <div className="absolute inset-0 bg-background/30 backdrop-blur-[1px] flex items-center justify-center z-10 transition-opacity animate-fadeIn">
               <div className="bg-card border border-border px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-2">
                 <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <span className="text-[10px] font-bold text-foreground">Updating...</span>
+                <span className="text-[10px] font-bold text-foreground">
+                  Updating...
+                </span>
               </div>
             </div>
           )}
@@ -142,7 +150,7 @@ export default function ReportsClient() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="cursor-pointer font-bold flex items-center gap-1.5 text-green-600 hover:text-green-700 dark:text-green-400"
+                          className="cursor-pointer font-bold flex items-center gap-1.5"
                           asChild
                         >
                           <a href={getFileUrl(rep.file)} download={rep.name}>
@@ -158,7 +166,11 @@ export default function ReportsClient() {
                           className="cursor-pointer font-bold flex items-center gap-1.5"
                           asChild
                         >
-                          <a href={rep.url} target="_blank" rel="noopener noreferrer">
+                          <a
+                            href={rep.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <ExternalLink className="w-3.5 h-3.5" />
                             Open Link
                           </a>
