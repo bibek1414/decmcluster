@@ -52,7 +52,8 @@ export const reportService = {
     date: string,
     file: File | null,
     urlValue: string | null,
-    token: string | null
+    token: string | null,
+    isAdmin: boolean = false
   ): Promise<ReportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -75,7 +76,8 @@ export const reportService = {
       }
     }
 
-    const res = await fetch(`${baseUrl}/api/report/`, {
+    const path = isAdmin ? "/api/report/admin/" : "/api/report/";
+    const res = await fetch(`${baseUrl}${path}`, {
       method: "POST",
       headers,
       body: formData,

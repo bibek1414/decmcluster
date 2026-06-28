@@ -69,7 +69,8 @@ export default function SituationalReportsClient() {
         todayDate,
         selectedFile,
         null,
-        token
+        token,
+        true
       );
     },
     onSuccess: () => {
