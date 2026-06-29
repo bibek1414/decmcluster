@@ -131,7 +131,7 @@ export default function TrainingClient() {
             </div>
           ) : (
             <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
-              No training modules match your search criteria.
+              No data available
             </div>
           )}
         </div>

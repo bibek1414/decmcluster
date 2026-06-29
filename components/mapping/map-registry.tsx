@@ -235,7 +235,7 @@ export default function MapRegistry() {
               </div>
             ) : (
               <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
-                No maps match your filter or search criteria.
+                No data available
               </div>
             )}
           </div>

@@ -293,7 +293,7 @@ export default function ReportsClient() {
             </div>
           ) : (
             <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
-              No reports match your search criteria.
+              No data available
             </div>
           )}
         </div>

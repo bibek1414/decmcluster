@@ -117,7 +117,7 @@ export default function LinksClient() {
           </div>
         ) : (
           <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
-            No useful links match your search criteria.
+            No data available
           </div>
         )}
       </div>

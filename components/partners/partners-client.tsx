@@ -174,7 +174,7 @@ export default function PartnersClient() {
         {!isLoading && !error && (contacts || []).length === 0 && (
           <div className="p-12 text-center text-muted-foreground text-xs flex flex-col items-center gap-2">
             <Users className="w-8 h-8 opacity-20" />
-            <span>No focal points found matching your search.</span>
+            <span>No data available</span>
           </div>
         )}
       </div>
