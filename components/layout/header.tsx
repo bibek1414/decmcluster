@@ -16,7 +16,7 @@ const VALID_PATHS = [
   "/training",
   "/partners",
   "/links",
-  "/contact"
+  "/contact",
 ];
 
 export default function Header() {
@@ -25,62 +25,63 @@ export default function Header() {
   const is404Path = pathname && !isAdminPath && !VALID_PATHS.includes(pathname);
 
   if (isAdminPath || is404Path) return null;
+
   return (
     <header className="bg-primary text-primary-foreground border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <Logo className="w-14 h-14 flex-shrink-0" />
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+          {/* Left: Logo + Title */}
+          <div className="flex items-start gap-3 min-w-0 flex-1">
+            <Logo className="w-10 h-10 sm:w-14 sm:h-14 flex-shrink-0 mt-0.5" />
             <div className="min-w-0">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight truncate">
+              <h1 className="text-sm xs:text-base sm:text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight break-words">
                 DECM Cluster Information Management and Data Portal
               </h1>
-              <p className="text-xs sm:text-sm text-primary-foreground/85 font-medium flex items-center gap-1.5 mt-0.5 whitespace-nowrap">
+              <p className="text-[10px] sm:text-xs text-primary-foreground/80 font-medium flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1">
                 <span>Vanuatu</span>
-                <span className="w-1 h-1 rounded-full bg-primary-foreground/35 flex-shrink-0"></span>
-                <span className="truncate">NDMO, IOM & Cluster Partners</span>
+                <span className="w-1 h-1 rounded-full bg-primary-foreground/35 flex-shrink-0" />
+                <span>NDMO, IOM & Cluster Partners</span>
               </p>
             </div>
           </div>
 
-          <div className="flex items-start gap-6 self-start md:self-auto flex-shrink-0 bg-white">
-            <div className="flex flex-col gap-1 flex-shrink-0">
-              <span className="text-sm uppercase tracking-wider text-primary font-bold text-center whitespace-nowrap">
+          {/* Right: Partner logos */}
+          <div className="flex items-start gap-3 sm:gap-4 flex-shrink-0 flex-wrap">
+            {/* Co-lead */}
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-[9px] sm:text-xs uppercase tracking-wider text-primary-foreground/80 font-bold whitespace-nowrap">
                 Co-lead
               </span>
-              <div className="flex items-center gap-2">
-                <div className="flex-shrink-0">
-                  <Image
-                    src="/nationaldisaster.jpeg"
-                    alt="National Disaster"
-                    width={60}
-                    height={40}
-                    className="w-auto object-contain"
-                  />
-                </div>
-                <div className="bg-white flex-shrink-0">
-                  <Image
-                    src="/iom.png"
-                    alt="IOM"
-                    width={70}
-                    height={40}
-                    className="w-auto object-contain"
-                  />
-                </div>
+              <div className="bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-md flex items-center gap-2 sm:gap-3 shadow-sm">
+                <Image
+                  src="/nationaldisaster.jpeg"
+                  alt="National Disaster Management Office"
+                  width={60}
+                  height={40}
+                  className="h-6 sm:h-8 w-auto object-contain flex-shrink-0"
+                />
+                <Image
+                  src="/iom.png"
+                  alt="IOM"
+                  width={70}
+                  height={40}
+                  className="h-6 sm:h-8 w-auto object-contain flex-shrink-0"
+                />
               </div>
             </div>
 
-            <div className="flex flex-col gap-1 flex-shrink-0">
-              <span className="text-sm uppercase tracking-wider text-primary font-bold whitespace-nowrap">
+            {/* Supported by */}
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-[9px] sm:text-xs uppercase tracking-wider text-primary-foreground/80 font-bold whitespace-nowrap">
                 Supported by
               </span>
-              <div className="flex-shrink-0">
+              <div className="bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-md flex items-center shadow-sm">
                 <Image
                   src="/australinaaid.png"
                   alt="Australian Aid"
                   width={70}
                   height={30}
-                  className="w-auto object-contain"
+                  className="h-6 sm:h-8 w-auto object-contain flex-shrink-0"
                 />
               </div>
             </div>
