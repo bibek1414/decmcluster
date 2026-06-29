@@ -63,7 +63,6 @@ export default function SOPsClient() {
   const uploadMutation = useMutation({
     mutationFn: async () => {
       if (!uploadName.trim()) throw new Error("Please enter a name");
-      if (!selectedFile) throw new Error("Please select a file to upload");
       return sopService.create(uploadName, uploadDescription, selectedFile, token);
     },
     onSuccess: () => {
@@ -210,14 +209,16 @@ export default function SOPsClient() {
                         <td className="p-4 text-muted-foreground font-semibold">{formattedDate}</td>
                         <td className="p-4 text-right">
                           <div className="inline-flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                              onClick={() => window.open(getFileUrl(item.file), "_blank")}
-                            >
-                              <Eye className="w-3.5 h-3.5" /> View
-                            </Button>
+                            {item.file && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1"
+                                onClick={() => window.open(getFileUrl(item.file), "_blank")}
+                              >
+                                <Eye className="w-3.5 h-3.5" /> View
+                              </Button>
+                            )}
                             {canDelete && (
                               <Button
                                 variant="outline"

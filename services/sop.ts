@@ -49,7 +49,7 @@ export const sopService = {
   create: async (
     name: string,
     description: string,
-    file: File,
+    file: File | null,
     token: string | null
   ): Promise<SOPData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -58,7 +58,9 @@ export const sopService = {
     if (description) {
       formData.append("description", description);
     }
-    formData.append("file", file);
+    if (file) {
+      formData.append("file", file);
+    }
 
     const headers: Record<string, string> = {};
     if (token) {

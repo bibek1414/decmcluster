@@ -61,7 +61,6 @@ export default function SopsClient() {
   const uploadMutation = useMutation({
     mutationFn: async () => {
       if (!uploadName.trim()) throw new Error("Please enter a name");
-      if (!selectedFile) throw new Error("Please select a file to upload");
       return sopService.create(uploadName, uploadDescription, selectedFile, token);
     },
     onSuccess: () => {
