@@ -147,7 +147,8 @@ export default function PartnersClient() {
                           >
                             <a href={`tel:${p.phone}`}>
                               <Phone className="w-3 h-3 mr-2" />
-                              {p.phone}
+                              <span className="hidden sm:inline">{p.phone}</span>
+                              <span className="sm:hidden">Call</span>
                             </a>
                           </Button>
                         )}
@@ -159,7 +160,8 @@ export default function PartnersClient() {
                         >
                           <a href={`mailto:${p.email}`}>
                             <Mail className="w-3 h-3 mr-2" />
-                            {p.email}
+                            <span className="hidden sm:inline">{p.email}</span>
+                            <span className="sm:hidden">Email</span>
                           </a>
                         </Button>
                       </div>

@@ -101,9 +101,9 @@ export default function Footer() {
         </div>
         
         {/* Bottom Section */}
-        <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+        <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground text-center sm:text-left">
           <p>© 2026 DECM Cluster Vanuatu. All rights reserved.</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center sm:justify-start gap-x-6 gap-y-2">
             <a href="/contact" className="hover:text-foreground transition-colors duration-200 font-semibold">Contact Us</a>
             <a href="#" className="hover:text-foreground transition-colors duration-200">Privacy Policy</a>
             <a href="#" className="hover:text-foreground transition-colors duration-200">Terms of Use</a>

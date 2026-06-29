@@ -87,7 +87,7 @@ export default function AssessmentRegistryTable() {
 
         {isLoading ? (
           <div className="p-6 space-y-4">
-            <div className="border border-border rounded-lg overflow-hidden">
+            <div className="border border-border rounded-lg overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

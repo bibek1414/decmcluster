@@ -93,7 +93,7 @@ export default function TrainingClient() {
                 {modulesList.map((mod) => (
                   <div
                     key={mod.id}
-                    className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 hover:border-primary/20 transition-all duration-200 flex items-center justify-between gap-4 "
+                    className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 hover:border-primary/20 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full"
                   >
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-foreground leading-snug">
@@ -106,7 +106,7 @@ export default function TrainingClient() {
                     {mod.link && (
                       <Button
                         size="sm"
-                        className="shrink-0 cursor-pointer text-xs font-bold"
+                        className="shrink-0 cursor-pointer text-xs font-bold w-full sm:w-auto mt-2 sm:mt-0"
                         onClick={() =>
                           window.open(mod.link, "_blank", "noopener,noreferrer")
                         }

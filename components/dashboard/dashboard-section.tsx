@@ -123,10 +123,10 @@ export default function DashboardSection() {
         
         {/* Left Side Menu (2 cols) */}
         <div className="lg:col-span-3 xl:col-span-2 flex flex-col gap-2 bg-card text-card-foreground p-4 rounded-lg border border-border h-fit">
-          <h4 className="text-xs font-bold text-muted-foreground px-2.5 pb-2 border-b border-border">
+          <h4 className="text-xs font-bold text-muted-foreground px-2.5 pb-2 border-b border-border hidden lg:block">
             Sectors & Filters
           </h4>
-          <div className="flex flex-col gap-1.5 mt-2">
+          <div className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 gap-1.5 scrollbar-thin">
             {sideMenuItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeMenu === item.id;
@@ -137,7 +137,7 @@ export default function DashboardSection() {
                     setActiveMenu(item.id);
                     setSelectedProvince(null); // Reset province filter on sector change
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-bold transition-all cursor-pointer ${
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-xs font-bold transition-all cursor-pointer whitespace-nowrap lg:w-full ${
                     isActive 
                       ? "bg-primary text-primary-foreground" 
                       : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -457,46 +457,48 @@ export default function DashboardSection() {
                   </div>
                 </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent border-border">
-                      <TableHead className="font-bold h-9">Province</TableHead>
-                      <TableHead className="font-bold h-9">Site Name</TableHead>
-                      <TableHead className="font-bold h-9">Type</TableHead>
-                      <TableHead className="font-bold h-9">Status</TableHead>
-                      <TableHead className="font-bold text-right h-9">HHs</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="text-[11px]">
-                    {filteredEvacuationCentres.length > 0 ? (
-                      filteredEvacuationCentres.map((ec, idx) => (
-                        <TableRow key={idx} className="border-border">
-                          <TableCell className="font-bold text-foreground">{ec.province}</TableCell>
-                          <TableCell>{ec.site}</TableCell>
-                          <TableCell className="text-muted-foreground font-semibold">{ec.type}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                              ec.status === "Open" 
-                                ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30" 
-                                : ec.status === "Monitoring" 
-                                  ? "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30" 
-                                  : "bg-muted text-muted-foreground border-border"
-                            }`}>
-                              {ec.status}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right font-extrabold text-foreground">{ec.hhs}</TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={5} className="p-6 text-center text-muted-foreground">
-                          No evacuation centres found matching filters.
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent border-border">
+                        <TableHead className="font-bold h-9">Province</TableHead>
+                        <TableHead className="font-bold h-9">Site Name</TableHead>
+                        <TableHead className="font-bold h-9">Type</TableHead>
+                        <TableHead className="font-bold h-9">Status</TableHead>
+                        <TableHead className="font-bold text-right h-9">HHs</TableHead>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody className="text-[11px]">
+                      {filteredEvacuationCentres.length > 0 ? (
+                        filteredEvacuationCentres.map((ec, idx) => (
+                          <TableRow key={idx} className="border-border">
+                            <TableCell className="font-bold text-foreground">{ec.province}</TableCell>
+                            <TableCell>{ec.site}</TableCell>
+                            <TableCell className="text-muted-foreground font-semibold">{ec.type}</TableCell>
+                            <TableCell>
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                ec.status === "Open" 
+                                  ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30" 
+                                  : ec.status === "Monitoring" 
+                                    ? "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30" 
+                                    : "bg-muted text-muted-foreground border-border"
+                              }`}>
+                                {ec.status}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-right font-extrabold text-foreground">{ec.hhs}</TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} className="p-6 text-center text-muted-foreground">
+                            No evacuation centres found matching filters.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
 
               <div className="p-3 bg-muted/50 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
@@ -512,43 +514,45 @@ export default function DashboardSection() {
                   Response Tracking Summary
                 </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow className="hover:bg-transparent border-border">
-                      <TableHead className="font-bold h-9">Sector</TableHead>
-                      <TableHead className="font-bold h-9">Partner</TableHead>
-                      <TableHead className="font-bold h-9">Status</TableHead>
-                      <TableHead className="font-bold text-right h-9">Coverage</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="text-[11px]">
-                    {responseTracking.map((res, idx) => (
-                      <TableRow key={idx} className="border-border">
-                        <TableCell className="font-bold text-foreground">{res.sector}</TableCell>
-                        <TableCell className="text-muted-foreground">{res.partner}</TableCell>
-                        <TableCell>
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                            res.status === "Ongoing" 
-                              ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" 
-                              : res.status === "Critical Need" 
-                                ? "bg-rose-50 text-rose-700 border-rose-100 font-extrabold dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" 
-                                : "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30"
-                          }`}>
-                            {res.status}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right font-extrabold text-foreground">
-                          <div className="flex items-center justify-end gap-2">
-                            <span>{res.coverage}%</span>
-                            <div className="w-12 bg-muted h-2 rounded-full overflow-hidden hidden sm:block">
-                              <div className="bg-primary h-full rounded-full" style={{ width: `${res.coverage}%` }}></div>
-                            </div>
-                          </div>
-                        </TableCell>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="hover:bg-transparent border-border">
+                        <TableHead className="font-bold h-9">Sector</TableHead>
+                        <TableHead className="font-bold h-9">Partner</TableHead>
+                        <TableHead className="font-bold h-9">Status</TableHead>
+                        <TableHead className="font-bold text-right h-9">Coverage</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody className="text-[11px]">
+                      {responseTracking.map((res, idx) => (
+                        <TableRow key={idx} className="border-border">
+                          <TableCell className="font-bold text-foreground">{res.sector}</TableCell>
+                          <TableCell className="text-muted-foreground">{res.partner}</TableCell>
+                          <TableCell>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                              res.status === "Ongoing" 
+                                ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" 
+                                : res.status === "Critical Need" 
+                                  ? "bg-rose-50 text-rose-700 border-rose-100 font-extrabold dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" 
+                                  : "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30"
+                            }`}>
+                              {res.status}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right font-extrabold text-foreground">
+                            <div className="flex items-center justify-end gap-2">
+                              <span>{res.coverage}%</span>
+                              <div className="w-12 bg-muted h-2 rounded-full overflow-hidden hidden sm:block">
+                                <div className="bg-primary h-full rounded-full" style={{ width: `${res.coverage}%` }}></div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
 
               <div className="p-3 bg-muted/50 border-t border-border text-[11px] text-muted-foreground flex items-center gap-1">

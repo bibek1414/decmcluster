@@ -201,7 +201,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-primary border-t border-border px-2 pt-2 pb-3 space-y-1">
+        <div className="lg:hidden bg-primary border-t border-border px-2 pt-2 pb-3 space-y-1 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.path;
