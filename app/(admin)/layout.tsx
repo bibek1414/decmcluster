@@ -38,16 +38,16 @@ export default function AdminLayout({
     const acList = user.access_control || [];
     const normalized = acList.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
 
-    if (pathname === "/assement/meeting-minutes") {
+    if (pathname?.startsWith("/assement/meeting-minutes")) {
       return normalized.includes("meeting-minutes");
     }
-    if (pathname === "/assement/sops") {
+    if (pathname?.startsWith("/assement/sops")) {
       return normalized.includes("sops");
     }
-    if (pathname === "/assement/situational-reports") {
+    if (pathname?.startsWith("/assement/situational-reports")) {
       return normalized.includes("situational-reports");
     }
-    if (pathname === "/assement/users") {
+    if (pathname?.startsWith("/assement/users")) {
       return false;
     }
     return true;
@@ -118,7 +118,13 @@ export default function AdminLayout({
                 href="/assement"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  pathname === "/assement" || (pathname?.startsWith("/assement/") && pathname !== "/assement/meeting-minutes" && pathname !== "/assement/sops")
+                  pathname === "/assement" || (
+                    pathname?.startsWith("/assement/") &&
+                    !pathname.startsWith("/assement/meeting-minutes") &&
+                    !pathname.startsWith("/assement/sops") &&
+                    !pathname.startsWith("/assement/situational-reports") &&
+                    !pathname.startsWith("/assement/users")
+                  )
                     ? "bg-primary text-primary-foreground border-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                 }`}
@@ -139,7 +145,7 @@ export default function AdminLayout({
                     href="/assement/meeting-minutes"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname === "/assement/meeting-minutes"
+                      pathname?.startsWith("/assement/meeting-minutes")
                         ? "bg-primary text-primary-foreground border-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                     }`}
@@ -153,7 +159,7 @@ export default function AdminLayout({
                     href="/assement/sops"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname === "/assement/sops"
+                      pathname?.startsWith("/assement/sops")
                         ? "bg-primary text-primary-foreground border-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                     }`}
@@ -175,7 +181,7 @@ export default function AdminLayout({
                   href="/assement/situational-reports"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                    pathname === "/assement/situational-reports"
+                    pathname?.startsWith("/assement/situational-reports")
                       ? "bg-primary text-primary-foreground border-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                   }`}
@@ -196,7 +202,7 @@ export default function AdminLayout({
                   href="/assement/users"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                    pathname === "/assement/users"
+                    pathname?.startsWith("/assement/users")
                       ? "bg-primary text-primary-foreground border-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                   }`}
