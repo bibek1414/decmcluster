@@ -550,6 +550,171 @@ export default function UsersClient() {
         description={`Are you sure you want to delete the user account for "${deleteTarget?.email}"? This action will permanently revoke their access.`}
         isPending={deleteMutation.isPending}
       />
+
+      {/* Edit User Modal */}
+      {editTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="space-y-0.5">
+                <h3 className="text-base font-bold text-foreground">Edit User</h3>
+                <p className="text-[10px] text-muted-foreground font-semibold">{editTarget.email}</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setEditTarget(null)}
+                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-muted-foreground">First Name</label>
+                  <Input
+                    value={editFirstName}
+                    onChange={(e) => setEditFirstName(e.target.value)}
+                    placeholder="John"
+                    className="w-full bg-background"
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-muted-foreground">Last Name</label>
+                  <Input
+                    value={editLastName}
+                    onChange={(e) => setEditLastName(e.target.value)}
+                    placeholder="Doe"
+                    className="w-full bg-background"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">Email Address</label>
+                <Input
+                  type="email"
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  placeholder="john.doe@gmail.com"
+                  className="w-full bg-background"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">
+                  New Password{" "}
+                  <span className="text-muted-foreground/60 font-normal">(leave blank to keep current)</span>
+                </label>
+                <div className="relative">
+                  <Input
+                    type={showEditPassword ? "text" : "password"}
+                    value={editPassword}
+                    onChange={(e) => setEditPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-background pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowEditPassword(!showEditPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer focus:outline-none"
+                  >
+                    {showEditPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">User Role</label>
+                <select
+                  value={editRole}
+                  onChange={(e) => handleEditRoleChange(e.target.value)}
+                  className="w-full rounded-xl border border-input bg-background p-2.5 text-xs font-semibold focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer"
+                >
+                  <option value="superadmin">Superadmin</option>
+                  <option value="viewer">Viewer</option>
+                  <option value="data_enumerator">Data Enumerator</option>
+                  <option value="field_coordinator">Field Coordinator</option>
+                </select>
+              </div>
+
+              {editRole !== "superadmin" && (
+                <div className="space-y-2 border-t border-border/60 pt-3 mt-1">
+                  <label className="block text-xs font-bold text-muted-foreground">Folder Access Control</label>
+                  <p className="text-[10px] text-muted-foreground font-medium pb-1">
+                    Select which directories this user is authorized to access:
+                  </p>
+                  <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
+                    {[
+                      { id: "meeting-minutes", label: "Coordination Meeting Minutes" },
+                      { id: "sops", label: "Standard Operating Procedures (SOPs)" },
+                      { id: "situational-reports", label: "Situational Reports" },
+                    ].map((folder) => {
+                      const isChecked = editSelectedFolders.includes(folder.id);
+                      return (
+                        <label key={folder.id} className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {
+                              if (isChecked) {
+                                setEditSelectedFolders(editSelectedFolders.filter((f) => f !== folder.id));
+                              } else {
+                                setEditSelectedFolders([...editSelectedFolders, folder.id]);
+                              }
+                            }}
+                            className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
+                          />
+                          <span>{folder.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {editRole === "superadmin" && (
+                <div className="text-[10px] text-green-700 dark:text-green-400 font-semibold bg-green-50 dark:bg-green-950/20 border border-green-100 dark:border-green-900/30 p-2.5 rounded-xl mt-1">
+                  Superadmins automatically have access to all folders.
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditTarget(null)}
+                  className="h-9 cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={updateMutation.isPending}
+                  className="h-9 font-bold cursor-pointer"
+                >
+                  {updateMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
