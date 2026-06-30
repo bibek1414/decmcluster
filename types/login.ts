@@ -1,7 +1,9 @@
 export interface User {
   email: string;
   role: string;
+  access_control?: string[];
 }
+
 
 export interface LoginRequest {
   email: string;
@@ -16,4 +18,5 @@ export interface LoginResponse {
   user?: User;
   role?: string;
   email?: string;
+  access_control?: string[];
 }

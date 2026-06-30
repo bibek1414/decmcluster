@@ -67,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             parsedUser = {
               email: decoded.email || parsedUser?.email || "",
               role: mapBackendRole(decoded.role || parsedUser?.role),
+              access_control: decoded.access_control || parsedUser?.access_control || [],
             };
             localStorage.setItem("decm_auth_user", JSON.stringify(parsedUser));
           }
@@ -93,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const resolvedUser: User = {
         email: decoded?.email || data.user?.email || data.email || credentials.email,
         role: mapBackendRole(decoded?.role || data.user?.role || data.role || credentials.role),
+        access_control: decoded?.access_control || data.user?.access_control || data.access_control || [],
       };
 
       setToken(authToken);

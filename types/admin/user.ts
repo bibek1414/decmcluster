@@ -6,4 +6,5 @@ export interface UserData {
   role: string;
   is_active: boolean;
   date_joined?: string;
+  access_control?: string[];
 }

@@ -43,7 +43,7 @@ export default function SOPVerifyClient({ id }: Props) {
   // Permissions
   const isSuperAdmin = user?.role === "Superadmin";
   const isViewer = user?.role === "Viewer";
-  const canVerify = isSuperAdmin || (!isViewer && !!user?.role);
+  const canVerify = isSuperAdmin;
 
   // Fetch single SOP details
   const {

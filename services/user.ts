@@ -34,7 +34,8 @@ export const userService = {
   },
 
   create: async (
-    payload: Record<string, string>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: Record<string, any>,
     token: string | null
   ): Promise<UserData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -91,5 +92,46 @@ export const userService = {
     if (!res.ok) {
       throw new Error("Failed to delete user");
     }
+  },
+
+  update: async (
+    id: number,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: Record<string, any>,
+    token: string | null
+  ): Promise<UserData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/account/users/${id}/`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update user";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+
+    return res.json();
   },
 };

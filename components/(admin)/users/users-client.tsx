@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Users, Trash2, X, Loader2, Eye, EyeOff } from "lucide-react";
+import { Plus, Search, Users, Trash2, X, Loader2, Eye, EyeOff, Pencil } from "lucide-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useAdminUsers } from "@/hooks/use-admin-users";
@@ -30,9 +30,44 @@ export default function UsersClient() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("viewer");
+  const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
+
+  const handleRoleChange = (newRole: string) => {
+    setRole(newRole);
+    if (newRole === "superadmin") {
+      setSelectedFolders([]);
+    }
+  };
 
   // Delete State
   const [deleteTarget, setDeleteTarget] = useState<{ id: number; email: string } | null>(null);
+
+  // Edit form state
+  const [editTarget, setEditTarget] = useState<UserData | null>(null);
+  const [editFirstName, setEditFirstName] = useState("");
+  const [editLastName, setEditLastName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editPassword, setEditPassword] = useState("");
+  const [showEditPassword, setShowEditPassword] = useState(false);
+  const [editRole, setEditRole] = useState("viewer");
+  const [editSelectedFolders, setEditSelectedFolders] = useState<string[]>([]);
+
+  const handleEditClick = (item: UserData) => {
+    setEditTarget(item);
+    setEditFirstName(item.first_name || "");
+    setEditLastName(item.last_name || "");
+    setEditEmail(item.email || "");
+    setEditPassword("");
+    setEditRole(item.role || "viewer");
+    setEditSelectedFolders(item.access_control || []);
+  };
+
+  const handleEditRoleChange = (newRole: string) => {
+    setEditRole(newRole);
+    if (newRole === "superadmin") {
+      setEditSelectedFolders([]);
+    }
+  };
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -62,6 +97,7 @@ export default function UsersClient() {
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         role,
+        access_control: selectedFolders,
       };
 
       return userService.create(payload, token);
@@ -74,6 +110,7 @@ export default function UsersClient() {
       setEmail("");
       setPassword("");
       setRole("viewer");
+      setSelectedFolders([]);
       queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
     },
     onError: (err: any) => {
@@ -97,9 +134,52 @@ export default function UsersClient() {
     },
   });
 
+  // Update mutation
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      if (!editTarget) throw new Error("No user selected for edit");
+      if (!editFirstName.trim()) throw new Error("First name is required");
+      if (!editLastName.trim()) throw new Error("Last name is required");
+      if (!editEmail.trim()) throw new Error("Email is required");
+
+      const payload: Record<string, any> = {
+        email: editEmail.trim(),
+        first_name: editFirstName.trim(),
+        last_name: editLastName.trim(),
+        role: editRole,
+        access_control: editSelectedFolders,
+      };
+
+      if (editPassword) {
+        payload.password = editPassword;
+      }
+
+      return userService.update(editTarget.id, payload, token);
+    },
+    onSuccess: () => {
+      toast.success("User updated successfully!");
+      setEditTarget(null);
+      setEditFirstName("");
+      setEditLastName("");
+      setEditEmail("");
+      setEditPassword("");
+      setEditRole("viewer");
+      setEditSelectedFolders([]);
+      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to update user");
+    },
+  });
+
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createMutation.mutate();
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateMutation.mutate();
   };
 
   const handleDelete = (id: number, email: string) => {
@@ -189,15 +269,57 @@ export default function UsersClient() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
-                    <th className="p-4 w-[35%]">Name</th>
-                    <th className="p-4 w-[35%]">Email</th>
+                    <th className="p-4 w-[30%]">Name</th>
+                    <th className="p-4 w-[30%]">Email</th>
                     <th className="p-4 w-[15%]">Role</th>
-                    {canDelete && <th className="p-4 w-[15%] text-right">Actions</th>}
+                    <th className="p-4 w-[15%]">Folder Access</th>
+                    {canDelete && <th className="p-4 w-[10%] text-right">Actions</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60 text-xs">
                   {usersList.map((item) => {
                     const fullName = `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
+                    
+                    const renderAccessControlBadges = (userData: typeof item) => {
+                      const roleLower = userData.role?.toLowerCase();
+                      if (roleLower === "superadmin") {
+                        return (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-green-50 text-green-700 border border-green-200 dark:bg-green-950/20 dark:text-green-400 dark:border-green-900/30">
+                            All Folders
+                          </span>
+                        );
+                      }
+                      const ac = userData.access_control || [];
+                      if (ac.length === 0) {
+                        return <span className="text-muted-foreground italic font-semibold text-[10px]">None</span>;
+                      }
+
+                      const labels: Record<string, string> = {
+                        "meeting-minutes": "Meeting Minutes",
+                        "meeting_minutes": "Meeting Minutes",
+                        "sops": "SOPs",
+                        "situational-reports": "Situational Reports",
+                        "situational_reports": "Situational Reports",
+                      };
+
+                      return (
+                        <div className="flex flex-wrap gap-1">
+                          {ac.map((val) => {
+                            const normalized = val.toLowerCase().replace(/_/g, "-");
+                            const label = labels[normalized] || val;
+                            return (
+                              <span
+                                key={val}
+                                className="inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border text-[9px] font-semibold"
+                              >
+                                {label}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      );
+                    };
+
                     return (
                       <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                         <td className="p-4 font-bold text-foreground">
@@ -211,9 +333,20 @@ export default function UsersClient() {
                             {mapRoleLabel(item.role)}
                           </span>
                         </td>
+                        <td className="p-4">
+                          {renderAccessControlBadges(item)}
+                        </td>
                         {canDelete && (
                           <td className="p-4 text-right">
-                            <div className="inline-flex items-center gap-2">
+                            <div className="inline-flex items-center justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950/20 border-border/80 cursor-pointer gap-1"
+                                onClick={() => handleEditClick(item)}
+                              >
+                                <Pencil className="w-3.5 h-3.5" /> Edit
+                              </Button>
                               {/* Prevent user from deleting themselves */}
                               {user?.email !== item.email && (
                                 <Button
@@ -330,7 +463,7 @@ export default function UsersClient() {
                 <label className="block text-xs font-bold text-muted-foreground">User Role</label>
                 <select
                   value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                  onChange={(e) => handleRoleChange(e.target.value)}
                   className="w-full rounded-xl border border-input bg-background p-2.5 text-xs font-semibold focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer"
                 >
                   <option value="superadmin">Superadmin</option>
@@ -339,6 +472,47 @@ export default function UsersClient() {
                   <option value="field_coordinator">Field Coordinator</option>
                 </select>
               </div>
+
+              {role !== "superadmin" && (
+                <div className="space-y-2 border-t border-border/60 pt-3 mt-1">
+                  <label className="block text-xs font-bold text-muted-foreground">Folder Access Control</label>
+                  <p className="text-[10px] text-muted-foreground font-medium pb-1">
+                    Select which directories this user is authorized to access:
+                  </p>
+                  <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
+                    {[
+                      { id: "meeting-minutes", label: "Coordination Meeting Minutes" },
+                      { id: "sops", label: "Standard Operating Procedures (SOPs)" },
+                      { id: "situational-reports", label: "Situational Reports" }
+                    ].map((folder) => {
+                      const isChecked = selectedFolders.includes(folder.id);
+                      return (
+                        <label key={folder.id} className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {
+                              if (isChecked) {
+                                setSelectedFolders(selectedFolders.filter((f) => f !== folder.id));
+                              } else {
+                                setSelectedFolders([...selectedFolders, folder.id]);
+                              }
+                            }}
+                            className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
+                          />
+                          <span>{folder.label}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {role === "superadmin" && (
+                <div className="text-[10px] text-green-700 dark:text-green-400 font-semibold bg-green-50 dark:bg-green-950/20 border border-green-100 dark:border-green-900/30 p-2.5 rounded-xl mt-1">
+                  Superadmins automatically have access to all folders.
+                </div>
+              )}
 
               <div className="flex items-center justify-end gap-2 pt-2">
                 <Button

@@ -65,7 +65,7 @@ export default function SituationalReportsClient() {
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
   const isViewer = user?.role === "Viewer";
-  const canAdd = isSuperAdmin || (!isViewer && !!user?.role);
+  const canAdd = isSuperAdmin;
   const canDelete = isSuperAdmin;
 
   // Reset page when search changes
