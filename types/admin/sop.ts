@@ -1,4 +1,4 @@
-import { UserProfile, CommentData } from "./meeting-minute";
+import { UserProfile, CommentData } from "./shared";
 
 export interface SOPData {
   id: number;
