@@ -59,7 +59,9 @@ export default function MeetingMinutesClient() {
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
   const isViewer = user?.role === "Viewer";
-  const canAdd = isSuperAdmin;
+  const isDataEnumerator = user?.role === "Data Enumerator";
+  const isFieldCoordinator = user?.role === "Field Coordinator";
+  const canAdd = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
   const canDelete = isSuperAdmin;
 
   // Reset page when search changes

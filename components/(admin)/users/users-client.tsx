@@ -1,7 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Users, Trash2, X, Loader2, Eye, EyeOff, Pencil } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Users,
+  Trash2,
+  X,
+  Loader2,
+  Eye,
+  EyeOff,
+  Pencil,
+  Edit,
+} from "lucide-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useAdminUsers } from "@/hooks/use-admin-users";
@@ -40,7 +51,10 @@ export default function UsersClient() {
   };
 
   // Delete State
-  const [deleteTarget, setDeleteTarget] = useState<{ id: number; email: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: number;
+    email: string;
+  } | null>(null);
 
   // Edit form state
   const [editTarget, setEditTarget] = useState<UserData | null>(null);
@@ -80,7 +94,11 @@ export default function UsersClient() {
   }, [debouncedSearch]);
 
   // Fetch Users list
-  const { data, isLoading, isPlaceholderData, error } = useAdminUsers(page, token, debouncedSearch);
+  const { data, isLoading, isPlaceholderData, error } = useAdminUsers(
+    page,
+    token,
+    debouncedSearch,
+  );
   const usersList = data?.results || [];
 
   // Create mutation
@@ -219,7 +237,10 @@ export default function UsersClient() {
           }
           actions={
             canAdd && (
-              <Button onClick={() => setIsAddOpen(true)} className="cursor-pointer font-bold">
+              <Button
+                onClick={() => setIsAddOpen(true)}
+                className="cursor-pointer font-bold"
+              >
                 <Plus className="mr-1.5 h-4 w-4" /> Add User
               </Button>
             )
@@ -258,7 +279,10 @@ export default function UsersClient() {
               description="Register new staff or viewer roles to grant access to the system."
               action={
                 canAdd ? (
-                  <Button onClick={() => setIsAddOpen(true)} className="cursor-pointer font-bold">
+                  <Button
+                    onClick={() => setIsAddOpen(true)}
+                    className="cursor-pointer font-bold"
+                  >
                     <Plus className="mr-1.5 h-4 w-4" /> Add User
                   </Button>
                 ) : undefined
@@ -273,14 +297,20 @@ export default function UsersClient() {
                     <th className="p-4 w-[30%]">Email</th>
                     <th className="p-4 w-[15%]">Role</th>
                     <th className="p-4 w-[15%]">Folder Access</th>
-                    {canDelete && <th className="p-4 w-[10%] text-right">Actions</th>}
+                    {canDelete && (
+                      <th className="p-4 w-[10%] text-right">Actions</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60 text-xs">
                   {usersList.map((item) => {
-                    const fullName = `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
-                    
-                    const renderAccessControlBadges = (userData: typeof item) => {
+                    const fullName =
+                      `${item.first_name || ""} ${item.last_name || ""}`.trim() ||
+                      item.email;
+
+                    const renderAccessControlBadges = (
+                      userData: typeof item,
+                    ) => {
                       const roleLower = userData.role?.toLowerCase();
                       if (roleLower === "superadmin") {
                         return (
@@ -291,21 +321,27 @@ export default function UsersClient() {
                       }
                       const ac = userData.access_control || [];
                       if (ac.length === 0) {
-                        return <span className="text-muted-foreground italic font-semibold text-[10px]">None</span>;
+                        return (
+                          <span className="text-muted-foreground italic font-semibold text-[10px]">
+                            None
+                          </span>
+                        );
                       }
 
                       const labels: Record<string, string> = {
                         "meeting-minutes": "Meeting Minutes",
-                        "meeting_minutes": "Meeting Minutes",
-                        "sops": "SOPs",
+                        meeting_minutes: "Meeting Minutes",
+                        sops: "SOPs",
                         "situational-reports": "Situational Reports",
-                        "situational_reports": "Situational Reports",
+                        situational_reports: "Situational Reports",
                       };
 
                       return (
                         <div className="flex flex-wrap gap-1">
                           {ac.map((val) => {
-                            const normalized = val.toLowerCase().replace(/_/g, "-");
+                            const normalized = val
+                              .toLowerCase()
+                              .replace(/_/g, "-");
                             const label = labels[normalized] || val;
                             return (
                               <span
@@ -321,9 +357,14 @@ export default function UsersClient() {
                     };
 
                     return (
-                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
+                      <tr
+                        key={item.id}
+                        className="hover:bg-muted/20 transition-colors"
+                      >
                         <td className="p-4 font-bold text-foreground">
-                          <span className="truncate max-w-xs block">{fullName}</span>
+                          <span className="truncate max-w-xs block">
+                            {fullName}
+                          </span>
                         </td>
                         <td className="p-4 text-muted-foreground font-semibold">
                           {item.email || "—"}
@@ -342,10 +383,10 @@ export default function UsersClient() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 px-2.5 font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950/20 border-border/80 cursor-pointer gap-1"
+                                className="h-8 px-2.5 font-bold  hover:bg-blue-50 dark:hover:bg-blue-950/20 border-border/80 cursor-pointer gap-1"
                                 onClick={() => handleEditClick(item)}
                               >
-                                <Pencil className="w-3.5 h-3.5" /> Edit
+                                <Edit className="w-3.5 h-3.5" /> Edit
                               </Button>
                               {/* Prevent user from deleting themselves */}
                               {user?.email !== item.email && (
@@ -353,7 +394,9 @@ export default function UsersClient() {
                                   variant="outline"
                                   size="sm"
                                   className="h-8 px-2.5 font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-border/80 cursor-pointer gap-1"
-                                  onClick={() => handleDelete(item.id, item.email)}
+                                  onClick={() =>
+                                    handleDelete(item.id, item.email)
+                                  }
                                 >
                                   <Trash2 className="w-3.5 h-3.5" /> Delete
                                 </Button>
@@ -387,7 +430,9 @@ export default function UsersClient() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
           <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Add New User</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Add New User
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -401,7 +446,9 @@ export default function UsersClient() {
             <form onSubmit={handleAddSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-muted-foreground">First Name</label>
+                  <label className="block text-xs font-bold text-muted-foreground">
+                    First Name
+                  </label>
                   <Input
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
@@ -411,7 +458,9 @@ export default function UsersClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-muted-foreground">Last Name</label>
+                  <label className="block text-xs font-bold text-muted-foreground">
+                    Last Name
+                  </label>
                   <Input
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
@@ -423,7 +472,9 @@ export default function UsersClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Email Address</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Email Address
+                </label>
                 <Input
                   type="email"
                   value={email}
@@ -435,7 +486,9 @@ export default function UsersClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Password</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Password
+                </label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -460,7 +513,9 @@ export default function UsersClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">User Role</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  User Role
+                </label>
                 <select
                   value={role}
                   onChange={(e) => handleRoleChange(e.target.value)}
@@ -475,27 +530,48 @@ export default function UsersClient() {
 
               {role !== "superadmin" && (
                 <div className="space-y-2 border-t border-border/60 pt-3 mt-1">
-                  <label className="block text-xs font-bold text-muted-foreground">Folder Access Control</label>
+                  <label className="block text-xs font-bold text-muted-foreground">
+                    Folder Access Control
+                  </label>
                   <p className="text-[10px] text-muted-foreground font-medium pb-1">
                     Select which directories this user is authorized to access:
                   </p>
                   <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
                     {[
-                      { id: "meeting-minutes", label: "Coordination Meeting Minutes" },
-                      { id: "sops", label: "Standard Operating Procedures (SOPs)" },
-                      { id: "situational-reports", label: "Situational Reports" }
+                      {
+                        id: "meeting-minutes",
+                        label: "Coordination Meeting Minutes",
+                      },
+                      {
+                        id: "sops",
+                        label: "Standard Operating Procedures (SOPs)",
+                      },
+                      {
+                        id: "situational-reports",
+                        label: "Situational Reports",
+                      },
                     ].map((folder) => {
                       const isChecked = selectedFolders.includes(folder.id);
                       return (
-                        <label key={folder.id} className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none">
+                        <label
+                          key={folder.id}
+                          className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
+                        >
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => {
                               if (isChecked) {
-                                setSelectedFolders(selectedFolders.filter((f) => f !== folder.id));
+                                setSelectedFolders(
+                                  selectedFolders.filter(
+                                    (f) => f !== folder.id,
+                                  ),
+                                );
                               } else {
-                                setSelectedFolders([...selectedFolders, folder.id]);
+                                setSelectedFolders([
+                                  ...selectedFolders,
+                                  folder.id,
+                                ]);
                               }
                             }}
                             className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
@@ -530,7 +606,8 @@ export default function UsersClient() {
                 >
                   {createMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Creating...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Creating...
                     </>
                   ) : (
                     "Create User"
@@ -557,8 +634,12 @@ export default function UsersClient() {
           <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="space-y-0.5">
-                <h3 className="text-base font-bold text-foreground">Edit User</h3>
-                <p className="text-[10px] text-muted-foreground font-semibold">{editTarget.email}</p>
+                <h3 className="text-base font-bold text-foreground">
+                  Edit User
+                </h3>
+                <p className="text-[10px] text-muted-foreground font-semibold">
+                  {editTarget.email}
+                </p>
               </div>
               <Button
                 variant="ghost"
@@ -573,7 +654,9 @@ export default function UsersClient() {
             <form onSubmit={handleEditSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-muted-foreground">First Name</label>
+                  <label className="block text-xs font-bold text-muted-foreground">
+                    First Name
+                  </label>
                   <Input
                     value={editFirstName}
                     onChange={(e) => setEditFirstName(e.target.value)}
@@ -583,7 +666,9 @@ export default function UsersClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="block text-xs font-bold text-muted-foreground">Last Name</label>
+                  <label className="block text-xs font-bold text-muted-foreground">
+                    Last Name
+                  </label>
                   <Input
                     value={editLastName}
                     onChange={(e) => setEditLastName(e.target.value)}
@@ -595,7 +680,9 @@ export default function UsersClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Email Address</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Email Address
+                </label>
                 <Input
                   type="email"
                   value={editEmail}
@@ -609,7 +696,9 @@ export default function UsersClient() {
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-muted-foreground">
                   New Password{" "}
-                  <span className="text-muted-foreground/60 font-normal">(leave blank to keep current)</span>
+                  <span className="text-muted-foreground/60 font-normal">
+                    (leave blank to keep current)
+                  </span>
                 </label>
                 <div className="relative">
                   <Input
@@ -634,7 +723,9 @@ export default function UsersClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">User Role</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  User Role
+                </label>
                 <select
                   value={editRole}
                   onChange={(e) => handleEditRoleChange(e.target.value)}
@@ -649,27 +740,48 @@ export default function UsersClient() {
 
               {editRole !== "superadmin" && (
                 <div className="space-y-2 border-t border-border/60 pt-3 mt-1">
-                  <label className="block text-xs font-bold text-muted-foreground">Folder Access Control</label>
+                  <label className="block text-xs font-bold text-muted-foreground">
+                    Folder Access Control
+                  </label>
                   <p className="text-[10px] text-muted-foreground font-medium pb-1">
                     Select which directories this user is authorized to access:
                   </p>
                   <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
                     {[
-                      { id: "meeting-minutes", label: "Coordination Meeting Minutes" },
-                      { id: "sops", label: "Standard Operating Procedures (SOPs)" },
-                      { id: "situational-reports", label: "Situational Reports" },
+                      {
+                        id: "meeting-minutes",
+                        label: "Coordination Meeting Minutes",
+                      },
+                      {
+                        id: "sops",
+                        label: "Standard Operating Procedures (SOPs)",
+                      },
+                      {
+                        id: "situational-reports",
+                        label: "Situational Reports",
+                      },
                     ].map((folder) => {
                       const isChecked = editSelectedFolders.includes(folder.id);
                       return (
-                        <label key={folder.id} className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none">
+                        <label
+                          key={folder.id}
+                          className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
+                        >
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={() => {
                               if (isChecked) {
-                                setEditSelectedFolders(editSelectedFolders.filter((f) => f !== folder.id));
+                                setEditSelectedFolders(
+                                  editSelectedFolders.filter(
+                                    (f) => f !== folder.id,
+                                  ),
+                                );
                               } else {
-                                setEditSelectedFolders([...editSelectedFolders, folder.id]);
+                                setEditSelectedFolders([
+                                  ...editSelectedFolders,
+                                  folder.id,
+                                ]);
                               }
                             }}
                             className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
@@ -704,7 +816,8 @@ export default function UsersClient() {
                 >
                   {updateMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Saving...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Saving...
                     </>
                   ) : (
                     "Save Changes"
