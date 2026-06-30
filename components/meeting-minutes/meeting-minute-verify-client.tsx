@@ -416,68 +416,47 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
                   : "N/A"}
               </p>
             </div>
+          </div>
+        )}
 
-            {/* Comment Log */}
-            {item.comments && item.comments.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold text-muted-foreground  tracking-wider">
-                  Comment Log
-                </h4>
-                <div className="space-y-2.5">
-                  {(item.comments as any[]).map((commentVal, index) => {
-                    const isStr = typeof commentVal === "string";
-                    const text = isStr
-                      ? commentVal
-                      : commentVal.comment || commentVal.text || "";
-                    const author = isStr ? null : commentVal.user?.email;
-                    const date = isStr ? null : commentVal.created_at;
+        {/* Comment Log */}
+        {item.comments && item.comments.length > 0 && (
+          <div className="pt-6 border-t border-border/80 space-y-3">
+            <h4 className="text-xs font-bold text-muted-foreground tracking-wider">
+              Comment Log
+            </h4>
+            <div className="space-y-2.5">
+              {(item.comments as any[]).map((commentVal, index) => {
+                const isStr = typeof commentVal === "string";
+                const text = isStr
+                  ? commentVal
+                  : commentVal.comment || commentVal.text || "";
+                const author = isStr
+                  ? null
+                  : commentVal.author?.email || commentVal.user?.email;
+                const date = isStr ? null : commentVal.created_at;
 
-                    return (
-                      <div
-                        key={index}
-                        className="p-3.5 rounded-xl bg-muted/30 border border-border/70 text-xs"
-                      >
-                        <p className="text-foreground leading-relaxed font-medium">
-                          {text}
-                        </p>
-                        {(author || date) && (
-                          <div className="flex items-center gap-2 mt-2 text-[10px] text-muted-foreground font-semibold">
-                            {author && <span>By: {author}</span>}
-                            {author && date && <span>•</span>}
-                            {date && (
-                              <span>{new Date(date).toLocaleString()}</span>
-                            )}
-                          </div>
+                return (
+                  <div
+                    key={index}
+                    className="p-3.5 rounded-xl bg-muted/30 border border-border/70 text-xs"
+                  >
+                    <p className="text-foreground leading-relaxed font-medium">
+                      {text}
+                    </p>
+                    {(author || date) && (
+                      <div className="flex items-center gap-2 mt-2 text-[10px] text-muted-foreground font-semibold">
+                        {author && <span>By: {author}</span>}
+                        {author && date && <span>•</span>}
+                        {date && (
+                          <span>{new Date(date).toLocaleString()}</span>
                         )}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Reverify Option */}
-            {item.status === "returned" && (
-              <div className="border-t border-border pt-5 flex items-center justify-between">
-                <div className="text-xs text-muted-foreground font-medium">
-                  Need to change the status or request review again?
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => reverifyMutation.mutate()}
-                  disabled={reverifyMutation.isPending}
-                  className="font-bold cursor-pointer gap-1.5 h-9"
-                >
-                  {reverifyMutation.isPending ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <RefreshCw className="w-3.5 h-3.5" />
-                  )}
-                  Reverify Document
-                </Button>
-              </div>
-            )}
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
