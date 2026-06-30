@@ -1,7 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, FileText, Trash2, X, Eye, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Search,
+  FileText,
+  Trash2,
+  X,
+  Eye,
+  Loader2,
+  RefreshCw,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+} from "lucide-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useMeetingMinutes } from "@/hooks/use-meeting-minutes";
@@ -16,6 +28,7 @@ import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { FileUpload } from "@/components/shared/file-upload";
+import Link from "next/link";
 
 export default function MeetingMinutesClient() {
   const { user, token } = useAuth();
@@ -28,7 +41,10 @@ export default function MeetingMinutesClient() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadName, setUploadName] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -42,7 +58,11 @@ export default function MeetingMinutesClient() {
   }, [debouncedSearch]);
 
   // Fetch meeting minutes list
-  const { data, isLoading, isPlaceholderData, error } = useMeetingMinutes(page, token, debouncedSearch);
+  const { data, isLoading, isPlaceholderData, error } = useMeetingMinutes(
+    page,
+    token,
+    debouncedSearch,
+  );
   const minutesList = data?.results || [];
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -89,6 +109,20 @@ export default function MeetingMinutesClient() {
     },
   });
 
+  // Reverify mutation
+  const reverifyMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return meetingMinuteService.reverify(id, token);
+    },
+    onSuccess: () => {
+      toast.success("Meeting minute status reverted to unverified!");
+      queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to revert meeting minute status");
+    },
+  });
+
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     uploadMutation.mutate();
@@ -111,7 +145,10 @@ export default function MeetingMinutesClient() {
           title="Meeting Minutes"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>Manage coordination meeting minutes, task guidelines, and partner circulars</span>
+              <span>
+                Manage coordination meeting minutes, task guidelines, and
+                partner circulars
+              </span>
               {data && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
                   {data.count} total records
@@ -121,7 +158,10 @@ export default function MeetingMinutesClient() {
           }
           actions={
             canAdd && (
-              <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
+              <Button
+                onClick={() => setIsUploadOpen(true)}
+                className="cursor-pointer font-bold"
+              >
                 <Plus className="mr-1.5 h-4 w-4" /> Upload Minute
               </Button>
             )
@@ -164,7 +204,10 @@ export default function MeetingMinutesClient() {
               }
               action={
                 canAdd ? (
-                  <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
+                  <Button
+                    onClick={() => setIsUploadOpen(true)}
+                    className="cursor-pointer font-bold"
+                  >
                     <Plus className="mr-1.5 h-4 w-4" /> Upload Minute
                   </Button>
                 ) : undefined
@@ -175,9 +218,10 @@ export default function MeetingMinutesClient() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
-                    <th className="p-4 w-[50%]">Document Name</th>
-                    <th className="p-4 w-[25%]">Published Date</th>
-                    <th className="p-4 w-[25%] text-right">Actions</th>
+                    <th className="p-4 w-[40%]">Document Name</th>
+                    <th className="p-4 w-[20%]">Published Date</th>
+                    <th className="p-4 w-[20%]">Status</th>
+                    <th className="p-4 w-[20%] text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60 text-xs">
@@ -193,21 +237,81 @@ export default function MeetingMinutesClient() {
                       : "N/A";
 
                     return (
-                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
+                      <tr
+                        key={item.id}
+                        className="hover:bg-muted/20 transition-colors"
+                      >
                         <td className="p-4 font-bold text-foreground">
-                          <span className="truncate max-w-md block">{item.name}</span>
+                          <span className="truncate max-w-md block">
+                            {item.name}
+                          </span>
                         </td>
-                        <td className="p-4 text-muted-foreground font-semibold">{formattedDate}</td>
+                        <td className="p-4 text-muted-foreground font-semibold">
+                          {formattedDate}
+                        </td>
+                        <td className="p-4">
+                          {item.status === "verified" ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3" /> Verified
+                            </span>
+                          ) : item.status === "returned" ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold border border-rose-200">
+                              <AlertTriangle className="w-3 h-3" /> Returned
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200">
+                              <Clock className="w-3 h-3" /> Unverified
+                            </span>
+                          )}
+                        </td>
                         <td className="p-4 text-right">
                           <div className="inline-flex items-center gap-2">
                             <Button
                               variant="outline"
                               size="sm"
                               className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                              onClick={() => window.open(getFileUrl(item.file), "_blank")}
+                              onClick={() =>
+                                window.open(getFileUrl(item.file), "_blank")
+                              }
                             >
                               <Eye className="w-3.5 h-3.5" /> View
                             </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-2.5 font-bold cursor-pointer gap-1"
+                              asChild
+                            >
+                              <Link
+                                href={`/assessment/meeting-minutes/verify/${item.id}`}
+                              >
+                                Review
+                              </Link>
+                            </Button>
+                            {item.status !== "unverified" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={reverifyMutation.isPending}
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1 hover:bg-muted"
+                                onClick={() => {
+                                  if (
+                                    confirm(
+                                      `Are you sure you want to request reverification for "${item.name}"?`,
+                                    )
+                                  ) {
+                                    reverifyMutation.mutate(item.id);
+                                  }
+                                }}
+                              >
+                                {reverifyMutation.isPending ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <RefreshCw className="w-3.5 h-3.5" />
+                                )}
+                                Verify
+                              </Button>
+                            )}
                             {canDelete && (
                               <Button
                                 variant="outline"
@@ -246,7 +350,9 @@ export default function MeetingMinutesClient() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
           <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Upload Meeting Minute</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Upload Meeting Minute
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -259,7 +365,9 @@ export default function MeetingMinutesClient() {
 
             <form onSubmit={handleUploadSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Document Title</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Document Title
+                </label>
                 <Input
                   value={uploadName}
                   onChange={(e) => setUploadName(e.target.value)}
@@ -269,7 +377,9 @@ export default function MeetingMinutesClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Select File (PDF, Excel, Word, etc.)</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Select File (PDF, Excel, Word, etc.)
+                </label>
                 <FileUpload
                   selectedFile={selectedFile}
                   onFileSelect={setSelectedFile}
@@ -294,7 +404,8 @@ export default function MeetingMinutesClient() {
                 >
                   {uploadMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Uploading...
                     </>
                   ) : (
                     "Upload"

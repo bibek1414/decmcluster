@@ -87,4 +87,99 @@ export const meetingMinuteService = {
       throw new Error("Failed to delete meeting minute");
     }
   },
+
+  get: async (id: number | string, token: string | null): Promise<MeetingMinuteData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/meeting-minute/${id}/`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch meeting minute details");
+    }
+    return res.json();
+  },
+
+  verify: async (
+    id: number | string,
+    status: "verified" | "returned",
+    comment: string,
+    token: string | null
+  ): Promise<MeetingMinuteData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/meeting-minute/${id}/`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ status, comment }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update meeting minute status";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  reverify: async (id: number | string, token: string | null): Promise<MeetingMinuteData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/meeting-minute/${id}/reverify/`, {
+      method: "POST",
+      headers,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to revert meeting minute status";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
 };
+
