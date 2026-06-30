@@ -29,6 +29,30 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // useMemo MUST be called before any early return to satisfy Rules of Hooks
+  const hasPathAccess = React.useMemo(() => {
+    if (!user) return false;
+    const roleLower = user.role?.toLowerCase();
+    if (roleLower === "superadmin") return true;
+
+    const acList = user.access_control || [];
+    const normalized = acList.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
+
+    if (pathname === "/assement/meeting-minutes") {
+      return normalized.includes("meeting-minutes");
+    }
+    if (pathname === "/assement/sops") {
+      return normalized.includes("sops");
+    }
+    if (pathname === "/assement/situational-reports") {
+      return normalized.includes("situational-reports");
+    }
+    if (pathname === "/assement/users") {
+      return false;
+    }
+    return true;
+  }, [pathname, user]);
+
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
       router.push("/");
@@ -56,29 +80,6 @@ export default function AdminLayout({
     logout();
     router.push("/");
   };
-
-  const hasPathAccess = React.useMemo(() => {
-    if (!user) return false;
-    const roleLower = user.role?.toLowerCase();
-    if (roleLower === "superadmin") return true;
-
-    const acList = user.access_control || [];
-    const normalized = acList.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
-
-    if (pathname === "/assement/meeting-minutes") {
-      return normalized.includes("meeting-minutes");
-    }
-    if (pathname === "/assement/sops") {
-      return normalized.includes("sops");
-    }
-    if (pathname === "/assement/situational-reports") {
-      return normalized.includes("situational-reports");
-    }
-    if (pathname === "/assement/users") {
-      return false; // Non-superadmins have no access to User Management
-    }
-    return true;
-  }, [pathname, user]);
 
   const SidebarContent = () => {
     const isSuperAdmin = user?.role === "Superadmin";
