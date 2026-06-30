@@ -50,7 +50,8 @@ export const sopService = {
     name: string,
     description: string,
     file: File | null,
-    token: string | null
+    token: string | null,
+    isAdmin: boolean = false
   ): Promise<SOPData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -71,7 +72,8 @@ export const sopService = {
       }
     }
 
-    const res = await fetch(`${baseUrl}/api/sop/`, {
+    const path = isAdmin ? "/api/sop/admin/" : "/api/sop/";
+    const res = await fetch(`${baseUrl}${path}`, {
       method: "POST",
       headers,
       body: formData,
@@ -113,5 +115,138 @@ export const sopService = {
     if (!res.ok) {
       throw new Error("Failed to delete SOP document");
     }
+  },
+
+  get: async (id: number | string, token: string | null): Promise<SOPData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/sop/${id}/`, {
+      method: "GET",
+      headers,
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch SOP document");
+    }
+    return res.json();
+  },
+
+  verify: async (
+    id: number | string,
+    status: string,
+    comment: string,
+    token: string | null
+  ): Promise<SOPData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/sop/${id}/`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ status, comment }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update SOP status";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  reverify: async (id: number | string, token: string | null): Promise<SOPData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/sop/${id}/reverify/`, {
+      method: "POST",
+      headers,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to revert SOP status";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  updateFile: async (
+    id: number | string,
+    file: File,
+    token: string | null
+  ): Promise<SOPData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/sop/${id}/`, {
+      method: "PATCH",
+      headers,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to upload new version";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
   },
 };

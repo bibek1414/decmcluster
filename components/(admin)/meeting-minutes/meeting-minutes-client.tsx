@@ -140,13 +140,17 @@ export default function MeetingMinutesClient() {
     mutationFn: async () => {
       if (!uploadNewTarget) throw new Error("No target selected");
       if (!selectedNewFile) throw new Error("Please select a file to upload");
-      
+
       // 1. PATCH the file
-      const updated = await meetingMinuteService.updateFile(uploadNewTarget.id, selectedNewFile, token);
-      
+      const updated = await meetingMinuteService.updateFile(
+        uploadNewTarget.id,
+        selectedNewFile,
+        token,
+      );
+
       // 2. Call reverify to reset status to unverified and trigger email
       await meetingMinuteService.reverify(uploadNewTarget.id, token);
-      
+
       return updated;
     },
     onSuccess: () => {
@@ -321,7 +325,7 @@ export default function MeetingMinutesClient() {
                                 asChild
                               >
                                 <Link
-                                  href={`/assessment/meeting-minutes/verify/${item.id}`}
+                                  href={`/meeting-minutes/verify/${item.id}`}
                                 >
                                   Review
                                 </Link>
@@ -516,7 +520,13 @@ export default function MeetingMinutesClient() {
 
             <div className="space-y-1 text-xs text-muted-foreground">
               <p>
-                Uploading a revised file for <strong className="text-foreground">"{uploadNewTarget.name}"</strong> will reset its status to <span className="font-bold text-amber-600">Unverified</span> for review.
+                Uploading a revised file for{" "}
+                <strong className="text-foreground">
+                  "{uploadNewTarget.name}"
+                </strong>{" "}
+                will reset its status to{" "}
+                <span className="font-bold text-amber-600">Unverified</span> for
+                review.
               </p>
             </div>
 

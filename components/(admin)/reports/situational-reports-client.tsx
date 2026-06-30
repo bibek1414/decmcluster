@@ -1,7 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, FileText, Trash2, X, Eye, Loader2, Download, ExternalLink } from "lucide-react";
+import {
+  Plus,
+  Search,
+  FileText,
+  Trash2,
+  X,
+  Eye,
+  Loader2,
+  Download,
+  ExternalLink,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  RefreshCw,
+  Upload,
+} from "lucide-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { useAdminReports } from "@/hooks/use-admin-reports";
@@ -16,6 +31,7 @@ import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { FileUpload } from "@/components/shared/file-upload";
+import Link from "next/link";
 
 export default function SituationalReportsClient() {
   const { user, token } = useAuth();
@@ -30,7 +46,21 @@ export default function SituationalReportsClient() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Delete State
-  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+
+  // Verification & Versioning state
+  const [reverifyTarget, setReverifyTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+  const [uploadNewTarget, setUploadNewTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+  const [selectedNewFile, setSelectedNewFile] = useState<File | null>(null);
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -44,7 +74,11 @@ export default function SituationalReportsClient() {
   }, [debouncedSearch]);
 
   // Fetch Reports list
-  const { data, isLoading, isPlaceholderData, error } = useAdminReports(page, token, debouncedSearch);
+  const { data, isLoading, isPlaceholderData, error } = useAdminReports(
+    page,
+    token,
+    debouncedSearch,
+  );
   const reportsList = data?.results || [];
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -61,7 +95,7 @@ export default function SituationalReportsClient() {
     mutationFn: async () => {
       if (!uploadName.trim()) throw new Error("Please enter a name");
       if (!selectedFile) throw new Error("Please select a file to upload");
-      
+
       const todayDate = new Date().toISOString().split("T")[0];
       return reportService.create(
         uploadName,
@@ -70,7 +104,7 @@ export default function SituationalReportsClient() {
         selectedFile,
         null,
         token,
-        true
+        true,
       );
     },
     onSuccess: () => {
@@ -82,6 +116,51 @@ export default function SituationalReportsClient() {
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to upload report");
+    },
+  });
+
+  // Reverify mutation
+  const reverifyMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return reportService.reverify(id, token);
+    },
+    onSuccess: () => {
+      toast.success("Report status reverted to unverified!");
+      setReverifyTarget(null);
+      queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to revert report status");
+      setReverifyTarget(null);
+    },
+  });
+
+  // Upload new version mutation
+  const uploadNewMutation = useMutation({
+    mutationFn: async () => {
+      if (!uploadNewTarget) throw new Error("No target selected");
+      if (!selectedNewFile) throw new Error("Please select a file to upload");
+
+      // 1. PATCH the file
+      const updated = await reportService.updateFile(
+        uploadNewTarget.id,
+        selectedNewFile,
+        token,
+      );
+
+      // 2. Call reverify to reset status and notify
+      await reportService.reverify(uploadNewTarget.id, token);
+
+      return updated;
+    },
+    onSuccess: () => {
+      toast.success("New version uploaded and submitted for verification!");
+      setUploadNewTarget(null);
+      setSelectedNewFile(null);
+      queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to upload new version");
     },
   });
 
@@ -136,7 +215,10 @@ export default function SituationalReportsClient() {
           title="Situational Reports & Publications"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>Manage displacement trackers, situational updates, and monthly reports</span>
+              <span>
+                Manage displacement trackers, situational updates, and monthly
+                reports
+              </span>
               {data && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
                   {data.count} total records
@@ -146,7 +228,10 @@ export default function SituationalReportsClient() {
           }
           actions={
             canAdd && (
-              <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
+              <Button
+                onClick={() => setIsUploadOpen(true)}
+                className="cursor-pointer font-bold"
+              >
                 <Plus className="mr-1.5 h-4 w-4" /> Upload Report
               </Button>
             )
@@ -189,7 +274,10 @@ export default function SituationalReportsClient() {
               }
               action={
                 canAdd ? (
-                  <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
+                  <Button
+                    onClick={() => setIsUploadOpen(true)}
+                    className="cursor-pointer font-bold"
+                  >
                     <Plus className="mr-1.5 h-4 w-4" /> Upload Report
                   </Button>
                 ) : undefined
@@ -200,20 +288,41 @@ export default function SituationalReportsClient() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
-                    <th className="p-4 w-[60%]">Document Name</th>
+                    <th className="p-4 w-[45%]">Document Name</th>
                     <th className="p-4 w-[20%]">Published Date</th>
+                    <th className="p-4 w-[15%]">Status</th>
                     <th className="p-4 w-[20%] text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60 text-xs">
                   {reportsList.map((item) => {
                     return (
-                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
+                      <tr
+                        key={item.id}
+                        className="hover:bg-muted/20 transition-colors"
+                      >
                         <td className="p-4 font-bold text-foreground">
-                          <span className="truncate max-w-md block">{item.name}</span>
+                          <span className="truncate max-w-md block">
+                            {item.name}
+                          </span>
                         </td>
                         <td className="p-4 text-muted-foreground font-semibold">
                           {item.date ? formatDate(item.date) : "—"}
+                        </td>
+                        <td className="p-4">
+                          {item.status === "verified" ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3" /> Verified
+                            </span>
+                          ) : item.status === "returned" ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 text-[10px] font-bold border border-rose-200">
+                              <AlertTriangle className="w-3 h-3" /> Returned
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200">
+                              <Clock className="w-3 h-3" /> Unverified
+                            </span>
+                          )}
                         </td>
                         <td className="p-4 text-right">
                           <div className="inline-flex items-center gap-2">
@@ -222,9 +331,64 @@ export default function SituationalReportsClient() {
                                 variant="outline"
                                 size="sm"
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                                onClick={() => window.open(getFileUrl(item.file || item.url), "_blank")}
+                                onClick={() =>
+                                  window.open(
+                                    getFileUrl(item.file || item.url),
+                                    "_blank",
+                                  )
+                                }
                               >
                                 <Eye className="w-3.5 h-3.5" /> View
+                              </Button>
+                            )}
+                            {isSuperAdmin && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1"
+                                asChild
+                              >
+                                <Link
+                                  href={`/situational-reports/verify/${item.id}`}
+                                >
+                                  Review
+                                </Link>
+                              </Button>
+                            )}
+                            {canAdd && item.status === "returned" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={reverifyMutation.isPending}
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1 hover:bg-muted"
+                                onClick={() =>
+                                  setReverifyTarget({
+                                    id: item.id,
+                                    name: item.name,
+                                  })
+                                }
+                              >
+                                {reverifyMutation.isPending ? (
+                                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                  <RefreshCw className="w-3.5 h-3.5" />
+                                )}
+                                Verify
+                              </Button>
+                            )}
+                            {canAdd && item.status !== "verified" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1 hover:bg-muted"
+                                onClick={() =>
+                                  setUploadNewTarget({
+                                    id: item.id,
+                                    name: item.name,
+                                  })
+                                }
+                              >
+                                <Upload className="w-3.5 h-3.5" /> Upload New
                               </Button>
                             )}
                             {canDelete && (
@@ -265,7 +429,9 @@ export default function SituationalReportsClient() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
           <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Upload Report / Publication</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Upload Report / Publication
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -278,7 +444,9 @@ export default function SituationalReportsClient() {
 
             <form onSubmit={handleUploadSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Document Title</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Document Title
+                </label>
                 <Input
                   value={uploadName}
                   onChange={(e) => setUploadName(e.target.value)}
@@ -288,7 +456,9 @@ export default function SituationalReportsClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Select File</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Select File
+                </label>
                 <FileUpload
                   selectedFile={selectedFile}
                   onFileSelect={setSelectedFile}
@@ -313,7 +483,8 @@ export default function SituationalReportsClient() {
                 >
                   {uploadMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Uploading...
                     </>
                   ) : (
                     "Upload"
@@ -325,6 +496,24 @@ export default function SituationalReportsClient() {
         </div>
       )}
 
+      {/* Reverify confirmation */}
+      <AlertDialog
+        isOpen={!!reverifyTarget}
+        onClose={() => setReverifyTarget(null)}
+        onConfirm={() => {
+          if (reverifyTarget) {
+            reverifyMutation.mutate(reverifyTarget.id);
+          }
+        }}
+        title="Revert Verification Status"
+        description={`Are you sure you want to request reverification for "${reverifyTarget?.name}"?`}
+        confirmText="Verify"
+        pendingText="Verifying..."
+        variant="default"
+        isPending={reverifyMutation.isPending}
+      />
+
+      {/* Delete confirmation */}
       <AlertDialog
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
@@ -333,6 +522,89 @@ export default function SituationalReportsClient() {
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
         isPending={deleteMutation.isPending}
       />
+
+      {/* Upload New Version Modal */}
+      {uploadNewTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-base font-bold text-foreground">
+                Upload New Version
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setUploadNewTarget(null);
+                  setSelectedNewFile(null);
+                }}
+                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p className="font-bold text-foreground">
+                Uploading a new version for "{uploadNewTarget.name}"
+              </p>
+              <p>
+                Need to submit a revised file? Uploading a new file will
+                automatically reset this document's status to unverified for
+                verification.
+              </p>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                uploadNewMutation.mutate();
+              }}
+              className="space-y-4"
+            >
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Select File
+                </label>
+                <FileUpload
+                  selectedFile={selectedNewFile}
+                  onFileSelect={setSelectedNewFile}
+                  accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg"
+                  helperText="Drag & drop new file here or click to browse"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setUploadNewTarget(null);
+                    setSelectedNewFile(null);
+                  }}
+                  className="h-9 cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={uploadNewMutation.isPending || !selectedNewFile}
+                  className="h-9 font-bold cursor-pointer"
+                >
+                  {uploadNewMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Uploading...
+                    </>
+                  ) : (
+                    "Upload Version"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
