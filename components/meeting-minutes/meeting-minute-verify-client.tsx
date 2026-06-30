@@ -4,7 +4,19 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { meetingMinuteService } from "@/services/meeting-minute";
-import { FileText, Loader2, CheckCircle2, AlertTriangle, Clock, RefreshCw, Calendar, User, Eye, Lock, ArrowLeft } from "lucide-react";
+import {
+  FileText,
+  Loader2,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  RefreshCw,
+  Calendar,
+  User,
+  Eye,
+  Lock,
+  ChevronLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
@@ -16,9 +28,17 @@ interface Props {
 }
 
 export default function MeetingMinuteVerifyClient({ id }: Props) {
-  const { user, isLoggedIn, isLoading: isAuthLoading, token, logout } = useAuth();
+  const {
+    user,
+    isLoggedIn,
+    isLoading: isAuthLoading,
+    token,
+    logout,
+  } = useAuth();
   const queryClient = useQueryClient();
-  const [selectedStatus, setSelectedStatus] = useState<"verified" | "returned" | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<
+    "verified" | "returned" | null
+  >(null);
   const [commentText, setCommentText] = useState("");
 
   // Permissions
@@ -27,7 +47,12 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
   const canVerify = isSuperAdmin || (!isViewer && !!user?.role);
 
   // Fetch single meeting minute details
-  const { data: item, isLoading: isDataLoading, error, refetch } = useQuery({
+  const {
+    data: item,
+    isLoading: isDataLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["meeting-minute-detail", id, token],
     queryFn: () => meetingMinuteService.get(id, token),
     enabled: isLoggedIn && !!token,
@@ -37,13 +62,20 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
   const verifyMutation = useMutation({
     mutationFn: async () => {
       if (!selectedStatus) throw new Error("Please select a status action");
-      return meetingMinuteService.verify(id, selectedStatus, commentText, token);
+      return meetingMinuteService.verify(
+        id,
+        selectedStatus,
+        commentText,
+        token,
+      );
     },
     onSuccess: (updated) => {
       toast.success(`Meeting minute successfully ${selectedStatus}!`);
       setCommentText("");
       setSelectedStatus(null);
-      queryClient.invalidateQueries({ queryKey: ["meeting-minute-detail", id] });
+      queryClient.invalidateQueries({
+        queryKey: ["meeting-minute-detail", id],
+      });
       queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
     },
     onError: (err: any) => {
@@ -58,7 +90,9 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
     },
     onSuccess: () => {
       toast.success("Meeting minute reverted to unverified status!");
-      queryClient.invalidateQueries({ queryKey: ["meeting-minute-detail", id] });
+      queryClient.invalidateQueries({
+        queryKey: ["meeting-minute-detail", id],
+      });
       queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
     },
     onError: (err: any) => {
@@ -86,7 +120,9 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
       <div className="flex flex-col items-center justify-center min-h-[400px] py-16 animate-fadeIn">
         <div className="flex flex-col items-center gap-3 bg-card border border-border p-8 rounded-2xl shadow-sm">
           <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-          <p className="text-xs text-muted-foreground font-semibold">Verifying secure session...</p>
+          <p className="text-xs text-muted-foreground font-semibold">
+            Verifying secure session...
+          </p>
         </div>
       </div>
     );
@@ -97,9 +133,12 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
     return (
       <div className="max-w-md w-full mx-auto px-4 py-16 animate-fadeIn space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-xl font-extrabold text-foreground">Secure Verification</h2>
+          <h2 className="text-xl font-extrabold text-foreground">
+            Secure Verification
+          </h2>
           <p className="text-xs text-muted-foreground">
-            Please log in with an authorized account to verify and review coordination meeting minutes.
+            Please log in with an authorized account to verify and review
+            coordination meeting minutes.
           </p>
         </div>
         <LoginCard />
@@ -116,16 +155,28 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
             <Lock className="h-6 w-6" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-base font-bold text-foreground">Access Denied</h3>
+            <h3 className="text-base font-bold text-foreground">
+              Access Denied
+            </h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Your account <strong>{user?.email}</strong> does not have permission to verify meeting minutes. Please request verification rights from the administrator.
+              Your account <strong>{user?.email}</strong> does not have
+              permission to verify meeting minutes. Please request verification
+              rights from the administrator.
             </p>
           </div>
           <div className="flex flex-col gap-2 pt-2">
-            <Button asChild variant="outline" className="w-full h-10 font-bold cursor-pointer">
+            <Button
+              asChild
+              variant="outline"
+              className="w-full h-10 font-bold cursor-pointer"
+            >
               <Link href="/">Go to Homepage</Link>
             </Button>
-            <Button onClick={logout} variant="ghost" className="w-full h-10 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 font-bold cursor-pointer">
+            <Button
+              onClick={logout}
+              variant="ghost"
+              className="w-full h-10 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 font-bold cursor-pointer"
+            >
               Sign Out & Switch Account
             </Button>
           </div>
@@ -150,11 +201,18 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
       <div className="max-w-3xl w-full mx-auto px-4 py-16 animate-fadeIn">
         <div className="bg-card border border-border rounded-2xl p-8 text-center space-y-4">
           <AlertTriangle className="mx-auto h-12 w-12 text-rose-500" />
-          <h3 className="text-base font-bold text-foreground">Failed to Load Document</h3>
+          <h3 className="text-base font-bold text-foreground">
+            Failed to Load Document
+          </h3>
           <p className="text-xs text-muted-foreground">
-            {(error as Error)?.message || "The requested meeting minute could not be retrieved. It may have been deleted."}
+            {(error as Error)?.message ||
+              "The requested meeting minute could not be retrieved. It may have been deleted."}
           </p>
-          <Button onClick={() => refetch()} variant="outline" className="cursor-pointer font-bold">
+          <Button
+            onClick={() => refetch()}
+            variant="outline"
+            className="cursor-pointer font-bold"
+          >
             <RefreshCw className="mr-1.5 h-4 w-4" /> Retry
           </Button>
         </div>
@@ -180,15 +238,15 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
           href="/assement/meeting-minutes"
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground font-semibold transition-colors"
         >
-          <ArrowLeft className="w-3.5 h-3.5" /> Back to Meeting Minutes
+          <ChevronLeft className="w-3.5 h-3.5" /> Back to Meeting Minutes
         </Link>
-        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider bg-muted border border-border px-2.5 py-1 rounded-full">
+        <span className="text-[10px] text-muted-foreground font-bold  tracking-wider bg-muted border border-border px-2.5 py-1 rounded-full">
           Verification Portal
         </span>
       </div>
 
       {/* Main Document Details Card */}
-      <div className="bg-card text-card-foreground rounded-2xl p-6 border border-border shadow-sm space-y-6">
+      <div className="bg-card text-card-foreground rounded-2xl p-6 border border-border  space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-border pb-5">
           <div className="space-y-1.5">
             <h1 className="text-lg sm:text-xl font-extrabold text-foreground tracking-tight">
@@ -235,7 +293,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
               <p className="text-xs font-bold text-foreground truncate max-w-sm sm:max-w-md">
                 {item.file ? item.file.split("/").pop() : "document_file"}
               </p>
-              <p className="text-[10px] text-muted-foreground font-semibold uppercase">
+              <p className="text-[10px] text-muted-foreground font-semibold ">
                 Attachment File
               </p>
             </div>
@@ -254,7 +312,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
         {item.status === "unverified" ? (
           <form onSubmit={handleVerifySubmit} className="pt-2 space-y-5">
             <div className="space-y-2.5">
-              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <label className="block text-xs font-bold text-muted-foreground  tracking-wider">
                 Select Verification Decision
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -267,7 +325,9 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
                       : "bg-background text-foreground border-border hover:bg-muted/30"
                   }`}
                 >
-                  <CheckCircle2 className={`w-4 h-4 ${selectedStatus === "verified" ? "text-emerald-600" : "text-muted-foreground"}`} />
+                  <CheckCircle2
+                    className={`w-4 h-4 ${selectedStatus === "verified" ? "text-emerald-600" : "text-muted-foreground"}`}
+                  />
                   Verify Document
                 </button>
                 <button
@@ -279,14 +339,16 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
                       : "bg-background text-foreground border-border hover:bg-muted/30"
                   }`}
                 >
-                  <AlertTriangle className={`w-4 h-4 ${selectedStatus === "returned" ? "text-rose-600" : "text-muted-foreground"}`} />
+                  <AlertTriangle
+                    className={`w-4 h-4 ${selectedStatus === "returned" ? "text-rose-600" : "text-muted-foreground"}`}
+                  />
                   Return Document
                 </button>
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <label className="block text-xs font-bold text-muted-foreground  tracking-wider">
                 Comments / Feedback
               </label>
               <textarea
@@ -306,12 +368,17 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
             <div className="flex justify-end gap-2 border-t border-border pt-4">
               <Button
                 type="submit"
-                disabled={!selectedStatus || verifyMutation.isPending || (selectedStatus === "returned" && !commentText.trim())}
+                disabled={
+                  !selectedStatus ||
+                  verifyMutation.isPending ||
+                  (selectedStatus === "returned" && !commentText.trim())
+                }
                 className="h-10 px-6 font-bold cursor-pointer"
               >
                 {verifyMutation.isPending ? (
                   <>
-                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Submitting...
+                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                    Submitting...
                   </>
                 ) : (
                   "Submit Decision"
@@ -322,11 +389,13 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
         ) : (
           <div className="pt-2 border-t border-border space-y-6">
             {/* Decided Outcome Card */}
-            <div className={`p-4 rounded-xl border ${
-              item.status === "verified" 
-                ? "bg-emerald-50/40 border-emerald-100/80 text-emerald-800" 
-                : "bg-rose-50/40 border-rose-100/80 text-rose-800"
-            }`}>
+            <div
+              className={`p-4 rounded-xl border ${
+                item.status === "verified"
+                  ? "bg-emerald-50/40 border-emerald-100/80 text-emerald-800"
+                  : "bg-rose-50/40 border-rose-100/80 text-rose-800"
+              }`}
+            >
               <p className="text-xs font-bold flex items-center gap-1.5">
                 {item.status === "verified" ? (
                   <>
@@ -341,29 +410,43 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
                 )}
               </p>
               <p className="text-[10px] text-muted-foreground font-semibold mt-1">
-                Decision submitted on {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : "N/A"}
+                Decision submitted on{" "}
+                {item.updated_at
+                  ? new Date(item.updated_at).toLocaleDateString()
+                  : "N/A"}
               </p>
             </div>
 
             {/* Comment Log */}
             {item.comments && item.comments.length > 0 && (
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Comment Log</h4>
+                <h4 className="text-xs font-bold text-muted-foreground  tracking-wider">
+                  Comment Log
+                </h4>
                 <div className="space-y-2.5">
                   {(item.comments as any[]).map((commentVal, index) => {
                     const isStr = typeof commentVal === "string";
-                    const text = isStr ? commentVal : (commentVal.comment || commentVal.text || "");
+                    const text = isStr
+                      ? commentVal
+                      : commentVal.comment || commentVal.text || "";
                     const author = isStr ? null : commentVal.user?.email;
                     const date = isStr ? null : commentVal.created_at;
 
                     return (
-                      <div key={index} className="p-3.5 rounded-xl bg-muted/30 border border-border/70 text-xs">
-                        <p className="text-foreground leading-relaxed font-medium">{text}</p>
+                      <div
+                        key={index}
+                        className="p-3.5 rounded-xl bg-muted/30 border border-border/70 text-xs"
+                      >
+                        <p className="text-foreground leading-relaxed font-medium">
+                          {text}
+                        </p>
                         {(author || date) && (
                           <div className="flex items-center gap-2 mt-2 text-[10px] text-muted-foreground font-semibold">
                             {author && <span>By: {author}</span>}
                             {author && date && <span>•</span>}
-                            {date && <span>{new Date(date).toLocaleString()}</span>}
+                            {date && (
+                              <span>{new Date(date).toLocaleString()}</span>
+                            )}
                           </div>
                         )}
                       </div>

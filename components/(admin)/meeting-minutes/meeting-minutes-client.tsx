@@ -45,6 +45,10 @@ export default function MeetingMinutesClient() {
     id: number;
     name: string;
   } | null>(null);
+  const [reverifyTarget, setReverifyTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -116,10 +120,12 @@ export default function MeetingMinutesClient() {
     },
     onSuccess: () => {
       toast.success("Meeting minute status reverted to unverified!");
+      setReverifyTarget(null);
       queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to revert meeting minute status");
+      setReverifyTarget(null);
     },
   });
 
@@ -276,33 +282,32 @@ export default function MeetingMinutesClient() {
                             >
                               <Eye className="w-3.5 h-3.5" /> View
                             </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                              asChild
-                            >
-                              <Link
-                                href={`/assessment/meeting-minutes/verify/${item.id}`}
+                            {isSuperAdmin && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1"
+                                asChild
                               >
-                                Review
-                              </Link>
-                            </Button>
-                            {item.status !== "unverified" && (
+                                <Link
+                                  href={`/assessment/meeting-minutes/verify/${item.id}`}
+                                >
+                                  Review
+                                </Link>
+                              </Button>
+                            )}
+                            {isSuperAdmin && item.status !== "unverified" && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 disabled={reverifyMutation.isPending}
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1 hover:bg-muted"
-                                onClick={() => {
-                                  if (
-                                    confirm(
-                                      `Are you sure you want to request reverification for "${item.name}"?`,
-                                    )
-                                  ) {
-                                    reverifyMutation.mutate(item.id);
-                                  }
-                                }}
+                                onClick={() =>
+                                  setReverifyTarget({
+                                    id: item.id,
+                                    name: item.name,
+                                  })
+                                }
                               >
                                 {reverifyMutation.isPending ? (
                                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -424,6 +429,19 @@ export default function MeetingMinutesClient() {
         title="Delete Meeting Minute"
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
         isPending={deleteMutation.isPending}
+      />
+
+      <AlertDialog
+        isOpen={!!reverifyTarget}
+        onClose={() => setReverifyTarget(null)}
+        onConfirm={() => {
+          if (reverifyTarget) {
+            reverifyMutation.mutate(reverifyTarget.id);
+          }
+        }}
+        title="Revert Verification Status"
+        description={`Are you sure you want to request reverification for "${reverifyTarget?.name}"?`}
+        isPending={reverifyMutation.isPending}
       />
     </div>
   );
