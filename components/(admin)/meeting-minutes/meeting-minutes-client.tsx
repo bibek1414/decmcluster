@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Clock,
+  Upload,
 } from "lucide-react";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
@@ -49,6 +50,11 @@ export default function MeetingMinutesClient() {
     id: number;
     name: string;
   } | null>(null);
+  const [uploadNewTarget, setUploadNewTarget] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
+  const [selectedNewFile, setSelectedNewFile] = useState<File | null>(null);
 
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
@@ -126,6 +132,31 @@ export default function MeetingMinutesClient() {
     onError: (err: any) => {
       toast.error(err.message || "Failed to revert meeting minute status");
       setReverifyTarget(null);
+    },
+  });
+
+  // Upload new version mutation
+  const uploadNewMutation = useMutation({
+    mutationFn: async () => {
+      if (!uploadNewTarget) throw new Error("No target selected");
+      if (!selectedNewFile) throw new Error("Please select a file to upload");
+      
+      // 1. PATCH the file
+      const updated = await meetingMinuteService.updateFile(uploadNewTarget.id, selectedNewFile, token);
+      
+      // 2. Call reverify to reset status to unverified and trigger email
+      await meetingMinuteService.reverify(uploadNewTarget.id, token);
+      
+      return updated;
+    },
+    onSuccess: () => {
+      toast.success("New version uploaded and submitted for verification!");
+      setUploadNewTarget(null);
+      setSelectedNewFile(null);
+      queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to upload new version");
     },
   });
 
@@ -296,7 +327,7 @@ export default function MeetingMinutesClient() {
                                 </Link>
                               </Button>
                             )}
-                            {isSuperAdmin && item.status !== "unverified" && (
+                            {canAdd && item.status === "returned" && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -315,6 +346,21 @@ export default function MeetingMinutesClient() {
                                   <RefreshCw className="w-3.5 h-3.5" />
                                 )}
                                 Verify
+                              </Button>
+                            )}
+                            {canAdd && item.status !== "verified" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 px-2.5 font-bold cursor-pointer gap-1 hover:bg-muted"
+                                onClick={() =>
+                                  setUploadNewTarget({
+                                    id: item.id,
+                                    name: item.name,
+                                  })
+                                }
+                              >
+                                <Upload className="w-3.5 h-3.5" /> Upload New
                               </Button>
                             )}
                             {canDelete && (
@@ -441,8 +487,83 @@ export default function MeetingMinutesClient() {
         }}
         title="Revert Verification Status"
         description={`Are you sure you want to request reverification for "${reverifyTarget?.name}"?`}
+        confirmText="Verify"
+        pendingText="Verifying..."
+        variant="default"
         isPending={reverifyMutation.isPending}
       />
+
+      {/* Upload New Version Modal */}
+      {uploadNewTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-base font-bold text-foreground">
+                Upload New Version
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  setUploadNewTarget(null);
+                  setSelectedNewFile(null);
+                }}
+                className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <p>
+                Uploading a revised file for <strong className="text-foreground">"{uploadNewTarget.name}"</strong> will reset its status to <span className="font-bold text-amber-600">Unverified</span> for review.
+              </p>
+            </div>
+
+            <div className="space-y-4 pt-2">
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Select File (PDF, Excel, Word, etc.)
+                </label>
+                <FileUpload
+                  selectedFile={selectedNewFile}
+                  onFileSelect={setSelectedNewFile}
+                  accept=".pdf,.xlsx,.xls,.doc,.docx,.png,.jpg,.jpeg"
+                  helperText="Drag & drop new file here or click to browse"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setUploadNewTarget(null);
+                    setSelectedNewFile(null);
+                  }}
+                  className="h-9 cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => uploadNewMutation.mutate()}
+                  disabled={!selectedNewFile || uploadNewMutation.isPending}
+                  className="h-9 font-bold cursor-pointer"
+                >
+                  {uploadNewMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Uploading...
+                    </>
+                  ) : (
+                    "Upload"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

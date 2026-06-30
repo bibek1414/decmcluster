@@ -181,5 +181,45 @@ export const meetingMinuteService = {
     }
     return res.json();
   },
+
+  updateFile: async (
+    id: number | string,
+    file: File,
+    token: string | null
+  ): Promise<MeetingMinuteData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/meeting-minute/${id}/`, {
+      method: "PATCH",
+      headers,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to upload new version";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
 };
 

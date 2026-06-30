@@ -309,7 +309,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
         </div>
 
         {/* Verification Form Section */}
-        {item.status === "unverified" ? (
+        {item.status === "unverified" || item.status === "returned" ? (
           <form onSubmit={handleVerifySubmit} className="pt-2 space-y-5">
             <div className="space-y-2.5">
               <label className="block text-xs font-bold text-muted-foreground  tracking-wider">
@@ -457,25 +457,27 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
             )}
 
             {/* Reverify Option */}
-            <div className="border-t border-border pt-5 flex items-center justify-between">
-              <div className="text-xs text-muted-foreground font-medium">
-                Need to change the status or request review again?
+            {item.status === "returned" && (
+              <div className="border-t border-border pt-5 flex items-center justify-between">
+                <div className="text-xs text-muted-foreground font-medium">
+                  Need to change the status or request review again?
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => reverifyMutation.mutate()}
+                  disabled={reverifyMutation.isPending}
+                  className="font-bold cursor-pointer gap-1.5 h-9"
+                >
+                  {reverifyMutation.isPending ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-3.5 h-3.5" />
+                  )}
+                  Reverify Document
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => reverifyMutation.mutate()}
-                disabled={reverifyMutation.isPending}
-                className="font-bold cursor-pointer gap-1.5 h-9"
-              >
-                {reverifyMutation.isPending ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <RefreshCw className="w-3.5 h-3.5" />
-                )}
-                Reverify Document
-              </Button>
-            </div>
+            )}
           </div>
         )}
       </div>
