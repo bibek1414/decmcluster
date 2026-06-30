@@ -18,6 +18,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAdminUsers } from "@/hooks/use-admin-users";
 import { useDebounce } from "@/hooks/use-debounce";
 import { userService } from "@/services/user";
+import { UserData } from "@/types/admin/user";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
