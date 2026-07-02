@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginCard() {
-  const { user, isLoggedIn, isLoading: isAuthLoading, loginMutation, logout } = useAuth();
+  const {
+    user,
+    isLoggedIn,
+    isLoading: isAuthLoading,
+    loginMutation,
+    logout,
+  } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
@@ -41,7 +47,9 @@ export default function LoginCard() {
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 border-0 sm:border border-border flex items-center justify-center h-full min-h-[300px]">
         <div className="flex flex-col items-center gap-2">
           <div className="w-6 h-6 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
-          <span className="text-xs text-muted-foreground">Checking session...</span>
+          <span className="text-xs text-muted-foreground">
+            Checking session...
+          </span>
         </div>
       </div>
     );
@@ -51,13 +59,13 @@ export default function LoginCard() {
     <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 border-0 sm:border border-border flex flex-col justify-between h-full transition-colors duration-300">
       <div>
         <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
-          <h3 className="text-lg font-bold text-primary flex items-center gap-2">
+          <h3 className="text-sm font-bold text-primary flex items-center gap-2">
             {isLoggedIn ? (
               <Unlock className="w-5 h-5 text-emerald-500" />
             ) : (
-              <Lock className="w-5 h-5 text-primary" />
+              <Lock className="w-4 h-4 text-primary" />
             )}
-            User Access
+            Welcome to DECM Cluster Data Repository
           </h3>
           {isLoggedIn && (
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
@@ -74,12 +82,19 @@ export default function LoginCard() {
                 <p className="text-xs text-muted-foreground font-semibold">
                   Logged In As
                 </p>
-                <p className="text-sm font-extrabold text-primary">{user?.email || "user@decmvanuatu.org"}</p>
-                <p className="text-xs text-emerald-700 font-medium">Role: {user?.role || "Viewer"}</p>
+                <p className="text-sm font-extrabold text-primary">
+                  {user?.email || "user@decmvanuatu.org"}
+                </p>
+                <p className="text-xs text-emerald-700 font-medium">
+                  Role: {user?.role || "Viewer"}
+                </p>
               </div>
             </div>
             <div className="text-xs text-muted-foreground leading-relaxed bg-muted p-3 rounded-lg border border-border">
-              Welcome back. You have access to {user?.role === "Admin" || user?.role === "Superadmin" ? "all system panels, database configuration, and partner forms." : "viewing statistical data and maps."}
+              Welcome back. You have access to{" "}
+              {user?.role === "Admin" || user?.role === "Superadmin"
+                ? "all system panels, database configuration, and partner forms."
+                : "viewing statistical data and maps."}
             </div>
             <Button
               onClick={handleLogout}
@@ -123,7 +138,6 @@ export default function LoginCard() {
               </div>
             </div>
 
-
             {errorToShow && (
               <div className="flex items-center gap-1.5 text-xs text-rose-600 bg-rose-50 p-2 rounded-lg border border-rose-100">
                 <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
@@ -148,7 +162,6 @@ export default function LoginCard() {
           </form>
         )}
       </div>
-
     </div>
   );
 }
