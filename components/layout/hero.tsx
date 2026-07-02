@@ -23,31 +23,6 @@ export default function Hero() {
       {/* Gradient Overlay for blending the image into solid dark blue */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#022a4f] via-[#022a4f] md:via-[#022a4f]/90 to-transparent z-0" />
 
-      {/* Melanesian Style Geometric / Tribal Vector Overlay */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 w-[300px] h-[300px] opacity-15 pointer-events-none z-10 hidden lg:block">
-        <svg
-          viewBox="0 0 100 100"
-          className="w-full h-full text-white"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          {/* Outer circle of triangles */}
-          <circle cx="50" cy="50" r="45" strokeDasharray="2 2" />
-          <circle cx="50" cy="50" r="40" />
-          {/* Tribal star geometric pattern */}
-          <path d="M50 10 L55 35 L80 35 L60 50 L70 75 L50 60 L30 75 L40 50 L20 35 L45 35 Z" />
-          <circle cx="50" cy="50" r="25" strokeDasharray="3 3" />
-          <path d="M50 25 L50 75 M25 50 L75 50 M32 32 L68 68 M32 68 L68 32" />
-          {/* Inner details */}
-          <polygon
-            points="50,35 55,45 65,50 55,55 50,65 45,55 35,50 45,45"
-            fill="currentColor"
-            fillOpacity="0.3"
-          />
-        </svg>
-      </div>
-
       <div className="absolute right-0 top-6 w-[120px] h-[300px] opacity-15 pointer-events-none z-10 hidden md:block">
         <svg
           viewBox="0 0 40 100"
