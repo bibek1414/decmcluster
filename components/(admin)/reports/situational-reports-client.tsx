@@ -105,6 +105,7 @@ export default function SituationalReportsClient() {
         todayDate,
         selectedFile,
         null,
+        null, // image
         token,
         true,
       );

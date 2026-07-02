@@ -3,6 +3,7 @@ import OverviewSection from "@/components/dashboard/overview-section";
 import LoginCard from "@/components/auth/login-card";
 import DashboardSection from "@/components/dashboard/dashboard-section";
 import ModulesGrid from "@/components/dashboard/modules-grid";
+import ReportsSection from "@/components/dashboard/reports-section";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -34,6 +35,9 @@ export default function Home() {
 
         {/* Modules Grid */}
         <ModulesGrid />
+
+        {/* Reports Grid Section */}
+        <ReportsSection />
       </div>
     </div>
   );

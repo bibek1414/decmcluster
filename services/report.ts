@@ -52,6 +52,7 @@ export const reportService = {
     date: string,
     file: File | null,
     urlValue: string | null,
+    image: File | null,
     token: string | null,
     isAdmin: boolean = false
   ): Promise<ReportData> => {
@@ -65,6 +66,9 @@ export const reportService = {
     }
     if (urlValue) {
       formData.append("url", urlValue);
+    }
+    if (image) {
+      formData.append("image", image);
     }
 
     const headers: Record<string, string> = {};
@@ -86,6 +90,72 @@ export const reportService = {
     if (!res.ok) {
       const errorText = await res.text();
       let errorMsg = "Failed to upload report";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+
+    return res.json();
+  },
+
+  update: async (
+    id: number,
+    name: string,
+    type: string,
+    date: string,
+    file: File | null | string,
+    urlValue: string | null,
+    image: File | null | string,
+    token: string | null
+  ): Promise<ReportData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("type", type);
+    formData.append("date", date);
+
+    if (file instanceof File) {
+      formData.append("file", file);
+    } else if (file === null) {
+      formData.append("file", "");
+    }
+
+    if (urlValue !== null) {
+      formData.append("url", urlValue);
+    } else {
+      formData.append("url", "");
+    }
+
+    if (image instanceof File) {
+      formData.append("image", image);
+    } else if (image === null) {
+      formData.append("image", "");
+    }
+
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/report/${id}/`, {
+      method: "PATCH",
+      headers,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update report";
       try {
         const parsed = JSON.parse(errorText);
         if (parsed.detail) errorMsg = parsed.detail;
