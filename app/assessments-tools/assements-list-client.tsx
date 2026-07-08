@@ -10,6 +10,10 @@ export default function AssessmentsListClient() {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
   const { data: assessments, isLoading, error } = useAssessments();
 
+  const publicAssessments = React.useMemo(() => {
+    return assessments?.filter((form) => form.is_public) || [];
+  }, [assessments]);
+
   const getFileUrl = (urlPath?: string | null) => {
     if (!urlPath) return "";
     if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) {
@@ -68,7 +72,7 @@ export default function AssessmentsListClient() {
         for offline use and field surveys.
       </p>
 
-      {!assessments || assessments.length === 0 ? (
+      {publicAssessments.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
           title="No assessments available"
@@ -76,7 +80,7 @@ export default function AssessmentsListClient() {
         />
       ) : (
         <div className="space-y-2">
-          {assessments.map((form) => (
+          {publicAssessments.map((form) => (
             <div
               key={form.id}
               className="p-3 rounded-lg bg-card border border-border flex items-center justify-between text-xs font-bold text-card-foreground hover:border-foreground/10 transition-colors"

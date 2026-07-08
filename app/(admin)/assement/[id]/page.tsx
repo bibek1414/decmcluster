@@ -213,23 +213,29 @@ export default function AssessmentDetailPage() {
           description={assessment.description || "No description provided."}
           actions={
             <div className="flex flex-wrap gap-2">
-              {assessment.pdf && (
-                <Button
-                  asChild
-                  variant="outline"
-                  className="cursor-pointer font-bold h-9"
-                >
-                  <a
-                    href={getFileUrl(assessment.pdf)}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
+              {assessment.pdf && (() => {
+                const isCsv = assessment.pdf.toLowerCase().endsWith(".csv") || assessment.pdf.toLowerCase().endsWith(".xlsx") || assessment.pdf.toLowerCase().endsWith(".xls");
+                const label = isCsv ? "Download Excel/CSV Template" : "Download PDF/Doc Template";
+                const IconComponent = isCsv ? FileSpreadsheet : FileText;
+                const iconColor = isCsv ? "text-green-600" : "text-blue-600";
+                return (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="cursor-pointer font-bold h-9"
                   >
-                    <FileText className="mr-1.5 h-4 w-4 text-blue-600" />{" "}
-                    Download PDF Form
-                  </a>
-                </Button>
-              )}
+                    <a
+                      href={getFileUrl(assessment.pdf)}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <IconComponent className={`mr-1.5 h-4 w-4 ${iconColor}`} />{" "}
+                      {label}
+                    </a>
+                  </Button>
+                );
+              })()}
               {assessment.excel && (
                 <Button
                   asChild
@@ -397,21 +403,27 @@ export default function AssessmentDetailPage() {
                 collections.
               </p>
               <div className="space-y-2.5">
-                {assessment.pdf ? (
-                  <a
-                    href={getFileUrl(assessment.pdf)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3 rounded-xl border border-border hover:bg-muted/30 transition-colors text-xs font-bold text-foreground"
-                  >
-                    <span className="flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-blue-600" /> PDF Version
-                    </span>
-                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
-                  </a>
-                ) : (
+                {assessment.pdf ? (() => {
+                  const isCsv = assessment.pdf.toLowerCase().endsWith(".csv") || assessment.pdf.toLowerCase().endsWith(".xlsx") || assessment.pdf.toLowerCase().endsWith(".xls");
+                  const label = isCsv ? "Excel/CSV Template" : "PDF/Doc Template";
+                  const IconComponent = isCsv ? FileSpreadsheet : FileText;
+                  const iconColor = isCsv ? "text-green-600" : "text-blue-600";
+                  return (
+                    <a
+                      href={getFileUrl(assessment.pdf)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-3 rounded-xl border border-border hover:bg-muted/30 transition-colors text-xs font-bold text-foreground"
+                    >
+                      <span className="flex items-center gap-2">
+                        <IconComponent className={`h-4 w-4 ${iconColor}`} /> {label}
+                      </span>
+                      <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                    </a>
+                  );
+                })() : (
                   <div className="p-3 text-center rounded-xl border border-border border-dashed text-[10px] text-muted-foreground font-semibold">
-                    No PDF Form Available
+                    No PDF/CSV Form Available
                   </div>
                 )}
 

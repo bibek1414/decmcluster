@@ -42,9 +42,20 @@ export function AssessmentCard({ a }: AssessmentCardProps) {
             <h3 className="font-bold text-base text-foreground group-hover/card:text-primary transition-colors line-clamp-2 leading-snug">
               {a.name} Data
             </h3>
-            <p className="text-[10px] text-muted-foreground font-semibold mt-1">
-              Created on {formattedDate}
-            </p>
+            <div className="flex items-center gap-2 mt-1 flex-wrap">
+              <p className="text-[10px] text-muted-foreground font-semibold">
+                Created on {formattedDate}
+              </p>
+              {a.is_public ? (
+                <span className="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-extrabold border border-emerald-200">
+                  Public
+                </span>
+              ) : (
+                <span className="text-[9px] bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded font-extrabold border border-amber-200">
+                  Private
+                </span>
+              )}
+            </div>
             {a.description && (
               <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
                 {a.description}
@@ -67,24 +78,32 @@ export function AssessmentCard({ a }: AssessmentCardProps) {
           </Link>
         </Button>
 
-        {a.pdf && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1 h-8 text-[10px] font-bold gap-1 cursor-pointer border-blue-600/10 text-blue-700 hover:bg-blue-50/50 hover:text-blue-800"
-            asChild
-          >
-            <a
-              href={getFileUrl(a.pdf)}
-              download
-              target="_blank"
-              rel="noopener noreferrer"
+        {a.pdf && (() => {
+          const isCsv = a.pdf.toLowerCase().endsWith(".csv") || a.pdf.toLowerCase().endsWith(".xlsx") || a.pdf.toLowerCase().endsWith(".xls");
+          const label = isCsv ? "Excel/CSV" : "PDF/Doc";
+          const IconComponent = isCsv ? FileSpreadsheet : FileText;
+          const colorClass = isCsv
+            ? "border-green-600/10 text-green-700 hover:bg-green-50/50 hover:text-green-800"
+            : "border-blue-600/10 text-blue-700 hover:bg-blue-50/50 hover:text-blue-800";
+          return (
+            <Button
+              variant="outline"
+              size="sm"
+              className={`flex-1 h-8 text-[10px] font-bold gap-1 cursor-pointer ${colorClass}`}
+              asChild
             >
-              <FileText className="h-3 w-3" />
-              PDF
-            </a>
-          </Button>
-        )}
+              <a
+                href={getFileUrl(a.pdf)}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconComponent className="h-3 w-3" />
+                {label}
+              </a>
+            </Button>
+          );
+        })()}
 
         {a.excel && (
           <Button

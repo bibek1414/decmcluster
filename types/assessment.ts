@@ -5,6 +5,7 @@ export interface AssessmentData {
   description?: string | null;
   pdf?: string | null;
   excel?: string | null;
+  is_public?: boolean;
   created_at: string;
   updated_at: string;
 }

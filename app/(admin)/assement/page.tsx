@@ -24,6 +24,7 @@ export default function AssessmentsPage() {
   const [newDesc, setNewDesc] = useState("");
   const [newPdf, setNewPdf] = useState<File | null>(null);
   const [newExcel, setNewExcel] = useState<File | null>(null);
+  const [newIsPublic, setNewIsPublic] = useState(true);
 
   // Role permissions
   const isSuperAdmin = user?.role === "Superadmin";
@@ -40,7 +41,14 @@ export default function AssessmentsPage() {
       if (!newName.trim()) {
         throw new Error("Please enter a name for the assessment");
       }
-      return assessmentService.create(newName, newDesc, newPdf, newExcel, token);
+      return assessmentService.create(
+        newName,
+        newDesc,
+        newPdf,
+        newExcel,
+        newIsPublic,
+        token
+      );
     },
     onSuccess: () => {
       toast.success("Assessment created successfully");
@@ -49,6 +57,7 @@ export default function AssessmentsPage() {
       setNewDesc("");
       setNewPdf(null);
       setNewExcel(null);
+      setNewIsPublic(true);
       queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
     },
     onError: (err: any) => {
@@ -192,13 +201,13 @@ export default function AssessmentsPage() {
 
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-muted-foreground">
-                  PDF Template File (Optional)
+                  PDF/CSV/Document Template (Optional)
                 </label>
                 <FileUpload
                   selectedFile={newPdf}
                   onFileSelect={setNewPdf}
-                  accept=".pdf"
-                  helperText="Drag & drop PDF here or click to browse"
+                  accept=".pdf,.csv,.xlsx,.xls,.doc,.docx"
+                  helperText="Drag & drop PDF, CSV, or document here or click to browse"
                 />
               </div>
 
@@ -212,6 +221,22 @@ export default function AssessmentsPage() {
                   accept=".xlsx,.xls"
                   helperText="Drag & drop Excel here or click to browse"
                 />
+              </div>
+
+              <div className="flex items-center gap-2 pt-1 pb-2">
+                <input
+                  type="checkbox"
+                  id="is-public"
+                  checked={newIsPublic}
+                  onChange={(e) => setNewIsPublic(e.target.checked)}
+                  className="h-4 w-4 rounded border-input bg-background text-primary focus:ring-primary cursor-pointer"
+                />
+                <label
+                  htmlFor="is-public"
+                  className="text-xs font-bold text-muted-foreground cursor-pointer select-none"
+                >
+                  Make this assessment public (visible on the public portal)
+                </label>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-2">

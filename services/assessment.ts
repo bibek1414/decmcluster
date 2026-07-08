@@ -25,6 +25,7 @@ export const assessmentService = {
     description: string,
     pdf: File | null,
     excel: File | null,
+    isPublic: boolean,
     token: string | null
   ): Promise<AssessmentData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -39,6 +40,7 @@ export const assessmentService = {
     if (excel) {
       formData.append("excel", excel);
     }
+    formData.append("is_public", String(isPublic));
 
     const headers: Record<string, string> = {};
     if (token) {
