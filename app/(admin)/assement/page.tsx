@@ -1,103 +1,97 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Plus, Search, ClipboardList, X, FileText } from "lucide-react";
+import { Plus, Search, ClipboardList, X, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { AssessmentCard } from "@/components/(admin)/assessment/assessment-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/shared/empty-state";
-import { assessments as initial, type Assessment } from "@/lib/mock-data";
+import { FileUpload } from "@/components/shared/file-upload";
+import { useAuth } from "@/hooks/use-auth";
+import { useAssessments } from "@/hooks/use-assessments";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { assessmentService } from "@/services/assessment";
 import { toast } from "sonner";
 
 export default function AssessmentsPage() {
-  const [items, setItems] = useState<Assessment[]>(initial);
+  const { user, token } = useAuth();
+  const queryClient = useQueryClient();
+
   const [query, setQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
+  const [newPdf, setNewPdf] = useState<File | null>(null);
+  const [newExcel, setNewExcel] = useState<File | null>(null);
+
+  // Role permissions
+  const isSuperAdmin = user?.role === "Superadmin";
+  const isDataEnumerator = user?.role === "Data Enumerator";
+  const isFieldCoordinator = user?.role === "Field Coordinator";
+  const canAdd = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
+
+  // Fetch assessments
+  const { data: assessments = [], isLoading, error } = useAssessments();
+
+  // Create assessment mutation
+  const createMutation = useMutation({
+    mutationFn: async () => {
+      if (!newName.trim()) {
+        throw new Error("Please enter a name for the assessment");
+      }
+      return assessmentService.create(newName, newDesc, newPdf, newExcel, token);
+    },
+    onSuccess: () => {
+      toast.success("Assessment created successfully");
+      setIsCreateOpen(false);
+      setNewName("");
+      setNewDesc("");
+      setNewPdf(null);
+      setNewExcel(null);
+      queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || "Failed to create assessment");
+    },
+  });
 
   const filtered = useMemo(() => {
-    return items.filter((a) => {
+    return assessments.filter((a) => {
       const matchesQuery = a.name.toLowerCase().includes(query.toLowerCase());
       return matchesQuery;
     });
-  }, [items, query]);
+  }, [assessments, query]);
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newName.trim()) {
-      toast.error("Please enter a name for the assessment");
-      return;
-    }
-
-    const newAssessment: Assessment = {
-      id: `asm_${Math.floor(10 + Math.random() * 90)}`,
-      name: newName,
-      description: newDesc || "No description provided.",
-      status: "Completed",
-      createdAt: new Date().toISOString(),
-      totalRecords: Math.floor(100 + Math.random() * 1500),
-      owner: "System Administrator",
-      duration: "1h 30m",
-    };
-
-    setItems((s) => [newAssessment, ...s]);
-    setNewName("");
-    setNewDesc("");
-    setIsCreateOpen(false);
-    toast.success("Assessment created successfully");
+    createMutation.mutate();
   };
 
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
         <PageHeader
-          title="Displacement Data"
+          title="Displacement Data Forms"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>Field survey forms, data schemas and mobile templates</span>
-              <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
-                {items.length} total ·{" "}
-                {items.filter((a) => a.status === "Completed").length} completed
-              </span>
+              <span>Dynamic field survey forms, schemas, and media templates</span>
+              {!isLoading && (
+                <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
+                  {assessments.length} total forms
+                </span>
+              )}
             </div>
           }
           actions={
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                className="cursor-pointer font-bold border-green-600/20 text-green-700 hover:bg-green-50 hover:text-green-800"
-                asChild
-              >
-                <a
-                  href="/csv/Evacuation Center Master List.xlsx"
-                  download="Evacuation Center Master List.xlsx"
-                >
-                  <FileText className="mr-1.5 h-4 w-4" /> Download Master List
-                  (Excel)
-                </a>
-              </Button>
-              <Button
-                variant="outline"
-                className="cursor-pointer font-bold border-blue-600/20 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
-                asChild
-              >
-                <a
-                  href="/response-tracking/Response Tracking Tool 5W DECM Cluster.xlsx"
-                  download="5W Response Data.xlsx"
-                >
-                  <FileText className="mr-1.5 h-4 w-4" /> Download 5W Response
-                  data
-                </a>
-              </Button>
+            canAdd && (
               <Button
                 className="cursor-pointer font-bold"
                 onClick={() => setIsCreateOpen(true)}
               >
                 <Plus className="mr-1.5 h-4 w-4" /> New Assessment
               </Button>
-            </div>
+            )
           }
         />
 
@@ -113,18 +107,34 @@ export default function AssessmentsPage() {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-40 bg-muted rounded-xl w-full" />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center border border-red-200/50 bg-red-50/50 text-red-700 text-xs rounded-xl font-medium dark:bg-red-950/20 dark:border-red-900/30 dark:text-red-400">
+            Failed to load assessments: {(error as Error).message}
+          </div>
+        ) : filtered.length === 0 ? (
           <EmptyState
             icon={ClipboardList}
             title="No assessments found"
-            description="Try adjusting your filters or create your first assessment to get started."
+            description={
+              canAdd
+                ? "Try adjusting your filters or create your first assessment to get started."
+                : "No assessments have been registered yet."
+            }
             action={
-              <Button
-                onClick={() => setIsCreateOpen(true)}
-                className="cursor-pointer font-bold"
-              >
-                <Plus className="mr-1.5 h-4 w-4" /> New Assessment
-              </Button>
+              canAdd ? (
+                <Button
+                  onClick={() => setIsCreateOpen(true)}
+                  className="cursor-pointer font-bold"
+                >
+                  <Plus className="mr-1.5 h-4 w-4" /> New Assessment
+                </Button>
+              ) : undefined
             }
           />
         ) : (
@@ -139,7 +149,7 @@ export default function AssessmentsPage() {
       {/* Custom Modal for New Assessment */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
+          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
                 Create New Assessment
@@ -162,7 +172,7 @@ export default function AssessmentsPage() {
                 <Input
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  placeholder="e.g. Q1 Evacuation Center Survey"
+                  placeholder="e.g. Displacement Tracking Matrix 2026"
                   className="w-full bg-background"
                 />
               </div>
@@ -180,6 +190,30 @@ export default function AssessmentsPage() {
                 />
               </div>
 
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">
+                  PDF Template File (Optional)
+                </label>
+                <FileUpload
+                  selectedFile={newPdf}
+                  onFileSelect={setNewPdf}
+                  accept=".pdf"
+                  helperText="Drag & drop PDF here or click to browse"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Excel Template File (Optional)
+                </label>
+                <FileUpload
+                  selectedFile={newExcel}
+                  onFileSelect={setNewExcel}
+                  accept=".xlsx,.xls"
+                  helperText="Drag & drop Excel here or click to browse"
+                />
+              </div>
+
               <div className="flex items-center justify-end gap-2 pt-2">
                 <Button
                   type="button"
@@ -189,8 +223,18 @@ export default function AssessmentsPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="h-9 font-bold cursor-pointer">
-                  Create
+                <Button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="h-9 font-bold cursor-pointer"
+                >
+                  {createMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Creating...
+                    </>
+                  ) : (
+                    "Create"
+                  )}
                 </Button>
               </div>
             </form>

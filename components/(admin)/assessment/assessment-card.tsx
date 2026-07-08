@@ -3,90 +3,107 @@
 import React from "react";
 import Link from "next/link";
 import { FileText, FileSpreadsheet, Eye } from "lucide-react";
-import { type Assessment } from "@/lib/mock-data";
+import { type AssessmentData } from "@/types/assessment";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getFilesForAssessment, stringifyCsv } from "@/lib/csv-storage";
-import { toast } from "sonner";
+import { siteConfig } from "@/config/site";
 
 interface AssessmentCardProps {
-  a: Assessment;
+  a: AssessmentData;
 }
 
 export function AssessmentCard({ a }: AssessmentCardProps) {
-  
-  const handleDownload = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (typeof window === "undefined") return;
+  const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
 
-    const files = getFilesForAssessment(a.id);
-    if (files.length === 0) {
-      toast.error("No data versions available to download.");
-      return;
+  const getFileUrl = (urlPath?: string | null) => {
+    if (!urlPath) return "";
+    if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) {
+      return urlPath;
     }
-
-    // Sort by createdAt descending to get the latest file version
-    const latestFile = [...files].sort((x, y) => 
-      new Date(y.createdAt).getTime() - new Date(x.createdAt).getTime()
-    )[0];
-
-    try {
-      const csvContent = stringifyCsv(latestFile.headers, latestFile.rows);
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", latestFile.name);
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success(`Downloaded latest CSV: ${latestFile.name}`);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to generate CSV download");
-    }
+    return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
   };
 
+  const formattedDate = a.created_at
+    ? new Date(a.created_at).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "N/A";
+
   return (
-    <Card className="flex flex-col justify-between border border-border p-5 hover:border-foreground/20 transition-all group/card bg-card duration-200 shadow-sm">
+    <Card className="flex flex-col justify-between border border-border p-5 hover:border-foreground/20 transition-all group/card bg-card duration-200 shadow-sm rounded-xl">
       <div className="space-y-4">
         <div className="flex items-start gap-3">
           <div className="mt-1 p-2 rounded-lg bg-primary/10 text-primary group-hover/card:bg-primary group-hover/card:text-primary-foreground transition-colors shrink-0">
             <FileText className="h-5 w-5" />
           </div>
-          <div>
-            <h3 className="font-bold text-base text-foreground group-hover/card:text-primary transition-colors line-clamp-2">
-              {a.name}
+          <div className="min-w-0">
+            <h3 className="font-bold text-base text-foreground group-hover/card:text-primary transition-colors line-clamp-2 leading-snug">
+              {a.name} Data
             </h3>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-              {a.description}
+            <p className="text-[10px] text-muted-foreground font-semibold mt-1">
+              Created on {formattedDate}
             </p>
+            {a.description && (
+              <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
+                {a.description}
+              </p>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="mt-5 pt-3 border-t border-border flex items-center justify-between gap-2.5">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="flex-1 h-9 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted"
+      <div className="mt-5 pt-3 border-t border-border flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1 h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted"
           asChild
         >
-          <Link href={`/assement/${a.id}`}>
+          <Link href={`/assement/${a.slug}`}>
             <Eye className="h-3.5 w-3.5" />
-            View
+            View Data
           </Link>
         </Button>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleDownload}
-          className="flex-1 h-9 text-xs font-bold gap-1.5 cursor-pointer border-green-600/20 text-green-700 hover:bg-green-50 hover:border-green-600/50"
-        >
-          <FileSpreadsheet className="h-3.5 w-3.5" />
-          Download CSV
-        </Button>
+
+        {a.pdf && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 h-8 text-[10px] font-bold gap-1 cursor-pointer border-blue-600/10 text-blue-700 hover:bg-blue-50/50 hover:text-blue-800"
+            asChild
+          >
+            <a
+              href={getFileUrl(a.pdf)}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FileText className="h-3 w-3" />
+              PDF
+            </a>
+          </Button>
+        )}
+
+        {a.excel && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 h-8 text-[10px] font-bold gap-1 cursor-pointer border-green-600/10 text-green-700 hover:bg-green-50/50 hover:text-green-800"
+            asChild
+          >
+            <a
+              href={getFileUrl(a.excel)}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FileSpreadsheet className="h-3 w-3" />
+              Excel
+            </a>
+          </Button>
+        )}
       </div>
     </Card>
   );
