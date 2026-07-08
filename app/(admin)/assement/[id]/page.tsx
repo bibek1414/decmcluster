@@ -78,8 +78,8 @@ export default function AssessmentDetailPage() {
     isLoading: isResultsLoading,
     error: resultsError,
   } = useQuery({
-    queryKey: ["assessment-results", slug],
-    queryFn: () => assessmentService.listResults(slug),
+    queryKey: ["assessment-results", slug, token],
+    queryFn: () => assessmentService.listResults(slug, token),
     enabled: !!slug,
   });
 

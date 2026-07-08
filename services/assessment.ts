@@ -95,9 +95,23 @@ export const assessmentService = {
     }
   },
 
-  listResults: async (slug: string): Promise<AssessmentResultData[]> => {
+  listResults: async (
+    slug: string,
+    token?: string | null
+  ): Promise<AssessmentResultData[]> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const res = await fetch(`${baseUrl}/api/assessment/${slug}/result/`);
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/assessment/${slug}/result/`, {
+      headers,
+    });
     if (!res.ok) {
       throw new Error("Failed to fetch assessment results");
     }
