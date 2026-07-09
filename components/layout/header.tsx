@@ -72,7 +72,7 @@ export default function Header() {
 
             {/* Supported by */}
             <div className="flex flex-col items-center gap-1">
-              <span className="text-[10px] sm:text-[10px] uppercase tracking-wider text-primary-foreground/80 font-bold whitespace-nowrap">
+              <span className="text-[9px] sm:text-xs uppercase tracking-wider text-primary-foreground/80 font-bold whitespace-nowrap">
                 Supported by
               </span>
               <div className="bg-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-md flex items-center shadow-sm">
@@ -81,7 +81,7 @@ export default function Header() {
                   alt="Australian Aid"
                   width={100}
                   height={100}
-                  className="h-8 sm:h-10 w-auto object-contain flex-shrink-0"
+                  className="h-6 sm:h-8 w-auto object-contain flex-shrink-0"
                 />
               </div>
             </div>
