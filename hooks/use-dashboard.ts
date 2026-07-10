@@ -29,10 +29,10 @@ export function useHistoricalEvents() {
   });
 }
 
-export function useEvacuationCentres() {
+export function useEvacuationCentres(search?: string) {
   return useQuery({
-    queryKey: ["evacuation-centres"],
-    queryFn: () => dashboardService.getEvacuationCentres(),
+    queryKey: ["evacuation-centres", search],
+    queryFn: () => dashboardService.getEvacuationCentres(search),
   });
 }
 

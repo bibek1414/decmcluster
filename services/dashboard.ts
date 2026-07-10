@@ -45,9 +45,13 @@ export const dashboardService = {
     return res.json();
   },
 
-  getEvacuationCentres: async (): Promise<EvacuationCentre[]> => {
+  getEvacuationCentres: async (search?: string): Promise<EvacuationCentre[]> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const res = await fetch(`${baseUrl}/api/dashboard/evacuation-centre-list/`);
+    let url = `${baseUrl}/api/dashboard/evacuation-centre-list/`;
+    if (search && search.trim() !== "") {
+      url += `?search=${encodeURIComponent(search)}`;
+    }
+    const res = await fetch(url);
     if (!res.ok) {
       throw new Error("Failed to fetch evacuation centres");
     }

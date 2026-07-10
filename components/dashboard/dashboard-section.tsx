@@ -38,18 +38,21 @@ import {
   useEvacuationCentres,
   useResponseTrackingSummary
 } from "@/hooks/use-dashboard";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function DashboardSection() {
   const [activeMenu, setActiveMenu] = useState("Summary");
   const [ecSearch, setEcSearch] = useState("");
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
 
+  const debouncedSearch = useDebounce(ecSearch, 300);
+
   // TanStack React Query Hooks
   const { data: summaryData, isLoading: isSummaryLoading } = useDashboardSummary();
   const { data: locationSummaryData, isLoading: isLocationLoading } = useEvacuationCentreLocationSummary();
   const { data: sectorSummaryData, isLoading: isSectorSummaryLoading } = useProvinceSectorSummary();
   const { data: historicalEventsData, isLoading: isEventsLoading } = useHistoricalEvents();
-  const { data: centresData, isLoading: isCentresLoading } = useEvacuationCentres();
+  const { data: centresData, isLoading: isCentresLoading } = useEvacuationCentres(debouncedSearch);
   const { data: trackingData, isLoading: isTrackingLoading } = useResponseTrackingSummary();
 
   // Side Menu Options
@@ -199,15 +202,13 @@ export default function DashboardSection() {
     return trackingData || defaultTracking;
   }, [trackingData]);
 
-  // Filtered EC list based on search & sidebar category & map selected province
+  // Filtered EC list based on map selected province (search is handled on the backend)
   const filteredEvacuationCentres = useMemo(() => {
     return evacuationCentres.filter((ec) => {
-      const matchesSearch = ec.site.toLowerCase().includes(ecSearch.toLowerCase()) || 
-                            ec.province.toLowerCase().includes(ecSearch.toLowerCase());
       const matchesProvince = selectedProvince ? ec.province === selectedProvince : true;
-      return matchesSearch && matchesProvince;
+      return matchesProvince;
     });
-  }, [evacuationCentres, ecSearch, selectedProvince]);
+  }, [evacuationCentres, selectedProvince]);
 
   return (
     <div className="space-y-6">
