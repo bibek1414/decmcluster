@@ -30,10 +30,27 @@ import {
   TableCell 
 } from "@/components/ui/table";
 
+import {
+  useDashboardSummary,
+  useEvacuationCentreLocationSummary,
+  useProvinceSectorSummary,
+  useHistoricalEvents,
+  useEvacuationCentres,
+  useResponseTrackingSummary
+} from "@/hooks/use-dashboard";
+
 export default function DashboardSection() {
   const [activeMenu, setActiveMenu] = useState("Summary");
   const [ecSearch, setEcSearch] = useState("");
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+
+  // TanStack React Query Hooks
+  const { data: summaryData, isLoading: isSummaryLoading } = useDashboardSummary();
+  const { data: locationSummaryData, isLoading: isLocationLoading } = useEvacuationCentreLocationSummary();
+  const { data: sectorSummaryData, isLoading: isSectorSummaryLoading } = useProvinceSectorSummary();
+  const { data: historicalEventsData, isLoading: isEventsLoading } = useHistoricalEvents();
+  const { data: centresData, isLoading: isCentresLoading } = useEvacuationCentres();
+  const { data: trackingData, isLoading: isTrackingLoading } = useResponseTrackingSummary();
 
   // Side Menu Options
   const sideMenuItems = [
@@ -47,47 +64,140 @@ export default function DashboardSection() {
     { id: "Response Tracking", label: "Response Tracking", icon: Truck },
   ];
 
-  // Raw Stats data
-  const baseStats = [
-    { key: "idps", label: "Estimated IDPs", value: "12,450", icon: Users, category: "Displacement" },
-    { key: "ecs", label: "Evacuation Centres", value: "86", icon: Tent, category: "Evacuation Centres" },
-    { key: "hhs", label: "Affected HHs", value: "2,340", icon: Home, category: "Displacement" },
-    { key: "villages", label: "Villages Assessed", value: "42", icon: MapPin, category: "Summary" },
-    { key: "shelter", label: "Shelter Needs", value: "1,120", icon: Home, category: "Shelter" },
-    { key: "services", label: "Access to Basic Services", value: "64%", icon: Heart, category: "Basic Services" },
-    { key: "children", label: "Children Affected", value: "4,980", icon: Baby, category: "Protection" },
-    { key: "disabilities", label: "Persons with Disabilities", value: "355", icon: Accessibility, category: "Protection" },
-    { key: "partners", label: "Active Partners", value: "28", icon: Handshake, category: "Response Tracking" },
-    { key: "coverage", label: "Response Coverage", value: "67%", icon: Activity, category: "Response Tracking" },
-  ];
+  // Dynamic Key Figures Stats data
+  const baseStats = useMemo(() => {
+    const defaultStats = {
+      estimated_idp: 12450,
+      evacuation_centres: 86,
+      affected_hhs: 2340,
+      villages_assessed: 42,
+      shelter_needs: 1120,
+      access_to_basic_services: 64,
+      children_affected: 4980,
+      person_with_disabilities: 355,
+      active_partners: 28,
+      response_coverage: 67
+    };
+    const s = summaryData?.[0] || defaultStats;
+
+    return [
+      { key: "idps", label: "Estimated IDPs", value: s.estimated_idp.toLocaleString(), icon: Users, category: "Displacement" },
+      { key: "ecs", label: "Evacuation Centres", value: s.evacuation_centres.toLocaleString(), icon: Tent, category: "Evacuation Centres" },
+      { key: "hhs", label: "Affected HHs", value: s.affected_hhs.toLocaleString(), icon: Home, category: "Displacement" },
+      { key: "villages", label: "Villages Assessed", value: s.villages_assessed.toLocaleString(), icon: MapPin, category: "Summary" },
+      { key: "shelter", label: "Shelter Needs", value: s.shelter_needs.toLocaleString(), icon: Home, category: "Shelter" },
+      { key: "services", label: "Access to Basic Services", value: `${s.access_to_basic_services}%`, icon: Heart, category: "Basic Services" },
+      { key: "children", label: "Children Affected", value: s.children_affected.toLocaleString(), icon: Baby, category: "Protection" },
+      { key: "disabilities", label: "Persons with Disabilities", value: s.person_with_disabilities.toLocaleString(), icon: Accessibility, category: "Protection" },
+      { key: "partners", label: "Active Partners", value: s.active_partners.toLocaleString(), icon: Handshake, category: "Response Tracking" },
+      { key: "coverage", label: "Response Coverage", value: `${s.response_coverage}%`, icon: Activity, category: "Response Tracking" },
+    ];
+  }, [summaryData]);
 
   // Province-based Data for Chart and SVG Map Interaction
-  const provinces = [
-    { name: "Torba", ecs: 4, idps: 350, barWidth: "20%", color: "text-blue-500 bg-blue-500" },
-    { name: "Sanma", ecs: 22, idps: 3100, barWidth: "75%", color: "text-teal-500 bg-teal-500" },
-    { name: "Penama", ecs: 14, idps: 1800, barWidth: "38%", color: "text-indigo-500 bg-indigo-500" },
-    { name: "Malampa", ecs: 12, idps: 1450, barWidth: "50%", color: "text-amber-500 bg-amber-500" },
-    { name: "Shefa", ecs: 26, idps: 4200, barWidth: "92%", color: "text-sky-500 bg-sky-500" },
-    { name: "Tafea", ecs: 12, idps: 1550, barWidth: "63%", color: "text-emerald-500 bg-emerald-500" },
+  const provinces = useMemo(() => {
+    const defaultProvinces = [
+      { name: "Torba", ecs: 4, idps: 350, color: "text-blue-500 bg-blue-500" },
+      { name: "Sanma", ecs: 22, idps: 3100, color: "text-teal-500 bg-teal-500" },
+      { name: "Penama", ecs: 14, idps: 1800, color: "text-indigo-500 bg-indigo-500" },
+      { name: "Malampa", ecs: 12, idps: 1450, color: "text-amber-500 bg-amber-500" },
+      { name: "Shefa", ecs: 26, idps: 4200, color: "text-sky-500 bg-sky-500" },
+      { name: "Tafea", ecs: 12, idps: 1550, color: "text-emerald-500 bg-emerald-500" },
+    ];
+
+    if (!locationSummaryData || locationSummaryData.length === 0) {
+      return defaultProvinces;
+    }
+
+    const colorMap: Record<string, string> = {
+      Torba: "text-blue-500 bg-blue-500",
+      Sanma: "text-teal-500 bg-teal-500",
+      Penama: "text-indigo-500 bg-indigo-500",
+      Malampa: "text-amber-500 bg-amber-500",
+      Malma: "text-amber-500 bg-amber-500",
+      Shefa: "text-sky-500 bg-sky-500",
+      Tafea: "text-emerald-500 bg-emerald-500",
+    };
+
+    // Sort by order or map directly
+    const sorted = [...locationSummaryData].sort((a, b) => a.order - b.order);
+
+    return sorted.map((item) => {
+      const cleanName = item.province.replace(" Province", "");
+      const finalName = cleanName === "Malma" ? "Malampa" : cleanName;
+      return {
+        name: finalName,
+        ecs: item.ecs,
+        idps: item.idps,
+        color: colorMap[finalName] || "text-gray-500 bg-gray-500",
+      };
+    });
+  }, [locationSummaryData]);
+
+  // Sector summary mapping
+  const sectorSummary = useMemo(() => {
+    const defaultSummary = [
+      { id: 1, title: "Shefa — Shelter / WASH / Protection", percentage: 92.0 },
+      { id: 2, title: "Sanma — Shelter / Basic Services", percentage: 75.0 },
+      { id: 4, title: "Tafea — Evacuation Centre Support", percentage: 63.0 },
+      { id: 5, title: "Malampa — Service Mapping", percentage: 50.0 },
+      { id: 6, title: "Penama — Response Tracking", percentage: 38.0 },
+    ];
+    return sectorSummaryData || defaultSummary;
+  }, [sectorSummaryData]);
+
+  // Historical events mapping
+  const historicalEvents = useMemo(() => {
+    const defaultEvents = [
+      { id: 1, event: "TC Pam", year: 2015, impact: "High Impact" },
+      { id: 2, event: "Ambae Volcano", year: 2017, impact: "Displacement" },
+      { id: 3, event: "TC Harold", year: 2020, impact: "Severe Impact" },
+      { id: 4, event: "TC Judy/Kevin", year: 2023, impact: "Multi-island" },
+      { id: 5, event: "Earthquake", year: 2024, impact: "Urban Impact" },
+    ];
+    return historicalEventsData || defaultEvents;
+  }, [historicalEventsData]);
+
+  const eventColors = [
+    "bg-red-50 text-red-700 border-red-100 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/30",
+    "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30",
+    "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30",
+    "bg-indigo-50 text-indigo-700 border-indigo-100 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-900/30",
+    "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30",
   ];
 
-  // Evacuation Centres list
-  const evacuationCentres = [
-    { province: "Shefa", site: "Port Vila Area Council Hall", status: "Open", hhs: 220, type: "Community Hall" },
-    { province: "Sanma", site: "Luganville Community Centre", status: "Open", hhs: 185, type: "School" },
-    { province: "Tafea", site: "Isangel School Compound", status: "Monitoring", hhs: 95, type: "School" },
-    { province: "Malampa", site: "Lakatoro Church Hall", status: "Open", hhs: 130, type: "Church" },
-    { province: "Penama", site: "Ranwadi College Gymnasium", status: "Closed", hhs: 0, type: "School" },
-    { province: "Torba", site: "Sola Provincial Office", status: "Monitoring", hhs: 45, type: "Office" },
-  ];
+  // Evacuation Centres list mapping
+  const evacuationCentres = useMemo(() => {
+    const defaultCentres = [
+      { province: "Shefa", site: "Port Vila Area Council Hall", status: "Open", hhs: 220, type: "Community Hall" },
+      { province: "Sanma", site: "Luganville Community Centre", status: "Open", hhs: 185, type: "School" },
+      { province: "Tafea", site: "Isangel School Compound", status: "Monitoring", hhs: 95, type: "School" },
+      { province: "Malampa", site: "Lakatoro Church Hall", status: "Open", hhs: 130, type: "Church" },
+      { province: "Penama", site: "Ranwadi College Gymnasium", status: "Closed", hhs: 0, type: "School" },
+      { province: "Torba", site: "Sola Provincial Office", status: "Monitoring", hhs: 45, type: "Office" },
+    ];
 
-  // Response tracking summary
-  const responseTracking = [
-    { sector: "Shelter/NFI", partner: "IOM / Partners", coverage: 68, status: "Ongoing" },
-    { sector: "WASH", partner: "Cluster Partners", coverage: 54, status: "Critical Need" },
-    { sector: "Protection", partner: "DECM Partners", coverage: 46, status: "Underfunded" },
-    { sector: "Access to Basic Services", partner: "NDMO / Partners", coverage: 64, status: "Ongoing" },
-  ];
+    if (!centresData) return defaultCentres;
+
+    return centresData.map((item) => ({
+      province: item.province,
+      site: item.site_name,
+      status: item.status,
+      hhs: item.hhs,
+      type: item.type,
+    }));
+  }, [centresData]);
+
+  // Response tracking mapping
+  const responseTracking = useMemo(() => {
+    const defaultTracking = [
+      { sector: "Shelter/NFI", partner: "IOM / Partners", coverage: 68, status: "Ongoing" },
+      { sector: "WASH", partner: "Cluster Partners", coverage: 54, status: "Critical Need" },
+      { sector: "Protection", partner: "DECM Partners", coverage: 46, status: "Underfunded" },
+      { sector: "Access to Basic Services", partner: "NDMO / Partners", coverage: 64, status: "Ongoing" },
+    ];
+    return trackingData || defaultTracking;
+  }, [trackingData]);
 
   // Filtered EC list based on search & sidebar category & map selected province
   const filteredEvacuationCentres = useMemo(() => {
@@ -97,7 +207,7 @@ export default function DashboardSection() {
       const matchesProvince = selectedProvince ? ec.province === selectedProvince : true;
       return matchesSearch && matchesProvince;
     });
-  }, [ecSearch, selectedProvince]);
+  }, [evacuationCentres, ecSearch, selectedProvince]);
 
   return (
     <div className="space-y-6">
@@ -158,34 +268,51 @@ export default function DashboardSection() {
         <div className="lg:col-span-9 xl:col-span-10 space-y-6">
           
           {/* Key Figures Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5">
-            {baseStats.map((stat, idx) => {
-              const Icon = stat.icon;
-              const isHighlighted = activeMenu === "Summary" || activeMenu === stat.category;
-              return (
+          {isSummaryLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
+              {Array.from({ length: 10 }).map((_, idx) => (
                 <div 
-                  key={idx}
-                  className={`p-4 rounded-lg border flex items-start gap-3.5 bg-card text-card-foreground transition-all duration-300 ${
-                    isHighlighted 
-                      ? "border-primary/40 bg-primary/5" 
-                      : "border-border opacity-60 grayscale-[25%] hover:opacity-100 hover:grayscale-0"
-                  }`}
+                  key={idx} 
+                  className="p-4 rounded-lg border border-border bg-card text-card-foreground flex items-start gap-3.5 animate-pulse"
                 >
-                  <div className={`p-2.5 rounded-xl ${isHighlighted ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"} transition-colors`}>
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-foreground leading-none">
-                      {stat.value}
-                    </h3>
-                    <p className="text-[11px] font-bold text-muted-foreground mt-1 leading-tight">
-                      {stat.label}
-                    </p>
+                  <div className="p-2.5 rounded-xl bg-muted w-10 h-10 shrink-0" />
+                  <div className="space-y-2 w-full">
+                    <div className="h-6 bg-muted rounded w-2/3" />
+                    <div className="h-3 bg-muted rounded w-1/2" />
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
+              {baseStats.map((stat, idx) => {
+                const Icon = stat.icon;
+                const isHighlighted = activeMenu === "Summary" || activeMenu === stat.category;
+                return (
+                  <div 
+                    key={idx}
+                    className={`p-4 rounded-lg border flex items-start gap-3.5 bg-card text-card-foreground transition-all duration-300 ${
+                      isHighlighted 
+                        ? "border-primary/40 bg-primary/5" 
+                        : "border-border opacity-60 grayscale-[25%] hover:opacity-100 hover:grayscale-0"
+                    }`}
+                  >
+                    <div className={`p-2.5 rounded-xl ${isHighlighted ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"} transition-colors`}>
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-foreground leading-none">
+                        {stat.value}
+                      </h3>
+                      <p className="text-[11px] font-bold text-muted-foreground mt-1 leading-tight">
+                        {stat.label}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
 
           {/* Visuals Box Grid */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -278,22 +405,22 @@ export default function DashboardSection() {
                       {/* Labels group drawn on top, click-through */}
                       <g className="pointer-events-none select-none">
                         {/* Torba Text */}
-                        <text x="75" y="34" className={`text-[10px] font-extrabold fill-foreground/80`}>Torba</text>
+                        <text x="75" y="34" className="text-[10px] font-extrabold fill-foreground/80">Torba</text>
                         
                         {/* Sanma Text */}
-                        <text x="15" y="82" className={`text-[10px] font-extrabold fill-foreground/80`}>Sanma</text>
+                        <text x="15" y="82" className="text-[10px] font-extrabold fill-foreground/80">Sanma</text>
                         
                         {/* Penama Text */}
-                        <text x="110" y="82" className={`text-[10px] font-extrabold fill-foreground/80`}>Penama</text>
+                        <text x="110" y="82" className="text-[10px] font-extrabold fill-foreground/80">Penama</text>
 
                         {/* Malampa Text */}
-                        <text x="95" y="125" className={`text-[10px] font-extrabold fill-foreground/80`}>Malampa</text>
+                        <text x="95" y="125" className="text-[10px] font-extrabold fill-foreground/80">Malampa</text>
 
                         {/* Shefa Text */}
-                        <text x="120" y="177" className={`text-[10px] font-extrabold fill-foreground/80`}>Shefa</text>
+                        <text x="120" y="177" className="text-[10px] font-extrabold fill-foreground/80">Shefa</text>
 
                         {/* Tafea Text */}
-                        <text x="80" y="235" className={`text-[10px] font-extrabold fill-foreground/80`}>Tafea</text>
+                        <text x="80" y="235" className="text-[10px] font-extrabold fill-foreground/80">Tafea</text>
                       </g>
                     </svg>
                   </div>
@@ -303,32 +430,40 @@ export default function DashboardSection() {
                     <h4 className="text-[11px] font-bold text-muted-foreground">
                       Provinces & Active Sites
                     </h4>
-                    <div className="space-y-2">
-                      {provinces.map((prov) => (
-                        <button
-                          key={prov.name}
-                          onClick={() => setSelectedProvince(selectedProvince === prov.name ? null : prov.name)}
-                          className={`w-full flex items-center justify-between p-2 rounded-lg text-left border text-xs cursor-pointer transition-all ${
-                            selectedProvince === prov.name 
-                              ? "bg-primary/10 border-primary/40 font-bold text-primary" 
-                              : "bg-card hover:bg-muted border-border text-muted-foreground"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className={`w-2 h-2 rounded-full ${prov.color.split(" ")[1]}`}></span>
-                            <span>{prov.name} Province</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="bg-muted text-foreground px-1.5 py-0.5 rounded text-[10px] font-bold border border-border">
-                              {prov.ecs} ECs
-                            </span>
-                            <span className="text-muted-foreground text-[10px]">
-                              {prov.idps.toLocaleString()} IDPs
-                            </span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                    {isLocationLoading ? (
+                      <div className="space-y-2 w-full animate-fadeIn">
+                        {Array.from({ length: 6 }).map((_, idx) => (
+                          <div key={idx} className="h-9 w-full bg-muted/50 rounded-lg animate-pulse border border-border/30" />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-2 animate-fadeIn">
+                        {provinces.map((prov) => (
+                          <button
+                            key={prov.name}
+                            onClick={() => setSelectedProvince(selectedProvince === prov.name ? null : prov.name)}
+                            className={`w-full flex items-center justify-between p-2 rounded-lg text-left border text-xs cursor-pointer transition-all ${
+                              selectedProvince === prov.name 
+                                ? "bg-primary/10 border-primary/40 font-bold text-primary" 
+                                : "bg-card hover:bg-muted border-border text-muted-foreground"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className={`w-2 h-2 rounded-full ${prov.color.split(" ")[1]}`}></span>
+                              <span>{prov.name} Province</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="bg-muted text-foreground px-1.5 py-0.5 rounded text-[10px] font-bold border border-border">
+                                {prov.ecs} ECs
+                              </span>
+                              <span className="text-muted-foreground text-[10px]">
+                                {prov.idps.toLocaleString()} IDPs
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -343,57 +478,36 @@ export default function DashboardSection() {
               <div className="p-4 flex flex-col justify-between h-full space-y-4">
                 <p className="text-[11px] text-muted-foreground">Estimated needs fulfillment & status mapping</p>
 
-                <div className="space-y-4 py-2">
-                  <div>
-                    <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                      <span>Shefa — Shelter / WASH / Protection</span>
-                      <span className="text-primary font-bold">92%</span>
-                    </div>
-                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: "92%" }}></div>
-                    </div>
+                {isSectorSummaryLoading ? (
+                  <div className="space-y-4 py-2 animate-pulse w-full">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <div key={idx} className="space-y-2">
+                        <div className="flex justify-between">
+                          <div className="h-4 bg-muted rounded w-1/2" />
+                          <div className="h-4 bg-muted rounded w-10" />
+                        </div>
+                        <div className="h-3 w-full bg-muted rounded-full" />
+                      </div>
+                    ))}
                   </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                      <span>Sanma — Shelter / Basic Services</span>
-                      <span className="text-primary font-bold">75%</span>
-                    </div>
-                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: "75%" }}></div>
-                    </div>
+                ) : (
+                  <div className="space-y-4 py-2 animate-fadeIn w-full">
+                    {sectorSummary.map((item) => (
+                      <div key={item.id}>
+                        <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
+                          <span>{item.title}</span>
+                          <span className="text-primary font-bold">{item.percentage}%</span>
+                        </div>
+                        <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary rounded-full transition-all duration-1000" 
+                            style={{ width: `${item.percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                      <span>Tafea — Evacuation Centre Support</span>
-                      <span className="text-primary font-bold">63%</span>
-                    </div>
-                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: "63%" }}></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                      <span>Malampa — Service Mapping</span>
-                      <span className="text-primary font-bold">50%</span>
-                    </div>
-                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: "50%" }}></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                      <span>Penama — Response Tracking</span>
-                      <span className="text-primary font-bold">38%</span>
-                    </div>
-                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full transition-all duration-1000" style={{ width: "38%" }}></div>
-                    </div>
-                  </div>
-                </div>
+                )}
 
                 <div className="text-[10px] text-muted-foreground leading-relaxed pt-3 border-t border-border mt-4">
                   <span>Ratios represent completed assessments and mapped responses per province.</span>
@@ -412,21 +526,26 @@ export default function DashboardSection() {
             <div className="p-4 space-y-4">
               <p className="text-[11px] text-muted-foreground">Major historic displace events tracked in database</p>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                {[
-                  { year: "2015", event: "TC Pam", impact: "High Impact", color: "bg-red-50 text-red-700 border-red-100 dark:bg-red-950/20 dark:text-red-400 dark:border-red-900/30" },
-                  { year: "2017", event: "Ambae Volcano", impact: "Displacement", color: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30" },
-                  { year: "2020", event: "TC Harold", impact: "Severe Impact", color: "bg-rose-50 text-rose-700 border-rose-100 dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" },
-                  { year: "2023", event: "TC Judy/Kevin", impact: "Multi-island", color: "bg-indigo-50 text-indigo-700 border-indigo-100 dark:bg-indigo-950/20 dark:text-indigo-400 dark:border-indigo-900/30" },
-                  { year: "2024", event: "Earthquake", impact: "Urban Impact", color: "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" }
-                ].map((evt, idx) => (
-                  <div key={idx} className={`p-3 rounded-lg border text-center flex flex-col justify-center gap-1 ${evt.color}`}>
-                    <span className="text-sm font-extrabold tracking-tight">{evt.year}</span>
-                    <span className="text-xs font-bold">{evt.event}</span>
-                    <span className="text-[9px] font-semibold opacity-90">{evt.impact}</span>
-                  </div>
-                ))}
-              </div>
+              {isEventsLoading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 animate-pulse">
+                  {Array.from({ length: 5 }).map((_, idx) => (
+                    <div key={idx} className="p-3 h-16 rounded-lg border border-border/30 bg-muted/40" />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 animate-fadeIn">
+                  {historicalEvents.map((evt, idx) => {
+                    const color = eventColors[idx % eventColors.length];
+                    return (
+                      <div key={evt.id || idx} className={`p-3 rounded-lg border text-center flex flex-col justify-center gap-1 ${color}`}>
+                        <span className="text-sm font-extrabold tracking-tight">{evt.year}</span>
+                        <span className="text-xs font-bold">{evt.event}</span>
+                        <span className="text-[9px] font-semibold opacity-90">{evt.impact}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
@@ -469,7 +588,17 @@ export default function DashboardSection() {
                       </TableRow>
                     </TableHeader>
                     <TableBody className="text-[11px]">
-                      {filteredEvacuationCentres.length > 0 ? (
+                      {isCentresLoading ? (
+                        Array.from({ length: 5 }).map((_, idx) => (
+                          <TableRow key={idx} className="animate-pulse border-border">
+                            <TableCell><div className="h-4 bg-muted rounded w-16" /></TableCell>
+                            <TableCell><div className="h-4 bg-muted rounded w-32" /></TableCell>
+                            <TableCell><div className="h-4 bg-muted rounded w-20" /></TableCell>
+                            <TableCell><div className="h-4 bg-muted rounded w-12" /></TableCell>
+                            <TableCell className="text-right"><div className="h-4 bg-muted rounded w-8 ml-auto" /></TableCell>
+                          </TableRow>
+                        ))
+                      ) : filteredEvacuationCentres.length > 0 ? (
                         filteredEvacuationCentres.map((ec, idx) => (
                           <TableRow key={idx} className="border-border">
                             <TableCell className="font-bold text-foreground">{ec.province}</TableCell>
@@ -525,31 +654,42 @@ export default function DashboardSection() {
                       </TableRow>
                     </TableHeader>
                     <TableBody className="text-[11px]">
-                      {responseTracking.map((res, idx) => (
-                        <TableRow key={idx} className="border-border">
-                          <TableCell className="font-bold text-foreground">{res.sector}</TableCell>
-                          <TableCell className="text-muted-foreground">{res.partner}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                              res.status === "Ongoing" 
-                                ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" 
-                                : res.status === "Critical Need" 
-                                  ? "bg-rose-50 text-rose-700 border-rose-100 font-extrabold dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" 
-                                  : "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30"
-                            }`}>
-                              {res.status}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right font-extrabold text-foreground">
-                            <div className="flex items-center justify-end gap-2">
-                              <span>{res.coverage}%</span>
-                              <div className="w-12 bg-muted h-2 rounded-full overflow-hidden hidden sm:block">
-                                <div className="bg-primary h-full rounded-full" style={{ width: `${res.coverage}%` }}></div>
+                      {isTrackingLoading ? (
+                        Array.from({ length: 4 }).map((_, idx) => (
+                          <TableRow key={idx} className="animate-pulse border-border">
+                            <TableCell><div className="h-4 bg-muted rounded w-24" /></TableCell>
+                            <TableCell><div className="h-4 bg-muted rounded w-28" /></TableCell>
+                            <TableCell><div className="h-4 bg-muted rounded w-16" /></TableCell>
+                            <TableCell className="text-right"><div className="h-4 bg-muted rounded w-12 ml-auto" /></TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        responseTracking.map((res, idx) => (
+                          <TableRow key={idx} className="border-border">
+                            <TableCell className="font-bold text-foreground">{res.sector}</TableCell>
+                            <TableCell className="text-muted-foreground">{res.partner}</TableCell>
+                            <TableCell>
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                res.status === "Ongoing" 
+                                  ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" 
+                                  : res.status === "Critical Need" 
+                                    ? "bg-rose-50 text-rose-700 border-rose-100 font-extrabold dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" 
+                                    : "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30"
+                              }`}>
+                                {res.status}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-right font-extrabold text-foreground">
+                              <div className="flex items-center justify-end gap-2">
+                                <span>{res.coverage}%</span>
+                                <div className="w-12 bg-muted h-2 rounded-full overflow-hidden hidden sm:block">
+                                  <div className="bg-primary h-full rounded-full" style={{ width: `${res.coverage}%` }}></div>
+                                </div>
                               </div>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 </div>
