@@ -42,3 +42,11 @@ export function useResponseTrackingSummary() {
     queryFn: () => dashboardService.getResponseTrackingSummary(),
   });
 }
+
+export function useEvacuationCentresStats() {
+  return useQuery({
+    queryKey: ["evacuation-centres-stats"],
+    queryFn: () => dashboardService.getEvacuationCentresStats(),
+  });
+}
+

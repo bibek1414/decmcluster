@@ -36,7 +36,8 @@ import {
   useProvinceSectorSummary,
   useHistoricalEvents,
   useEvacuationCentres,
-  useResponseTrackingSummary
+  useResponseTrackingSummary,
+  useEvacuationCentresStats
 } from "@/hooks/use-dashboard";
 import { useDebounce } from "@/hooks/use-debounce";
 
@@ -54,6 +55,7 @@ export default function DashboardSection() {
   const { data: historicalEventsData, isLoading: isEventsLoading } = useHistoricalEvents();
   const { data: centresData, isLoading: isCentresLoading } = useEvacuationCentres(debouncedSearch);
   const { data: trackingData, isLoading: isTrackingLoading } = useResponseTrackingSummary();
+  const { data: ecStatsData, isLoading: isEcStatsLoading } = useEvacuationCentresStats();
 
   // Side Menu Options
   const sideMenuItems = [
@@ -97,6 +99,54 @@ export default function DashboardSection() {
     ];
   }, [summaryData]);
 
+  // Evacuation Centres Stats
+  const ecStats = useMemo(() => {
+    const defaultEcStats = {
+      total_ec: 612,
+      total_internal_capacity: 19460,
+      total_toilets: 277,
+      total_water_storage: 5223887,
+      total_showers: 116,
+      is_govt_approved: 85,
+      first_aid_kit_available: 75,
+      first_aid_trained_person: 209
+    };
+    const s = ecStatsData || defaultEcStats;
+
+    return [
+      { key: "total_ec", label: "Total Evacuation Centres", value: s.total_ec.toLocaleString(), icon: Tent },
+      { key: "capacity", label: "Total Capacity", value: s.total_internal_capacity.toLocaleString(), icon: Users },
+      { key: "toilets", label: "Total Toilets", value: s.total_toilets.toLocaleString(), icon: Droplet },
+      { key: "showers", label: "Total Showers", value: s.total_showers.toLocaleString(), icon: Droplet },
+      { key: "water", label: "Total Water Storage", value: `${s.total_water_storage.toLocaleString()} L`, icon: Droplet },
+      { key: "govt_approved", label: "Govt Approved Status", value: s.is_govt_approved.toLocaleString(), icon: Shield },
+      { key: "first_aid_kit", label: "First Aid Kit Available", value: s.first_aid_kit_available.toLocaleString(), icon: Heart },
+      { key: "first_aid_person", label: "First Aid Trained Person", value: s.first_aid_trained_person.toLocaleString(), icon: Activity },
+    ];
+  }, [ecStatsData]);
+
+  // WASH Facilities list
+  const washFacilitiesList = useMemo(() => {
+    const defaultFacilities = {
+      toilets: 277,
+      showers: 116,
+      kitchen_facilities: 50,
+      laundry_facilities: 24,
+    };
+    const f = ecStatsData?.wash_and_facilities || defaultFacilities;
+    const items = [
+      { name: "Toilets", value: f.toilets },
+      { name: "Showers", value: f.showers },
+      { name: "Kitchen Facilities", value: f.kitchen_facilities },
+      { name: "Laundry Facilities", value: f.laundry_facilities },
+    ];
+    const maxVal = Math.max(...items.map(i => i.value), 1);
+    return items.map(item => ({
+      ...item,
+      percentage: Math.round((item.value / maxVal) * 100),
+    }));
+  }, [ecStatsData]);
+
   // Province-based Data for Chart and SVG Map Interaction
   const provinces = useMemo(() => {
     const defaultProvinces = [
@@ -108,10 +158,6 @@ export default function DashboardSection() {
       { name: "Tafea", ecs: 12, idps: 1550, color: "text-emerald-500 bg-emerald-500" },
     ];
 
-    if (!locationSummaryData || locationSummaryData.length === 0) {
-      return defaultProvinces;
-    }
-
     const colorMap: Record<string, string> = {
       Torba: "text-blue-500 bg-blue-500",
       Sanma: "text-teal-500 bg-teal-500",
@@ -121,6 +167,35 @@ export default function DashboardSection() {
       Shefa: "text-sky-500 bg-sky-500",
       Tafea: "text-emerald-500 bg-emerald-500",
     };
+
+    if (activeMenu === "Evacuation Centres") {
+      if (!ecStatsData || !ecStatsData.evacutation_center) {
+        return defaultProvinces;
+      }
+      
+      const provinceNames = ["Torba", "Sanma", "Penama", "Malampa", "Shefa", "Tafea"];
+      const apiMap = new Map(
+        ecStatsData.evacutation_center.map((item) => {
+          const cleanName = item.province.replace(" Province", "").trim();
+          const finalName = cleanName === "Malma" ? "Malampa" : cleanName;
+          return [finalName, item];
+        })
+      );
+
+      return provinceNames.map((name) => {
+        const item = apiMap.get(name);
+        return {
+          name,
+          ecs: item ? item.total_ec : 0,
+          idps: item ? item.idp : 0,
+          color: colorMap[name] || "text-gray-500 bg-gray-500",
+        };
+      });
+    }
+
+    if (!locationSummaryData || locationSummaryData.length === 0) {
+      return defaultProvinces;
+    }
 
     // Sort by order or map directly
     const sorted = [...locationSummaryData].sort((a, b) => a.order - b.order);
@@ -135,7 +210,7 @@ export default function DashboardSection() {
         color: colorMap[finalName] || "text-gray-500 bg-gray-500",
       };
     });
-  }, [locationSummaryData]);
+  }, [locationSummaryData, activeMenu, ecStatsData]);
 
   // Sector summary mapping
   const sectorSummary = useMemo(() => {
@@ -210,6 +285,9 @@ export default function DashboardSection() {
     });
   }, [evacuationCentres, selectedProvince]);
 
+  const isLoading = activeMenu === "Evacuation Centres" ? isEcStatsLoading : isSummaryLoading;
+  const currentStats = activeMenu === "Evacuation Centres" ? ecStats : baseStats;
+
   return (
     <div className="space-y-6">
       {/* Dashboard Top Banner */}
@@ -269,9 +347,9 @@ export default function DashboardSection() {
         <div className="lg:col-span-9 xl:col-span-10 space-y-6">
           
           {/* Key Figures Grid */}
-          {isSummaryLoading ? (
+          {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
-              {Array.from({ length: 10 }).map((_, idx) => (
+              {Array.from({ length: activeMenu === "Evacuation Centres" ? 8 : 10 }).map((_, idx) => (
                 <div 
                   key={idx} 
                   className="p-4 rounded-lg border border-border bg-card text-card-foreground flex items-start gap-3.5 animate-pulse"
@@ -286,9 +364,9 @@ export default function DashboardSection() {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
-              {baseStats.map((stat, idx) => {
+              {currentStats.map((stat, idx) => {
                 const Icon = stat.icon;
-                const isHighlighted = activeMenu === "Summary" || activeMenu === stat.category;
+                const isHighlighted = activeMenu === "Evacuation Centres" || activeMenu === "Summary" || (stat.category && activeMenu === stat.category);
                 return (
                   <div 
                     key={idx}
@@ -470,48 +548,89 @@ export default function DashboardSection() {
               </div>
             </div>
 
-            {/* Sector Summary by Province Chart */}
+            {/* Sector Summary by Province Chart OR WASH & Facilities Summary */}
             <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden flex flex-col justify-between">
               <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold">
-                Sector Summary by Province
+                {activeMenu === "Evacuation Centres" ? "WASH & Facilities Summary" : "Sector Summary by Province"}
               </div>
               
               <div className="p-4 flex flex-col justify-between h-full space-y-4">
-                <p className="text-[11px] text-muted-foreground">Estimated needs fulfillment & status mapping</p>
+                <p className="text-[11px] text-muted-foreground">
+                  {activeMenu === "Evacuation Centres" 
+                    ? "Facilities counts available across evacuation centres" 
+                    : "Estimated needs fulfillment & status mapping"}
+                </p>
 
-                {isSectorSummaryLoading ? (
-                  <div className="space-y-4 py-2 animate-pulse w-full">
-                    {Array.from({ length: 5 }).map((_, idx) => (
-                      <div key={idx} className="space-y-2">
-                        <div className="flex justify-between">
-                          <div className="h-4 bg-muted rounded w-1/2" />
-                          <div className="h-4 bg-muted rounded w-10" />
+                {activeMenu === "Evacuation Centres" ? (
+                  isLoading ? (
+                    <div className="space-y-4 py-2 animate-pulse w-full">
+                      {Array.from({ length: 4 }).map((_, idx) => (
+                        <div key={idx} className="space-y-2">
+                          <div className="flex justify-between">
+                            <div className="h-4 bg-muted rounded w-1/2" />
+                            <div className="h-4 bg-muted rounded w-10" />
+                          </div>
+                          <div className="h-3 w-full bg-muted rounded-full" />
                         </div>
-                        <div className="h-3 w-full bg-muted rounded-full" />
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4 py-2 animate-fadeIn w-full">
+                      {washFacilitiesList.map((item, idx) => (
+                        <div key={idx}>
+                          <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
+                            <span>{item.name}</span>
+                            <span className="text-primary font-bold">{item.value.toLocaleString()}</span>
+                          </div>
+                          <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-primary rounded-full transition-all duration-1000" 
+                              style={{ width: `${item.percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )
                 ) : (
-                  <div className="space-y-4 py-2 animate-fadeIn w-full">
-                    {sectorSummary.map((item) => (
-                      <div key={item.id}>
-                        <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                          <span>{item.title}</span>
-                          <span className="text-primary font-bold">{item.percentage}%</span>
+                  isSectorSummaryLoading ? (
+                    <div className="space-y-4 py-2 animate-pulse w-full">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <div key={idx} className="space-y-2">
+                          <div className="flex justify-between">
+                            <div className="h-4 bg-muted rounded w-1/2" />
+                            <div className="h-4 bg-muted rounded w-10" />
+                          </div>
+                          <div className="h-3 w-full bg-muted rounded-full" />
                         </div>
-                        <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-primary rounded-full transition-all duration-1000" 
-                            style={{ width: `${item.percentage}%` }}
-                          ></div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4 py-2 animate-fadeIn w-full">
+                      {sectorSummary.map((item) => (
+                        <div key={item.id}>
+                          <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
+                            <span>{item.title}</span>
+                            <span className="text-primary font-bold">{item.percentage}%</span>
+                          </div>
+                          <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-primary rounded-full transition-all duration-1000" 
+                              style={{ width: `${item.percentage}%` }}
+                            ></div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )
                 )}
 
                 <div className="text-[10px] text-muted-foreground leading-relaxed pt-3 border-t border-border mt-4">
-                  <span>Ratios represent completed assessments and mapped responses per province.</span>
+                  <span>
+                    {activeMenu === "Evacuation Centres"
+                      ? "Figures represent total facilities mapped across all active evacuation centres."
+                      : "Ratios represent completed assessments and mapped responses per province."}
+                  </span>
                 </div>
               </div>
             </div>
@@ -519,190 +638,194 @@ export default function DashboardSection() {
           </div>
 
           {/* Historical Events Snapshot */}
-          <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden">
-            <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold">
-              Historical Events Snapshot
-            </div>
-            
-            <div className="p-4 space-y-4">
-              <p className="text-[11px] text-muted-foreground">Major historic displace events tracked in database</p>
+          {activeMenu !== "Evacuation Centres" && (
+            <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden">
+              <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold">
+                Historical Events Snapshot
+              </div>
               
-              {isEventsLoading ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 animate-pulse">
-                  {Array.from({ length: 5 }).map((_, idx) => (
-                    <div key={idx} className="p-3 h-16 rounded-lg border border-border/30 bg-muted/40" />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 animate-fadeIn">
-                  {historicalEvents.map((evt, idx) => {
-                    const color = eventColors[idx % eventColors.length];
-                    return (
-                      <div key={evt.id || idx} className={`p-3 rounded-lg border text-center flex flex-col justify-center gap-1 ${color}`}>
-                        <span className="text-sm font-extrabold tracking-tight">{evt.year}</span>
-                        <span className="text-xs font-bold">{evt.event}</span>
-                        <span className="text-[9px] font-semibold opacity-90">{evt.impact}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+              <div className="p-4 space-y-4">
+                <p className="text-[11px] text-muted-foreground">Major historic displace events tracked in database</p>
+                
+                {isEventsLoading ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 animate-pulse">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <div key={idx} className="p-3 h-16 rounded-lg border border-border/30 bg-muted/40" />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 animate-fadeIn">
+                    {historicalEvents.map((evt, idx) => {
+                      const color = eventColors[idx % eventColors.length];
+                      return (
+                        <div key={evt.id || idx} className={`p-3 rounded-lg border text-center flex flex-col justify-center gap-1 ${color}`}>
+                          <span className="text-sm font-extrabold tracking-tight">{evt.year}</span>
+                          <span className="text-xs font-bold">{evt.event}</span>
+                          <span className="text-[9px] font-semibold opacity-90">{evt.impact}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Lower Data Tables Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            
-            {/* Evacuation Centres List Table */}
-            <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden flex flex-col justify-between">
-              <div>
-                <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border">
-                  <div className="flex items-center gap-2">
-                    <span>Evacuation Centre List</span>
-                    {selectedProvince && (
-                      <span className="text-[10px] text-primary-foreground/80 font-normal">
-                        ({selectedProvince})
-                      </span>
-                    )}
+          {activeMenu !== "Evacuation Centres" && (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              
+              {/* Evacuation Centres List Table */}
+              <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border">
+                    <div className="flex items-center gap-2">
+                      <span>Evacuation Centre List</span>
+                      {selectedProvince && (
+                        <span className="text-[10px] text-primary-foreground/80 font-normal">
+                          ({selectedProvince})
+                        </span>
+                      )}
+                    </div>
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-primary-foreground/60" />
+                      <input 
+                        type="text"
+                        placeholder="Search site..."
+                        value={ecSearch}
+                        onChange={(e) => setEcSearch(e.target.value)}
+                        className="bg-primary-foreground/15 text-primary-foreground placeholder-primary-foreground/50 text-xs px-2.5 pl-8 py-1 rounded-md border border-primary-foreground/25 focus:outline-none focus:border-primary-foreground/50 w-full sm:w-40"
+                      />
+                    </div>
                   </div>
-                  <div className="relative">
-                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-primary-foreground/60" />
-                    <input 
-                      type="text"
-                      placeholder="Search site..."
-                      value={ecSearch}
-                      onChange={(e) => setEcSearch(e.target.value)}
-                      className="bg-primary-foreground/15 text-primary-foreground placeholder-primary-foreground/50 text-xs px-2.5 pl-8 py-1 rounded-md border border-primary-foreground/25 focus:outline-none focus:border-primary-foreground/50 w-full sm:w-40"
-                    />
-                  </div>
-                </div>
 
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent border-border">
-                        <TableHead className="font-bold h-9">Province</TableHead>
-                        <TableHead className="font-bold h-9">Site Name</TableHead>
-                        <TableHead className="font-bold h-9">Type</TableHead>
-                        <TableHead className="font-bold h-9">Status</TableHead>
-                        <TableHead className="font-bold text-right h-9">HHs</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-[11px]">
-                      {isCentresLoading ? (
-                        Array.from({ length: 5 }).map((_, idx) => (
-                          <TableRow key={idx} className="animate-pulse border-border">
-                            <TableCell><div className="h-4 bg-muted rounded w-16" /></TableCell>
-                            <TableCell><div className="h-4 bg-muted rounded w-32" /></TableCell>
-                            <TableCell><div className="h-4 bg-muted rounded w-20" /></TableCell>
-                            <TableCell><div className="h-4 bg-muted rounded w-12" /></TableCell>
-                            <TableCell className="text-right"><div className="h-4 bg-muted rounded w-8 ml-auto" /></TableCell>
-                          </TableRow>
-                        ))
-                      ) : filteredEvacuationCentres.length > 0 ? (
-                        filteredEvacuationCentres.map((ec, idx) => (
-                          <TableRow key={idx} className="border-border">
-                            <TableCell className="font-bold text-foreground">{ec.province}</TableCell>
-                            <TableCell>{ec.site}</TableCell>
-                            <TableCell className="text-muted-foreground font-semibold">{ec.type}</TableCell>
-                            <TableCell>
-                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                                ec.status === "Open" 
-                                  ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30" 
-                                  : ec.status === "Monitoring" 
-                                    ? "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30" 
-                                    : "bg-muted text-muted-foreground border-border"
-                              }`}>
-                                {ec.status}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-right font-extrabold text-foreground">{ec.hhs}</TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        <TableRow>
-                          <TableCell colSpan={5} className="p-6 text-center text-muted-foreground">
-                            No evacuation centres found matching filters.
-                          </TableCell>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="hover:bg-transparent border-border">
+                          <TableHead className="font-bold h-9">Province</TableHead>
+                          <TableHead className="font-bold h-9">Site Name</TableHead>
+                          <TableHead className="font-bold h-9">Type</TableHead>
+                          <TableHead className="font-bold h-9">Status</TableHead>
+                          <TableHead className="font-bold text-right h-9">HHs</TableHead>
                         </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-
-              <div className="p-3 bg-muted/50 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
-                <span>Showing {filteredEvacuationCentres.length} centers</span>
-                <span className="font-bold">Total HHs: {filteredEvacuationCentres.reduce((acc, curr) => acc + curr.hhs, 0)}</span>
-              </div>
-            </div>
-
-            {/* Response Tracking Table */}
-            <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden flex flex-col justify-between">
-              <div>
-                <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold border-b border-border">
-                  Response Tracking Summary
-                </div>
-
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="hover:bg-transparent border-border">
-                        <TableHead className="font-bold h-9">Sector</TableHead>
-                        <TableHead className="font-bold h-9">Partner</TableHead>
-                        <TableHead className="font-bold h-9">Status</TableHead>
-                        <TableHead className="font-bold text-right h-9">Coverage</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="text-[11px]">
-                      {isTrackingLoading ? (
-                        Array.from({ length: 4 }).map((_, idx) => (
-                          <TableRow key={idx} className="animate-pulse border-border">
-                            <TableCell><div className="h-4 bg-muted rounded w-24" /></TableCell>
-                            <TableCell><div className="h-4 bg-muted rounded w-28" /></TableCell>
-                            <TableCell><div className="h-4 bg-muted rounded w-16" /></TableCell>
-                            <TableCell className="text-right"><div className="h-4 bg-muted rounded w-12 ml-auto" /></TableCell>
-                          </TableRow>
-                        ))
-                      ) : (
-                        responseTracking.map((res, idx) => (
-                          <TableRow key={idx} className="border-border">
-                            <TableCell className="font-bold text-foreground">{res.sector}</TableCell>
-                            <TableCell className="text-muted-foreground">{res.partner}</TableCell>
-                            <TableCell>
-                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
-                                res.status === "Ongoing" 
-                                  ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" 
-                                  : res.status === "Critical Need" 
-                                    ? "bg-rose-50 text-rose-700 border-rose-100 font-extrabold dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" 
-                                    : "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30"
-                              }`}>
-                                {res.status}
-                              </span>
+                      </TableHeader>
+                      <TableBody className="text-[11px]">
+                        {isCentresLoading ? (
+                          Array.from({ length: 5 }).map((_, idx) => (
+                            <TableRow key={idx} className="animate-pulse border-border">
+                              <TableCell><div className="h-4 bg-muted rounded w-16" /></TableCell>
+                              <TableCell><div className="h-4 bg-muted rounded w-32" /></TableCell>
+                              <TableCell><div className="h-4 bg-muted rounded w-20" /></TableCell>
+                              <TableCell><div className="h-4 bg-muted rounded w-12" /></TableCell>
+                              <TableCell className="text-right"><div className="h-4 bg-muted rounded w-8 ml-auto" /></TableCell>
+                            </TableRow>
+                          ))
+                        ) : filteredEvacuationCentres.length > 0 ? (
+                          filteredEvacuationCentres.map((ec, idx) => (
+                            <TableRow key={idx} className="border-border">
+                              <TableCell className="font-bold text-foreground">{ec.province}</TableCell>
+                              <TableCell>{ec.site}</TableCell>
+                              <TableCell className="text-muted-foreground font-semibold">{ec.type}</TableCell>
+                              <TableCell>
+                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                  ec.status === "Open" 
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-950/20 dark:text-emerald-400 dark:border-emerald-900/30" 
+                                    : ec.status === "Monitoring" 
+                                      ? "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30" 
+                                      : "bg-muted text-muted-foreground border-border"
+                                }`}>
+                                  {ec.status}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-right font-extrabold text-foreground">{ec.hhs}</TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          <TableRow>
+                            <TableCell colSpan={5} className="p-6 text-center text-muted-foreground">
+                              No evacuation centres found matching filters.
                             </TableCell>
-                            <TableCell className="text-right font-extrabold text-foreground">
-                              <div className="flex items-center justify-end gap-2">
-                                <span>{res.coverage}%</span>
-                                <div className="w-12 bg-muted h-2 rounded-full overflow-hidden hidden sm:block">
-                                  <div className="bg-primary h-full rounded-full" style={{ width: `${res.coverage}%` }}></div>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-muted/50 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span>Showing {filteredEvacuationCentres.length} centers</span>
+                  <span className="font-bold">Total HHs: {filteredEvacuationCentres.reduce((acc, curr) => acc + curr.hhs, 0)}</span>
+                </div>
+              </div>
+
+              {/* Response Tracking Table */}
+              <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="bg-primary text-primary-foreground px-3.5 py-2 text-[13px] font-bold border-b border-border">
+                    Response Tracking Summary
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="hover:bg-transparent border-border">
+                          <TableHead className="font-bold h-9">Sector</TableHead>
+                          <TableHead className="font-bold h-9">Partner</TableHead>
+                          <TableHead className="font-bold h-9">Status</TableHead>
+                          <TableHead className="font-bold text-right h-9">Coverage</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody className="text-[11px]">
+                        {isTrackingLoading ? (
+                          Array.from({ length: 4 }).map((_, idx) => (
+                            <TableRow key={idx} className="animate-pulse border-border">
+                              <TableCell><div className="h-24 bg-muted rounded w-24" /></TableCell>
+                              <TableCell><div className="h-4 bg-muted rounded w-28" /></TableCell>
+                              <TableCell><div className="h-4 bg-muted rounded w-16" /></TableCell>
+                              <TableCell className="text-right"><div className="h-4 bg-muted rounded w-12 ml-auto" /></TableCell>
+                            </TableRow>
+                          ))
+                        ) : (
+                          responseTracking.map((res, idx) => (
+                            <TableRow key={idx} className="border-border">
+                              <TableCell className="font-bold text-foreground">{res.sector}</TableCell>
+                              <TableCell className="text-muted-foreground">{res.partner}</TableCell>
+                              <TableCell>
+                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                                  res.status === "Ongoing" 
+                                    ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30" 
+                                    : res.status === "Critical Need" 
+                                      ? "bg-rose-50 text-rose-700 border-rose-100 font-extrabold dark:bg-rose-950/20 dark:text-rose-400 dark:border-rose-900/30" 
+                                      : "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-950/20 dark:text-amber-400 dark:border-amber-900/30"
+                                }`}>
+                                  {res.status}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-right font-extrabold text-foreground">
+                                <div className="flex items-center justify-end gap-2">
+                                  <span>{res.coverage}%</span>
+                                  <div className="w-12 bg-muted h-2 rounded-full overflow-hidden hidden sm:block">
+                                    <div className="bg-primary h-full rounded-full" style={{ width: `${res.coverage}%` }}></div>
+                                  </div>
                                 </div>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-muted/50 border-t border-border text-[11px] text-muted-foreground flex items-center gap-1">
+                  <Filter className="w-3 h-3 text-muted-foreground/60" />
+                  <span>Sector targets updated in database: 2 hours ago.</span>
                 </div>
               </div>
 
-              <div className="p-3 bg-muted/50 border-t border-border text-[11px] text-muted-foreground flex items-center gap-1">
-                <Filter className="w-3 h-3 text-muted-foreground/60" />
-                <span>Sector targets updated in database: 2 hours ago.</span>
-              </div>
             </div>
-
-          </div>
+          )}
 
         </div>
 

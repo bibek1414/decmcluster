@@ -6,6 +6,7 @@ import {
   HistoricalEvent,
   EvacuationCentre,
   ResponseTrackingSummary,
+  EvacuationCentresStats,
 } from "@/types/dashboard";
 
 export const dashboardService = {
@@ -63,6 +64,15 @@ export const dashboardService = {
     const res = await fetch(`${baseUrl}/api/dashboard/response-tracking-summary/`);
     if (!res.ok) {
       throw new Error("Failed to fetch response tracking summary");
+    }
+    return res.json();
+  },
+
+  getEvacuationCentresStats: async (): Promise<EvacuationCentresStats> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/evacuation-centres/stats/`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch evacuation centres stats");
     }
     return res.json();
   },
