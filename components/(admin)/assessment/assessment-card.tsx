@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { FileText, FileSpreadsheet, Eye } from "lucide-react";
 import { type AssessmentData } from "@/types/assessment";
@@ -78,32 +77,36 @@ export function AssessmentCard({ a }: AssessmentCardProps) {
           </Link>
         </Button>
 
-        {a.pdf && (() => {
-          const isCsv = a.pdf.toLowerCase().endsWith(".csv") || a.pdf.toLowerCase().endsWith(".xlsx") || a.pdf.toLowerCase().endsWith(".xls");
-          const label = isCsv ? "Excel/CSV" : "PDF/Doc";
-          const IconComponent = isCsv ? FileSpreadsheet : FileText;
-          const colorClass = isCsv
-            ? "border-green-600/10 text-green-700 hover:bg-green-50/50 hover:text-green-800"
-            : "border-blue-600/10 text-blue-700 hover:bg-blue-50/50 hover:text-blue-800";
-          return (
-            <Button
-              variant="outline"
-              size="sm"
-              className={`flex-1 h-8 text-[10px] font-bold gap-1 cursor-pointer ${colorClass}`}
-              asChild
-            >
-              <a
-                href={getFileUrl(a.pdf)}
-                download
-                target="_blank"
-                rel="noopener noreferrer"
+        {a.pdf &&
+          (() => {
+            const isCsv =
+              a.pdf.toLowerCase().endsWith(".csv") ||
+              a.pdf.toLowerCase().endsWith(".xlsx") ||
+              a.pdf.toLowerCase().endsWith(".xls");
+            const label = isCsv ? "Excel/CSV" : "PDF/Doc";
+            const IconComponent = isCsv ? FileSpreadsheet : FileText;
+            const colorClass = isCsv
+              ? "border-green-600/10 text-green-700 hover:bg-green-50/50 hover:text-green-800"
+              : "border-blue-600/10 text-blue-700 hover:bg-blue-50/50 hover:text-blue-800";
+            return (
+              <Button
+                variant="outline"
+                size="sm"
+                className={`flex-1 h-8 text-[10px] font-bold gap-1 cursor-pointer ${colorClass}`}
+                asChild
               >
-                <IconComponent className="h-3 w-3" />
-                {label}
-              </a>
-            </Button>
-          );
-        })()}
+                <a
+                  href={getFileUrl(a.pdf)}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <IconComponent className="h-3 w-3" />
+                  {label}
+                </a>
+              </Button>
+            );
+          })()}
 
         {a.excel && (
           <Button

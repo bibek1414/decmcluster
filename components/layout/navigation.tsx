@@ -32,7 +32,7 @@ const VALID_PATHS = [
   "/training",
   "/partners",
   "/links",
-  "/contact"
+  "/contact",
 ];
 
 export default function Navigation() {
@@ -162,7 +162,7 @@ export default function Navigation() {
                         className="flex w-full items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-bold text-foreground hover:bg-muted transition-colors cursor-pointer"
                       >
                         <ClipboardList className="w-4 h-4 text-muted-foreground" />
-                        <span>Assessment Management</span>
+                        <span>Displacement Data</span>
                       </Link>
                       <button
                         onClick={() => {
@@ -238,7 +238,7 @@ export default function Navigation() {
                 className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-bold bg-primary-foreground/10 hover:bg-primary-foreground/15 text-primary-foreground transition-all cursor-pointer"
               >
                 <ClipboardList className="w-4 h-4" />
-                <span>Assessment Management</span>
+                <span>Displacement Data</span>
               </Link>
               <button
                 onClick={() => {
