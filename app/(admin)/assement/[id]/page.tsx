@@ -21,8 +21,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { assessmentService } from "@/services/assessment";
+import {
+  useAssessment,
+  useAssessmentResults,
+  useDeleteAssessment,
+  useCreateAssessmentResult,
+  useDeleteAssessmentResult,
+} from "@/hooks/use-assessments";
 import { FileUpload } from "@/components/shared/file-upload";
 import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
@@ -30,7 +35,6 @@ import { siteConfig } from "@/config/site";
 export default function AssessmentDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { user, token } = useAuth();
 
   const slug = params.id as string;
@@ -67,76 +71,18 @@ export default function AssessmentDetailPage() {
     data: assessment,
     isLoading: isAssessmentLoading,
     error: assessmentError,
-  } = useQuery({
-    queryKey: ["assessment-detail", slug],
-    queryFn: () => assessmentService.get(slug),
-    enabled: !!slug,
-  });
+  } = useAssessment(slug);
 
   const {
     data: results = [],
     isLoading: isResultsLoading,
     error: resultsError,
-  } = useQuery({
-    queryKey: ["assessment-results", slug, token],
-    queryFn: () => assessmentService.listResults(slug, token),
-    enabled: !!slug,
-  });
+  } = useAssessmentResults(slug, token);
 
   // Mutations
-  const deleteAssessmentMutation = useMutation({
-    mutationFn: () => assessmentService.delete(slug, token),
-    onSuccess: () => {
-      toast.success("Assessment deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
-      router.push("/assement");
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to delete assessment");
-    },
-  });
-
-  const uploadResultMutation = useMutation({
-    mutationFn: () => {
-      if (!resultTitle.trim()) {
-        throw new Error("Please enter a title for the result");
-      }
-      if (!resultFile) {
-        throw new Error("Please select a file to upload");
-      }
-      return assessmentService.createResult(
-        slug,
-        resultTitle,
-        resultDesc,
-        resultFile,
-        token,
-      );
-    },
-    onSuccess: () => {
-      toast.success("Result uploaded successfully");
-      setIsResultUploadOpen(false);
-      setResultTitle("");
-      setResultDesc("");
-      setResultFile(null);
-      queryClient.invalidateQueries({ queryKey: ["assessment-results", slug] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload result");
-    },
-  });
-
-  const deleteResultMutation = useMutation({
-    mutationFn: (resultId: number) =>
-      assessmentService.deleteResult(slug, resultId, token),
-    onSuccess: () => {
-      toast.success("Result deleted successfully");
-      setResultToDelete(null);
-      queryClient.invalidateQueries({ queryKey: ["assessment-results", slug] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to delete result");
-    },
-  });
+  const deleteAssessmentMutation = useDeleteAssessment();
+  const uploadResultMutation = useCreateAssessmentResult();
+  const deleteResultMutation = useDeleteAssessmentResult();
 
   if (isAssessmentLoading) {
     return (
@@ -185,16 +131,66 @@ export default function AssessmentDetailPage() {
 
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    uploadResultMutation.mutate();
+    if (!resultTitle.trim()) {
+      toast.error("Please enter a title for the result");
+      return;
+    }
+    if (!resultFile) {
+      toast.error("Please select a file to upload");
+      return;
+    }
+    uploadResultMutation.mutate(
+      {
+        slug,
+        title: resultTitle,
+        description: resultDesc,
+        file: resultFile,
+        token,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Result uploaded successfully");
+          setIsResultUploadOpen(false);
+          setResultTitle("");
+          setResultDesc("");
+          setResultFile(null);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to upload result");
+        },
+      }
+    );
   };
 
   const handleConfirmDeleteAssessment = () => {
-    deleteAssessmentMutation.mutate();
+    deleteAssessmentMutation.mutate(
+      { slug, token },
+      {
+        onSuccess: () => {
+          toast.success("Assessment deleted successfully");
+          router.push("/assement");
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to delete assessment");
+        },
+      }
+    );
   };
 
   const handleConfirmDeleteResult = () => {
     if (resultToDelete !== null) {
-      deleteResultMutation.mutate(resultToDelete);
+      deleteResultMutation.mutate(
+        { slug, resultId: resultToDelete, token },
+        {
+          onSuccess: () => {
+            toast.success("Result deleted successfully");
+            setResultToDelete(null);
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to delete result");
+          },
+        }
+      );
     }
   };
 

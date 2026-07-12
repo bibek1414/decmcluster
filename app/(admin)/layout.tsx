@@ -50,6 +50,13 @@ export default function AdminLayout({
     if (pathname?.startsWith("/assement/users")) {
       return false;
     }
+    // Guard for specific assessment slug details pages
+    if (pathname?.startsWith("/assement/")) {
+      const rest = pathname.substring("/assement/".length);
+      if (rest && !rest.includes("/")) {
+        return normalized.includes(rest.toLowerCase());
+      }
+    }
     return true;
   }, [pathname, user]);
 

@@ -9,14 +9,11 @@ import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/shared/empty-state";
 import { FileUpload } from "@/components/shared/file-upload";
 import { useAuth } from "@/hooks/use-auth";
-import { useAssessments } from "@/hooks/use-assessments";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { assessmentService } from "@/services/assessment";
+import { useAssessments, useCreateAssessment } from "@/hooks/use-assessments";
 import { toast } from "sonner";
 
 export default function AssessmentsPage() {
   const { user, token } = useAuth();
-  const queryClient = useQueryClient();
 
   const [query, setQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -36,45 +33,55 @@ export default function AssessmentsPage() {
   const { data: assessments = [], isLoading, error } = useAssessments();
 
   // Create assessment mutation
-  const createMutation = useMutation({
-    mutationFn: async () => {
-      if (!newName.trim()) {
-        throw new Error("Please enter a name for the assessment");
-      }
-      return assessmentService.create(
-        newName,
-        newDesc,
-        newPdf,
-        newExcel,
-        newIsPublic,
-        token
-      );
-    },
-    onSuccess: () => {
-      toast.success("Assessment created successfully");
-      setIsCreateOpen(false);
-      setNewName("");
-      setNewDesc("");
-      setNewPdf(null);
-      setNewExcel(null);
-      setNewIsPublic(true);
-      queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to create assessment");
-    },
-  });
+  const createMutation = useCreateAssessment();
 
   const filtered = useMemo(() => {
     return assessments.filter((a) => {
+      // Enforce access control for non-superadmins
+      if (!isSuperAdmin) {
+        const acList = user?.access_control || [];
+        const normalized = acList.map((item) =>
+          item.toLowerCase().replace(/_/g, "-")
+        );
+        if (!normalized.includes(a.slug.toLowerCase())) {
+          return false;
+        }
+      }
       const matchesQuery = a.name.toLowerCase().includes(query.toLowerCase());
       return matchesQuery;
     });
-  }, [assessments, query]);
+  }, [assessments, query, isSuperAdmin, user]);
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate();
+    if (!newName.trim()) {
+      toast.error("Please enter a name for the assessment");
+      return;
+    }
+    createMutation.mutate(
+      {
+        name: newName,
+        description: newDesc,
+        pdf: newPdf,
+        excel: newExcel,
+        isPublic: newIsPublic,
+        token,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Assessment created successfully");
+          setIsCreateOpen(false);
+          setNewName("");
+          setNewDesc("");
+          setNewPdf(null);
+          setNewExcel(null);
+          setNewIsPublic(true);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to create assessment");
+        },
+      }
+    );
   };
 
   return (

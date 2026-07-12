@@ -26,11 +26,39 @@ import { Pagination } from "@/components/shared/pagination";
 import { EmptyState } from "@/components/shared/empty-state";
 import { toast } from "sonner";
 import { AlertDialog } from "@/components/ui/alert-dialog";
+import { useAssessments } from "@/hooks/use-assessments";
+
+const FALLBACK_ASSESSMENTS = [
+  { id: "5w-response-data", label: "5W Response Data" },
+  { id: "community-level-damage-assessment-form", label: "Community Level Damage Assessment Form" },
+  { id: "durable-solution-relocation-survey", label: "Durable Solution & Relocation Survey" },
+  { id: "service-monitoring-tool-2026", label: "Service Monitoring Tool 2026" },
+  { id: "displacement-profile-phone-survey", label: "Displacement Profile - Phone Survey" },
+  { id: "displacement-tracking-matrix-form", label: "Displacement Tracking Matrix Form" },
+  { id: "rapid-assessment-form-area-council", label: "Rapid Assessment Form (Area Council)" },
+  { id: "damage-assessment-form-community-v2", label: "Damage Assessment Form (Community V2)" },
+  { id: "evacuation-centre-assessment-form", label: "Evacuation Centre Assessment Form" },
+];
 
 export default function UsersClient() {
   const { user, token } = useAuth();
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const { data: assessmentsData } = useAssessments();
+  const assessments = assessmentsData || [];
+
+  const assessmentsMap = React.useMemo(() => {
+    const m = new Map<string, string>();
+    FALLBACK_ASSESSMENTS.forEach((item) => {
+      m.set(item.id.toLowerCase(), item.label);
+    });
+    assessments.forEach((a) => {
+      m.set(a.slug.toLowerCase(), a.name);
+    });
+    return m;
+  }, [assessments]);
+
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(searchQuery, 300);
 
@@ -343,7 +371,7 @@ export default function UsersClient() {
                             const normalized = val
                               .toLowerCase()
                               .replace(/_/g, "-");
-                            const label = labels[normalized] || val;
+                            const label = labels[normalized] || assessmentsMap.get(normalized) || val;
                             return (
                               <span
                                 key={val}
@@ -530,57 +558,106 @@ export default function UsersClient() {
               </div>
 
               {role !== "superadmin" && (
-                <div className="space-y-2 border-t border-border/60 pt-3 mt-1">
-                  <label className="block text-xs font-bold text-muted-foreground">
-                    Folder Access Control
-                  </label>
-                  <p className="text-[10px] text-muted-foreground font-medium pb-1">
-                    Select which directories this user is authorized to access:
-                  </p>
-                  <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
-                    {[
-                      {
-                        id: "meeting-minutes",
-                        label: "Coordination Meeting Minutes",
-                      },
-                      {
-                        id: "sops",
-                        label: "Standard Operating Procedures (SOPs)",
-                      },
-                      {
-                        id: "situational-reports",
-                        label: "Situational Reports",
-                      },
-                    ].map((folder) => {
-                      const isChecked = selectedFolders.includes(folder.id);
-                      return (
-                        <label
-                          key={folder.id}
-                          className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {
-                              if (isChecked) {
-                                setSelectedFolders(
-                                  selectedFolders.filter(
-                                    (f) => f !== folder.id,
-                                  ),
-                                );
-                              } else {
-                                setSelectedFolders([
-                                  ...selectedFolders,
-                                  folder.id,
-                                ]);
-                              }
-                            }}
-                            className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
-                          />
-                          <span>{folder.label}</span>
-                        </label>
-                      );
-                    })}
+                <div className="space-y-3 border-t border-border/60 pt-3 mt-1 max-h-[250px] overflow-y-auto pr-1">
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-muted-foreground">
+                      Folder & Assessment Access Control
+                    </label>
+                    <p className="text-[10px] text-muted-foreground font-medium">
+                      Select directories and assessment forms this user is authorized to access:
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {/* Folders Section */}
+                    <div className="space-y-2">
+                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Folders</h4>
+                      <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
+                        {[
+                          {
+                            id: "meeting-minutes",
+                            label: "Coordination Meeting Minutes",
+                          },
+                          {
+                            id: "sops",
+                            label: "Standard Operating Procedures (SOPs)",
+                          },
+                          {
+                            id: "situational-reports",
+                            label: "Situational Reports",
+                          },
+                        ].map((folder) => {
+                          const isChecked = selectedFolders.includes(folder.id);
+                          return (
+                            <label
+                              key={folder.id}
+                              className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setSelectedFolders(
+                                      selectedFolders.filter(
+                                        (f) => f !== folder.id,
+                                      ),
+                                    );
+                                  } else {
+                                    setSelectedFolders([
+                                      ...selectedFolders,
+                                      folder.id,
+                                    ]);
+                                  }
+                                }}
+                                className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
+                              />
+                              <span>{folder.label}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Assessments Section */}
+                    <div className="space-y-2">
+                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Displacement Data Forms</h4>
+                      <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50 max-h-[160px] overflow-y-auto">
+                        {(assessments.length > 0
+                          ? assessments.map((a) => ({ id: a.slug, label: a.name }))
+                          : FALLBACK_ASSESSMENTS
+                        ).map((form) => {
+                          const isChecked = selectedFolders.includes(form.id);
+                          return (
+                            <label
+                              key={form.id}
+                              className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setSelectedFolders(
+                                      selectedFolders.filter(
+                                        (f) => f !== form.id,
+                                      ),
+                                    );
+                                  } else {
+                                    setSelectedFolders([
+                                      ...selectedFolders,
+                                      form.id,
+                                    ]);
+                                  }
+                                }}
+                                className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
+                              />
+                              <span>{form.label}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -740,57 +817,106 @@ export default function UsersClient() {
               </div>
 
               {editRole !== "superadmin" && (
-                <div className="space-y-2 border-t border-border/60 pt-3 mt-1">
-                  <label className="block text-xs font-bold text-muted-foreground">
-                    Folder Access Control
-                  </label>
-                  <p className="text-[10px] text-muted-foreground font-medium pb-1">
-                    Select which directories this user is authorized to access:
-                  </p>
-                  <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
-                    {[
-                      {
-                        id: "meeting-minutes",
-                        label: "Coordination Meeting Minutes",
-                      },
-                      {
-                        id: "sops",
-                        label: "Standard Operating Procedures (SOPs)",
-                      },
-                      {
-                        id: "situational-reports",
-                        label: "Situational Reports",
-                      },
-                    ].map((folder) => {
-                      const isChecked = editSelectedFolders.includes(folder.id);
-                      return (
-                        <label
-                          key={folder.id}
-                          className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {
-                              if (isChecked) {
-                                setEditSelectedFolders(
-                                  editSelectedFolders.filter(
-                                    (f) => f !== folder.id,
-                                  ),
-                                );
-                              } else {
-                                setEditSelectedFolders([
-                                  ...editSelectedFolders,
-                                  folder.id,
-                                ]);
-                              }
-                            }}
-                            className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
-                          />
-                          <span>{folder.label}</span>
-                        </label>
-                      );
-                    })}
+                <div className="space-y-3 border-t border-border/60 pt-3 mt-1 max-h-[250px] overflow-y-auto pr-1">
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-muted-foreground">
+                      Folder & Assessment Access Control
+                    </label>
+                    <p className="text-[10px] text-muted-foreground font-medium">
+                      Select directories and assessment forms this user is authorized to access:
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {/* Folders Section */}
+                    <div className="space-y-2">
+                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Folders</h4>
+                      <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
+                        {[
+                          {
+                            id: "meeting-minutes",
+                            label: "Coordination Meeting Minutes",
+                          },
+                          {
+                            id: "sops",
+                            label: "Standard Operating Procedures (SOPs)",
+                          },
+                          {
+                            id: "situational-reports",
+                            label: "Situational Reports",
+                          },
+                        ].map((folder) => {
+                          const isChecked = editSelectedFolders.includes(folder.id);
+                          return (
+                            <label
+                              key={folder.id}
+                              className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setEditSelectedFolders(
+                                      editSelectedFolders.filter(
+                                        (f) => f !== folder.id,
+                                      ),
+                                    );
+                                  } else {
+                                    setEditSelectedFolders([
+                                      ...editSelectedFolders,
+                                      folder.id,
+                                    ]);
+                                  }
+                                }}
+                                className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
+                              />
+                              <span>{folder.label}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Assessments Section */}
+                    <div className="space-y-2">
+                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Displacement Data Forms</h4>
+                      <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50 max-h-[160px] overflow-y-auto">
+                        {(assessments.length > 0
+                          ? assessments.map((a) => ({ id: a.slug, label: a.name }))
+                          : FALLBACK_ASSESSMENTS
+                        ).map((form) => {
+                          const isChecked = editSelectedFolders.includes(form.id);
+                          return (
+                            <label
+                              key={form.id}
+                              className="flex items-center gap-2 text-xs font-bold text-foreground cursor-pointer select-none"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setEditSelectedFolders(
+                                      editSelectedFolders.filter(
+                                        (f) => f !== form.id,
+                                      ),
+                                    );
+                                  } else {
+                                    setEditSelectedFolders([
+                                      ...editSelectedFolders,
+                                      form.id,
+                                    ]);
+                                  }
+                                }}
+                                className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 cursor-pointer accent-primary"
+                              />
+                              <span>{form.label}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
