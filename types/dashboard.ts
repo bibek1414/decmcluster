@@ -60,7 +60,40 @@ export interface WashAndFacilities {
 export interface EvacuationCenterProvinceInfo {
   province: string;
   total_ec: number;
-  idp: number;
+  count: number;
+}
+
+export interface ReadinessIndicators {
+  is_ec_owner_approved: number;
+  is_ec_govt_approved: number;
+  first_aid_kit_availability: number;
+  first_aid_trained_person: number;
+  kitchen_cooking_facilities: number;
+  laundry_facilities: number;
+}
+
+export interface WashAndFacilityIndicators {
+  total_water_storage_capacity: number;
+  water_storage_sites: number;
+  mens_toilet: number;
+  female_toilet: number;
+  total_unisex_toilet: number;
+  total_disability_toilet: number;
+  total_mens_shower: number;
+  total_womens_shower: number;
+  total_unisex_shower: number;
+  total_disability_shower: number;
+  total_disabilityies_shower: number;
+  mens_toilet_sites: number;
+  female_toilet_sites: number;
+  total_unisex_toilet_sites: number;
+  total_disability_toilet_sites: number;
+  total_mens_shower_sites: number;
+  total_womens_shower_sites: number;
+  total_unisex_shower_sites: number;
+  total_disability_shower_sites: number;
+  kitchen_available_sites: number;
+  laundry_available_sites: number;
 }
 
 export interface EvacuationCentresStats {
@@ -72,7 +105,40 @@ export interface EvacuationCentresStats {
   is_govt_approved: number;
   first_aid_kit_available: number;
   first_aid_trained_person: number;
-  wash_and_facilities: WashAndFacilities;
-  evacutation_center: EvacuationCenterProvinceInfo[];
+  ec_by_province: EvacuationCenterProvinceInfo[];
+  readiness_indicators: ReadinessIndicators;
+  wash_and_facility_indicators: WashAndFacilityIndicators;
 }
 
+export interface EvacuationCentreLocation {
+  id: number;
+  compound_name: string;
+  latitude: number;
+  longitude: number;
+  is_ec_owner_approved: boolean;
+  is_ec_govt_approved: boolean;
+  province: string;
+}
+
+export interface IDPByYear {
+  year: number;
+  total_male: number;
+  total_female: number;
+  total_idp: number;
+}
+
+export interface IDPByAdmin1 {
+  admin1_name: string;
+  total_male: number;
+  total_female: number;
+  total_idp: number;
+}
+
+export interface DisplacementStats {
+  total_idp: number;
+  total_male: number;
+  total_female: number;
+  operation_count: number;
+  idps_by_year: IDPByYear[];
+  idps_by_admin1: IDPByAdmin1[];
+}

@@ -7,6 +7,8 @@ import {
   EvacuationCentre,
   ResponseTrackingSummary,
   EvacuationCentresStats,
+  EvacuationCentreLocation,
+  DisplacementStats,
 } from "@/types/dashboard";
 
 export const dashboardService = {
@@ -68,11 +70,35 @@ export const dashboardService = {
     return res.json();
   },
 
-  getEvacuationCentresStats: async (): Promise<EvacuationCentresStats> => {
+  getEvacuationCentresStats: async (province?: string): Promise<EvacuationCentresStats> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const res = await fetch(`${baseUrl}/api/evacuation-centres/stats/`);
+    const url = province 
+      ? `${baseUrl}/api/evacuation-centres/stats/?province=${encodeURIComponent(province)}`
+      : `${baseUrl}/api/evacuation-centres/stats/`;
+    const res = await fetch(url);
     if (!res.ok) {
       throw new Error("Failed to fetch evacuation centres stats");
+    }
+    return res.json();
+  },
+
+  getEvacuationCentreLocations: async (province?: string): Promise<EvacuationCentreLocation[]> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const url = province 
+      ? `${baseUrl}/api/evacuation-centres/location/?province=${encodeURIComponent(province)}`
+      : `${baseUrl}/api/evacuation-centres/location/`;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error("Failed to fetch evacuation centre locations");
+    }
+    return res.json();
+  },
+
+  getDisplacementStats: async (): Promise<DisplacementStats> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/displacements/stats/`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch displacement stats");
     }
     return res.json();
   },

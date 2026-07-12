@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { EvacuationCenterProvinceInfo } from "@/types/dashboard";
 import {
   List,
   Tent,
@@ -29,6 +30,9 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
+
+import EvacuationCentresDashboard from "./evacuation-centres-dashboard";
+import DisplacementDashboard from "./displacement-dashboard";
 
 import {
   useDashboardSummary,
@@ -186,48 +190,56 @@ export default function DashboardSection() {
         label: "Total Evacuation Centres",
         value: s.total_ec.toLocaleString(),
         icon: Tent,
+        category: "Evacuation Centres",
       },
       {
         key: "capacity",
         label: "Total Capacity",
         value: s.total_internal_capacity.toLocaleString(),
         icon: Users,
+        category: "Evacuation Centres",
       },
       {
         key: "toilets",
         label: "Total Toilets",
         value: s.total_toilets.toLocaleString(),
         icon: Droplet,
+        category: "Evacuation Centres",
       },
       {
         key: "showers",
         label: "Total Showers",
         value: s.total_showers.toLocaleString(),
         icon: Droplet,
+        category: "Evacuation Centres",
       },
       {
         key: "water",
         label: "Total Water Storage",
         value: `${s.total_water_storage.toLocaleString()} L`,
         icon: Droplet,
+        category: "Evacuation Centres",
       },
       {
         key: "govt_approved",
         label: "Govt Approved Status",
         value: s.is_govt_approved.toLocaleString(),
         icon: Shield,
+        category: "Evacuation Centres",
       },
       {
         key: "first_aid_kit",
         label: "First Aid Kit Available",
         value: s.first_aid_kit_available.toLocaleString(),
         icon: Heart,
+        category: "Evacuation Centres",
       },
       {
         key: "first_aid_person",
         label: "First Aid Trained Person",
         value: s.first_aid_trained_person.toLocaleString(),
         icon: Activity,
+        category: "Evacuation Centres",
       },
     ];
   }, [ecStatsData]);
@@ -240,7 +252,14 @@ export default function DashboardSection() {
       kitchen_facilities: 50,
       laundry_facilities: 24,
     };
-    const f = ecStatsData?.wash_and_facilities || defaultFacilities;
+    const f = ecStatsData?.wash_and_facility_indicators 
+      ? {
+          toilets: ecStatsData.total_toilets,
+          showers: ecStatsData.total_showers,
+          kitchen_facilities: ecStatsData.wash_and_facility_indicators.kitchen_available_sites,
+          laundry_facilities: ecStatsData.wash_and_facility_indicators.laundry_available_sites
+        }
+      : defaultFacilities;
     const items = [
       { name: "Toilets", value: f.toilets },
       { name: "Showers", value: f.showers },
@@ -296,7 +315,7 @@ export default function DashboardSection() {
     };
 
     if (activeMenu === "Evacuation Centres") {
-      if (!ecStatsData || !ecStatsData.evacutation_center) {
+      if (!ecStatsData || !ecStatsData.ec_by_province) {
         return defaultProvinces;
       }
 
@@ -309,7 +328,7 @@ export default function DashboardSection() {
         "Tafea",
       ];
       const apiMap = new Map(
-        ecStatsData.evacutation_center.map((item) => {
+        ecStatsData.ec_by_province.map((item: EvacuationCenterProvinceInfo) => {
           const cleanName = item.province.replace(" Province", "").trim();
           const finalName = cleanName === "Malma" ? "Malampa" : cleanName;
           return [finalName, item];
@@ -321,7 +340,7 @@ export default function DashboardSection() {
         return {
           name,
           ecs: item ? item.total_ec : 0,
-          idps: item ? item.idp : 0,
+          idps: item ? item.count : 0,
           color: colorMap[name] || "text-gray-500 bg-gray-500",
         };
       });
@@ -549,8 +568,14 @@ export default function DashboardSection() {
 
         {/* Right Content Area (9 cols) */}
         <div className="lg:col-span-9 xl:col-span-10 space-y-6">
-          {/* Key Figures Grid */}
-          {isLoading ? (
+          {activeMenu === "Evacuation Centres" ? (
+            <EvacuationCentresDashboard />
+          ) : activeMenu === "Displacement" ? (
+            <DisplacementDashboard />
+          ) : (
+            <>
+              {/* Key Figures Grid */}
+              {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
               {Array.from({
                 length: activeMenu === "Evacuation Centres" ? 8 : 10,
@@ -1205,6 +1230,8 @@ export default function DashboardSection() {
                 </div>
               </div>
             </div>
+          )}
+            </>
           )}
         </div>
       </div>
