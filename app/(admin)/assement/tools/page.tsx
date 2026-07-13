@@ -1,16 +1,33 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import { Plus, Search, ClipboardList, X, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Search,
+  ClipboardList,
+  X,
+  Loader2,
+  Edit,
+  Trash2,
+  FileText,
+  FileSpreadsheet,
+  Eye,
+} from "lucide-react";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
-import { AssessmentCard } from "@/components/(admin)/assessment/assessment-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/shared/empty-state";
 import { FileUpload } from "@/components/shared/file-upload";
 import { useAuth } from "@/hooks/use-auth";
-import { useAssessments, useCreateAssessment } from "@/hooks/use-assessments";
+import {
+  useAssessments,
+  useCreateAssessment,
+  useDeleteAssessment,
+  useUpdateAssessment,
+} from "@/hooks/use-assessments";
 import { toast } from "sonner";
+import { AlertDialog } from "@/components/ui/alert-dialog";
+import { siteConfig } from "@/config/site";
 
 export default function AssessmentToolsPage() {
   const { user, token } = useAuth();
@@ -23,11 +40,40 @@ export default function AssessmentToolsPage() {
   const [newExcel, setNewExcel] = useState<File | null>(null);
   const [newIsPublic, setNewIsPublic] = useState(true);
 
+  const [editTarget, setEditTarget] = useState<any>(null);
+  const updateMutation = useUpdateAssessment();
+
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: number;
+    name: string;
+    slug: string;
+  } | null>(null);
+  const deleteMutation = useDeleteAssessment();
+
+  const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+  const getFileUrl = (urlPath?: string | null) => {
+    if (!urlPath) return "";
+    if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) {
+      return urlPath;
+    }
+    return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
+  };
+
+  const closeModal = () => {
+    setIsCreateOpen(false);
+    setEditTarget(null);
+    setNewName("");
+    setNewDesc("");
+    setNewPdf(null);
+    setNewExcel(null);
+    setNewIsPublic(true);
+  };
+
   // Escape key handler to close create modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setIsCreateOpen(false);
+        closeModal();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -63,36 +109,87 @@ export default function AssessmentToolsPage() {
     });
   }, [assessments, query, isSuperAdmin, user]);
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) {
       toast.error("Please enter a name for the assessment");
       return;
     }
-    createMutation.mutate(
-      {
-        name: newName,
-        description: newDesc,
-        pdf: newPdf,
-        excel: newExcel,
-        isPublic: newIsPublic,
-        token,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Assessment created successfully");
-          setIsCreateOpen(false);
-          setNewName("");
-          setNewDesc("");
-          setNewPdf(null);
-          setNewExcel(null);
-          setNewIsPublic(true);
+
+    if (editTarget) {
+      updateMutation.mutate(
+        {
+          slug: editTarget.slug,
+          name: newName,
+          description: newDesc,
+          pdf: newPdf,
+          excel: newExcel,
+          isPublic: newIsPublic,
+          token,
         },
-        onError: (err: any) => {
-          toast.error(err.message || "Failed to create assessment");
+        {
+          onSuccess: () => {
+            toast.success("Assessment updated successfully");
+            closeModal();
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to update assessment");
+          },
         },
-      },
-    );
+      );
+    } else {
+      createMutation.mutate(
+        {
+          name: newName,
+          description: newDesc,
+          pdf: newPdf,
+          excel: newExcel,
+          isPublic: newIsPublic,
+          token,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Assessment created successfully");
+            closeModal();
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to create assessment");
+          },
+        },
+      );
+    }
+  };
+
+  const handleEdit = (a: any) => {
+    setEditTarget(a);
+    setNewName(a.name);
+    setNewDesc(a.description || "");
+    setNewPdf(null); // File inputs cannot show existing files
+    setNewExcel(null);
+    setNewIsPublic(a.is_public);
+    setIsCreateOpen(true);
+  };
+
+  const handleDelete = (id: number, name: string, slug: string) => {
+    setDeleteTarget({ id, name, slug });
+  };
+
+  const confirmDelete = () => {
+    if (deleteTarget) {
+      deleteMutation.mutate(
+        { slug: deleteTarget.slug, token },
+        {
+          onSuccess: () => {
+            toast.success("Assessment tool deleted successfully");
+            setDeleteTarget(null);
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to delete assessment tool");
+            setDeleteTarget(null);
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -114,7 +211,10 @@ export default function AssessmentToolsPage() {
             canAdd && (
               <Button
                 className="cursor-pointer font-bold"
-                onClick={() => setIsCreateOpen(true)}
+                onClick={() => {
+                  closeModal();
+                  setIsCreateOpen(true);
+                }}
               >
                 <Plus className="mr-1.5 h-4 w-4" /> New Assessment
               </Button>
@@ -156,7 +256,10 @@ export default function AssessmentToolsPage() {
             action={
               canAdd ? (
                 <Button
-                  onClick={() => setIsCreateOpen(true)}
+                  onClick={() => {
+                    closeModal();
+                    setIsCreateOpen(true);
+                  }}
                   className="cursor-pointer font-bold"
                 >
                   <Plus className="mr-1.5 h-4 w-4" /> New Assessment
@@ -165,19 +268,93 @@ export default function AssessmentToolsPage() {
             }
           />
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((a) => (
-              <AssessmentCard key={a.id} a={a} isTool={true} useRawName={true} />
-            ))}
+          <div className="overflow-x-auto border border-border rounded-xl">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
+                  <th className="p-4 w-[50%]">Tool Name</th>
+                  <th className="p-4 w-[15%]">Visibility</th>
+                  <th className="p-4 w-[20%] text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/60 text-xs">
+                {filtered.map((a) => {
+                  return (
+                    <tr
+                      key={a.id}
+                      className="hover:bg-muted/20 transition-colors"
+                    >
+                      <td className="p-4 font-bold text-foreground">
+                        <span className="truncate max-w-xs block">
+                          {a.name.replace(/\bForm\b/gi, "Data")}
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        {a.is_public ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                            Public
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200">
+                            Private
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-4 text-right">
+                        <div className="inline-flex items-center justify-end gap-1.5">
+                          {(a.pdf || a.excel) && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 px-2.5 font-bold cursor-pointer gap-1"
+                              onClick={() =>
+                                window.open(
+                                  getFileUrl(a.pdf || a.excel),
+                                  "_blank",
+                                )
+                              }
+                            >
+                              <Eye className="w-3.5 h-3.5" /> View
+                            </Button>
+                          )}
+
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 cursor-pointer"
+                            onClick={() => handleEdit(a)}
+                            title="Edit Tool"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+
+                          {canAdd && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 cursor-pointer"
+                              onClick={() => handleDelete(a.id, a.name, a.slug)}
+                              title="Delete Tool"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
 
-      {/* Custom Modal for New Assessment */}
+      {/* Custom Modal for New/Edit Assessment */}
       {isCreateOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
-          onClick={() => setIsCreateOpen(false)}
+          onClick={closeModal}
         >
           <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl max-h-[90vh] overflow-y-auto"
@@ -185,19 +362,19 @@ export default function AssessmentToolsPage() {
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
-                Create New Assessment
+                {editTarget ? "Edit Assessment" : "Create New Assessment"}
               </h3>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsCreateOpen(false)}
+                onClick={closeModal}
                 className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
 
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
                 <label className="block text-xs font-bold text-muted-foreground">
                   Assessment Name
@@ -267,21 +444,25 @@ export default function AssessmentToolsPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setIsCreateOpen(false)}
+                  onClick={closeModal}
                   className="h-9 cursor-pointer"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  disabled={createMutation.isPending}
+                  disabled={
+                    createMutation.isPending || updateMutation.isPending
+                  }
                   className="h-9 font-bold cursor-pointer"
                 >
-                  {createMutation.isPending ? (
+                  {createMutation.isPending || updateMutation.isPending ? (
                     <>
                       <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Creating...
+                      {editTarget ? "Updating..." : "Creating..."}
                     </>
+                  ) : editTarget ? (
+                    "Update"
                   ) : (
                     "Create"
                   )}
@@ -291,6 +472,16 @@ export default function AssessmentToolsPage() {
           </div>
         </div>
       )}
+
+      {/* Delete confirmation */}
+      <AlertDialog
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+        title="Delete Assessment Tool"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`}
+        isPending={deleteMutation.isPending}
+      />
     </div>
   );
 }

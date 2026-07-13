@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, FileSpreadsheet, Eye } from "lucide-react";
+import { FileText, FileSpreadsheet, Eye, Edit, Trash2 } from "lucide-react";
 import { type AssessmentData } from "@/types/assessment";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,18 @@ interface AssessmentCardProps {
   hideDocLinks?: boolean;
   isTool?: boolean;
   useRawName?: boolean;
+  onEdit?: (a: AssessmentData) => void;
+  onDelete?: (id: number, name: string, slug: string) => void;
 }
 
-export function AssessmentCard({ a, hideDocLinks = false, isTool = false, useRawName = false }: AssessmentCardProps) {
+export function AssessmentCard({
+  a,
+  hideDocLinks = false,
+  isTool = false,
+  useRawName = false,
+  onEdit,
+  onDelete,
+}: AssessmentCardProps) {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
 
   const getFileUrl = (urlPath?: string | null) => {
@@ -44,12 +53,13 @@ export function AssessmentCard({ a, hideDocLinks = false, isTool = false, useRaw
             <h3 className="font-bold text-base text-foreground group-hover/card:text-primary transition-colors line-clamp-2 leading-snug">
               {useRawName
                 ? a.name
-                : (a.slug === "displacement-tracking-matrix-form" || a.slug === "displacement-data"
-                  ? "Displacement Data"
-                  : a.slug === "evacuation-centre-assessment-form"
-                  ? "Evacuation Centre Data"
-                  : a.name
-                ).replace(/\bForm\b/gi, "Data")}
+                : (a.slug === "displacement-tracking-matrix-form" ||
+                  a.slug === "displacement-data"
+                    ? "Displacement Data"
+                    : a.slug === "evacuation-centre-assessment-form"
+                      ? "Evacuation Centre Data"
+                      : a.name
+                  ).replace(/\bForm\b/gi, "Data")}
             </h3>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <p className="text-[10px] text-muted-foreground font-semibold">
@@ -75,19 +85,46 @@ export function AssessmentCard({ a, hideDocLinks = false, isTool = false, useRaw
       </div>
 
       <div className="mt-5 pt-3 border-t border-border flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className={`${hideDocLinks ? "w-full" : "flex-1"} h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted`}
-          asChild
-        >
-          <Link href={isTool ? `/assement/tools/${a.slug}` : `/assement/${a.slug}`}>
-            <Eye className="h-3.5 w-3.5" />
-            View Data
-          </Link>
-        </Button>
+        {!isTool && (
+          <Button
+            variant="outline"
+            size="sm"
+            className={`${hideDocLinks ? "w-full" : "flex-1"} h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted`}
+            asChild
+          >
+            <Link href={`/assement/${a.slug}`}>
+              <Eye className="h-3.5 w-3.5" />
+              View Data
+            </Link>
+          </Button>
+        )}
 
-        {!hideDocLinks && a.pdf &&
+        {isTool && onEdit && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted"
+            onClick={() => onEdit(a)}
+          >
+            <Edit className="h-3.5 w-3.5" />
+            Edit
+          </Button>
+        )}
+
+        {isTool && onDelete && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 h-8 text-xs font-bold gap-1.5 cursor-pointer border-rose-600/10 text-rose-700 hover:bg-rose-50/50 hover:text-rose-800"
+            onClick={() => onDelete(a.id, a.name, a.slug)}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Delete
+          </Button>
+        )}
+
+        {!hideDocLinks &&
+          a.pdf &&
           (() => {
             const isCsv =
               a.pdf.toLowerCase().endsWith(".csv") ||

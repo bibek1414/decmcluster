@@ -42,6 +42,41 @@ export function useCreateAssessment() {
   });
 }
 
+export function useUpdateAssessment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      slug,
+      name,
+      description,
+      pdf,
+      excel,
+      isPublic,
+      token,
+    }: {
+      slug: string;
+      name: string;
+      description: string;
+      pdf: File | null;
+      excel: File | null;
+      isPublic: boolean;
+      token: string | null;
+    }) =>
+      assessmentService.update(
+        slug,
+        name,
+        description,
+        pdf,
+        excel,
+        isPublic,
+        token
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
+    },
+  });
+}
+
 export function useDeleteAssessment() {
   const queryClient = useQueryClient();
   return useMutation({

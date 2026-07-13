@@ -74,6 +74,61 @@ export const assessmentService = {
     return res.json();
   },
 
+  update: async (
+    slug: string,
+    name: string,
+    description: string,
+    pdf: File | null,
+    excel: File | null,
+    isPublic: boolean,
+    token: string | null
+  ): Promise<AssessmentData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    if (name) formData.append("name", name);
+    if (description !== undefined && description !== null) {
+      formData.append("description", description);
+    }
+    if (pdf) {
+      formData.append("pdf", pdf);
+    }
+    if (excel) {
+      formData.append("excel", excel);
+    }
+    formData.append("is_public", String(isPublic));
+
+    const headers: Record<string, string> = {};
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/assessment/${slug}/`, {
+      method: "PATCH",
+      headers,
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update assessment";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+
+    return res.json();
+  },
+
   delete: async (slug: string, token: string | null): Promise<void> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {};
