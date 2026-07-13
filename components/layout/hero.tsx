@@ -8,7 +8,7 @@ export default function Hero() {
       <div
         className="absolute right-0 top-0 bottom-0 w-full md:w-[55%] lg:w-[50%] bg-cover bg-center z-0 hidden md:block"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1542856391-010fb87dcfed?auto=format&fit=crop&q=80&w=1600')`,
+          backgroundImage: `url('/dashboards.jpeg')`,
         }}
       />
 
@@ -16,7 +16,7 @@ export default function Hero() {
       <div
         className="absolute inset-0 bg-cover bg-center z-0 md:hidden opacity-30"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1542856391-010fb87dcfed?auto=format&fit=crop&q=80&w=800')`,
+          backgroundImage: `url('/dashboards.jpeg')`,
         }}
       />
 

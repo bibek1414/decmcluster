@@ -1,11 +1,27 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { Users, User, UserCheck, Activity } from "lucide-react";
-import { useDisplacementStats } from "@/hooks/use-dashboard";
+import React, { useMemo, useState } from "react";
+import { Users, User, UserCheck, Activity, Filter, X } from "lucide-react";
+import {
+  useDisplacementStats,
+  useDisplacementFilters,
+} from "@/hooks/use-dashboard";
 
 export default function DisplacementDashboard() {
-  const { data: stats, isLoading } = useDisplacementStats();
+  const [admin1Name, setAdmin1Name] = useState<string>("");
+  const [operation, setOperation] = useState<string>("");
+  const [reportingYear, setReportingYear] = useState<string>("");
+
+  const filters = useMemo(() => {
+    const f: any = {};
+    if (admin1Name) f.admin1_name = admin1Name;
+    if (operation) f.operation = operation;
+    if (reportingYear) f.reporting_year = reportingYear;
+    return f;
+  }, [admin1Name, operation, reportingYear]);
+
+  const { data: stats, isLoading } = useDisplacementStats(filters);
+  const { data: uniqueFilters } = useDisplacementFilters();
 
   const statsCards = useMemo(() => {
     if (!stats) return [];
@@ -57,6 +73,77 @@ export default function DisplacementDashboard() {
 
   return (
     <div className="space-y-6 w-full animate-fadeIn">
+      {/* Filters Bar */}
+      <div className="bg-card text-card-foreground p-4 rounded-xl border border-border flex flex-col sm:flex-row items-center gap-4 justify-between -xs">
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-primary" />
+          <span className="text-xs font-bold">Filter Displacement Data</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          {/* Admin Level 1 (Province) Dropdown */}
+          <div className="flex-1 sm:flex-initial min-w-[140px]">
+            <select
+              value={admin1Name}
+              onChange={(e) => setAdmin1Name(e.target.value)}
+              className="w-full text-xs font-bold bg-muted hover:bg-muted/80 border border-border rounded-lg px-3 py-1.5 text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="">All Provinces (Admin 1)</option>
+              {uniqueFilters?.admin1_names?.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Event / Operation Dropdown */}
+          <div className="flex-1 sm:flex-initial min-w-[140px]">
+            <select
+              value={operation}
+              onChange={(e) => setOperation(e.target.value)}
+              className="w-full text-xs font-bold bg-muted hover:bg-muted/80 border border-border rounded-lg px-3 py-1.5 text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="">All Events (Operations)</option>
+              {uniqueFilters?.operations?.map((op) => (
+                <option key={op} value={op}>
+                  {op}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Year Dropdown */}
+          <div className="flex-1 sm:flex-initial min-w-[100px]">
+            <select
+              value={reportingYear}
+              onChange={(e) => setReportingYear(e.target.value)}
+              className="w-full text-xs font-bold bg-muted hover:bg-muted/80 border border-border rounded-lg px-3 py-1.5 text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
+            >
+              <option value="">All Years</option>
+              {uniqueFilters?.reporting_years?.map((yr) => (
+                <option key={yr} value={yr}>
+                  {yr}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Clear button if any filter is active */}
+          {(admin1Name || operation || reportingYear) && (
+            <button
+              onClick={() => {
+                setAdmin1Name("");
+                setOperation("");
+                setReportingYear("");
+              }}
+              className="text-xs bg-muted hover:bg-muted-foreground/10 text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-lg font-bold cursor-pointer transition-colors"
+            >
+              Clear Filters
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* 4 Stats Cards — same style as Summary grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
         {isLoading
@@ -92,7 +179,7 @@ export default function DisplacementDashboard() {
       {/* Main Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* ── IDPs by Year: Vertical Bar Chart ── */}
-        <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
+        <div className="bg-card text-card-foreground rounded-xl border border-border p-5 -xs">
           <div className="mb-4">
             <h3 className="text-sm font-bold text-foreground">IDPs by year</h3>
             <p className="text-[11px] text-muted-foreground mt-0.5">
@@ -131,10 +218,6 @@ export default function DisplacementDashboard() {
                             hasData ? 8 : 4,
                           )
                         : 4;
-                    const malePx = hasData
-                      ? Math.round((row.total_male / row.total_idp) * totalPx)
-                      : 0;
-                    const femalePx = totalPx - malePx;
 
                     return (
                       <div
@@ -143,7 +226,7 @@ export default function DisplacementDashboard() {
                       >
                         {/* Callout above bar — only for years with data */}
                         {hasData && (
-                          <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] w-max bg-primary text-primary-foreground rounded-lg px-2.5 py-1.5 shadow-md text-center pointer-events-none z-10">
+                          <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] w-max bg-primary text-primary-foreground rounded-lg px-2.5 py-1.5 -md text-center pointer-events-none z-10 animate-fadeIn">
                             <span className="block text-[10px] font-bold leading-tight">
                               {row.year}
                             </span>
@@ -164,26 +247,17 @@ export default function DisplacementDashboard() {
                               style={{
                                 borderLeft: "5px solid transparent",
                                 borderRight: "5px solid transparent",
-                                borderTop: "6px solid hsl(var(--foreground))",
+                                borderTop: "6px solid hsl(var(--primary))",
                               }}
                             />
                           </div>
                         )}
 
-                        {/* Stacked bar */}
+                        {/* Solid blue bar */}
                         <div
-                          className="w-full flex flex-col justify-end rounded-t overflow-hidden cursor-default group"
+                          className="w-full bg-blue-900 hover:bg-blue-800 transition-colors rounded-t cursor-default"
                           style={{ height: totalPx }}
-                        >
-                          <div
-                            className="w-full bg-rose-400 group-hover:bg-rose-500 transition-colors"
-                            style={{ height: femalePx }}
-                          />
-                          <div
-                            className="w-full bg-blue-500 group-hover:bg-blue-600 transition-colors"
-                            style={{ height: malePx }}
-                          />
-                        </div>
+                        />
                       </div>
                     );
                   })}
@@ -216,11 +290,11 @@ export default function DisplacementDashboard() {
                   return peakYear ? (
                     <div className="mt-4 pt-3.5 border-t border-border flex items-center justify-between gap-3 flex-wrap">
                       <span className="text-[11px] font-bold text-muted-foreground shrink-0">
-                        {peakYear.year}
+                        Peak Year: {peakYear.year}
                       </span>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-sm bg-blue-500" />
+                          <span className="h-2.5 w-2.5 rounded-sm bg-blue-900" />
                           <span className="text-[11px] text-muted-foreground">
                             Male
                           </span>
@@ -229,7 +303,7 @@ export default function DisplacementDashboard() {
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <span className="h-2.5 w-2.5 rounded-sm bg-rose-400" />
+                          <span className="h-2.5 w-2.5 rounded-sm bg-blue-900 opacity-60" />
                           <span className="text-[11px] text-muted-foreground">
                             Female
                           </span>
@@ -249,7 +323,7 @@ export default function DisplacementDashboard() {
         </div>
 
         {/* ── IDPs by Province (Admin1): Horizontal Bars ── */}
-        <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
+        <div className="bg-card text-card-foreground rounded-xl border border-border p-5 -xs">
           {/* Header — no global totals here, each province shows its own breakdown inline */}
           <div className="mb-5">
             <h3 className="text-sm font-bold text-foreground">
@@ -275,11 +349,6 @@ export default function DisplacementDashboard() {
                 const totalPct = Math.round(
                   (row.total_idp / maxAdmin1Val) * 100,
                 );
-                const malePct =
-                  row.total_idp > 0
-                    ? Math.round((row.total_male / row.total_idp) * 100)
-                    : 0;
-                const femalePct = 100 - malePct;
                 const hasData = row.total_idp > 0;
                 return (
                   <div key={row.admin1_name}>
@@ -291,20 +360,12 @@ export default function DisplacementDashboard() {
                         {hasData ? row.total_idp.toLocaleString() : "0"}
                       </span>
                     </div>
-                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden flex">
+                    <div className="h-3 w-full bg-muted rounded-full overflow-hidden">
                       {hasData && (
-                        <>
-                          <div
-                            className="h-full bg-blue-500 transition-all duration-1000"
-                            style={{ width: `${(malePct / 100) * totalPct}%` }}
-                          />
-                          <div
-                            className="h-full bg-rose-400 transition-all duration-1000"
-                            style={{
-                              width: `${(femalePct / 100) * totalPct}%`,
-                            }}
-                          />
-                        </>
+                        <div
+                          className="h-full bg-blue-900 transition-all duration-1000"
+                          style={{ width: `${totalPct}%` }}
+                        />
                       )}
                     </div>
                     <div className="flex items-center gap-3 mt-1">

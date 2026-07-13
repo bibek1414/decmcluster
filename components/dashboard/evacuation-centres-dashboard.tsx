@@ -273,7 +273,7 @@ export default function EvacuationCentresDashboard() {
     return Math.max(...provinceBreakdown.map((i) => i.value), 1);
   }, [provinceBreakdown]);
 
-  // Readiness indicators
+  // Readiness indicators - All unified to bg-blue-900
   const readinessList = useMemo(() => {
     if (!stats?.readiness_indicators) return [];
     const r = stats.readiness_indicators;
@@ -281,33 +281,33 @@ export default function EvacuationCentresDashboard() {
       {
         name: "Owner approved",
         value: r.is_ec_owner_approved,
-        color: "bg-sky-400",
+        color: "bg-blue-900",
       },
       {
         name: "First aid trained",
         value: r.first_aid_trained_person,
-        color: "bg-amber-400",
+        color: "bg-blue-900",
       },
       {
         name: "Govt approved",
         value: r.is_ec_govt_approved,
-        color: "bg-red-500",
+        color: "bg-blue-900",
       },
       {
         name: "First aid kit",
         value: r.first_aid_kit_availability,
-        color: "bg-red-500",
+        color: "bg-blue-900",
       },
       {
         name: "Kitchen",
         value: r.kitchen_cooking_facilities,
-        color: "bg-red-500",
+        color: "bg-blue-900",
       },
-      { name: "Laundry", value: r.laundry_facilities, color: "bg-red-500" },
+      { name: "Laundry", value: r.laundry_facilities, color: "bg-blue-900" },
     ];
   }, [stats]);
 
-  // WASH and Facility indicators list
+  // WASH and Facility indicators list - All unified to bg-blue-900
   const washFacilityList = useMemo(() => {
     if (!stats?.wash_and_facility_indicators) return [];
     const w = stats.wash_and_facility_indicators;
@@ -315,44 +315,44 @@ export default function EvacuationCentresDashboard() {
       {
         name: "Water storage sites",
         value: w.water_storage_sites,
-        color: "bg-amber-400",
+        color: "bg-blue-900",
       },
-      { name: "Mens toilets", value: w.mens_toilet, color: "bg-blue-600" },
-      { name: "Womens toilets", value: w.female_toilet, color: "bg-blue-600" },
+      { name: "Mens toilets", value: w.mens_toilet, color: "bg-blue-900" },
+      { name: "Womens toilets", value: w.female_toilet, color: "bg-blue-900" },
       {
         name: "Unisex toilets",
         value: w.total_unisex_toilet,
-        color: "bg-blue-600",
+        color: "bg-blue-900",
       },
       {
         name: "Mens showers",
         value: w.total_mens_shower,
-        color: "bg-blue-600",
+        color: "bg-blue-900",
       },
       {
         name: "Kitchen available sites",
         value: w.kitchen_available_sites,
-        color: "bg-emerald-500",
+        color: "bg-blue-900",
       },
       {
         name: "Womens showers",
         value: w.total_womens_shower,
-        color: "bg-blue-600",
+        color: "bg-blue-900",
       },
       {
         name: "Laundry available sites",
         value: w.laundry_available_sites,
-        color: "bg-emerald-500",
+        color: "bg-blue-900",
       },
       {
         name: "Disability toilets",
         value: w.total_disability_toilet,
-        color: "bg-blue-600",
+        color: "bg-blue-900",
       },
       {
         name: "Unisex showers",
         value: w.total_unisex_shower,
-        color: "bg-blue-600",
+        color: "bg-blue-900",
       },
     ];
   }, [stats]);
@@ -398,9 +398,9 @@ export default function EvacuationCentresDashboard() {
             })}
       </div>
 
-      {/* Main visualization grid - Left: Map & WASH, Right: Provinces & Readiness */}
+      {/* Main visualization grid - Left: Map, Right: Provinces & Readiness */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left Column: Interactive Map & WASH Indicators in Grid of Two */}
+        {/* Left Column: Interactive Map */}
         <div className="lg:col-span-2 space-y-6">
           {/* Map Card */}
           <div className="bg-card text-card-foreground rounded-xl border border-border p-5 flex flex-col justify-between shadow-xs">
@@ -419,10 +419,11 @@ export default function EvacuationCentresDashboard() {
                 {selectedProvince && (
                   <button
                     onClick={() => setSelectedProvince(null)}
-                    className="p-1 hover:bg-muted cursor-pointer text-muted-foreground rounded transition-colors"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold bg-muted hover:bg-muted-foreground/10 text-muted-foreground hover:text-foreground rounded-lg transition-colors cursor-pointer"
                     title="Clear Filter"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-3 w-3" />
+                    <span>Clear Filter</span>
                   </button>
                 )}
                 <select
@@ -444,7 +445,7 @@ export default function EvacuationCentresDashboard() {
 
             {/* Map container — no overflow-hidden so tiles don't get clipped */}
             <div
-              className="mt-4 relative w-full rounded-lg border border-border"
+              className="mt-4 relative w-full rounded-lg border border-border z-0"
               style={{ height: "420px" }}
             >
               {(!mapLoaded || locationsLoading) && (
@@ -491,47 +492,6 @@ export default function EvacuationCentresDashboard() {
                 </span>
               </div>
             </div>
-          </div>
-
-          {/* WASH and facility indicators (Directly below Map in Grid of Two) */}
-          <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
-            <h3 className="text-sm font-bold text-foreground mb-4">
-              WASH and facility indicators
-            </h3>
-            {showStatsLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-pulse">
-                {Array.from({ length: 10 }).map((_, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <div className="h-3 bg-muted rounded w-1/2" />
-                    <div className="h-2 bg-muted rounded w-full" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-                {washFacilityList.map((item) => {
-                  const percentage = Math.round(
-                    (item.value / maxWashFacilityVal) * 100,
-                  );
-                  return (
-                    <div key={item.name}>
-                      <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
-                        <span>{item.name}</span>
-                        <span className="text-primary font-bold">
-                          {item.value}
-                        </span>
-                      </div>
-                      <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${item.color} rounded-full transition-all duration-1000`}
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </div>
 
@@ -618,6 +578,47 @@ export default function EvacuationCentresDashboard() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* WASH and facility indicators (Full width below) */}
+      <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
+        <h3 className="text-sm font-bold text-foreground mb-4">
+          WASH and facility indicators
+        </h3>
+        {showStatsLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-pulse">
+            {Array.from({ length: 10 }).map((_, idx) => (
+              <div key={idx} className="space-y-2">
+                <div className="h-3 bg-muted rounded w-1/2" />
+                <div className="h-2 bg-muted rounded w-full" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-4">
+            {washFacilityList.map((item) => {
+              const percentage = Math.round(
+                (item.value / maxWashFacilityVal) * 100,
+              );
+              return (
+                <div key={item.name}>
+                  <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
+                    <span>{item.name}</span>
+                    <span className="text-primary font-bold">
+                      {item.value}
+                    </span>
+                  </div>
+                  <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
+                    <div
+                      className={`h-full ${item.color} rounded-full transition-all duration-1000`}
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

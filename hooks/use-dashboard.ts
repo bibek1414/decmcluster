@@ -57,9 +57,22 @@ export function useEvacuationCentreLocations(province?: string) {
   });
 }
 
-export function useDisplacementStats() {
+export function useDisplacementStats(filters?: {
+  admin1_name?: string;
+  operation?: string;
+  reporting_year?: string;
+}) {
   return useQuery({
-    queryKey: ["displacement-stats"],
-    queryFn: () => dashboardService.getDisplacementStats(),
+    queryKey: ["displacement-stats", filters],
+    queryFn: () => dashboardService.getDisplacementStats(filters),
   });
 }
+
+export function useDisplacementFilters() {
+  return useQuery({
+    queryKey: ["displacement-filters"],
+    queryFn: () => dashboardService.getDisplacementFilters(),
+    staleTime: 1000 * 60 * 30, // 30 minutes
+  });
+}
+

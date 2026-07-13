@@ -214,7 +214,7 @@ export function ToolsClient() {
                   setIsCreateOpen(true);
                 }}
               >
-                <Plus className="mr-1.5 h-4 w-4" /> New Assessment
+                <Plus className="mr-1.5 h-4 w-4" /> New IM Tools
               </Button>
             )
           }

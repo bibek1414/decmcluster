@@ -94,12 +94,48 @@ export const dashboardService = {
     return res.json();
   },
 
-  getDisplacementStats: async (): Promise<DisplacementStats> => {
+  getDisplacementStats: async (filters?: {
+    admin1_name?: string;
+    operation?: string;
+    reporting_year?: string;
+  }): Promise<DisplacementStats> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const res = await fetch(`${baseUrl}/api/displacements/stats/`);
+    const params = new URLSearchParams();
+    if (filters?.admin1_name) params.append("admin1_name", filters.admin1_name);
+    if (filters?.operation) params.append("operation", filters.operation);
+    if (filters?.reporting_year) params.append("reporting_year", filters.reporting_year);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const res = await fetch(`${baseUrl}/api/displacements/stats/${query}`);
     if (!res.ok) {
       throw new Error("Failed to fetch displacement stats");
     }
     return res.json();
   },
+
+  getDisplacementFilters: async (): Promise<{
+    admin1_names: string[];
+    operations: string[];
+    reporting_years: number[];
+  }> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    try {
+      const res = await fetch(`${baseUrl}/api/displacements/unique-filters/`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch displacement unique-filters");
+      }
+      return await res.json();
+    } catch (error) {
+      console.warn("Fallback unique-filters used:", error);
+      return {
+        admin1_names: ["Malampa", "Penama", "Sanma", "Shefa", "Tafea"],
+        operations: [
+          "Cyclone Pam",
+          "Manaro Volcano Eruption (Ambae)",
+          "Tropical Cyclone Harold Response",
+        ],
+        reporting_years: [2015, 2017, 2018, 2019, 2020],
+      };
+    }
+  },
 };
+
