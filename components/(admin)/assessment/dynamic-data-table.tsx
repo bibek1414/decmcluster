@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
-  Edit2,
+  Pencil,
   ChevronLeft,
   ChevronRight,
   Search,
@@ -12,6 +12,7 @@ import {
   X,
   Trash2,
   Upload,
+  Edit,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -33,7 +34,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { dynamicDataService } from "@/services/dynamic-data";
 import {
   useDynamicData,
@@ -274,7 +275,7 @@ export function DynamicDataTable({
         new Set(data.results.map((r: any) => r[opKey]).filter(Boolean)),
       ).sort() as string[],
     };
-  }, [data?.results, isEvac]);
+  }, [data, isEvac]);
 
   useEffect(() => {
     setPage(1);
@@ -1005,11 +1006,6 @@ export function DynamicDataTable({
                             ) : (
                               String(value)
                             )}
-                            {!col.readonly && canEdit && (
-                              <span className="absolute right-1 top-2.5 opacity-0 group-hover:opacity-60 transition-opacity">
-                                <Edit2 className="h-2.5 w-2.5 text-muted-foreground" />
-                              </span>
-                            )}
                           </>
                         )}
                       </TableCell>
@@ -1022,10 +1018,10 @@ export function DynamicDataTable({
                           variant="ghost"
                           size="icon"
                           onClick={() => openModalEditor(row)}
-                          className="h-7 w-7 text-muted-foreground hover:text-foreground rounded-md shadow-none"
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground rounded-md shadow-none cursor-pointer"
                           title="Edit all fields"
                         >
-                          <Edit2 className="h-3.5 w-3.5" />
+                          <Edit className="h-3.5 w-3.5" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -1034,7 +1030,7 @@ export function DynamicDataTable({
                             e.stopPropagation();
                             setRowToDelete(row);
                           }}
-                          className="h-7 w-7 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-md shadow-none"
+                          className="h-7 w-7 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-md shadow-none cursor-pointer"
                           title="Delete record"
                         >
                           <Trash2 className="h-3.5 w-3.5" />

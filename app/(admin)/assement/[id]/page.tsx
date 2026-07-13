@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, SlidersHorizontal, ChevronLeft } from "lucide-react";
-import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
@@ -40,12 +39,28 @@ export default function AssessmentDetailPage() {
 
   // Base URL translation
 
+  const isStatic =
+    slug === "displacement-tracking-matrix-form" ||
+    slug === "displacement-data" ||
+    slug === "evacuation-centre-assessment-form";
+
   // Queries
   const {
-    data: assessment,
+    data: fetchedAssessment,
     isLoading: isAssessmentLoading,
     error: assessmentError,
-  } = useAssessment(slug);
+  } = useAssessment(isStatic ? "" : slug);
+
+  const assessment = isStatic
+    ? {
+        name:
+          slug === "evacuation-centre-assessment-form"
+            ? "Evacuation Centre Data"
+            : slug === "displacement-tracking-matrix-form"
+              ? "Displacement Tracking Matrix Data"
+              : "Displacement Data",
+      }
+    : fetchedAssessment;
 
   // Mutations
   const deleteAssessmentMutation = useDeleteAssessment();
@@ -100,12 +115,7 @@ export default function AssessmentDetailPage() {
     );
   };
 
-  const isDisplacement =
-    slug === "displacement-tracking-matrix-form" ||
-    slug === "displacement-data";
-  const displayTitle = (
-    isDisplacement ? "Displacement Data" : assessment.name
-  ).replace(/\bForm\b/gi, "Data");
+  const displayTitle = (assessment?.name || "").replace(/\bForm\b/gi, "Data");
 
   return (
     <div className=" w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">

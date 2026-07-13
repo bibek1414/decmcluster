@@ -53,8 +53,9 @@ export function AssessmentCard({
             <h3 className="font-bold text-base text-foreground group-hover/card:text-primary transition-colors line-clamp-2 leading-snug">
               {useRawName
                 ? a.name
-                : (a.slug === "displacement-tracking-matrix-form" ||
-                  a.slug === "displacement-data"
+                : (a.slug === "displacement-tracking-matrix-form"
+                  ? "Displacement Tracking Matrix Data"
+                  : a.slug === "displacement-data"
                     ? "Displacement Data"
                     : a.slug === "evacuation-centre-assessment-form"
                       ? "Evacuation Centre Data"

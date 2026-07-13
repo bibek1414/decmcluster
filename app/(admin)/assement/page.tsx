@@ -32,7 +32,7 @@ interface StaticEntry {
 const DISPLACEMENT_DATA_ENTRY: StaticEntry = {
   id: 0,
   name: "Displacement Data",
-  slug: "displacement-tracking-matrix-form",
+  slug: "displacement-data",
   description:
     "Interactive database table for viewing, editing, and exporting displacement tracking records.",
   pdf: null,
