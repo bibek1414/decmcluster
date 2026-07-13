@@ -219,7 +219,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
                   }`}
                 >
                   <FileSpreadsheet className="h-4 w-4 shrink-0" />
-                  <span>Play/Situational Reports</span>
+                  <span>Situational Reports</span>
                 </Link>
               </div>
             )}
