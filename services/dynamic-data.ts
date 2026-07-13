@@ -104,10 +104,11 @@ export const dynamicDataService = {
     token: string | null = null,
     province?: string,
     district?: string,
-    op?: string
+    op?: string,
+    pageSize: number = 50
   ): Promise<PaginatedResponse<EvacuationCentreRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    let url = `${baseUrl}/api/evacuation-centres/?page=${page}`;
+    let url = `${baseUrl}/api/evacuation-centres/?page=${page}&page_size=${pageSize}`;
     if (search.trim()) {
       url += `&search=${encodeURIComponent(search)}`;
     }
@@ -158,10 +159,11 @@ export const dynamicDataService = {
     token: string | null = null,
     province?: string,
     district?: string,
-    op?: string
+    op?: string,
+    pageSize: number = 50
   ): Promise<PaginatedResponse<DisplacementRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    let url = `${baseUrl}/api/displacements/?page=${page}`;
+    let url = `${baseUrl}/api/displacements/?page=${page}&page_size=${pageSize}`;
     if (search.trim()) {
       url += `&search=${encodeURIComponent(search)}`;
     }
@@ -232,29 +234,75 @@ export const dynamicDataService = {
     return res.json();
   },
 
-  createDisplacement: async (
-    fields: Partial<DisplacementRecord>,
+  deleteEvacuationCentre: async (
+    id: number,
     token: string | null
-  ): Promise<DisplacementRecord> => {
+  ): Promise<void> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const res = await fetch(`${baseUrl}/api/displacements/`, {
-      method: "POST",
+    const res = await fetch(`${baseUrl}/api/evacuation-centres/${id}/`, {
+      method: "DELETE",
       headers: getHeaders(token),
-      body: JSON.stringify(fields),
     });
-    if (!res.ok) {
-      const errorText = await res.text();
-      let errorMsg = "Failed to create displacement";
-      try {
-        const parsed = JSON.parse(errorText);
-        if (parsed.detail) errorMsg = parsed.detail;
-        else if (typeof parsed === "object") {
-          const firstKey = Object.keys(parsed)[0];
-          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
-        }
-      } catch (e) {}
-      throw new Error(errorMsg);
-    }
-    return res.json();
+    if (!res.ok) throw new Error("Failed to delete evacuation centre");
+  },
+
+  deleteDisplacement: async (
+    id: number,
+    token: string | null
+  ): Promise<void> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/displacements/${id}/`, {
+      method: "DELETE",
+      headers: getHeaders(token),
+    });
+    if (!res.ok) throw new Error("Failed to delete displacement record");
+  },
+
+  exportEvacuationCentres: async (
+    columns: string[],
+    token: string | null,
+    province?: string,
+    district?: string,
+    op?: string,
+    search?: string
+  ): Promise<Blob> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const params = new URLSearchParams();
+    if (columns.length > 0) params.set("columns", columns.join(","));
+    if (province) params.set("province", province);
+    if (district) params.set("area_council", district);
+    if (op) params.set("compound_function", op);
+    if (search?.trim()) params.set("search", search.trim());
+
+    const res = await fetch(
+      `${baseUrl}/api/evacuation-centres/export/?${params.toString()}`,
+      { headers: { ...getHeaders(token), "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } }
+    );
+    if (!res.ok) throw new Error("Failed to export evacuation centres");
+    return res.blob();
+  },
+
+  exportDisplacements: async (
+    columns: string[],
+    token: string | null,
+    province?: string,
+    district?: string,
+    op?: string,
+    search?: string
+  ): Promise<Blob> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const params = new URLSearchParams();
+    if (columns.length > 0) params.set("columns", columns.join(","));
+    if (province) params.set("admin1_name", province);
+    if (district) params.set("admin2_name", district);
+    if (op) params.set("operation", op);
+    if (search?.trim()) params.set("search", search.trim());
+
+    const res = await fetch(
+      `${baseUrl}/api/displacements/export/?${params.toString()}`,
+      { headers: { ...getHeaders(token), "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } }
+    );
+    if (!res.ok) throw new Error("Failed to export displacements");
+    return res.blob();
   },
 };

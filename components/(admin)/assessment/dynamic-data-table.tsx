@@ -10,6 +10,7 @@ import {
   Loader2,
   Plus,
   X,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -33,6 +34,12 @@ import {
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { dynamicDataService } from "@/services/dynamic-data";
+import {
+  useDynamicData,
+  useCreateDynamicRecord,
+  useUpdateDynamicRecord,
+  useDeleteDynamicRecord,
+} from "@/hooks/use-dynamic-data";
 
 interface DynamicDataTableProps {
   slug: string;
@@ -209,105 +216,55 @@ export function DynamicDataTable({
   }, [search]);
 
   // TanStack Query for Dynamic Paginated Fetching
-  const { data, isLoading, isError } = useQuery({
-    queryKey: [
-      "dynamic-data",
-      slug,
-      page,
-      debouncedSearch,
-      selectedProvinceFilter,
-      selectedDistrictFilter,
-      selectedOpFilter,
-      token,
-    ],
-    queryFn: async () => {
-      if (isEvac) {
-        return dynamicDataService.fetchEvacuationCentres(
-          page,
-          debouncedSearch,
-          token,
-          selectedProvinceFilter,
-          selectedDistrictFilter,
-          selectedOpFilter,
-        );
-      } else {
-        return dynamicDataService.fetchDisplacements(
-          page,
-          debouncedSearch,
-          token,
-          selectedProvinceFilter,
-          selectedDistrictFilter,
-          selectedOpFilter,
-        );
-      }
-    },
-  });
+  const { data, isLoading, isError } = useDynamicData(
+    slug,
+    page,
+    debouncedSearch,
+    selectedProvinceFilter,
+    selectedDistrictFilter,
+    selectedOpFilter,
+    token,
+    50,
+  );
 
-  // Background Options state for filter dropdowns (fetched once per slug to get distinct values)
-  const [filterOptions, setFilterOptions] = useState<{
-    provinces: string[];
-    districts: string[];
-    operations: string[];
-  }>({ provinces: [], districts: [], operations: [] });
+  const createRecord = useCreateDynamicRecord(slug, token);
+  const updateRecord = useUpdateDynamicRecord(slug, token);
+  const deleteRecord = useDeleteDynamicRecord(slug, token);
 
-  const fetchFilterOptions = async () => {
-    try {
-      let allResults: any[] = [];
-      const fetchFn = isEvac
-        ? dynamicDataService.fetchEvacuationCentres
-        : dynamicDataService.fetchDisplacements;
+  // Compute filter options dynamically from the current page's results
+  // This prevents an extra duplicate API call on mount.
+  const filterOptions = useMemo(() => {
+    if (!data?.results) return { provinces: [], districts: [], operations: [] };
 
-      const firstPage = await fetchFn(1, "", token);
-      allResults = [...(firstPage.results || [])];
-      const totalCount = firstPage.count || 0;
-      const size = firstPage.results?.length || 10;
+    const provKey = isEvac ? "province" : "admin1_name";
+    const distKey = isEvac ? "area_council" : "admin2_name";
+    const opKey = isEvac ? "compound_function" : "operation";
 
-      if (size > 0 && totalCount > size) {
-        const totalPages = Math.ceil(totalCount / size);
-        const promises = [];
-        for (let p = 2; p <= totalPages; p++) {
-          promises.push(fetchFn(p, "", token));
-        }
-        const remainingPages = await Promise.all(promises);
-        remainingPages.forEach((pageRes) => {
-          allResults.push(...(pageRes.results || []));
-        });
-      }
-
-      // Compute distinct keys
-      const provKey = isEvac ? "province" : "admin1_name";
-      const distKey = isEvac ? "area_council" : "admin2_name";
-      const opKey = isEvac ? "compound_function" : "operation";
-
-      const provs = Array.from(
-        new Set(allResults.map((r) => r[provKey]).filter(Boolean)),
-      ).sort() as string[];
-      const dists = Array.from(
-        new Set(allResults.map((r) => r[distKey]).filter(Boolean)),
-      ).sort() as string[];
-      const ops = Array.from(
-        new Set(allResults.map((r) => r[opKey]).filter(Boolean)),
-      ).sort() as string[];
-
-      setFilterOptions({ provinces: provs, districts: dists, operations: ops });
-    } catch (e) {
-      console.error("Failed to load background filter options", e);
-    }
-  };
+    return {
+      provinces: Array.from(
+        new Set(data.results.map((r: any) => r[provKey]).filter(Boolean)),
+      ).sort() as string[],
+      districts: Array.from(
+        new Set(data.results.map((r: any) => r[distKey]).filter(Boolean)),
+      ).sort() as string[],
+      operations: Array.from(
+        new Set(data.results.map((r: any) => r[opKey]).filter(Boolean)),
+      ).sort() as string[],
+    };
+  }, [data?.results, isEvac]);
 
   useEffect(() => {
-    fetchFilterOptions();
     setPage(1);
     setSelectedProvinceFilter("");
     setSelectedDistrictFilter("");
     setSelectedOpFilter("");
     setSelectedRowIds([]);
-    setSelectedExportColumns(columns.map((c) => c.key));
+    setSelectedExportColumns([]);
   }, [slug, token]);
 
   // Export Columns & Selected Rows
   const [selectedExportColumns, setSelectedExportColumns] = useState<string[]>(
-    columns.map((c) => c.key),
+    [],
   );
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
@@ -324,6 +281,8 @@ export function DynamicDataTable({
   const [modalFormData, setModalFormData] = useState<any>({});
   const [activeModalTab, setActiveModalTab] = useState("general");
   const [isSubmittingModal, setIsSubmittingModal] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState<any | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Export Dropdown State
   const [isExportDropdownOpen, setIsExportDropdownOpen] = useState(false);
@@ -347,7 +306,7 @@ export function DynamicDataTable({
   const count = data?.count || 0;
   const hasNext = !!data?.next;
   const hasPrev = !!data?.previous;
-  const totalPages = Math.ceil(count / 10) || 1;
+  const totalPages = Math.ceil(count / 50) || 1;
 
   // Inline edit start
   const handleInlineEditStart = (row: any, key: string, readonly?: boolean) => {
@@ -377,19 +336,10 @@ export function DynamicDataTable({
     setEditingCell(null);
 
     try {
-      if (isEvac) {
-        await dynamicDataService.updateEvacuationCentre(
-          rowId,
-          { [key]: parsedVal },
-          token,
-        );
-      } else {
-        await dynamicDataService.updateDisplacement(
-          rowId,
-          { [key]: parsedVal },
-          token,
-        );
-      }
+      await updateRecord.mutateAsync({
+        id: rowId,
+        fields: { [key]: parsedVal },
+      });
       queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
       toast.success("Field updated successfully");
     } catch (error: any) {
@@ -403,27 +353,14 @@ export function DynamicDataTable({
     setIsSubmittingModal(true);
     try {
       if (isCreating) {
-        if (isEvac) {
-          await dynamicDataService.createEvacuationCentre(modalFormData, token);
-        } else {
-          await dynamicDataService.createDisplacement(modalFormData, token);
-        }
+        await createRecord.mutateAsync(modalFormData);
         toast.success("Record created successfully");
         setIsCreating(false);
       } else if (editingRow) {
-        if (isEvac) {
-          await dynamicDataService.updateEvacuationCentre(
-            editingRow.id,
-            modalFormData,
-            token,
-          );
-        } else {
-          await dynamicDataService.updateDisplacement(
-            editingRow.id,
-            modalFormData,
-            token,
-          );
-        }
+        await updateRecord.mutateAsync({
+          id: editingRow.id,
+          fields: modalFormData,
+        });
         toast.success("Record updated successfully");
         setEditingRow(null);
       }
@@ -463,6 +400,20 @@ export function DynamicDataTable({
     setActiveModalTab(isEvac ? "general" : "general_displacement");
   };
 
+  const handleDeleteRow = async () => {
+    if (!rowToDelete) return;
+    setIsDeleting(true);
+    try {
+      await deleteRecord.mutateAsync(rowToDelete.id);
+      toast.success("Record deleted successfully");
+      setRowToDelete(null);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete record");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const handleSelectRow = (id: number) => {
     if (selectedRowIds.includes(id)) {
       setSelectedRowIds(selectedRowIds.filter((rowId) => rowId !== id));
@@ -480,182 +431,51 @@ export function DynamicDataTable({
   };
 
   // Perform on-demand fetch of filtered rows to perform clean complete CSV or Excel export
-  const performExport = async (
-    format: "csv" | "excel",
-    onlySelected: boolean,
-  ) => {
+  const [loadingExport, setLoadingExport] = useState(false);
+
+  const performExport = async () => {
+    // If no columns are explicitly selected, export all columns
+    const columnsToExport =
+      selectedExportColumns.length > 0
+        ? selectedExportColumns
+        : columns.map((c) => c.key);
     setLoadingExport(true);
     try {
-      let exportRows: any[] = [];
-      if (onlySelected) {
-        // Fetch matching selected rows by querying them or mapping current local ones
-        // To be safe, we can just grab from all pages matching currently selected IDs
-        // E.g., we fetch all records with filters, and then filter by selected IDs
-        const allFiltered = await fetchAllFilteredOnDemand();
-        exportRows = allFiltered.filter((r) => selectedRowIds.includes(r.id));
-      } else {
-        exportRows = await fetchAllFilteredOnDemand();
-      }
-
-      if (exportRows.length === 0) {
-        toast.warning("No records found to export");
-        return;
-      }
-
-      const exportCols = columns.filter((c) =>
-        selectedExportColumns.includes(c.key),
-      );
-
-      if (format === "csv") {
-        const headers = exportCols
-          .map((c) => `"${c.label.replace(/"/g, '""')}"`)
-          .join(",");
-        const rows = exportRows.map((row) =>
-          exportCols
-            .map((c) => {
-              const val = row[c.key];
-              if (val === null || val === undefined) return '""';
-              if (typeof val === "boolean") return val ? '"True"' : '"False"';
-              return `"${String(val).replace(/"/g, '""')}"`;
-            })
-            .join(","),
+      let blob: Blob;
+      if (isEvac) {
+        blob = await dynamicDataService.exportEvacuationCentres(
+          columnsToExport,
+          token,
+          selectedProvinceFilter,
+          selectedDistrictFilter,
+          selectedOpFilter,
+          debouncedSearch,
         );
-
-        const csvContent = "\uFEFF" + [headers, ...rows].join("\n");
-        const blob = new Blob([csvContent], {
-          type: "text/csv;charset=utf-8;",
-        });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `${slug}_export.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        toast.success("CSV file exported successfully");
       } else {
-        // Excel format using SpreadsheetML/HTML
-        const headersHtml = exportCols
-          .map(
-            (c) =>
-              `<th style="background-color: #f3f4f6; font-weight: bold; border: 1px solid #d1d5db; padding: 6px;">${c.label}</th>`,
-          )
-          .join("");
-        const rowsHtml = exportRows
-          .map((row) => {
-            return `<tr>${exportCols
-              .map((c) => {
-                const val = row[c.key];
-                const displayVal =
-                  val === null || val === undefined
-                    ? ""
-                    : typeof val === "boolean"
-                      ? val
-                        ? "True"
-                        : "False"
-                      : String(val);
-                return `<td style="border: 1px solid #d1d5db; padding: 6px;">${displayVal}</td>`;
-              })
-              .join("")}</tr>`;
-          })
-          .join("");
-
-        const htmlContent = `
-          <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-          <head>
-            <meta charset="utf-8" />
-            <!--[if gte mso 9]>
-            <xml>
-              <x:ExcelWorkbook>
-                <x:ExcelWorksheets>
-                  <x:ExcelWorksheet>
-                    <x:Name>Data Export</x:Name>
-                    <x:WorksheetOptions>
-                      <x:DisplayGridlines/>
-                    </x:WorksheetOptions>
-                  </x:ExcelWorksheet>
-                </x:ExcelWorksheets>
-              </x:ExcelWorkbook>
-            </xml>
-            <![endif]-->
-          </head>
-          <body>
-            <table>
-              <thead>
-                <tr>${headersHtml}</tr>
-              </thead>
-              <tbody>
-                ${rowsHtml}
-              </tbody>
-            </table>
-          </body>
-          </html>
-        `;
-
-        const blob = new Blob([htmlContent], {
-          type: "application/vnd.ms-excel;charset=utf-8;",
-        });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `${slug}_export.xls`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        toast.success("Excel file exported successfully");
+        blob = await dynamicDataService.exportDisplacements(
+          columnsToExport,
+          token,
+          selectedProvinceFilter,
+          selectedDistrictFilter,
+          selectedOpFilter,
+          debouncedSearch,
+        );
       }
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `${slug}_export.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      toast.success("Excel file exported successfully");
     } catch (e: any) {
       toast.error(e.message || "Failed to export data");
     } finally {
       setLoadingExport(false);
-      setIsExportDropdownOpen(false);
     }
-  };
-
-  const [loadingExport, setLoadingExport] = useState(false);
-
-  // Helper to fetch all filtered pages on demand
-  const fetchAllFilteredOnDemand = async () => {
-    let allResults: any[] = [];
-    const fetchFn = isEvac
-      ? dynamicDataService.fetchEvacuationCentres
-      : dynamicDataService.fetchDisplacements;
-
-    const firstPage = await fetchFn(
-      1,
-      debouncedSearch,
-      token,
-      selectedProvinceFilter,
-      selectedDistrictFilter,
-      selectedOpFilter,
-    );
-    allResults = [...(firstPage.results || [])];
-    const totalCount = firstPage.count || 0;
-    const size = firstPage.results?.length || 10;
-
-    if (size > 0 && totalCount > size) {
-      const totalPages = Math.ceil(totalCount / size);
-      const promises = [];
-      for (let p = 2; p <= totalPages; p++) {
-        promises.push(
-          fetchFn(
-            p,
-            debouncedSearch,
-            token,
-            selectedProvinceFilter,
-            selectedDistrictFilter,
-            selectedOpFilter,
-          ),
-        );
-      }
-      const remainingPages = await Promise.all(promises);
-      remainingPages.forEach((pageRes) => {
-        allResults.push(...(pageRes.results || []));
-      });
-    }
-    return allResults;
   };
 
   const renderEvacuationFormFields = () => {
@@ -899,40 +719,6 @@ export function DynamicDataTable({
                 </option>
               ))}
             </select>
-
-            <select
-              value={selectedDistrictFilter}
-              onChange={(e) => {
-                setSelectedDistrictFilter(e.target.value);
-                setPage(1);
-              }}
-              className="h-9 px-3 rounded-xl border border-border bg-background text-xs font-semibold focus:outline-none cursor-pointer"
-            >
-              <option value="">All Districts/Councils</option>
-              {filterOptions.districts.map((dist) => (
-                <option key={dist} value={dist}>
-                  {dist}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedOpFilter}
-              onChange={(e) => {
-                setSelectedOpFilter(e.target.value);
-                setPage(1);
-              }}
-              className="h-9 px-3 rounded-xl border border-border bg-background text-xs font-semibold focus:outline-none cursor-pointer"
-            >
-              <option value="">
-                {isEvac ? "All Functions" : "All Operations"}
-              </option>
-              {filterOptions.operations.map((op) => (
-                <option key={op} value={op}>
-                  {op}
-                </option>
-              ))}
-            </select>
           </div>
 
           <div className="flex items-center gap-2 ml-auto">
@@ -965,51 +751,25 @@ export function DynamicDataTable({
                 Export
               </Button>
               {isExportDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-card border border-border rounded-xl z-40 p-2 animate-fadeIn shadow-none">
-                  <div className="text-[10px] uppercase font-extrabold text-muted-foreground tracking-wider px-2 py-1 pb-2 border-b border-border mb-1">
-                    Export Excel / CSV
+                <div className="absolute right-0 mt-2 w-72 bg-card border border-border rounded-xl z-40 p-3 animate-fadeIn shadow-none space-y-1">
+                  <div className="text-[10px] uppercase font-extrabold text-muted-foreground tracking-wider px-1 pb-2 border-b border-border">
+                    Export to Excel
                   </div>
                   <button
-                    onClick={() => performExport("csv", false)}
+                    onClick={performExport}
                     className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
                   >
-                    <span>Export Filtered Rows (CSV)</span>
+                    <span>
+                      Export (
+                      {selectedExportColumns.length === 0
+                        ? "all"
+                        : selectedExportColumns.length}{" "}
+                      columns)
+                    </span>
                     <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono text-muted-foreground">
                       {count} rows
                     </span>
                   </button>
-                  <button
-                    onClick={() => performExport("excel", false)}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
-                  >
-                    <span>Export Filtered Rows (Excel)</span>
-                    <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono text-muted-foreground">
-                      {count} rows
-                    </span>
-                  </button>
-                  {selectedRowIds.length > 0 && (
-                    <>
-                      <div className="border-t border-border my-1"></div>
-                      <button
-                        onClick={() => performExport("csv", true)}
-                        className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
-                      >
-                        <span>Export Selected (CSV)</span>
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono font-bold">
-                          {selectedRowIds.length} rows
-                        </span>
-                      </button>
-                      <button
-                        onClick={() => performExport("excel", true)}
-                        className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
-                      >
-                        <span>Export Selected (Excel)</span>
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono font-bold">
-                          {selectedRowIds.length} rows
-                        </span>
-                      </button>
-                    </>
-                  )}
                 </div>
               )}
             </div>
@@ -1066,9 +826,6 @@ export function DynamicDataTable({
                     onCheckedChange={handleSelectAllOnPage}
                   />
                 </TableHead>
-                <TableHead className="w-16 text-center text-xs font-extrabold text-muted-foreground">
-                  Actions
-                </TableHead>
                 {columns.map((col) => {
                   const isExportSelected = selectedExportColumns.includes(
                     col.key,
@@ -1076,7 +833,7 @@ export function DynamicDataTable({
                   return (
                     <TableHead
                       key={col.key}
-                      className="text-xs font-extrabold text-muted-foreground tracking-wider py-3 px-4"
+                      className="text-xs font-semibold  py-3 px-4"
                     >
                       <div className="flex items-center gap-1.5 py-1">
                         <Checkbox
@@ -1102,6 +859,11 @@ export function DynamicDataTable({
                     </TableHead>
                   );
                 })}
+                {canEdit && (
+                  <TableHead className="w-20 text-center text-xs font-extrabold text-muted-foreground">
+                    Actions
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -1119,19 +881,6 @@ export function DynamicDataTable({
                       checked={selectedRowIds.includes(row.id)}
                       onCheckedChange={() => handleSelectRow(row.id)}
                     />
-                  </TableCell>
-                  <TableCell className="text-center p-2">
-                    <div className="flex items-center justify-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => openModalEditor(row)}
-                        className="h-7 w-7 text-muted-foreground hover:text-foreground rounded-md shadow-none"
-                        title="Edit all fields"
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
                   </TableCell>
                   {columns.map((col) => {
                     const isEditing =
@@ -1194,9 +943,7 @@ export function DynamicDataTable({
                         ) : (
                           <>
                             {value === null || value === undefined ? (
-                              <span className="text-muted-foreground/35 italic">
-                                blank
-                              </span>
+                              <span className="text-muted-foreground/35 italic"></span>
                             ) : typeof value === "boolean" ? (
                               <span
                                 className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
@@ -1220,6 +967,33 @@ export function DynamicDataTable({
                       </TableCell>
                     );
                   })}
+                  {canEdit && (
+                    <TableCell className="text-center p-2">
+                      <div className="flex items-center justify-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openModalEditor(row)}
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground rounded-md shadow-none"
+                          title="Edit all fields"
+                        >
+                          <Edit2 className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setRowToDelete(row);
+                          }}
+                          className="h-7 w-7 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-md shadow-none"
+                          title="Delete record"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -1232,11 +1006,11 @@ export function DynamicDataTable({
         <span className="text-xs font-semibold text-muted-foreground">
           Showing{" "}
           <span className="text-foreground font-bold">
-            {results.length === 0 ? 0 : (page - 1) * 10 + 1}
+            {results.length === 0 ? 0 : (page - 1) * 50 + 1}
           </span>{" "}
           to{" "}
           <span className="text-foreground font-bold">
-            {Math.min(page * 10, count)}
+            {Math.min(page * 50, count)}
           </span>{" "}
           of <span className="text-foreground font-bold">{count}</span> records
         </span>
@@ -1265,6 +1039,49 @@ export function DynamicDataTable({
           </Button>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog
+        open={!!rowToDelete}
+        onOpenChange={(open) => {
+          if (!open) setRowToDelete(null);
+        }}
+      >
+        <DialogContent className="max-w-md w-full rounded-2xl border border-border bg-card shadow-none p-6">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-foreground">
+              Delete Record
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground leading-relaxed mt-2">
+              Are you sure you want to delete this record (ID: {rowToDelete?.id}
+              )? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center justify-end gap-2 pt-4 border-t border-border mt-2">
+            <Button
+              variant="outline"
+              onClick={() => setRowToDelete(null)}
+              className="h-9 cursor-pointer"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteRow}
+              disabled={isDeleting}
+              className="h-9 font-bold cursor-pointer bg-rose-600 hover:bg-rose-700 text-white"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Full Record Edit/Create Modal — Shadcn Dialog (ESC closes natively) */}
       <Dialog
