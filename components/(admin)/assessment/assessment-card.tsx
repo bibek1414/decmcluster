@@ -11,9 +11,10 @@ interface AssessmentCardProps {
   a: AssessmentData;
   hideDocLinks?: boolean;
   isTool?: boolean;
+  useRawName?: boolean;
 }
 
-export function AssessmentCard({ a, hideDocLinks = false, isTool = false }: AssessmentCardProps) {
+export function AssessmentCard({ a, hideDocLinks = false, isTool = false, useRawName = false }: AssessmentCardProps) {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
 
   const getFileUrl = (urlPath?: string | null) => {
@@ -41,7 +42,14 @@ export function AssessmentCard({ a, hideDocLinks = false, isTool = false }: Asse
           </div>
           <div className="min-w-0">
             <h3 className="font-bold text-base text-foreground group-hover/card:text-primary transition-colors line-clamp-2 leading-snug">
-              {a.name} Data
+              {useRawName
+                ? a.name
+                : (a.slug === "displacement-tracking-matrix-form" || a.slug === "displacement-data"
+                  ? "Displacement Data"
+                  : a.slug === "evacuation-centre-assessment-form"
+                  ? "Evacuation Centre Data"
+                  : a.name
+                ).replace(/\bForm\b/gi, "Data")}
             </h3>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <p className="text-[10px] text-muted-foreground font-semibold">

@@ -52,7 +52,7 @@ export default function AssessmentToolsPage() {
       if (!isSuperAdmin) {
         const acList = user?.access_control || [];
         const normalized = acList.map((item) =>
-          item.toLowerCase().replace(/_/g, "-")
+          item.toLowerCase().replace(/_/g, "-"),
         );
         if (!normalized.includes(a.slug.toLowerCase())) {
           return false;
@@ -91,7 +91,7 @@ export default function AssessmentToolsPage() {
         onError: (err: any) => {
           toast.error(err.message || "Failed to create assessment");
         },
-      }
+      },
     );
   };
 
@@ -99,10 +99,10 @@ export default function AssessmentToolsPage() {
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
         <PageHeader
-          title="Assessment Tools"
+          title="New Tools"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>Create and manage dynamic assessments and survey forms</span>
+              <span>Create and manage assessments and survey forms</span>
               {!isLoading && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
                   {filtered.length} total forms
@@ -167,7 +167,7 @@ export default function AssessmentToolsPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((a) => (
-              <AssessmentCard key={a.id} a={a} isTool={true} />
+              <AssessmentCard key={a.id} a={a} isTool={true} useRawName={true} />
             ))}
           </div>
         )}
@@ -175,11 +175,11 @@ export default function AssessmentToolsPage() {
 
       {/* Custom Modal for New Assessment */}
       {isCreateOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => setIsCreateOpen(false)}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
@@ -279,7 +279,8 @@ export default function AssessmentToolsPage() {
                 >
                   {createMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Creating...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
+                      Creating...
                     </>
                   ) : (
                     "Create"
