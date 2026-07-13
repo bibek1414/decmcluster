@@ -112,6 +112,75 @@ export default function UsersClient() {
     }
   };
 
+  // Toggle access control helpers
+  const folderIds = React.useMemo(() => ["meeting-minutes", "sops", "situational-reports"], []);
+  const currentAssessmentIds = React.useMemo(() => {
+    return assessments.length > 0
+      ? assessments.map((a) => a.slug)
+      : FALLBACK_ASSESSMENTS.map((f) => f.id);
+  }, [assessments]);
+
+  const areAllFoldersSelected = React.useMemo(() => {
+    return folderIds.every((id) => selectedFolders.includes(id));
+  }, [selectedFolders, folderIds]);
+
+  const toggleAllFolders = () => {
+    if (areAllFoldersSelected) {
+      setSelectedFolders(selectedFolders.filter((id) => !folderIds.includes(id)));
+    } else {
+      setSelectedFolders((prev) => Array.from(new Set([...prev, ...folderIds])));
+    }
+  };
+
+  const areAllAssessmentsSelected = React.useMemo(() => {
+    return currentAssessmentIds.every((id) => selectedFolders.includes(id));
+  }, [currentAssessmentIds, selectedFolders]);
+
+  const toggleAllAssessments = () => {
+    if (areAllAssessmentsSelected) {
+      setSelectedFolders(selectedFolders.filter((id) => !currentAssessmentIds.includes(id)));
+    } else {
+      setSelectedFolders((prev) => Array.from(new Set([...prev, ...currentAssessmentIds])));
+    }
+  };
+
+  const areAllEditFoldersSelected = React.useMemo(() => {
+    return folderIds.every((id) => editSelectedFolders.includes(id));
+  }, [editSelectedFolders, folderIds]);
+
+  const toggleAllEditFolders = () => {
+    if (areAllEditFoldersSelected) {
+      setEditSelectedFolders(editSelectedFolders.filter((id) => !folderIds.includes(id)));
+    } else {
+      setEditSelectedFolders((prev) => Array.from(new Set([...prev, ...folderIds])));
+    }
+  };
+
+  const areAllEditAssessmentsSelected = React.useMemo(() => {
+    return currentAssessmentIds.every((id) => editSelectedFolders.includes(id));
+  }, [currentAssessmentIds, editSelectedFolders]);
+
+  const toggleAllEditAssessments = () => {
+    if (areAllEditAssessmentsSelected) {
+      setEditSelectedFolders(editSelectedFolders.filter((id) => !currentAssessmentIds.includes(id)));
+    } else {
+      setEditSelectedFolders((prev) => Array.from(new Set([...prev, ...currentAssessmentIds])));
+    }
+  };
+
+  // Close modals on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsAddOpen(false);
+        setEditTarget(null);
+        setDeleteTarget(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // Permission Flags
   const isSuperAdmin = user?.role === "Superadmin";
   const canAdd = isSuperAdmin;
@@ -456,8 +525,14 @@ export default function UsersClient() {
 
       {/* Add User Modal */}
       {isAddOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setIsAddOpen(false)}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
                 Add New User
@@ -571,7 +646,16 @@ export default function UsersClient() {
                   <div className="space-y-3">
                     {/* Folders Section */}
                     <div className="space-y-2">
-                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Folders</h4>
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Folders</h4>
+                        <button
+                          type="button"
+                          onClick={toggleAllFolders}
+                          className="text-[10px] font-bold text-primary hover:underline cursor-pointer focus:outline-none"
+                        >
+                          {areAllFoldersSelected ? "Deselect All" : "Select All"}
+                        </button>
+                      </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
                         {[
                           {
@@ -621,7 +705,16 @@ export default function UsersClient() {
 
                     {/* Assessments Section */}
                     <div className="space-y-2">
-                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Displacement Data Forms</h4>
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Displacement Data Forms</h4>
+                        <button
+                          type="button"
+                          onClick={toggleAllAssessments}
+                          className="text-[10px] font-bold text-primary hover:underline cursor-pointer focus:outline-none"
+                        >
+                          {areAllAssessmentsSelected ? "Deselect All" : "Select All"}
+                        </button>
+                      </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50 max-h-[160px] overflow-y-auto">
                         {(assessments.length > 0
                           ? assessments.map((a) => ({ id: a.slug, label: a.name }))
@@ -708,8 +801,14 @@ export default function UsersClient() {
 
       {/* Edit User Modal */}
       {editTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn max-h-[90vh] overflow-y-auto">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setEditTarget(null)}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4 animate-scaleIn max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="space-y-0.5">
                 <h3 className="text-base font-bold text-foreground">
@@ -830,7 +929,16 @@ export default function UsersClient() {
                   <div className="space-y-3">
                     {/* Folders Section */}
                     <div className="space-y-2">
-                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Folders</h4>
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Folders</h4>
+                        <button
+                          type="button"
+                          onClick={toggleAllEditFolders}
+                          className="text-[10px] font-bold text-primary hover:underline cursor-pointer focus:outline-none"
+                        >
+                          {areAllEditFoldersSelected ? "Deselect All" : "Select All"}
+                        </button>
+                      </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
                         {[
                           {
@@ -880,7 +988,16 @@ export default function UsersClient() {
 
                     {/* Assessments Section */}
                     <div className="space-y-2">
-                      <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Displacement Data Forms</h4>
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground/85">Displacement Data Forms</h4>
+                        <button
+                          type="button"
+                          onClick={toggleAllEditAssessments}
+                          className="text-[10px] font-bold text-primary hover:underline cursor-pointer focus:outline-none"
+                        >
+                          {areAllEditAssessmentsSelected ? "Deselect All" : "Select All"}
+                        </button>
+                      </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50 max-h-[160px] overflow-y-auto">
                         {(assessments.length > 0
                           ? assessments.map((a) => ({ id: a.slug, label: a.name }))

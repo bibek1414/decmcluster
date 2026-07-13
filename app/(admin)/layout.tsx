@@ -14,6 +14,7 @@ import {
   BookOpen,
   FileSpreadsheet,
   Users,
+  Wrench,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -49,6 +50,9 @@ export default function AdminLayout({
     }
     if (pathname?.startsWith("/assement/users")) {
       return false;
+    }
+    if (pathname?.startsWith("/assement/tools")) {
+      return roleLower === "data enumerator" || roleLower === "field coordinator";
     }
     // Guard for specific assessment slug details pages
     if (pathname?.startsWith("/assement/")) {
@@ -89,94 +93,112 @@ export default function AdminLayout({
   };
 
   const SidebarContent = () => {
-    const isSuperAdmin = user?.role === "Superadmin";
-    const ac = user?.access_control || [];
-    const normalizedAc = ac.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
-
-    const showMeetingMinutes = isSuperAdmin || normalizedAc.includes("meeting-minutes");
-    const showSops = isSuperAdmin || normalizedAc.includes("sops");
-    const showSituationalReports = isSuperAdmin || normalizedAc.includes("situational-reports");
-    const showUserManagement = isSuperAdmin;
-
-    return (
-      <div className="h-full flex flex-col justify-between p-5">
-        <div className="space-y-6">
-          {/* Logo and Brand */}
-          <div className="flex items-center gap-3 pb-4 border-b border-border">
-            <Logo className="w-10 h-10" />
-            <div className="min-w-0">
-              <h2 className="text-xs font-extrabold text-foreground leading-tight tracking-tight uppercase">
-                DECM Cluster
-              </h2>
-              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
-                Admin Portal
-              </p>
-            </div>
-          </div>
-
-          {/* Navigation Groups */}
-          <div className="space-y-5">
-            {/* Database Group */}
-            <div className="space-y-1.5">
-              <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                Database
-              </p>
-              <Link
-                href="/assement"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  pathname === "/assement" || (
-                    pathname?.startsWith("/assement/") &&
-                    !pathname.startsWith("/assement/meeting-minutes") &&
-                    !pathname.startsWith("/assement/sops") &&
-                    !pathname.startsWith("/assement/situational-reports") &&
-                    !pathname.startsWith("/assement/users")
-                  )
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                }`}
-              >
-                <ClipboardList className="h-4 w-4 shrink-0" />
-                <span>Displacement Data</span>
-              </Link>
-            </div>
-
-            {/* Coordination Group */}
-            {(showMeetingMinutes || showSops) && (
-              <div className="space-y-1.5">
-                <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Coordination
-                </p>
-                {showMeetingMinutes && (
-                  <Link
-                    href="/assement/meeting-minutes"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname?.startsWith("/assement/meeting-minutes")
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                    }`}
-                  >
-                    <FileText className="h-4 w-4 shrink-0" />
-                    <span>Meeting Minutes</span>
-                  </Link>
-                )}
-                {showSops && (
-                  <Link
-                    href="/assement/sops"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname?.startsWith("/assement/sops")
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                    }`}
-                  >
-                    <BookOpen className="h-4 w-4 shrink-0" />
-                    <span>SOPs</span>
-                  </Link>
-                )}
-              </div>
-            )}
+     const isSuperAdmin = user?.role === "Superadmin";
+     const isDataEnumerator = user?.role === "Data Enumerator";
+     const isFieldCoordinator = user?.role === "Field Coordinator";
+     const ac = user?.access_control || [];
+     const normalizedAc = ac.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
+ 
+     const showMeetingMinutes = isSuperAdmin || normalizedAc.includes("meeting-minutes");
+     const showSops = isSuperAdmin || normalizedAc.includes("sops");
+     const showTools = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
+     const showSituationalReports = isSuperAdmin || normalizedAc.includes("situational-reports");
+     const showUserManagement = isSuperAdmin;
+ 
+     return (
+       <div className="h-full flex flex-col justify-between p-5">
+         <div className="space-y-6">
+           {/* Logo and Brand */}
+           <div className="flex items-center gap-3 pb-4 border-b border-border">
+             <Logo className="w-10 h-10" />
+             <div className="min-w-0">
+               <h2 className="text-xs font-extrabold text-foreground leading-tight tracking-tight uppercase">
+                 DECM Cluster
+               </h2>
+               <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+                 Admin Portal
+               </p>
+             </div>
+           </div>
+ 
+           {/* Navigation Groups */}
+           <div className="space-y-5">
+             {/* Database Group */}
+             <div className="space-y-1.5">
+               <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                 Database
+               </p>
+               <Link
+                 href="/assement"
+                 onClick={() => setIsMobileMenuOpen(false)}
+                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                   pathname === "/assement" || (
+                     pathname?.startsWith("/assement/") &&
+                     !pathname.startsWith("/assement/meeting-minutes") &&
+                     !pathname.startsWith("/assement/sops") &&
+                     !pathname.startsWith("/assement/situational-reports") &&
+                     !pathname.startsWith("/assement/users") &&
+                     !pathname.startsWith("/assement/tools")
+                   )
+                     ? "bg-primary text-primary-foreground border-primary"
+                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                 }`}
+               >
+                 <ClipboardList className="h-4 w-4 shrink-0" />
+                 <span>Displacement Data</span>
+               </Link>
+             </div>
+ 
+             {/* Coordination Group */}
+             {(showMeetingMinutes || showSops || showTools) && (
+               <div className="space-y-1.5">
+                 <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                   Coordination
+                 </p>
+                 {showMeetingMinutes && (
+                   <Link
+                     href="/assement/meeting-minutes"
+                     onClick={() => setIsMobileMenuOpen(false)}
+                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                       pathname?.startsWith("/assement/meeting-minutes")
+                         ? "bg-primary text-primary-foreground border-primary"
+                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                     }`}
+                   >
+                     <FileText className="h-4 w-4 shrink-0" />
+                     <span>Meeting Minutes</span>
+                   </Link>
+                 )}
+                 {showSops && (
+                   <Link
+                     href="/assement/sops"
+                     onClick={() => setIsMobileMenuOpen(false)}
+                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                       pathname?.startsWith("/assement/sops")
+                         ? "bg-primary text-primary-foreground border-primary"
+                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                     }`}
+                   >
+                     <BookOpen className="h-4 w-4 shrink-0" />
+                     <span>SOPs</span>
+                   </Link>
+                 )}
+                 {showTools && (
+                   <Link
+                     href="/assement/tools"
+                     onClick={() => setIsMobileMenuOpen(false)}
+                     className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                       pathname?.startsWith("/assement/tools")
+                         ? "bg-primary text-primary-foreground border-primary"
+                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                     }`}
+                   >
+                     <Wrench className="h-4 w-4 shrink-0" />
+                     <span>Tools</span>
+                   </Link>
+                 )}
+               </div>
+             )}
 
             {/* Reports Group */}
             {showSituationalReports && (

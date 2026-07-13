@@ -72,6 +72,19 @@ export default function SOPsClient() {
     setPage(1);
   }, [debouncedSearch]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsUploadOpen(false);
+        setUploadNewTarget(null);
+        setDeleteTarget(null);
+        setReverifyTarget(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // Fetch SOP list
   const { data, isLoading, isPlaceholderData, error } = useAdminSops(
     page,
@@ -417,8 +430,14 @@ export default function SOPsClient() {
 
       {/* Upload Modal */}
       {isUploadOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setIsUploadOpen(false)}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
                 Upload SOP Document
@@ -529,8 +548,17 @@ export default function SOPsClient() {
 
       {/* Upload New Version Modal */}
       {uploadNewTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => {
+            setUploadNewTarget(null);
+            setSelectedNewFile(null);
+          }}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
                 Upload New Version

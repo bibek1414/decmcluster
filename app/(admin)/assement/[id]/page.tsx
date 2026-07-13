@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -48,6 +48,18 @@ export default function AssessmentDetailPage() {
   // Deletion States
   const [assessmentToDelete, setAssessmentToDelete] = useState(false);
   const [resultToDelete, setResultToDelete] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsResultUploadOpen(false);
+        setAssessmentToDelete(false);
+        setResultToDelete(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Role permissions
   const isSuperAdmin = user?.role === "Superadmin";
@@ -449,8 +461,14 @@ export default function AssessmentDetailPage() {
 
       {/* Result Upload Modal */}
       {isResultUploadOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setIsResultUploadOpen(false)}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-border pb-3">
               <h3 className="text-base font-bold text-foreground">
                 Upload Assessment Result
@@ -534,8 +552,14 @@ export default function AssessmentDetailPage() {
 
       {/* Assessment Deletion Confirmation Modal */}
       {assessmentToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-sm p-6 rounded-xl space-y-4 shadow-xl">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setAssessmentToDelete(false)}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-sm p-6 rounded-xl space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3 className="text-base font-bold text-foreground">
               Delete Assessment
             </h3>
@@ -576,8 +600,14 @@ export default function AssessmentDetailPage() {
 
       {/* Result Deletion Confirmation Modal */}
       {resultToDelete !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-card border border-border w-full max-w-sm p-6 rounded-xl space-y-4 shadow-xl">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setResultToDelete(null)}
+        >
+          <div 
+            className="bg-card border border-border w-full max-w-sm p-6 rounded-xl space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h3 className="text-base font-bold text-foreground">
               Delete Result File
             </h3>

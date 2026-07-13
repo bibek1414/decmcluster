@@ -9,9 +9,10 @@ import { siteConfig } from "@/config/site";
 
 interface AssessmentCardProps {
   a: AssessmentData;
+  hideDocLinks?: boolean;
 }
 
-export function AssessmentCard({ a }: AssessmentCardProps) {
+export function AssessmentCard({ a, hideDocLinks = false }: AssessmentCardProps) {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
 
   const getFileUrl = (urlPath?: string | null) => {
@@ -68,7 +69,7 @@ export function AssessmentCard({ a }: AssessmentCardProps) {
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted"
+          className={`${hideDocLinks ? "w-full" : "flex-1"} h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted`}
           asChild
         >
           <Link href={`/assement/${a.slug}`}>
@@ -77,7 +78,7 @@ export function AssessmentCard({ a }: AssessmentCardProps) {
           </Link>
         </Button>
 
-        {a.pdf &&
+        {!hideDocLinks && a.pdf &&
           (() => {
             const isCsv =
               a.pdf.toLowerCase().endsWith(".csv") ||
@@ -108,7 +109,7 @@ export function AssessmentCard({ a }: AssessmentCardProps) {
             );
           })()}
 
-        {a.excel && (
+        {!hideDocLinks && a.excel && (
           <Button
             variant="outline"
             size="sm"

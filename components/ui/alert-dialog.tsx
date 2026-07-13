@@ -27,14 +27,36 @@ export function AlertDialog({
   pendingText,
   variant = "destructive",
 }: AlertDialogProps) {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !isPending) {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose, isPending]);
+
   if (!isOpen) return null;
 
   const defaultPendingText =
     pendingText || (variant === "destructive" ? "Deleting..." : "Processing...");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
+      onClick={() => {
+        if (!isPending) onClose();
+      }}
+    >
+      <div 
+        className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-start gap-3">
           <div
             className={`p-2 rounded-lg shrink-0 ${
