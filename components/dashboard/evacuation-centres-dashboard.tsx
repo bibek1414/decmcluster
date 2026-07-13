@@ -22,7 +22,7 @@ export default function EvacuationCentresDashboard() {
 
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const mapInstance = useRef<any>(null);
+  const [map, setMap] = useState<any>(null);
 
   // Dynamically load Leaflet library on client-side
   useEffect(() => {
@@ -83,17 +83,17 @@ export default function EvacuationCentresDashboard() {
   useEffect(() => {
     if (!mapLoaded || !mapRef.current) return;
     const L = (window as any).L;
-    if (!L || mapInstance.current) return;
+    if (!L || map) return;
+
+    let activeMap: any = null;
 
     const initMap = () => {
       if (!mapRef.current) return;
-      const map = L.map(mapRef.current, {
+      activeMap = L.map(mapRef.current, {
         zoomControl: true,
         scrollWheelZoom: false,
         preferCanvas: false,
       }).setView([-16.5, 168.0], 7);
-
-      mapInstance.current = map;
 
       tileLayerRef.current = L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -103,31 +103,32 @@ export default function EvacuationCentresDashboard() {
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           crossOrigin: true,
         }
-      ).addTo(map);
+      ).addTo(activeMap);
+
+      setMap(activeMap);
 
       // Multi-step invalidateSize: RAF → 300 ms → 800 ms
       // Guarantees tiles appear even when the container was hidden on mount.
       requestAnimationFrame(() => {
-        map.invalidateSize();
-        setTimeout(() => map.invalidateSize(), 300);
-        setTimeout(() => map.invalidateSize(), 800);
+        activeMap.invalidateSize();
+        setTimeout(() => activeMap.invalidateSize(), 300);
+        setTimeout(() => activeMap.invalidateSize(), 800);
       });
     };
 
     requestAnimationFrame(initMap);
 
     return () => {
-      if (mapInstance.current) {
-        mapInstance.current.remove();
-        mapInstance.current = null;
-        tileLayerRef.current = null;
+      if (activeMap) {
+        activeMap.remove();
       }
+      setMap(null);
+      tileLayerRef.current = null;
     };
   }, [mapLoaded]);
 
   // ── Effect 2: Update markers whenever locations or province filter changes ─
-  const renderMarkers = useCallback(() => {
-    const map = mapInstance.current;
+  useEffect(() => {
     const L = (window as any).L;
     if (!map || !L || !locations) return;
 
@@ -185,12 +186,7 @@ export default function EvacuationCentresDashboard() {
 
     // Ensure tiles are rendered after any layout shift
     requestAnimationFrame(() => map.invalidateSize());
-  }, [locations, selectedProvince]);
-
-  useEffect(() => {
-    if (!mapInstance.current) return;
-    renderMarkers();
-  }, [renderMarkers]);
+  }, [map, locations, selectedProvince]);
 
   // Total statistics indicators mapping (Exactly match Summary cards fields structure)
   const statsCards = useMemo(() => {
