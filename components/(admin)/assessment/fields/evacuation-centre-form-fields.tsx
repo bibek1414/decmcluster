@@ -158,7 +158,7 @@ export function EvacuationCentreFormFields({
   const activeFields = fieldGroups[activeModalTab] || [];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto px-1 py-2">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[380px] content-start overflow-y-auto px-1 py-2">
       {activeFields.map((fieldKey) => {
         const col = EVACUATION_CENTRE_COLUMNS.find((c) => c.key === fieldKey);
         if (!col) return null;
