@@ -234,6 +234,32 @@ export const dynamicDataService = {
     return res.json();
   },
 
+  createDisplacement: async (
+    fields: Partial<DisplacementRecord>,
+    token: string | null
+  ): Promise<DisplacementRecord> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/displacements/`, {
+      method: "POST",
+      headers: getHeaders(token),
+      body: JSON.stringify(fields),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to create displacement";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
   deleteEvacuationCentre: async (
     id: number,
     token: string | null
