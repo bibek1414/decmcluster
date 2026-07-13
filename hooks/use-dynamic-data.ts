@@ -104,3 +104,21 @@ export function useDeleteDynamicRecord(slug: string, token: string | null) {
     },
   });
 }
+
+export function useImportDynamicRecord(slug: string, token: string | null) {
+  const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (file: File) => {
+      if (isEvac) {
+        return dynamicDataService.importEvacuationCentres(file, token);
+      } else {
+        return dynamicDataService.importDisplacements(file, token);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
+    },
+  });
+}

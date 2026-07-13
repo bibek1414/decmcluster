@@ -305,4 +305,50 @@ export const dynamicDataService = {
     if (!res.ok) throw new Error("Failed to export displacements");
     return res.blob();
   },
+
+  importEvacuationCentres: async (
+    file: File,
+    token: string | null
+  ): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const headers = getHeaders(token);
+    delete headers["Content-Type"]; // Let browser set Content-Type with boundary for FormData
+
+    const res = await fetch(`${baseUrl}/api/evacuation-centres/import/`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || "Failed to import evacuation centres");
+    }
+    return res.json();
+  },
+
+  importDisplacements: async (
+    file: File,
+    token: string | null
+  ): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const headers = getHeaders(token);
+    delete headers["Content-Type"]; // Let browser set Content-Type with boundary for FormData
+
+    const res = await fetch(`${baseUrl}/api/displacements/import/`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || "Failed to import displacements");
+    }
+    return res.json();
+  },
 };

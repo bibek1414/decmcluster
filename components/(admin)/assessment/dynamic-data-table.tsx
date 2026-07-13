@@ -11,6 +11,7 @@ import {
   Plus,
   X,
   Trash2,
+  Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -39,6 +40,7 @@ import {
   useCreateDynamicRecord,
   useUpdateDynamicRecord,
   useDeleteDynamicRecord,
+  useImportDynamicRecord,
 } from "@/hooks/use-dynamic-data";
 
 interface DynamicDataTableProps {
@@ -230,6 +232,27 @@ export function DynamicDataTable({
   const createRecord = useCreateDynamicRecord(slug, token);
   const updateRecord = useUpdateDynamicRecord(slug, token);
   const deleteRecord = useDeleteDynamicRecord(slug, token);
+  const importRecord = useImportDynamicRecord(slug, token);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImporting, setIsImporting] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    try {
+      await importRecord.mutateAsync(file);
+      toast.success("Data imported successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to import data");
+    } finally {
+      setIsImporting(false);
+      // Reset input so the same file can be selected again
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   // Compute filter options dynamically from the current page's results
   // This prevents an extra duplicate API call on mount.
@@ -732,6 +755,32 @@ export function DynamicDataTable({
                 <Plus className="h-4 w-4" />
                 Add Record
               </Button>
+            )}
+
+            {canEdit && (
+              <>
+                <input
+                  type="file"
+                  accept=".csv,.xlsx,.xls"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isImporting}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
+                >
+                  {isImporting ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                  ) : (
+                    <Upload className="h-4 w-4" />
+                  )}
+                  Import
+                </Button>
+              </>
             )}
 
             {/* Export Dropdown */}
