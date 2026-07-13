@@ -388,7 +388,6 @@ export function DynamicDataTable({
         setEditingRow(null);
       }
       queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
-      fetchFilterOptions(); // update filters options
     } catch (error: any) {
       toast.error(error.message || "Failed to save changes");
     } finally {

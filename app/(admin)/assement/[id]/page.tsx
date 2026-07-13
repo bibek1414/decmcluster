@@ -3,22 +3,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  FileSpreadsheet,
-  Trash2,
-  Loader2,
-  FileText,
-  SlidersHorizontal,
-  ChevronLeft,
-} from "lucide-react";
+import { Loader2, SlidersHorizontal, ChevronLeft } from "lucide-react";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { useAssessment, useDeleteAssessment } from "@/hooks/use-assessments";
 import { toast } from "sonner";
-import { siteConfig } from "@/config/site";
 import { DynamicDataTable } from "@/components/(admin)/assessment/dynamic-data-table";
 
 export default function AssessmentDetailPage() {
@@ -46,17 +37,8 @@ export default function AssessmentDetailPage() {
   const isDataEnumerator = user?.role === "Data Enumerator";
   const isFieldCoordinator = user?.role === "Field Coordinator";
   const canAdd = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
-  const canDelete = isSuperAdmin;
 
   // Base URL translation
-  const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-  const getFileUrl = (urlPath?: string | null) => {
-    if (!urlPath) return "";
-    if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) {
-      return urlPath;
-    }
-    return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
-  };
 
   // Queries
   const {
@@ -133,9 +115,8 @@ export default function AssessmentDetailPage() {
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
+          <div className="text-gray-900 text-xl">{displayTitle}</div>
         </Link>
-
-        <PageHeader title={displayTitle} actions={<></>} />
 
         <div className="space-y-4">
           {slug === "evacuation-centre-assessment-form" ||
