@@ -143,7 +143,7 @@ export default function DisplacementDashboard() {
                       >
                         {/* Callout above bar — only for years with data */}
                         {hasData && (
-                          <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] w-max bg-foreground text-background rounded-lg px-2.5 py-1.5 shadow-md text-center pointer-events-none z-10">
+                          <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] w-max bg-primary text-primary-foreground rounded-lg px-2.5 py-1.5 shadow-md text-center pointer-events-none z-10">
                             <span className="block text-[10px] font-bold leading-tight">
                               {row.year}
                             </span>

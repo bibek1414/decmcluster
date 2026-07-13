@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useMemo } from "react";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { 
   Tent, 
   Users, 
@@ -28,46 +28,66 @@ export default function EvacuationCentresDashboard() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if ((window as any).L) {
+    // Check if both Leaflet script is loaded and stylesheet is present
+    const hasScript = !!(window as any).L;
+    const hasCss = !!document.querySelector('link[href*="leaflet.css"]');
+
+    if (hasScript && hasCss) {
       setMapLoaded(true);
       return;
     }
 
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-    document.head.appendChild(link);
+    let cssLoaded = hasCss;
+    let jsLoaded = hasScript;
 
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-    script.async = true;
-    script.onload = () => {
-      setMapLoaded(true);
+    const checkLoaded = () => {
+      if (cssLoaded && jsLoaded) {
+        setMapLoaded(true);
+      }
     };
-    document.body.appendChild(script);
 
-    return () => {
-      if (document.head.contains(link)) document.head.removeChild(link);
-      if (document.body.contains(script)) document.body.removeChild(script);
-    };
-  }, []);
-
-  // Initialize and update map
-  useEffect(() => {
-    if (!mapLoaded || !mapRef.current || !locations) return;
-
-    if (mapInstance.current) {
-      mapInstance.current.remove();
-      mapInstance.current = null;
+    if (!hasCss) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      link.onload = () => {
+        cssLoaded = true;
+        checkLoaded();
+      };
+      link.onerror = () => {
+        cssLoaded = true;
+        checkLoaded();
+      };
+      document.head.appendChild(link);
     }
 
-    const L = (window as any).L;
-    if (!L) return;
+    if (!hasScript) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.async = true;
+      script.onload = () => {
+        jsLoaded = true;
+        checkLoaded();
+      };
+      script.onerror = () => {
+        jsLoaded = true;
+        checkLoaded();
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
 
-    // Use requestAnimationFrame to ensure the container has been painted
-    // before Leaflet measures its dimensions — this fixes blank tile loading
+  const tileLayerRef = useRef<any>(null);
+
+  // ── Effect 1: Initialise map ONCE when Leaflet is ready ──────────────────
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return;
+    const L = (window as any).L;
+    if (!L || mapInstance.current) return;
+
     const initMap = () => {
-      const map = L.map(mapRef.current!, {
+      if (!mapRef.current) return;
+      const map = L.map(mapRef.current, {
         zoomControl: true,
         scrollWheelZoom: false,
         preferCanvas: false,
@@ -75,64 +95,23 @@ export default function EvacuationCentresDashboard() {
 
       mapInstance.current = map;
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        crossOrigin: true,
-      }).addTo(map);
-
-      const validCoords: [number, number][] = [];
-
-      locations.forEach((loc) => {
-        if (loc.latitude === 0 && loc.longitude === 0) return;
-
-        validCoords.push([loc.latitude, loc.longitude]);
-
-        let color = "#ef4444";
-        let statusName = "Not approved / unknown";
-        if (loc.is_ec_govt_approved) {
-          color = "#10b981";
-          statusName = "Government approved";
-        } else if (loc.is_ec_owner_approved) {
-          color = "#3b82f6";
-          statusName = "Owner approved only";
+      tileLayerRef.current = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          maxZoom: 19,
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          crossOrigin: true,
         }
+      ).addTo(map);
 
-        const marker = L.circleMarker([loc.latitude, loc.longitude], {
-          radius: 6,
-          fillColor: color,
-          color: "#ffffff",
-          weight: 1.5,
-          opacity: 1,
-          fillOpacity: 0.85,
-        }).addTo(map);
-
-        const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
-        marker.bindPopup(`
-          <div style="font-family: sans-serif; font-size: 12px; padding: 4px; min-width: 180px;">
-            <h4 style="margin: 0 0 6px 0; font-weight: bold; color: #1e293b; font-size: 13px;">${loc.compound_name}</h4>
-            <p style="margin: 0 0 8px 0; color: #475569; line-height: 1.4;">
-              <strong>Province:</strong> ${loc.province || "N/A"}<br/>
-              <strong>Status:</strong> <span style="color: ${color}; font-weight: bold;">${statusName}</span>
-            </p>
-            <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer"
-               style="display: block; width: 100%; background-color: #2563eb; color: white; padding: 5px 8px; border-radius: 4px; text-decoration: none; font-weight: 600; text-align: center; box-sizing: border-box; font-size: 11px;">
-               View on Google Maps
-            </a>
-          </div>
-        `);
-      });
-
-      if (validCoords.length > 0 && selectedProvince) {
-        map.fitBounds(L.latLngBounds(validCoords), { padding: [40, 40] });
-      } else {
-        map.setView([-16.5, 168.0], 7);
-      }
-
-      // Force tile refresh after DOM has fully settled
-      setTimeout(() => {
+      // Multi-step invalidateSize: RAF → 300 ms → 800 ms
+      // Guarantees tiles appear even when the container was hidden on mount.
+      requestAnimationFrame(() => {
         map.invalidateSize();
-      }, 200);
+        setTimeout(() => map.invalidateSize(), 300);
+        setTimeout(() => map.invalidateSize(), 800);
+      });
     };
 
     requestAnimationFrame(initMap);
@@ -141,9 +120,77 @@ export default function EvacuationCentresDashboard() {
       if (mapInstance.current) {
         mapInstance.current.remove();
         mapInstance.current = null;
+        tileLayerRef.current = null;
       }
     };
-  }, [mapLoaded, locations, selectedProvince]);
+  }, [mapLoaded]);
+
+  // ── Effect 2: Update markers whenever locations or province filter changes ─
+  const renderMarkers = useCallback(() => {
+    const map = mapInstance.current;
+    const L = (window as any).L;
+    if (!map || !L || !locations) return;
+
+    // Remove all existing marker layers (keep tile layer)
+    map.eachLayer((layer: any) => {
+      if (layer !== tileLayerRef.current) map.removeLayer(layer);
+    });
+
+    const validCoords: [number, number][] = [];
+
+    locations.forEach((loc) => {
+      if (loc.latitude === 0 && loc.longitude === 0) return;
+      validCoords.push([loc.latitude, loc.longitude]);
+
+      let color = "#ef4444";
+      let statusName = "Not approved / unknown";
+      if (loc.is_ec_govt_approved) {
+        color = "#10b981";
+        statusName = "Government approved";
+      } else if (loc.is_ec_owner_approved) {
+        color = "#3b82f6";
+        statusName = "Owner approved only";
+      }
+
+      const marker = L.circleMarker([loc.latitude, loc.longitude], {
+        radius: 6,
+        fillColor: color,
+        color: "#ffffff",
+        weight: 1.5,
+        opacity: 1,
+        fillOpacity: 0.85,
+      }).addTo(map);
+
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
+      marker.bindPopup(`
+        <div style="font-family: sans-serif; font-size: 12px; padding: 4px; min-width: 180px;">
+          <h4 style="margin: 0 0 6px 0; font-weight: bold; color: #1e293b; font-size: 13px;">${loc.compound_name}</h4>
+          <p style="margin: 0 0 8px 0; color: #475569; line-height: 1.4;">
+            <strong>Province:</strong> ${loc.province || "N/A"}<br/>
+            <strong>Status:</strong> <span style="color: ${color}; font-weight: bold;">${statusName}</span>
+          </p>
+          <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer"
+             style="display: block; width: 100%; background-color: #2563eb; color: white; padding: 5px 8px; border-radius: 4px; text-decoration: none; font-weight: 600; text-align: center; box-sizing: border-box; font-size: 11px;">
+             View on Google Maps
+          </a>
+        </div>
+      `);
+    });
+
+    if (validCoords.length > 0 && selectedProvince) {
+      map.fitBounds(L.latLngBounds(validCoords), { padding: [40, 40] });
+    } else {
+      map.setView([-16.5, 168.0], 7);
+    }
+
+    // Ensure tiles are rendered after any layout shift
+    requestAnimationFrame(() => map.invalidateSize());
+  }, [locations, selectedProvince]);
+
+  useEffect(() => {
+    if (!mapInstance.current) return;
+    renderMarkers();
+  }, [renderMarkers]);
 
   // Total statistics indicators mapping (Exactly match Summary cards fields structure)
   const statsCards = useMemo(() => {
@@ -335,11 +382,13 @@ export default function EvacuationCentresDashboard() {
 
             {/* Map container — no overflow-hidden so tiles don't get clipped */}
             <div className="mt-4 relative w-full rounded-lg border border-border" style={{ height: "420px" }}>
-              {!mapLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted/20 rounded-lg z-10">
-                  <div className="flex flex-col items-center space-y-2">
+              {(!mapLoaded || locationsLoading) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-card/65 backdrop-blur-[2px] rounded-lg z-[1000] transition-all duration-300">
+                  <div className="flex flex-col items-center space-y-2 bg-popover/95 px-5 py-3.5 rounded-xl border border-border shadow-md">
                     <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    <span className="text-xs text-muted-foreground">Loading map...</span>
+                    <span className="text-xs font-semibold text-muted-foreground">
+                      {!mapLoaded ? "Loading map..." : "Updating locations..."}
+                    </span>
                   </div>
                 </div>
               )}
