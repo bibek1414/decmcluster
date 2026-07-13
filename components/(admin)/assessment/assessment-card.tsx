@@ -10,9 +10,10 @@ import { siteConfig } from "@/config/site";
 interface AssessmentCardProps {
   a: AssessmentData;
   hideDocLinks?: boolean;
+  isTool?: boolean;
 }
 
-export function AssessmentCard({ a, hideDocLinks = false }: AssessmentCardProps) {
+export function AssessmentCard({ a, hideDocLinks = false, isTool = false }: AssessmentCardProps) {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
 
   const getFileUrl = (urlPath?: string | null) => {
@@ -72,7 +73,7 @@ export function AssessmentCard({ a, hideDocLinks = false }: AssessmentCardProps)
           className={`${hideDocLinks ? "w-full" : "flex-1"} h-8 text-xs font-bold gap-1.5 cursor-pointer hover:bg-muted`}
           asChild
         >
-          <Link href={`/assement/${a.slug}`}>
+          <Link href={isTool ? `/assement/tools/${a.slug}` : `/assement/${a.slug}`}>
             <Eye className="h-3.5 w-3.5" />
             View Data
           </Link>

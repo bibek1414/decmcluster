@@ -167,7 +167,7 @@ export default function AssessmentToolsPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((a) => (
-              <AssessmentCard key={a.id} a={a} />
+              <AssessmentCard key={a.id} a={a} isTool={true} />
             ))}
           </div>
         )}
