@@ -43,152 +43,20 @@ import {
   useDeleteDynamicRecord,
   useImportDynamicRecord,
 } from "@/hooks/use-dynamic-data";
+import {
+  EVACUATION_CENTRE_COLUMNS,
+  EvacuationCentreFormFields,
+} from "./fields/evacuation-centre-form-fields";
+import {
+  DISPLACEMENT_COLUMNS,
+  DisplacementFormFields,
+} from "./fields/displacement-form-fields";
 
 interface DynamicDataTableProps {
   slug: string;
   token: string | null;
   canEdit: boolean;
 }
-
-const EVACUATION_CENTRE_COLUMNS = [
-  { key: "id", label: "ID", type: "number", readonly: true },
-  { key: "compound_name", label: "Compound Name", type: "text" },
-  { key: "province", label: "Province", type: "text" },
-  { key: "area_council", label: "Area Council", type: "text" },
-  { key: "island", label: "Island", type: "text" },
-  { key: "village", label: "Village", type: "text" },
-  { key: "country", label: "Country", type: "text" },
-  { key: "organization", label: "Organization", type: "text" },
-  { key: "agency", label: "Agency", type: "text" },
-  { key: "latitude", label: "Latitude", type: "number" },
-  { key: "longitude", label: "Longitude", type: "number" },
-  { key: "primary_contact", label: "Primary Contact", type: "text" },
-  { key: "secondary_contact", label: "Secondary Contact", type: "text" },
-  { key: "compound_function", label: "Compound Function", type: "text" },
-  { key: "is_ec_owner_approved", label: "EC Owner Approved", type: "boolean" },
-  { key: "is_ec_govt_approved", label: "EC Govt Approved", type: "boolean" },
-  {
-    key: "name_of_outside_temporary_shelter",
-    label: "Outside Temp Shelter Name",
-    type: "text",
-  },
-  {
-    key: "outside_temporary_shelter_capacity",
-    label: "Outside Shelter Capacity",
-    type: "number",
-  },
-  {
-    key: "first_aid_kit_availability",
-    label: "First Aid Kit Available",
-    type: "boolean",
-  },
-  {
-    key: "first_aid_trained_person",
-    label: "First Aid Trained Person",
-    type: "boolean",
-  },
-  { key: "electricity_source", label: "Electricity Source", type: "text" },
-  {
-    key: "drinking_water_source",
-    label: "Drinking Water Source",
-    type: "text",
-  },
-  { key: "washing_water_source", label: "Washing Water Source", type: "text" },
-  {
-    key: "water_storage_capacity_litres",
-    label: "Water Storage Capacity (L)",
-    type: "number",
-  },
-  { key: "no_of_buildings", label: "No. of Buildings", type: "number" },
-  { key: "no_of_rooms", label: "No. of Rooms", type: "number" },
-  {
-    key: "internal_building_evacuee_capacity",
-    label: "Internal Evacuee Capacity",
-    type: "number",
-  },
-  {
-    key: "disaster_suitable_for",
-    label: "Disaster Suitable For",
-    type: "text",
-  },
-  {
-    key: "enginerring_certified_cyclone_rating",
-    label: "Certified Cyclone Rating",
-    type: "text",
-  },
-  { key: "total_mens_toilet", label: "Total Men's Toilet", type: "number" },
-  { key: "total_womens_toilet", label: "Total Women's Toilet", type: "number" },
-  { key: "total_unisex_toilet", label: "Total Unisex Toilet", type: "number" },
-  {
-    key: "total_disability_access_toilet",
-    label: "Total Disability Toilet",
-    type: "number",
-  },
-  { key: "total_mens_shower", label: "Total Men's Shower", type: "number" },
-  { key: "total_womens_shower", label: "Total Women's Shower", type: "number" },
-  { key: "total_unisex_shower", label: "Total Unisex Shower", type: "number" },
-  {
-    key: "total_disability_access_shower",
-    label: "Total Disability Shower",
-    type: "number",
-  },
-  {
-    key: "kitchen_cooking_facilities",
-    label: "Kitchen Cooking Facilities",
-    type: "boolean",
-  },
-  { key: "laundry_facilities", label: "Laundry Facilities", type: "boolean" },
-  { key: "communication_back_up", label: "Communication Backup", type: "text" },
-];
-
-const DISPLACEMENT_COLUMNS = [
-  { key: "id", label: "ID", type: "number", readonly: true },
-  { key: "operation", label: "Operation", type: "text" },
-  { key: "operation_code", label: "Operation Code", type: "text" },
-  { key: "admin0_name", label: "Country (Admin0)", type: "text" },
-  { key: "admin0_pcode", label: "Country Pcode (Admin0)", type: "text" },
-  { key: "admin1_name", label: "Province (Admin1)", type: "text" },
-  { key: "admin1_pcode", label: "Province Pcode (Admin1)", type: "text" },
-  { key: "admin2_name", label: "District (Admin2)", type: "text" },
-  { key: "admin2_pcode", label: "District Pcode (Admin2)", type: "text" },
-  { key: "admin_level", label: "Admin Level", type: "number" },
-  { key: "num_present_idps", label: "No. of Present IDPs", type: "number" },
-  { key: "reporting_date", label: "Reporting Date", type: "text" },
-  { key: "reporting_year", label: "Reporting Year", type: "number" },
-  { key: "reporting_month", label: "Reporting Month", type: "number" },
-  { key: "round_number", label: "Round Number", type: "number" },
-  { key: "displacement_reason", label: "Displacement Reason", type: "text" },
-  { key: "males_number", label: "Males Number", type: "number" },
-  { key: "female_number", label: "Females Number", type: "number" },
-  { key: "males_number_0_4", label: "Males 0-4", type: "number" },
-  { key: "females_number_0_4", label: "Females 0-4", type: "number" },
-  { key: "males_number_5_17", label: "Males 5-17", type: "number" },
-  { key: "females_number_5_17", label: "Females 5-17", type: "number" },
-  { key: "males_number_18_59", label: "Males 18-59", type: "number" },
-  { key: "females_number_18_59", label: "Females 18-59", type: "number" },
-  { key: "males_number_60_plus", label: "Males 60+", type: "number" },
-  { key: "females_number_60_plus", label: "Females 60+", type: "number" },
-  { key: "total_vul_hhs", label: "Total Vul HHs", type: "number" },
-  { key: "idp_origin_admin1_name", label: "Origin Admin1 Name", type: "text" },
-  {
-    key: "idp_origin_admin1_pcode",
-    label: "Origin Admin1 Pcode",
-    type: "text",
-  },
-  { key: "assessment_type", label: "Assessment Type", type: "text" },
-  { key: "operation_status", label: "Operation Status", type: "text" },
-  { key: "idp_destination", label: "IDP Destination", type: "text" },
-  {
-    key: "idp_destination_admin1_name",
-    label: "Destination Admin1 Name",
-    type: "text",
-  },
-  {
-    key: "idp_destination_admin1_pcode",
-    label: "Destination Admin1 Pcode",
-    type: "text",
-  },
-];
 
 export function DynamicDataTable({
   slug,
@@ -501,214 +369,7 @@ export function DynamicDataTable({
     }
   };
 
-  const renderEvacuationFormFields = () => {
-    const fieldGroups: Record<string, string[]> = {
-      general: [
-        "compound_name",
-        "compound_function",
-        "country",
-        "province",
-        "area_council",
-        "island",
-        "village",
-        "latitude",
-        "longitude",
-      ],
-      contact: [
-        "primary_contact",
-        "secondary_contact",
-        "organization",
-        "agency",
-      ],
-      capacity: [
-        "no_of_buildings",
-        "no_of_rooms",
-        "internal_building_evacuee_capacity",
-        "name_of_outside_temporary_shelter",
-        "outside_temporary_shelter_capacity",
-        "disaster_suitable_for",
-        "enginerring_certified_cyclone_rating",
-      ],
-      readiness: [
-        "is_ec_owner_approved",
-        "is_ec_govt_approved",
-        "first_aid_kit_availability",
-        "first_aid_trained_person",
-        "electricity_source",
-        "kitchen_cooking_facilities",
-        "laundry_facilities",
-        "communication_back_up",
-      ],
-      water_sanitation: [
-        "drinking_water_source",
-        "washing_water_source",
-        "water_storage_capacity_litres",
-        "total_mens_toilet",
-        "total_womens_toilet",
-        "total_unisex_toilet",
-        "total_disability_access_toilet",
-        "total_mens_shower",
-        "total_womens_shower",
-        "total_unisex_shower",
-        "total_disability_access_shower",
-      ],
-    };
 
-    const activeFields = fieldGroups[activeModalTab] || [];
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto px-1 py-2">
-        {activeFields.map((fieldKey) => {
-          const col = EVACUATION_CENTRE_COLUMNS.find((c) => c.key === fieldKey);
-          if (!col) return null;
-
-          return (
-            <div key={col.key} className="space-y-1">
-              <label className="block text-xs font-bold text-muted-foreground">
-                {col.label}
-              </label>
-              {col.type === "boolean" ? (
-                <select
-                  value={String(modalFormData[col.key] ?? "")}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setModalFormData((prev: any) => ({
-                      ...prev,
-                      [col.key]:
-                        val === "true" ? true : val === "false" ? false : "",
-                    }));
-                  }}
-                  className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
-                >
-                  <option value="">-- Blank/Null --</option>
-                  <option value="true">True / Approved</option>
-                  <option value="false">False / Disapproved</option>
-                </select>
-              ) : col.type === "number" ? (
-                <Input
-                  type="number"
-                  value={modalFormData[col.key] ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setModalFormData((prev: any) => ({
-                      ...prev,
-                      [col.key]: val === "" ? "" : Number(val),
-                    }));
-                  }}
-                  className="w-full bg-background shadow-none"
-                />
-              ) : (
-                <Input
-                  type="text"
-                  value={modalFormData[col.key] ?? ""}
-                  onChange={(e) => {
-                    setModalFormData((prev: any) => ({
-                      ...prev,
-                      [col.key]: e.target.value,
-                    }));
-                  }}
-                  className="w-full bg-background shadow-none"
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  const renderDisplacementFormFields = () => {
-    const fieldGroups: Record<string, string[]> = {
-      general_displacement: [
-        "operation",
-        "operation_code",
-        "displacement_reason",
-        "operation_status",
-        "assessment_type",
-      ],
-      geography: [
-        "admin0_name",
-        "admin0_pcode",
-        "admin1_name",
-        "admin1_pcode",
-        "admin2_name",
-        "admin2_pcode",
-        "admin_level",
-      ],
-      timeline: [
-        "reporting_date",
-        "reporting_year",
-        "reporting_month",
-        "round_number",
-      ],
-      demographics: [
-        "num_present_idps",
-        "males_number",
-        "female_number",
-        "total_vul_hhs",
-        "males_number_0_4",
-        "females_number_0_4",
-        "males_number_5_17",
-        "females_number_5_17",
-        "males_number_18_59",
-        "females_number_18_59",
-        "males_number_60_plus",
-        "females_number_60_plus",
-      ],
-      destination: [
-        "idp_origin_admin1_name",
-        "idp_origin_admin1_pcode",
-        "idp_destination",
-        "idp_destination_admin1_name",
-        "idp_destination_admin1_pcode",
-      ],
-    };
-
-    const activeFields = fieldGroups[activeModalTab] || [];
-
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[50vh] overflow-y-auto px-1 py-2">
-        {activeFields.map((fieldKey) => {
-          const col = DISPLACEMENT_COLUMNS.find((c) => c.key === fieldKey);
-          if (!col) return null;
-
-          return (
-            <div key={col.key} className="space-y-1">
-              <label className="block text-xs font-bold text-muted-foreground">
-                {col.label}
-              </label>
-              {col.type === "number" ? (
-                <Input
-                  type="number"
-                  value={modalFormData[col.key] ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setModalFormData((prev: any) => ({
-                      ...prev,
-                      [col.key]: val === "" ? "" : Number(val),
-                    }));
-                  }}
-                  className="w-full bg-background shadow-none"
-                />
-              ) : (
-                <Input
-                  type="text"
-                  value={modalFormData[col.key] ?? ""}
-                  onChange={(e) => {
-                    setModalFormData((prev: any) => ({
-                      ...prev,
-                      [col.key]: e.target.value,
-                    }));
-                  }}
-                  className="w-full bg-background shadow-none"
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   return (
     <Card className="border border-border bg-card/65 backdrop-blur-sm rounded-2xl overflow-hidden shadow-none animate-fadeIn">
@@ -1203,9 +864,19 @@ export function DynamicDataTable({
 
             {/* Modal Form */}
             <form onSubmit={handleModalSave} className="space-y-4">
-              {isEvac
-                ? renderEvacuationFormFields()
-                : renderDisplacementFormFields()}
+              {isEvac ? (
+                <EvacuationCentreFormFields
+                  activeModalTab={activeModalTab}
+                  modalFormData={modalFormData}
+                  setModalFormData={setModalFormData}
+                />
+              ) : (
+                <DisplacementFormFields
+                  activeModalTab={activeModalTab}
+                  modalFormData={modalFormData}
+                  setModalFormData={setModalFormData}
+                />
+              )}
 
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
                 <Button

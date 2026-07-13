@@ -15,11 +15,15 @@ import {
   Clock,
   Upload,
 } from "lucide-react";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
-import { useMeetingMinutes } from "@/hooks/use-meeting-minutes";
+import {
+  useMeetingMinutes,
+  useUploadMeetingMinute,
+  useDeleteMeetingMinute,
+  useReverifyMeetingMinute,
+  useUploadNewMeetingMinute,
+} from "@/hooks/use-meeting-minutes";
 import { useDebounce } from "@/hooks/use-debounce";
-import { meetingMinuteService } from "@/services/meeting-minute";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +37,6 @@ import Link from "next/link";
 
 export default function MeetingMinutesClient() {
   const { user, token } = useAuth();
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(searchQuery, 300);
@@ -100,88 +103,40 @@ export default function MeetingMinutesClient() {
   };
 
   // Upload mutation
-  const uploadMutation = useMutation({
-    mutationFn: async () => {
-      if (!uploadName.trim()) throw new Error("Please enter a name");
-      if (!selectedFile) throw new Error("Please select a file to upload");
-      return meetingMinuteService.create(uploadName, selectedFile, token);
-    },
-    onSuccess: () => {
-      toast.success("Meeting minute uploaded successfully!");
-      setIsUploadOpen(false);
-      setUploadName("");
-      setSelectedFile(null);
-      queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload meeting minute");
-    },
-  });
+  const uploadMutation = useUploadMeetingMinute();
 
   // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return meetingMinuteService.delete(id, token);
-    },
-    onSuccess: () => {
-      toast.success("Meeting minute deleted successfully!");
-      setDeleteTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to delete meeting minute");
-      setDeleteTarget(null);
-    },
-  });
+  const deleteMutation = useDeleteMeetingMinute();
 
   // Reverify mutation
-  const reverifyMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return meetingMinuteService.reverify(id, token);
-    },
-    onSuccess: () => {
-      toast.success("Meeting minute status reverted to unverified!");
-      setReverifyTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to revert meeting minute status");
-      setReverifyTarget(null);
-    },
-  });
+  const reverifyMutation = useReverifyMeetingMinute();
 
   // Upload new version mutation
-  const uploadNewMutation = useMutation({
-    mutationFn: async () => {
-      if (!uploadNewTarget) throw new Error("No target selected");
-      if (!selectedNewFile) throw new Error("Please select a file to upload");
-
-      // 1. PATCH the file
-      const updated = await meetingMinuteService.updateFile(
-        uploadNewTarget.id,
-        selectedNewFile,
-        token,
-      );
-
-      // 2. Call reverify to reset status to unverified and trigger email
-      await meetingMinuteService.reverify(uploadNewTarget.id, token);
-
-      return updated;
-    },
-    onSuccess: () => {
-      toast.success("New version uploaded and submitted for verification!");
-      setUploadNewTarget(null);
-      setSelectedNewFile(null);
-      queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload new version");
-    },
-  });
+  const uploadNewMutation = useUploadNewMeetingMinute();
 
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    uploadMutation.mutate();
+    if (!uploadName.trim()) return toast.error("Please enter a name");
+    if (!selectedFile) return toast.error("Please select a file to upload");
+
+    uploadMutation.mutate(
+      {
+        name: uploadName,
+        file: selectedFile,
+        token,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Meeting minute uploaded successfully!");
+          setIsUploadOpen(false);
+          setUploadName("");
+          setSelectedFile(null);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to upload meeting minute");
+        },
+      }
+    );
   };
 
   const handleDelete = (id: number, name: string) => {
@@ -190,7 +145,19 @@ export default function MeetingMinutesClient() {
 
   const handleConfirmDelete = () => {
     if (deleteTarget) {
-      deleteMutation.mutate(deleteTarget.id);
+      deleteMutation.mutate(
+        { id: deleteTarget.id, token },
+        {
+          onSuccess: () => {
+            toast.success("Meeting minute deleted successfully!");
+            setDeleteTarget(null);
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to delete meeting minute");
+            setDeleteTarget(null);
+          },
+        }
+      );
     }
   };
 
@@ -507,7 +474,19 @@ export default function MeetingMinutesClient() {
         onClose={() => setReverifyTarget(null)}
         onConfirm={() => {
           if (reverifyTarget) {
-            reverifyMutation.mutate(reverifyTarget.id);
+            reverifyMutation.mutate(
+              { id: reverifyTarget.id, token },
+              {
+                onSuccess: () => {
+                  toast.success("Meeting minute status reverted to unverified!");
+                  setReverifyTarget(null);
+                },
+                onError: (err: any) => {
+                  toast.error(err.message || "Failed to revert meeting minute status");
+                  setReverifyTarget(null);
+                },
+              }
+            );
           }
         }}
         title="Revert Verification Status"
@@ -586,7 +565,27 @@ export default function MeetingMinutesClient() {
                   Cancel
                 </Button>
                 <Button
-                  onClick={() => uploadNewMutation.mutate()}
+                  onClick={() => {
+                    if (!selectedNewFile) return toast.error("Please select a file to upload");
+                    if (!uploadNewTarget) return;
+                    uploadNewMutation.mutate(
+                      {
+                        id: uploadNewTarget.id,
+                        file: selectedNewFile,
+                        token,
+                      },
+                      {
+                        onSuccess: () => {
+                          toast.success("New version uploaded and submitted for verification!");
+                          setUploadNewTarget(null);
+                          setSelectedNewFile(null);
+                        },
+                        onError: (err: any) => {
+                          toast.error(err.message || "Failed to upload new version");
+                        },
+                      }
+                    );
+                  }}
                   disabled={!selectedNewFile || uploadNewMutation.isPending}
                   className="h-9 font-bold cursor-pointer"
                 >

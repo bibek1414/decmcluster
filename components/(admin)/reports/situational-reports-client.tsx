@@ -17,11 +17,15 @@ import {
   RefreshCw,
   Upload,
 } from "lucide-react";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
-import { useAdminReports } from "@/hooks/use-admin-reports";
+import {
+  useAdminReports,
+  useUploadReport,
+  useReverifyReport,
+  useUploadNewReport,
+  useDeleteReport,
+} from "@/hooks/use-admin-reports";
 import { useDebounce } from "@/hooks/use-debounce";
-import { reportService } from "@/services/report";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +39,6 @@ import Link from "next/link";
 
 export default function SituationalReportsClient() {
   const { user, token } = useAuth();
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(searchQuery, 300);
@@ -106,99 +109,40 @@ export default function SituationalReportsClient() {
   };
 
   // Upload mutation
-  const uploadMutation = useMutation({
-    mutationFn: async () => {
-      if (!uploadName.trim()) throw new Error("Please enter a name");
-      if (!selectedFile) throw new Error("Please select a file to upload");
-
-      const todayDate = new Date().toISOString().split("T")[0];
-      return reportService.create(
-        uploadName,
-        "situational",
-        todayDate,
-        selectedFile,
-        null,
-        null, // image
-        token,
-        true,
-      );
-    },
-    onSuccess: () => {
-      toast.success("Report uploaded successfully!");
-      setIsUploadOpen(false);
-      setUploadName("");
-      setSelectedFile(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload report");
-    },
-  });
+  const uploadMutation = useUploadReport();
 
   // Reverify mutation
-  const reverifyMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return reportService.reverify(id, token);
-    },
-    onSuccess: () => {
-      toast.success("Report status reverted to unverified!");
-      setReverifyTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to revert report status");
-      setReverifyTarget(null);
-    },
-  });
+  const reverifyMutation = useReverifyReport();
 
   // Upload new version mutation
-  const uploadNewMutation = useMutation({
-    mutationFn: async () => {
-      if (!uploadNewTarget) throw new Error("No target selected");
-      if (!selectedNewFile) throw new Error("Please select a file to upload");
-
-      // 1. PATCH the file
-      const updated = await reportService.updateFile(
-        uploadNewTarget.id,
-        selectedNewFile,
-        token,
-      );
-
-      // 2. Call reverify to reset status and notify
-      await reportService.reverify(uploadNewTarget.id, token);
-
-      return updated;
-    },
-    onSuccess: () => {
-      toast.success("New version uploaded and submitted for verification!");
-      setUploadNewTarget(null);
-      setSelectedNewFile(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload new version");
-    },
-  });
+  const uploadNewMutation = useUploadNewReport();
 
   // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return reportService.delete(id, token);
-    },
-    onSuccess: () => {
-      toast.success("Report deleted successfully!");
-      setDeleteTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to delete report");
-      setDeleteTarget(null);
-    },
-  });
+  const deleteMutation = useDeleteReport();
 
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    uploadMutation.mutate();
+    if (!uploadName.trim()) return toast.error("Please enter a name");
+    if (!selectedFile) return toast.error("Please select a file to upload");
+
+    uploadMutation.mutate(
+      {
+        name: uploadName,
+        file: selectedFile,
+        token,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Report uploaded successfully!");
+          setIsUploadOpen(false);
+          setUploadName("");
+          setSelectedFile(null);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to upload report");
+        },
+      }
+    );
   };
 
   const handleDelete = (id: number, name: string) => {
@@ -207,7 +151,19 @@ export default function SituationalReportsClient() {
 
   const handleConfirmDelete = () => {
     if (deleteTarget) {
-      deleteMutation.mutate(deleteTarget.id);
+      deleteMutation.mutate(
+        { id: deleteTarget.id, token },
+        {
+          onSuccess: () => {
+            toast.success("Report deleted successfully!");
+            setDeleteTarget(null);
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to delete report");
+            setDeleteTarget(null);
+          },
+        }
+      );
     }
   };
 
@@ -524,7 +480,19 @@ export default function SituationalReportsClient() {
         onClose={() => setReverifyTarget(null)}
         onConfirm={() => {
           if (reverifyTarget) {
-            reverifyMutation.mutate(reverifyTarget.id);
+            reverifyMutation.mutate(
+              { id: reverifyTarget.id, token },
+              {
+                onSuccess: () => {
+                  toast.success("Report status reverted to unverified!");
+                  setReverifyTarget(null);
+                },
+                onError: (err: any) => {
+                  toast.error(err.message || "Failed to revert report status");
+                  setReverifyTarget(null);
+                },
+              }
+            );
           }
         }}
         title="Revert Verification Status"
@@ -589,7 +557,25 @@ export default function SituationalReportsClient() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                uploadNewMutation.mutate();
+                if (!selectedNewFile) return toast.error("Please select a file to upload");
+                if (!uploadNewTarget) return;
+                uploadNewMutation.mutate(
+                  {
+                    id: uploadNewTarget.id,
+                    file: selectedNewFile,
+                    token,
+                  },
+                  {
+                    onSuccess: () => {
+                      toast.success("New version uploaded and submitted for verification!");
+                      setUploadNewTarget(null);
+                      setSelectedNewFile(null);
+                    },
+                    onError: (err: any) => {
+                      toast.error(err.message || "Failed to upload new version");
+                    },
+                  }
+                );
               }}
               className="space-y-4"
             >

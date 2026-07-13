@@ -13,11 +13,14 @@ import {
   Pencil,
   Edit,
 } from "lucide-react";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
-import { useAdminUsers } from "@/hooks/use-admin-users";
+import {
+  useAdminUsers,
+  useCreateUser,
+  useUpdateUser,
+  useDeleteUser,
+} from "@/hooks/use-admin-users";
 import { useDebounce } from "@/hooks/use-debounce";
-import { userService } from "@/services/user";
 import { UserData } from "@/types/admin/user";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
@@ -42,7 +45,6 @@ const FALLBACK_ASSESSMENTS = [
 
 export default function UsersClient() {
   const { user, token } = useAuth();
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   
   const { data: assessmentsData } = useAssessments();
@@ -200,102 +202,87 @@ export default function UsersClient() {
   const usersList = data?.results || [];
 
   // Create mutation
-  const createMutation = useMutation({
-    mutationFn: async () => {
-      if (!firstName.trim()) throw new Error("First name is required");
-      if (!lastName.trim()) throw new Error("Last name is required");
-      if (!email.trim()) throw new Error("Email is required");
-      if (!password) throw new Error("Password is required");
-
-      const payload = {
-        email: email.trim(),
-        password,
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        role,
-        access_control: selectedFolders,
-      };
-
-      return userService.create(payload, token);
-    },
-    onSuccess: () => {
-      toast.success("User created successfully!");
-      setIsAddOpen(false);
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPassword("");
-      setRole("viewer");
-      setSelectedFolders([]);
-      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to create user");
-    },
-  });
+  const createMutation = useCreateUser();
 
   // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return userService.delete(id, token);
-    },
-    onSuccess: () => {
-      toast.success("User deleted successfully!");
-      setDeleteTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to delete user");
-      setDeleteTarget(null);
-    },
-  });
+  const deleteMutation = useDeleteUser();
 
   // Update mutation
-  const updateMutation = useMutation({
-    mutationFn: async () => {
-      if (!editTarget) throw new Error("No user selected for edit");
-      if (!editFirstName.trim()) throw new Error("First name is required");
-      if (!editLastName.trim()) throw new Error("Last name is required");
-      if (!editEmail.trim()) throw new Error("Email is required");
-
-      const payload: Record<string, any> = {
-        email: editEmail.trim(),
-        first_name: editFirstName.trim(),
-        last_name: editLastName.trim(),
-        role: editRole,
-        access_control: editSelectedFolders,
-      };
-
-      if (editPassword) {
-        payload.password = editPassword;
-      }
-
-      return userService.update(editTarget.id, payload, token);
-    },
-    onSuccess: () => {
-      toast.success("User updated successfully!");
-      setEditTarget(null);
-      setEditFirstName("");
-      setEditLastName("");
-      setEditEmail("");
-      setEditPassword("");
-      setEditRole("viewer");
-      setEditSelectedFolders([]);
-      queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to update user");
-    },
-  });
+  const updateMutation = useUpdateUser();
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate();
+    if (!firstName.trim()) return toast.error("First name is required");
+    if (!lastName.trim()) return toast.error("Last name is required");
+    if (!email.trim()) return toast.error("Email is required");
+    if (!password) return toast.error("Password is required");
+
+    const payload = {
+      email: email.trim(),
+      password,
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      role,
+      access_control: selectedFolders,
+    };
+
+    createMutation.mutate(
+      { payload, token },
+      {
+        onSuccess: () => {
+          toast.success("User created successfully!");
+          setIsAddOpen(false);
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPassword("");
+          setRole("viewer");
+          setSelectedFolders([]);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to create user");
+        },
+      }
+    );
   };
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateMutation.mutate();
+    if (!editTarget) return toast.error("No user selected for edit");
+    if (!editFirstName.trim()) return toast.error("First name is required");
+    if (!editLastName.trim()) return toast.error("Last name is required");
+    if (!editEmail.trim()) return toast.error("Email is required");
+
+    const payload: Record<string, any> = {
+      email: editEmail.trim(),
+      first_name: editFirstName.trim(),
+      last_name: editLastName.trim(),
+      role: editRole,
+      access_control: editSelectedFolders,
+    };
+
+    if (editPassword) {
+      payload.password = editPassword;
+    }
+
+    updateMutation.mutate(
+      { id: editTarget.id, payload, token },
+      {
+        onSuccess: () => {
+          toast.success("User updated successfully!");
+          setEditTarget(null);
+          setEditFirstName("");
+          setEditLastName("");
+          setEditEmail("");
+          setEditPassword("");
+          setEditRole("viewer");
+          setEditSelectedFolders([]);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to update user");
+        },
+      }
+    );
   };
 
   const handleDelete = (id: number, email: string) => {
@@ -304,7 +291,19 @@ export default function UsersClient() {
 
   const handleConfirmDelete = () => {
     if (deleteTarget) {
-      deleteMutation.mutate(deleteTarget.id);
+      deleteMutation.mutate(
+        { id: deleteTarget.id, token },
+        {
+          onSuccess: () => {
+            toast.success("User deleted successfully!");
+            setDeleteTarget(null);
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to delete user");
+            setDeleteTarget(null);
+          },
+        }
+      );
     }
   };
 

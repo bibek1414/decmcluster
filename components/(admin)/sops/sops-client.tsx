@@ -15,11 +15,15 @@ import {
   RefreshCw,
   Upload,
 } from "lucide-react";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
-import { useAdminSops } from "@/hooks/use-admin-sops";
+import {
+  useAdminSops,
+  useUploadSop,
+  useReverifySop,
+  useUploadNewSop,
+  useDeleteSop,
+} from "@/hooks/use-admin-sops";
 import { useDebounce } from "@/hooks/use-debounce";
-import { sopService } from "@/services/sop";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +37,6 @@ import Link from "next/link";
 
 export default function SOPsClient() {
   const { user, token } = useAuth();
-  const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebounce(searchQuery, 300);
@@ -103,94 +106,40 @@ export default function SOPsClient() {
   };
 
   // Upload mutation
-  const uploadMutation = useMutation({
-    mutationFn: async () => {
-      if (!uploadName.trim()) throw new Error("Please enter a name");
-      return sopService.create(
-        uploadName,
-        uploadDescription,
-        selectedFile,
-        token,
-        true,
-      );
-    },
-    onSuccess: () => {
-      toast.success("SOP document uploaded successfully!");
-      setIsUploadOpen(false);
-      setUploadName("");
-      setUploadDescription("");
-      setSelectedFile(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-sops-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload SOP document");
-    },
-  });
+  const uploadMutation = useUploadSop();
 
   // Reverify mutation
-  const reverifyMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return sopService.reverify(id, token);
-    },
-    onSuccess: () => {
-      toast.success("SOP status reverted to unverified!");
-      setReverifyTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-sops-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to revert SOP status");
-      setReverifyTarget(null);
-    },
-  });
+  const reverifyMutation = useReverifySop();
 
   // Upload new version mutation
-  const uploadNewMutation = useMutation({
-    mutationFn: async () => {
-      if (!uploadNewTarget) throw new Error("No target selected");
-      if (!selectedNewFile) throw new Error("Please select a file to upload");
-
-      // 1. PATCH the file
-      const updated = await sopService.updateFile(
-        uploadNewTarget.id,
-        selectedNewFile,
-        token,
-      );
-
-      // 2. Call reverify to reset status and notify
-      await sopService.reverify(uploadNewTarget.id, token);
-
-      return updated;
-    },
-    onSuccess: () => {
-      toast.success("New version uploaded and submitted for verification!");
-      setUploadNewTarget(null);
-      setSelectedNewFile(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-sops-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to upload new version");
-    },
-  });
+  const uploadNewMutation = useUploadNewSop();
 
   // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return sopService.delete(id, token);
-    },
-    onSuccess: () => {
-      toast.success("SOP document deleted successfully!");
-      setDeleteTarget(null);
-      queryClient.invalidateQueries({ queryKey: ["admin-sops-list"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to delete SOP document");
-      setDeleteTarget(null);
-    },
-  });
+  const deleteMutation = useDeleteSop();
 
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    uploadMutation.mutate();
+    if (!uploadName.trim()) return toast.error("Please enter a name");
+    uploadMutation.mutate(
+      {
+        name: uploadName,
+        description: uploadDescription,
+        file: selectedFile,
+        token,
+      },
+      {
+        onSuccess: () => {
+          toast.success("SOP document uploaded successfully!");
+          setIsUploadOpen(false);
+          setUploadName("");
+          setUploadDescription("");
+          setSelectedFile(null);
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to upload SOP document");
+        },
+      }
+    );
   };
 
   const handleDelete = (id: number, name: string) => {
@@ -199,7 +148,19 @@ export default function SOPsClient() {
 
   const handleConfirmDelete = () => {
     if (deleteTarget) {
-      deleteMutation.mutate(deleteTarget.id);
+      deleteMutation.mutate(
+        { id: deleteTarget.id, token },
+        {
+          onSuccess: () => {
+            toast.success("SOP document deleted successfully!");
+            setDeleteTarget(null);
+          },
+          onError: (err: any) => {
+            toast.error(err.message || "Failed to delete SOP document");
+            setDeleteTarget(null);
+          },
+        }
+      );
     }
   };
 
@@ -525,7 +486,19 @@ export default function SOPsClient() {
         onClose={() => setReverifyTarget(null)}
         onConfirm={() => {
           if (reverifyTarget) {
-            reverifyMutation.mutate(reverifyTarget.id);
+            reverifyMutation.mutate(
+              { id: reverifyTarget.id, token },
+              {
+                onSuccess: () => {
+                  toast.success("SOP status reverted to unverified!");
+                  setReverifyTarget(null);
+                },
+                onError: (err: any) => {
+                  toast.error(err.message || "Failed to revert SOP status");
+                  setReverifyTarget(null);
+                },
+              }
+            );
           }
         }}
         title="Revert Verification Status"
@@ -590,7 +563,25 @@ export default function SOPsClient() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                uploadNewMutation.mutate();
+                if (!selectedNewFile) return toast.error("Please select a file to upload");
+                if (!uploadNewTarget) return;
+                uploadNewMutation.mutate(
+                  {
+                    id: uploadNewTarget.id,
+                    file: selectedNewFile,
+                    token,
+                  },
+                  {
+                    onSuccess: () => {
+                      toast.success("New version uploaded and submitted for verification!");
+                      setUploadNewTarget(null);
+                      setSelectedNewFile(null);
+                    },
+                    onError: (err: any) => {
+                      toast.error(err.message || "Failed to upload new version");
+                    },
+                  }
+                );
               }}
               className="space-y-4"
             >
