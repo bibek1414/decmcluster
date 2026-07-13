@@ -9,8 +9,6 @@ import {
   Loader2,
   Edit,
   Trash2,
-  FileText,
-  FileSpreadsheet,
   Eye,
 } from "lucide-react";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
