@@ -245,7 +245,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
               </div>
             )}
 
-            {/* Live Portal Link */}z
+            {/* Live Portal Link */}
             <div className="pt-2 border-t border-border/40">
               <Link
                 href="/dashboard"
