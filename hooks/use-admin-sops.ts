@@ -3,11 +3,7 @@ import { sopService } from "@/services/sop";
 import { SOPData } from "@/types/admin/sop";
 import { PaginatedResponse } from "@/types/assessment-registry";
 
-export function useAdminSops(
-  page: number,
-  token: string | null,
-  search?: string
-) {
+export function useAdminSops(page: number, token: string | null, search?: string) {
   return useQuery<PaginatedResponse<SOPData>>({
     queryKey: ["admin-sops-list", page, token, search],
     queryFn: () => sopService.listAdmin(page, token, search),
@@ -50,15 +46,7 @@ export function useReverifySop() {
 export function useUploadNewSop() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      id,
-      file,
-      token,
-    }: {
-      id: number;
-      file: File;
-      token: string | null;
-    }) => {
+    mutationFn: async ({ id, file, token }: { id: number; file: File; token: string | null }) => {
       const updated = await sopService.updateFile(id, file, token);
       await sopService.reverify(id, token);
       return updated;

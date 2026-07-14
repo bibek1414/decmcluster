@@ -44,10 +44,7 @@ export default function Navigation() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     }
@@ -151,9 +148,7 @@ export default function Navigation() {
                       <p className="text-xs font-bold text-foreground truncate mt-0.5">
                         {user?.email}
                       </p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        Role: {user?.role}
-                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">Role: {user?.role}</p>
                     </div>
                     <div className="py-1">
                       <Link
@@ -182,18 +177,12 @@ export default function Navigation() {
           </div>
 
           <div className="flex lg:hidden items-center justify-between w-full">
-            <span className="text-xs font-bold text-primary-foreground/80">
-              DECM Portal Menu
-            </span>
+            <span className="text-xs font-bold text-primary-foreground/80">DECM Portal Menu</span>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-md text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/5 focus:outline-none"
             >
-              {isOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>

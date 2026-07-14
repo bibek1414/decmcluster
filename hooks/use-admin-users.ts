@@ -3,11 +3,7 @@ import { userService } from "@/services/user";
 import { UserData } from "@/types/admin/user";
 import { PaginatedResponse } from "@/types/assessment-registry";
 
-export function useAdminUsers(
-  page: number,
-  token: string | null,
-  search?: string
-) {
+export function useAdminUsers(page: number, token: string | null, search?: string) {
   return useQuery<PaginatedResponse<UserData>>({
     queryKey: ["admin-users-list", page, token, search],
     queryFn: () => userService.list(page, token, search),
@@ -30,15 +26,8 @@ export function useCreateUser() {
 export function useUpdateUser() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      id,
-      payload,
-      token,
-    }: {
-      id: number;
-      payload: any;
-      token: string | null;
-    }) => userService.update(id, payload, token),
+    mutationFn: ({ id, payload, token }: { id: number; payload: any; token: string | null }) =>
+      userService.update(id, payload, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-users-list"] });
     },

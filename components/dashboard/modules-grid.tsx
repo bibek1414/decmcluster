@@ -181,13 +181,9 @@ export default function ModulesGrid() {
                   </span>
                 </div>
 
-                <h3 className="text-base font-extrabold text-foreground mb-2">
-                  {mod.title}
-                </h3>
+                <h3 className="text-base font-extrabold text-foreground mb-2">{mod.title}</h3>
 
-                <p className="text-xs text-muted-foreground leading-relaxed mb-4">
-                  {mod.desc}
-                </p>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-4">{mod.desc}</p>
               </div>
 
               {mod.items && (
@@ -197,9 +193,7 @@ export default function ModulesGrid() {
                       const isObject = typeof item === "object";
                       const name = isObject ? (item as any).name : item;
                       const path = isObject ? (item as any).path : null;
-                      const excelPath = isObject
-                        ? (item as any).excelPath
-                        : null;
+                      const excelPath = isObject ? (item as any).excelPath : null;
 
                       return (
                         <li
@@ -214,9 +208,7 @@ export default function ModulesGrid() {
                                 className="hover:underline flex items-center gap-1 "
                               >
                                 {name}
-                                <span className="text-[10px] text-primary/60 font-bold">
-                                  (PDF)
-                                </span>
+                                <span className="text-[10px] text-primary/60 font-bold">(PDF)</span>
                               </a>
                             ) : (
                               <span>{name}</span>

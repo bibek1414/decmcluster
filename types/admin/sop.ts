@@ -12,4 +12,3 @@ export interface SOPData {
   created_at: string;
   updated_at: string;
 }
-

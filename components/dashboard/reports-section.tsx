@@ -2,13 +2,7 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  FileText,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  ExternalLink,
-} from "lucide-react";
+import { FileText, ChevronLeft, ChevronRight, Download, ExternalLink } from "lucide-react";
 import { useReports } from "@/hooks/use-reports";
 import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
@@ -48,8 +42,7 @@ export default function ReportsSection() {
   // Handle scroll detection for updating navigation button states
   const checkScrollPosition = () => {
     if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 5);
       // Give a tiny tolerance of 5px for scrollRight
       setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5);
@@ -76,10 +69,7 @@ export default function ReportsSection() {
       const scrollAmount = clientWidth * 0.75;
 
       scrollContainerRef.current.scrollTo({
-        left:
-          direction === "left"
-            ? scrollLeft - scrollAmount
-            : scrollLeft + scrollAmount,
+        left: direction === "left" ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
         behavior: "smooth",
       });
     }
@@ -198,11 +188,7 @@ export default function ReportsSection() {
 
                     {/* Metadata */}
                     <p className="text-[10px] text-muted-foreground font-semibold flex flex-wrap items-center gap-1 mt-1 pt-1.5">
-                      <span>
-                        {rep.date
-                          ? formatDate(rep.date)
-                          : formatDate(rep.created_at)}
-                      </span>
+                      <span>{rep.date ? formatDate(rep.date) : formatDate(rep.created_at)}</span>
                       <span className="text-muted-foreground/50">•</span>
                       <span className="text-primary font-extrabold">
                         {rep.type || "Publication"}

@@ -1,16 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
-import {
-  Plus,
-  Search,
-  ClipboardList,
-  X,
-  Loader2,
-  Edit,
-  Trash2,
-  Eye,
-} from "lucide-react";
+import { Plus, Search, ClipboardList, X, Loader2, Edit, Trash2, Eye } from "lucide-react";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -95,9 +86,7 @@ export function ToolsClient() {
       // Enforce access control for non-superadmins
       if (!isSuperAdmin) {
         const acList = user?.access_control || [];
-        const normalized = acList.map((item) =>
-          item.toLowerCase().replace(/_/g, "-"),
-        );
+        const normalized = acList.map((item) => item.toLowerCase().replace(/_/g, "-"));
         if (!normalized.includes(a.slug.toLowerCase())) {
           return false;
         }
@@ -278,10 +267,7 @@ export function ToolsClient() {
               <tbody className="divide-y divide-border/60 text-xs">
                 {filtered.map((a) => {
                   return (
-                    <tr
-                      key={a.id}
-                      className="hover:bg-muted/20 transition-colors"
-                    >
+                    <tr key={a.id} className="hover:bg-muted/20 transition-colors">
                       <td className="p-4 font-bold text-foreground">
                         <span className="truncate max-w-xs block">
                           {a.name.replace(/\bForm\b/gi, "Data")}
@@ -305,12 +291,7 @@ export function ToolsClient() {
                               variant="outline"
                               size="sm"
                               className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                              onClick={() =>
-                                window.open(
-                                  getFileUrl(a.pdf || a.excel),
-                                  "_blank",
-                                )
-                              }
+                              onClick={() => window.open(getFileUrl(a.pdf || a.excel), "_blank")}
                             >
                               <Eye className="w-3.5 h-3.5" /> View
                             </Button>
@@ -386,9 +367,7 @@ export function ToolsClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  Description
-                </label>
+                <label className="block text-xs font-bold text-muted-foreground">Description</label>
                 <textarea
                   value={newDesc}
                   onChange={(e) => setNewDesc(e.target.value)}
@@ -449,9 +428,7 @@ export function ToolsClient() {
                 </Button>
                 <Button
                   type="submit"
-                  disabled={
-                    createMutation.isPending || updateMutation.isPending
-                  }
+                  disabled={createMutation.isPending || updateMutation.isPending}
                   className="h-9 font-bold cursor-pointer"
                 >
                   {createMutation.isPending || updateMutation.isPending ? (

@@ -34,8 +34,7 @@ export function useCreateAssessment() {
       excel: File | null;
       isPublic: boolean;
       token: string | null;
-    }) =>
-      assessmentService.create(name, description, pdf, excel, isPublic, token),
+    }) => assessmentService.create(name, description, pdf, excel, isPublic, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
     },
@@ -61,16 +60,7 @@ export function useUpdateAssessment() {
       excel: File | null;
       isPublic: boolean;
       token: string | null;
-    }) =>
-      assessmentService.update(
-        slug,
-        name,
-        description,
-        pdf,
-        excel,
-        isPublic,
-        token
-      ),
+    }) => assessmentService.update(slug, name, description, pdf, excel, isPublic, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["assessments-list"] });
     },
@@ -111,8 +101,7 @@ export function useCreateAssessmentResult() {
       description: string;
       file: File | null;
       token: string | null;
-    }) =>
-      assessmentService.createResult(slug, title, description, file, token),
+    }) => assessmentService.createResult(slug, title, description, file, token),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["assessment-results", variables.slug],

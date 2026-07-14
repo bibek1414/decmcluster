@@ -59,10 +59,9 @@ export default function Hero() {
 
           {/* Description Paragraph */}
           <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-2xl mb-10">
-            This portal is a unified platform for the DECM Cluster Vanuatu
-            information management system. It coordinates standardized data
-            collection, evacuation centre tracking, village assessments, service
-            mapping, post-distribution monitoring, and partner response
+            This portal is a unified platform for the DECM Cluster Vanuatu information management
+            system. It coordinates standardized data collection, evacuation centre tracking, village
+            assessments, service mapping, post-distribution monitoring, and partner response
             datasets.
           </p>
 

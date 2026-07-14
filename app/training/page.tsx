@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Training & Capacity — DECM Cluster Vanuatu",
-  description:
-    "E-learning resources, modules, and field enumeration guidelines.",
+  description: "E-learning resources, modules, and field enumeration guidelines.",
 };
 
 export default function TrainingPage() {

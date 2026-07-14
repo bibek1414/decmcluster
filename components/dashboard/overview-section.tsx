@@ -1,13 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { 
-  Tent, 
-  Database, 
-  Map, 
-  PieChart, 
-  FileCheck, 
-  Download 
-} from "lucide-react";
+import { Tent, Database, Map, PieChart, FileCheck, Download } from "lucide-react";
 
 export default function OverviewSection() {
   const quickLinks = [
@@ -27,21 +20,21 @@ export default function OverviewSection() {
       </h2>
       <div className="space-y-4 text-muted-foreground text-sm sm:text-base leading-relaxed">
         <p>
-          The DECM Cluster Information Management and Data Portal provides a central platform for managing
-          displacement-related information across preparedness, emergency response, recovery, and durable
-          solutions work in Vanuatu. It can be used by NDMO, IOM, provincial authorities, and cluster partners
-          to collect, validate, analyze, export, and share operational information in a consistent format.
+          The DECM Cluster Information Management and Data Portal provides a central platform for
+          managing displacement-related information across preparedness, emergency response,
+          recovery, and durable solutions work in Vanuatu. It can be used by NDMO, IOM, provincial
+          authorities, and cluster partners to collect, validate, analyze, export, and share
+          operational information in a consistent format.
         </p>
         <p>
-          The portal can later be connected with KoboToolbox, web forms, dashboards, GIS maps, user-based access,
-          evacuation centre databases, historical disaster datasets, and partner response tracking tools.
+          The portal can later be connected with KoboToolbox, web forms, dashboards, GIS maps,
+          user-based access, evacuation centre databases, historical disaster datasets, and partner
+          response tracking tools.
         </p>
       </div>
 
       <div className="mt-8">
-        <h3 className="text-xs font-bold text-muted-foreground mb-4">
-          Quick Access Portal Links
-        </h3>
+        <h3 className="text-xs font-bold text-muted-foreground mb-4">Quick Access Portal Links</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
           {quickLinks.map((link, idx) => {
             const Icon = link.icon;

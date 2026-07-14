@@ -7,13 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginCard() {
-  const {
-    user,
-    isLoggedIn,
-    isLoading: isAuthLoading,
-    loginMutation,
-    logout,
-  } = useAuth();
+  const { user, isLoggedIn, isLoading: isAuthLoading, loginMutation, logout } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState("");
@@ -47,9 +41,7 @@ export default function LoginCard() {
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 border-0 sm:border border-border flex items-center justify-center h-full min-h-[300px]">
         <div className="flex flex-col items-center gap-2">
           <div className="w-6 h-6 rounded-full border-2 border-primary border-t-transparent animate-spin"></div>
-          <span className="text-xs text-muted-foreground">
-            Checking session...
-          </span>
+          <span className="text-xs text-muted-foreground">Checking session...</span>
         </div>
       </div>
     );
@@ -79,9 +71,7 @@ export default function LoginCard() {
             <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50/50 border border-emerald-100">
               <CheckCircle2 className="w-8 h-8 text-emerald-500 shrink-0" />
               <div>
-                <p className="text-xs text-muted-foreground font-semibold">
-                  Logged In As
-                </p>
+                <p className="text-xs text-muted-foreground font-semibold">Logged In As</p>
                 <p className="text-sm font-extrabold text-primary">
                   {user?.email || "user@decmvanuatu.org"}
                 </p>
@@ -123,9 +113,7 @@ export default function LoginCard() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-muted-foreground mb-1">
-                Password
-              </label>
+              <label className="block text-xs font-bold text-muted-foreground mb-1">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input

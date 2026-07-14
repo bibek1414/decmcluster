@@ -69,9 +69,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
       <div className=" w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
         <div className="flex flex-col items-center justify-center min-h-[300px] bg-card border border-border rounded-2xl p-12">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-xs text-muted-foreground font-semibold mt-4">
-            Loading details...
-          </p>
+          <p className="text-xs text-muted-foreground font-semibold mt-4">Loading details...</p>
         </div>
       </div>
     );
@@ -81,15 +79,11 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
     return (
       <div className=" w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
         <div className="bg-card border border-border rounded-2xl mx-auto max-w-md py-16 text-center space-y-4">
-          <h2 className="text-xl font-bold text-foreground">
-            Displacement Data Not Found
-          </h2>
+          <h2 className="text-xl font-bold text-foreground">Displacement Data Not Found</h2>
           <p className="text-sm text-muted-foreground max-w-xs mx-auto">
             The displacement data with slug{" "}
-            <code className="bg-muted px-1.5 py-0.5 rounded font-mono">
-              {slug}
-            </code>{" "}
-            may have been deleted, moved, or the API is unreachable.
+            <code className="bg-muted px-1.5 py-0.5 rounded font-mono">{slug}</code> may have been
+            deleted, moved, or the API is unreachable.
           </p>
           <Button asChild className="mt-2 font-bold cursor-pointer">
             <Link href="/assement">Back to Displacement Data</Link>
@@ -142,8 +136,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
                   No data records available for now
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  Interactive database tables are currently not configured for
-                  this form.
+                  Interactive database tables are currently not configured for this form.
                 </p>
               </div>
             </Card>
@@ -161,16 +154,11 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
             className="bg-card border border-border w-full max-w-sm p-6 rounded-xl space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-base font-bold text-foreground">
-              Delete Form Registry
-            </h3>
+            <h3 className="text-base font-bold text-foreground">Delete Form Registry</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Are you sure you want to delete form{" "}
-              <span className="font-extrabold text-foreground">
-                "{assessment.name}"
-              </span>
-              ? This will permanently delete this registry. This action cannot
-              be undone.
+              <span className="font-extrabold text-foreground">"{assessment.name}"</span>? This will
+              permanently delete this registry. This action cannot be undone.
             </p>
             <div className="flex items-center justify-end gap-2 pt-2">
               <Button
@@ -187,8 +175,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
               >
                 {deleteAssessmentMutation.isPending ? (
                   <>
-                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                    Deleting...
+                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Deleting...
                   </>
                 ) : (
                   "Delete"

@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import {
-  Search,
-  FileText,
-  FileSpreadsheet,
-  Eye,
-  Database,
-} from "lucide-react";
+import { Search, FileText, FileSpreadsheet, Eye, Database } from "lucide-react";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -150,8 +144,7 @@ function StaticCard({ entry }: { entry: StaticEntry }) {
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
   const getFileUrl = (urlPath: string | null) => {
     if (!urlPath) return "";
-    if (urlPath.startsWith("http://") || urlPath.startsWith("https://"))
-      return urlPath;
+    if (urlPath.startsWith("http://") || urlPath.startsWith("https://")) return urlPath;
     return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
   };
 
@@ -186,9 +179,7 @@ function StaticCard({ entry }: { entry: StaticEntry }) {
             </h3>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <p className="text-[10px] text-muted-foreground font-semibold">
-                {entry.isInteractive
-                  ? "Interactive Table"
-                  : `Created on ${formattedDate}`}
+                {entry.isInteractive ? "Interactive Table" : `Created on ${formattedDate}`}
               </p>
               {entry.isInteractive ? (
                 <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-extrabold border border-primary/20">
@@ -293,9 +284,7 @@ export function AssessmentsClient() {
 
   const filtered = useMemo(() => {
     if (!query.trim()) return ALL_ENTRIES;
-    return ALL_ENTRIES.filter((e) =>
-      e.name.toLowerCase().includes(query.toLowerCase()),
-    );
+    return ALL_ENTRIES.filter((e) => e.name.toLowerCase().includes(query.toLowerCase()));
   }, [query]);
 
   return (
@@ -305,9 +294,7 @@ export function AssessmentsClient() {
           title="Displacement Data"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>
-                Field survey forms, schemas, and interactive data tables
-              </span>
+              <span>Field survey forms, schemas, and interactive data tables</span>
               <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
                 {filtered.length} total data
               </span>

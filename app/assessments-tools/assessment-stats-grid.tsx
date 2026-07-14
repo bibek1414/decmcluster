@@ -10,17 +10,9 @@ export function AssessmentStatsGrid() {
   const getIcon = (name: string) => {
     const lower = name.toLowerCase();
     if (lower.includes("partner")) return Handshake;
-    if (
-      lower.includes("province") ||
-      lower.includes("location") ||
-      lower.includes("area")
-    )
+    if (lower.includes("province") || lower.includes("location") || lower.includes("area"))
       return MapPin;
-    if (
-      lower.includes("assessment") ||
-      lower.includes("survey") ||
-      lower.includes("tool")
-    )
+    if (lower.includes("assessment") || lower.includes("survey") || lower.includes("tool"))
       return ClipboardList;
     return Activity;
   };

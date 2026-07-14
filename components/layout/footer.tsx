@@ -33,14 +33,11 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Logo className="w-8 h-8" />
-              <h4 className="text-sm font-bold text-foreground">
-                DECM Cluster Vanuatu
-              </h4>
+              <h4 className="text-sm font-bold text-foreground">DECM Cluster Vanuatu</h4>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-sm">
-              Supporting the Government of Vanuatu in coordinating displacement
-              tracking, evacuation center management, and multi-sector
-              preparedness and response activities.
+              Supporting the Government of Vanuatu in coordinating displacement tracking, evacuation
+              center management, and multi-sector preparedness and response activities.
             </p>
           </div>
 
@@ -69,13 +66,11 @@ export default function Footer() {
 
           {/* Column 3: Contact & Support */}
           <div className="space-y-4">
-            <h4 className="text-sm font-bold text-foreground">
-              Contact & Support
-            </h4>
+            <h4 className="text-sm font-bold text-foreground">Contact & Support</h4>
             <div className="space-y-3">
               <p className="text-xs text-muted-foreground leading-relaxed">
-                For system inquiries, data validation questions, or user account
-                requests, please reach out to the cluster coordinator.
+                For system inquiries, data validation questions, or user account requests, please
+                reach out to the cluster coordinator.
               </p>
               <div className="flex flex-col sm:flex-row gap-2.5">
                 <div className="flex items-center gap-2 text-xs bg-muted/40 p-2.5 rounded-lg border border-border w-fit">
@@ -109,22 +104,13 @@ export default function Footer() {
             >
               Contact Us
             </a>
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors duration-200"
-            >
+            <a href="#" className="hover:text-foreground transition-colors duration-200">
               Privacy Policy
             </a>
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors duration-200"
-            >
+            <a href="#" className="hover:text-foreground transition-colors duration-200">
               Terms of Use
             </a>
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors duration-200"
-            >
+            <a href="#" className="hover:text-foreground transition-colors duration-200">
               Data Guidelines
             </a>
           </div>

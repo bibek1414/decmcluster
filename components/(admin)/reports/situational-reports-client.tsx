@@ -141,7 +141,7 @@ export default function SituationalReportsClient() {
         onError: (err: any) => {
           toast.error(err.message || "Failed to upload report");
         },
-      }
+      },
     );
   };
 
@@ -162,7 +162,7 @@ export default function SituationalReportsClient() {
             toast.error(err.message || "Failed to delete report");
             setDeleteTarget(null);
           },
-        }
+        },
       );
     }
   };
@@ -187,10 +187,7 @@ export default function SituationalReportsClient() {
           title="Situational Reports & Publications"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>
-                Manage displacement trackers, situational updates, and monthly
-                reports
-              </span>
+              <span>Manage displacement trackers, situational updates, and monthly reports</span>
               {data && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
                   {data.count} total records
@@ -200,10 +197,7 @@ export default function SituationalReportsClient() {
           }
           actions={
             canAdd && (
-              <Button
-                onClick={() => setIsUploadOpen(true)}
-                className="cursor-pointer font-bold"
-              >
+              <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
                 <Plus className="mr-1.5 h-4 w-4" /> Upload Report
               </Button>
             )
@@ -269,14 +263,9 @@ export default function SituationalReportsClient() {
                 <tbody className="divide-y divide-border/60 text-xs">
                   {reportsList.map((item) => {
                     return (
-                      <tr
-                        key={item.id}
-                        className="hover:bg-muted/20 transition-colors"
-                      >
+                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                         <td className="p-4 font-bold text-foreground">
-                          <span className="truncate max-w-md block">
-                            {item.name}
-                          </span>
+                          <span className="truncate max-w-md block">{item.name}</span>
                         </td>
                         <td className="p-4 text-muted-foreground font-semibold">
                           {item.date ? formatDate(item.date) : "—"}
@@ -304,10 +293,7 @@ export default function SituationalReportsClient() {
                                 size="sm"
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 onClick={() =>
-                                  window.open(
-                                    getFileUrl(item.file || item.url),
-                                    "_blank",
-                                  )
+                                  window.open(getFileUrl(item.file || item.url), "_blank")
                                 }
                               >
                                 <Eye className="w-3.5 h-3.5" /> View
@@ -320,11 +306,7 @@ export default function SituationalReportsClient() {
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 asChild
                               >
-                                <Link
-                                  href={`/situational-reports/verify/${item.id}`}
-                                >
-                                  Review
-                                </Link>
+                                <Link href={`/situational-reports/verify/${item.id}`}>Review</Link>
                               </Button>
                             )}
                             {canAdd && item.status === "returned" && (
@@ -398,18 +380,16 @@ export default function SituationalReportsClient() {
 
       {/* Upload Modal */}
       {isUploadOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => setIsUploadOpen(false)}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload Report / Publication
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload Report / Publication</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -434,9 +414,7 @@ export default function SituationalReportsClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  Select File
-                </label>
+                <label className="block text-xs font-bold text-muted-foreground">Select File</label>
                 <FileUpload
                   selectedFile={selectedFile}
                   onFileSelect={setSelectedFile}
@@ -461,8 +439,7 @@ export default function SituationalReportsClient() {
                 >
                   {uploadMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload"
@@ -491,7 +468,7 @@ export default function SituationalReportsClient() {
                   toast.error(err.message || "Failed to revert report status");
                   setReverifyTarget(null);
                 },
-              }
+              },
             );
           }
         }}
@@ -515,21 +492,19 @@ export default function SituationalReportsClient() {
 
       {/* Upload New Version Modal */}
       {uploadNewTarget && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => {
             setUploadNewTarget(null);
             setSelectedNewFile(null);
           }}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload New Version
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload New Version</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -548,9 +523,8 @@ export default function SituationalReportsClient() {
                 Uploading a new version for "{uploadNewTarget.name}"
               </p>
               <p>
-                Need to submit a revised file? Uploading a new file will
-                automatically reset this document's status to unverified for
-                verification.
+                Need to submit a revised file? Uploading a new file will automatically reset this
+                document's status to unverified for verification.
               </p>
             </div>
 
@@ -574,15 +548,13 @@ export default function SituationalReportsClient() {
                     onError: (err: any) => {
                       toast.error(err.message || "Failed to upload new version");
                     },
-                  }
+                  },
                 );
               }}
               className="space-y-4"
             >
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  Select File
-                </label>
+                <label className="block text-xs font-bold text-muted-foreground">Select File</label>
                 <FileUpload
                   selectedFile={selectedNewFile}
                   onFileSelect={setSelectedNewFile}
@@ -610,8 +582,7 @@ export default function SituationalReportsClient() {
                 >
                   {uploadNewMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload Version"

@@ -26,7 +26,7 @@ export const assessmentService = {
     pdf: File | null,
     excel: File | null,
     isPublic: boolean,
-    token: string | null
+    token: string | null,
   ): Promise<AssessmentData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -81,7 +81,7 @@ export const assessmentService = {
     pdf: File | null,
     excel: File | null,
     isPublic: boolean,
-    token: string | null
+    token: string | null,
   ): Promise<AssessmentData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -150,10 +150,7 @@ export const assessmentService = {
     }
   },
 
-  listResults: async (
-    slug: string,
-    token?: string | null
-  ): Promise<AssessmentResultData[]> => {
+  listResults: async (slug: string, token?: string | null): Promise<AssessmentResultData[]> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {};
     if (token) {
@@ -178,7 +175,7 @@ export const assessmentService = {
     title: string,
     description: string,
     file: File | null,
-    token: string | null
+    token: string | null,
   ): Promise<AssessmentResultData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -222,11 +219,7 @@ export const assessmentService = {
     return res.json();
   },
 
-  deleteResult: async (
-    slug: string,
-    resultId: number,
-    token: string | null
-  ): Promise<void> => {
+  deleteResult: async (slug: string, resultId: number, token: string | null): Promise<void> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {};
     if (token) {
@@ -237,13 +230,10 @@ export const assessmentService = {
       }
     }
 
-    const res = await fetch(
-      `${baseUrl}/api/assessment/${slug}/result/${resultId}/`,
-      {
-        method: "DELETE",
-        headers,
-      }
-    );
+    const res = await fetch(`${baseUrl}/api/assessment/${slug}/result/${resultId}/`, {
+      method: "DELETE",
+      headers,
+    });
 
     if (!res.ok) {
       throw new Error("Failed to delete assessment result");

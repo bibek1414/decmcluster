@@ -178,8 +178,18 @@ export default function MapRegistry() {
                               <div className="absolute inset-0 opacity-[0.06] pointer-events-none">
                                 <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                                   <defs>
-                                    <pattern id="previewGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="1" />
+                                    <pattern
+                                      id="previewGrid"
+                                      width="20"
+                                      height="20"
+                                      patternUnits="userSpaceOnUse"
+                                    >
+                                      <path
+                                        d="M 20 0 L 0 0 0 20"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="1"
+                                      />
                                     </pattern>
                                   </defs>
                                   <rect width="100%" height="100%" fill="url(#previewGrid)" />
@@ -209,7 +219,9 @@ export default function MapRegistry() {
                           </div>
                           {mapItem.image && (
                             <button
-                              onClick={() => window.open(mapItem.image, "_blank", "noopener,noreferrer")}
+                              onClick={() =>
+                                window.open(mapItem.image, "_blank", "noopener,noreferrer")
+                              }
                               className="w-full py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer border-0 shadow-sm"
                             >
                               <Eye className="w-3.5 h-3.5" />

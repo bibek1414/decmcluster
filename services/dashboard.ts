@@ -70,7 +70,11 @@ export const dashboardService = {
     return res.json();
   },
 
-  getEvacuationCentresStats: async (filters?: { province?: string; latitude?: number; longitude?: number }): Promise<EvacuationCentresStats> => {
+  getEvacuationCentresStats: async (filters?: {
+    province?: string;
+    latitude?: number;
+    longitude?: number;
+  }): Promise<EvacuationCentresStats> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const params = new URLSearchParams();
     if (filters?.province) params.append("province", filters.province);
@@ -85,7 +89,11 @@ export const dashboardService = {
     return res.json();
   },
 
-  getEvacuationCentreLocations: async (filters?: { province?: string; latitude?: number; longitude?: number }): Promise<EvacuationCentreLocation[]> => {
+  getEvacuationCentreLocations: async (filters?: {
+    province?: string;
+    latitude?: number;
+    longitude?: number;
+  }): Promise<EvacuationCentreLocation[]> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const params = new URLSearchParams();
     if (filters?.province) params.append("province", filters.province);
@@ -144,4 +152,3 @@ export const dashboardService = {
     }
   },
 };
-

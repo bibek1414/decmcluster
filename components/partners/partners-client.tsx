@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Users,
-  Search,
-  Mail,
-  Building2,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { Users, Search, Mail, Building2, MapPin, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useContactList } from "@/hooks/use-contact-list";
@@ -22,12 +15,15 @@ export default function PartnersClient() {
   const categories = ["National Co-lead", "Sub-National", "Inter-Cluster"] as const;
 
   // Group contacts by type
-  const groupedPoints = (contacts || []).reduce((acc, item) => {
-    const list = acc[item.type] || [];
-    list.push(item);
-    acc[item.type] = list;
-    return acc;
-  }, {} as Record<string, typeof contacts>);
+  const groupedPoints = (contacts || []).reduce(
+    (acc, item) => {
+      const list = acc[item.type] || [];
+      list.push(item);
+      acc[item.type] = list;
+      return acc;
+    },
+    {} as Record<string, typeof contacts>,
+  );
 
   // Sort each group by order
   Object.keys(groupedPoints).forEach((key) => {
@@ -101,9 +97,7 @@ export default function PartnersClient() {
             return (
               <div key={cat} className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-xs font-semibold text-muted-foreground ">
-                    {cat}
-                  </h3>
+                  <h3 className="text-xs font-semibold text-muted-foreground ">{cat}</h3>
                 </div>
 
                 <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">

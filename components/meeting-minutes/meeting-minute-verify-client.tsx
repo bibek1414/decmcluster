@@ -28,17 +28,9 @@ interface Props {
 }
 
 export default function MeetingMinuteVerifyClient({ id }: Props) {
-  const {
-    user,
-    isLoggedIn,
-    isLoading: isAuthLoading,
-    token,
-    logout,
-  } = useAuth();
+  const { user, isLoggedIn, isLoading: isAuthLoading, token, logout } = useAuth();
   const queryClient = useQueryClient();
-  const [selectedStatus, setSelectedStatus] = useState<
-    "verified" | "returned" | null
-  >(null);
+  const [selectedStatus, setSelectedStatus] = useState<"verified" | "returned" | null>(null);
   const [commentText, setCommentText] = useState("");
 
   // Permissions
@@ -62,12 +54,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
   const verifyMutation = useMutation({
     mutationFn: async () => {
       if (!selectedStatus) throw new Error("Please select a status action");
-      return meetingMinuteService.verify(
-        id,
-        selectedStatus,
-        commentText,
-        token,
-      );
+      return meetingMinuteService.verify(id, selectedStatus, commentText, token);
     },
     onSuccess: (updated) => {
       toast.success(`Meeting minute successfully ${selectedStatus}!`);
@@ -120,9 +107,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
       <div className="flex flex-col items-center justify-center min-h-[400px] py-16 animate-fadeIn">
         <div className="flex flex-col items-center gap-3 bg-card border border-border p-8 rounded-2xl shadow-sm">
           <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-          <p className="text-xs text-muted-foreground font-semibold">
-            Verifying secure session...
-          </p>
+          <p className="text-xs text-muted-foreground font-semibold">Verifying secure session...</p>
         </div>
       </div>
     );
@@ -133,12 +118,10 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
     return (
       <div className="max-w-md w-full mx-auto px-4 py-16 animate-fadeIn space-y-6">
         <div className="text-center space-y-2">
-          <h2 className="text-xl font-extrabold text-foreground">
-            Secure Verification
-          </h2>
+          <h2 className="text-xl font-extrabold text-foreground">Secure Verification</h2>
           <p className="text-xs text-muted-foreground">
-            Please log in with an authorized account to verify and review
-            coordination meeting minutes.
+            Please log in with an authorized account to verify and review coordination meeting
+            minutes.
           </p>
         </div>
         <LoginCard />
@@ -155,21 +138,14 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
             <Lock className="h-6 w-6" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-base font-bold text-foreground">
-              Access Denied
-            </h3>
+            <h3 className="text-base font-bold text-foreground">Access Denied</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Your account <strong>{user?.email}</strong> does not have
-              permission to verify meeting minutes. Please request verification
-              rights from the administrator.
+              Your account <strong>{user?.email}</strong> does not have permission to verify meeting
+              minutes. Please request verification rights from the administrator.
             </p>
           </div>
           <div className="flex flex-col gap-2 pt-2">
-            <Button
-              asChild
-              variant="outline"
-              className="w-full h-10 font-bold cursor-pointer"
-            >
+            <Button asChild variant="outline" className="w-full h-10 font-bold cursor-pointer">
               <Link href="/">Go to Homepage</Link>
             </Button>
             <Button
@@ -201,18 +177,12 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
       <div className="max-w-3xl w-full mx-auto px-4 py-16 animate-fadeIn">
         <div className="bg-card border border-border rounded-2xl p-8 text-center space-y-4">
           <AlertTriangle className="mx-auto h-12 w-12 text-rose-500" />
-          <h3 className="text-base font-bold text-foreground">
-            Failed to Load Document
-          </h3>
+          <h3 className="text-base font-bold text-foreground">Failed to Load Document</h3>
           <p className="text-xs text-muted-foreground">
             {(error as Error)?.message ||
               "The requested meeting minute could not be retrieved. It may have been deleted."}
           </p>
-          <Button
-            onClick={() => refetch()}
-            variant="outline"
-            className="cursor-pointer font-bold"
-          >
+          <Button onClick={() => refetch()} variant="outline" className="cursor-pointer font-bold">
             <RefreshCw className="mr-1.5 h-4 w-4" /> Retry
           </Button>
         </div>
@@ -293,9 +263,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
               <p className="text-xs font-bold text-foreground truncate max-w-sm sm:max-w-md">
                 {item.file ? item.file.split("/").pop() : "document_file"}
               </p>
-              <p className="text-[10px] text-muted-foreground font-semibold ">
-                Attachment File
-              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold ">Attachment File</p>
             </div>
           </div>
           <Button
@@ -377,8 +345,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
               >
                 {verifyMutation.isPending ? (
                   <>
-                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                    Submitting...
+                    <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Submitting...
                   </>
                 ) : (
                   "Submit Decision"
@@ -411,9 +378,7 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
               </p>
               <p className="text-[10px] text-muted-foreground font-semibold mt-1">
                 Decision submitted on{" "}
-                {item.updated_at
-                  ? new Date(item.updated_at).toLocaleDateString()
-                  : "N/A"}
+                {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : "N/A"}
               </p>
             </div>
           </div>
@@ -422,18 +387,12 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
         {/* Comment Log */}
         {item.comments && item.comments.length > 0 && (
           <div className="pt-6 border-t border-border/80 space-y-3">
-            <h4 className="text-xs font-bold text-muted-foreground tracking-wider">
-              Comment Log
-            </h4>
+            <h4 className="text-xs font-bold text-muted-foreground tracking-wider">Comment Log</h4>
             <div className="space-y-2.5">
               {(item.comments as any[]).map((commentVal, index) => {
                 const isStr = typeof commentVal === "string";
-                const text = isStr
-                  ? commentVal
-                  : commentVal.comment || commentVal.text || "";
-                const author = isStr
-                  ? null
-                  : commentVal.author?.email || commentVal.user?.email;
+                const text = isStr ? commentVal : commentVal.comment || commentVal.text || "";
+                const author = isStr ? null : commentVal.author?.email || commentVal.user?.email;
                 const date = isStr ? null : commentVal.created_at;
 
                 return (
@@ -441,16 +400,12 @@ export default function MeetingMinuteVerifyClient({ id }: Props) {
                     key={index}
                     className="p-3.5 rounded-xl bg-muted/30 border border-border/70 text-xs"
                   >
-                    <p className="text-foreground leading-relaxed font-medium">
-                      {text}
-                    </p>
+                    <p className="text-foreground leading-relaxed font-medium">{text}</p>
                     {(author || date) && (
                       <div className="flex items-center gap-2 mt-2 text-[10px] text-muted-foreground font-semibold">
                         {author && <span>By: {author}</span>}
                         {author && date && <span>•</span>}
-                        {date && (
-                          <span>{new Date(date).toLocaleString()}</span>
-                        )}
+                        {date && <span>{new Date(date).toLocaleString()}</span>}
                       </div>
                     )}
                   </div>

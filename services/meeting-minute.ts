@@ -3,7 +3,11 @@ import { MeetingMinuteData } from "@/types/admin/meeting-minute";
 import { PaginatedResponse } from "@/types/assessment-registry";
 
 export const meetingMinuteService = {
-  list: async (page: number = 1, token: string | null, search?: string): Promise<PaginatedResponse<MeetingMinuteData>> => {
+  list: async (
+    page: number = 1,
+    token: string | null,
+    search?: string,
+  ): Promise<PaginatedResponse<MeetingMinuteData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/meeting-minute/?page=${page}&page_size=10`;
     if (search && search.trim() !== "") {
@@ -114,7 +118,7 @@ export const meetingMinuteService = {
     id: number | string,
     status: "verified" | "returned",
     comment: string,
-    token: string | null
+    token: string | null,
   ): Promise<MeetingMinuteData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {
@@ -185,7 +189,7 @@ export const meetingMinuteService = {
   updateFile: async (
     id: number | string,
     file: File,
-    token: string | null
+    token: string | null,
   ): Promise<MeetingMinuteData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -222,4 +226,3 @@ export const meetingMinuteService = {
     return res.json();
   },
 };
-

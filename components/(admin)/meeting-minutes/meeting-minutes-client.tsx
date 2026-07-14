@@ -135,7 +135,7 @@ export default function MeetingMinutesClient() {
         onError: (err: any) => {
           toast.error(err.message || "Failed to upload meeting minute");
         },
-      }
+      },
     );
   };
 
@@ -156,7 +156,7 @@ export default function MeetingMinutesClient() {
             toast.error(err.message || "Failed to delete meeting minute");
             setDeleteTarget(null);
           },
-        }
+        },
       );
     }
   };
@@ -169,8 +169,7 @@ export default function MeetingMinutesClient() {
           description={
             <div className="flex flex-col gap-0.5">
               <span>
-                Manage coordination meeting minutes, task guidelines, and
-                partner circulars
+                Manage coordination meeting minutes, task guidelines, and partner circulars
               </span>
               {data && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
@@ -181,10 +180,7 @@ export default function MeetingMinutesClient() {
           }
           actions={
             canAdd && (
-              <Button
-                onClick={() => setIsUploadOpen(true)}
-                className="cursor-pointer font-bold"
-              >
+              <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
                 <Plus className="mr-1.5 h-4 w-4" /> Upload Minute
               </Button>
             )
@@ -260,18 +256,11 @@ export default function MeetingMinutesClient() {
                       : "N/A";
 
                     return (
-                      <tr
-                        key={item.id}
-                        className="hover:bg-muted/20 transition-colors"
-                      >
+                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                         <td className="p-4 font-bold text-foreground">
-                          <span className="truncate max-w-md block">
-                            {item.name}
-                          </span>
+                          <span className="truncate max-w-md block">{item.name}</span>
                         </td>
-                        <td className="p-4 text-muted-foreground font-semibold">
-                          {formattedDate}
-                        </td>
+                        <td className="p-4 text-muted-foreground font-semibold">{formattedDate}</td>
                         <td className="p-4">
                           {item.status === "verified" ? (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
@@ -293,9 +282,7 @@ export default function MeetingMinutesClient() {
                               variant="outline"
                               size="sm"
                               className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                              onClick={() =>
-                                window.open(getFileUrl(item.file), "_blank")
-                              }
+                              onClick={() => window.open(getFileUrl(item.file), "_blank")}
                             >
                               <Eye className="w-3.5 h-3.5" /> View
                             </Button>
@@ -306,11 +293,7 @@ export default function MeetingMinutesClient() {
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 asChild
                               >
-                                <Link
-                                  href={`/meeting-minutes/verify/${item.id}`}
-                                >
-                                  Review
-                                </Link>
+                                <Link href={`/meeting-minutes/verify/${item.id}`}>Review</Link>
                               </Button>
                             )}
                             {canAdd && item.status === "returned" && (
@@ -384,18 +367,16 @@ export default function MeetingMinutesClient() {
 
       {/* Upload Modal */}
       {isUploadOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => setIsUploadOpen(false)}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload Meeting Minute
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload Meeting Minute</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -447,8 +428,7 @@ export default function MeetingMinutesClient() {
                 >
                   {uploadMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload"
@@ -485,7 +465,7 @@ export default function MeetingMinutesClient() {
                   toast.error(err.message || "Failed to revert meeting minute status");
                   setReverifyTarget(null);
                 },
-              }
+              },
             );
           }
         }}
@@ -499,21 +479,19 @@ export default function MeetingMinutesClient() {
 
       {/* Upload New Version Modal */}
       {uploadNewTarget && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => {
             setUploadNewTarget(null);
             setSelectedNewFile(null);
           }}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload New Version
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload New Version</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -530,12 +508,8 @@ export default function MeetingMinutesClient() {
             <div className="space-y-1 text-xs text-muted-foreground">
               <p>
                 Uploading a revised file for{" "}
-                <strong className="text-foreground">
-                  "{uploadNewTarget.name}"
-                </strong>{" "}
-                will reset its status to{" "}
-                <span className="font-bold text-amber-600">Unverified</span> for
-                review.
+                <strong className="text-foreground">"{uploadNewTarget.name}"</strong> will reset its
+                status to <span className="font-bold text-amber-600">Unverified</span> for review.
               </p>
             </div>
 
@@ -583,7 +557,7 @@ export default function MeetingMinutesClient() {
                         onError: (err: any) => {
                           toast.error(err.message || "Failed to upload new version");
                         },
-                      }
+                      },
                     );
                   }}
                   disabled={!selectedNewFile || uploadNewMutation.isPending}
@@ -591,8 +565,7 @@ export default function MeetingMinutesClient() {
                 >
                   {uploadNewMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload"

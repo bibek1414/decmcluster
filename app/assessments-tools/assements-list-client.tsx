@@ -68,8 +68,8 @@ export default function AssessmentsListClient() {
         Downloadable Assessment Forms
       </h3>
       <p className="text-xs text-muted-foreground">
-        Download the official DECM Cluster assessment forms in PDF or Excel format
-        for offline use and field surveys.
+        Download the official DECM Cluster assessment forms in PDF or Excel format for offline use
+        and field surveys.
       </p>
 
       {publicAssessments.length === 0 ? (

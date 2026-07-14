@@ -4,7 +4,6 @@ export interface User {
   access_control?: string[];
 }
 
-
 export interface LoginRequest {
   email: string;
   password?: string;

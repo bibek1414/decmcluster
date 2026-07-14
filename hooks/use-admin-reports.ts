@@ -3,11 +3,7 @@ import { reportService } from "@/services/report";
 import { ReportData } from "@/types/admin/report";
 import { PaginatedResponse } from "@/types/assessment-registry";
 
-export function useAdminReports(
-  page: number,
-  token: string | null,
-  search?: string
-) {
+export function useAdminReports(page: number, token: string | null, search?: string) {
   return useQuery<PaginatedResponse<ReportData>>({
     queryKey: ["admin-reports-list", page, token, search],
     queryFn: () => reportService.listAdmin(page, token, search),
@@ -29,16 +25,7 @@ export function useUploadReport() {
       token: string | null;
     }) => {
       const todayDate = new Date().toISOString().split("T")[0];
-      return reportService.create(
-        name,
-        "situational",
-        todayDate,
-        file,
-        null,
-        null,
-        token,
-        true
-      );
+      return reportService.create(name, "situational", todayDate, file, null, null, token, true);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-reports-list"] });
@@ -60,15 +47,7 @@ export function useReverifyReport() {
 export function useUploadNewReport() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      id,
-      file,
-      token,
-    }: {
-      id: number;
-      file: File;
-      token: string | null;
-    }) => {
+    mutationFn: async ({ id, file, token }: { id: number; file: File; token: string | null }) => {
       const updated = await reportService.updateFile(id, file, token);
       await reportService.reverify(id, token);
       return updated;

@@ -6,7 +6,7 @@ export const userService = {
   list: async (
     page: number = 1,
     token: string | null,
-    search?: string
+    search?: string,
   ): Promise<PaginatedResponse<UserData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/account/users/?page=${page}&page_size=10`;
@@ -36,7 +36,7 @@ export const userService = {
   create: async (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: Record<string, any>,
-    token: string | null
+    token: string | null,
   ): Promise<UserData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {
@@ -98,7 +98,7 @@ export const userService = {
     id: number,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload: Record<string, any>,
-    token: string | null
+    token: string | null,
   ): Promise<UserData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {

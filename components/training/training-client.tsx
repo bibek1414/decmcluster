@@ -18,10 +18,7 @@ export default function TrainingClient() {
     setPage(1);
   }, [debouncedSearch]);
 
-  const { data, isLoading, isPlaceholderData, error } = useTraining(
-    page,
-    debouncedSearch,
-  );
+  const { data, isLoading, isPlaceholderData, error } = useTraining(page, debouncedSearch);
 
   const modulesList = data?.results || [];
 
@@ -43,19 +40,14 @@ export default function TrainingClient() {
         </div>
         {data && (
           <span className="text-xs text-muted-foreground font-semibold bg-muted/50 border border-border px-3 py-1 rounded-full shrink-0 self-start sm:self-center">
-            Total Modules:{" "}
-            <strong className="text-foreground font-extrabold">
-              {data.count}
-            </strong>
+            Total Modules: <strong className="text-foreground font-extrabold">{data.count}</strong>
           </span>
         )}
       </div>
 
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-          <h3 className="text-xs font-bold text-muted-foreground">
-            Available Modules
-          </h3>
+          <h3 className="text-xs font-bold text-muted-foreground">Available Modules</h3>
           <div className="flex gap-2">
             <Input
               type="text"
@@ -107,9 +99,7 @@ export default function TrainingClient() {
                       <Button
                         size="sm"
                         className="shrink-0 cursor-pointer text-xs font-bold w-full sm:w-auto mt-2 sm:mt-0"
-                        onClick={() =>
-                          window.open(mod.link, "_blank", "noopener,noreferrer")
-                        }
+                        onClick={() => window.open(mod.link, "_blank", "noopener,noreferrer")}
                       >
                         Start Course
                       </Button>

@@ -3,11 +3,7 @@ import { meetingMinuteService } from "@/services/meeting-minute";
 import { MeetingMinuteData } from "@/types/admin/meeting-minute";
 import { PaginatedResponse } from "@/types/assessment-registry";
 
-export function useMeetingMinutes(
-  page: number,
-  token: string | null,
-  search?: string
-) {
+export function useMeetingMinutes(page: number, token: string | null, search?: string) {
   return useQuery<PaginatedResponse<MeetingMinuteData>>({
     queryKey: ["meeting-minutes-list", page, token, search],
     queryFn: () => meetingMinuteService.list(page, token, search),
@@ -19,15 +15,8 @@ export function useMeetingMinutes(
 export function useUploadMeetingMinute() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      name,
-      file,
-      token,
-    }: {
-      name: string;
-      file: File;
-      token: string | null;
-    }) => meetingMinuteService.create(name, file, token),
+    mutationFn: ({ name, file, token }: { name: string; file: File; token: string | null }) =>
+      meetingMinuteService.create(name, file, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["meeting-minutes-list"] });
     },
@@ -59,15 +48,7 @@ export function useReverifyMeetingMinute() {
 export function useUploadNewMeetingMinute() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({
-      id,
-      file,
-      token,
-    }: {
-      id: number;
-      file: File;
-      token: string | null;
-    }) => {
+    mutationFn: async ({ id, file, token }: { id: number; file: File; token: string | null }) => {
       const updated = await meetingMinuteService.updateFile(id, file, token);
       await meetingMinuteService.reverify(id, token);
       return updated;

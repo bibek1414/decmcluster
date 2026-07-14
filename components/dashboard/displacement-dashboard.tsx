@@ -1,11 +1,18 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Users, User, UserCheck, Activity, Filter, X, Home, Baby, Accessibility } from "lucide-react";
 import {
-  useDisplacementStats,
-  useDisplacementFilters,
-} from "@/hooks/use-dashboard";
+  Users,
+  User,
+  UserCheck,
+  Activity,
+  Filter,
+  X,
+  Home,
+  Baby,
+  Accessibility,
+} from "lucide-react";
+import { useDisplacementStats, useDisplacementFilters } from "@/hooks/use-dashboard";
 
 export default function DisplacementDashboard() {
   const [admin1Name, setAdmin1Name] = useState<string>("");
@@ -256,10 +263,7 @@ export default function DisplacementDashboard() {
           </div>
 
           {isLoading ? (
-            <div
-              className="flex items-end gap-3 animate-pulse"
-              style={{ height: 220 }}
-            >
+            <div className="flex items-end gap-3 animate-pulse" style={{ height: 220 }}>
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
@@ -288,10 +292,7 @@ export default function DisplacementDashboard() {
                         : 4;
 
                     return (
-                      <div
-                        key={row.year}
-                        className="flex-1 relative flex flex-col justify-end"
-                      >
+                      <div key={row.year} className="flex-1 relative flex flex-col justify-end">
                         {/* Callout above bar — only for years with data */}
                         {hasData && (
                           <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] w-max bg-primary text-primary-foreground rounded-lg px-2.5 py-1.5 -md text-center pointer-events-none z-10 animate-fadeIn">
@@ -340,9 +341,7 @@ export default function DisplacementDashboard() {
                       {row.year}
                     </span>
                     {row.total_idp === 0 && (
-                      <span className="block text-[10px] text-muted-foreground/60">
-                        0
-                      </span>
+                      <span className="block text-[10px] text-muted-foreground/60">0</span>
                     )}
                   </div>
                 ))}
@@ -352,9 +351,7 @@ export default function DisplacementDashboard() {
               {stats &&
                 (() => {
                   // Find the year with most IDPs to label the footer
-                  const peakYear = yearData.find(
-                    (y) => y.total_idp === maxYearVal,
-                  );
+                  const peakYear = yearData.find((y) => y.total_idp === maxYearVal);
                   return peakYear ? (
                     <div className="mt-4 pt-3.5 border-t border-border flex items-center justify-between gap-3 flex-wrap">
                       <span className="text-[11px] font-bold text-muted-foreground shrink-0">
@@ -363,18 +360,14 @@ export default function DisplacementDashboard() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1.5">
                           <span className="h-2.5 w-2.5 rounded-sm bg-blue-900" />
-                          <span className="text-[11px] text-muted-foreground">
-                            Male
-                          </span>
+                          <span className="text-[11px] text-muted-foreground">Male</span>
                           <span className="text-[11px] font-bold text-blue-600">
                             {peakYear.total_male.toLocaleString()}
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <span className="h-2.5 w-2.5 rounded-sm bg-blue-900 opacity-60" />
-                          <span className="text-[11px] text-muted-foreground">
-                            Female
-                          </span>
+                          <span className="text-[11px] text-muted-foreground">Female</span>
                           <span className="text-[11px] font-bold text-rose-500">
                             {peakYear.total_female.toLocaleString()}
                           </span>
@@ -394,9 +387,7 @@ export default function DisplacementDashboard() {
         <div className="bg-card text-card-foreground rounded-xl border border-border p-5 -xs">
           {/* Header — no global totals here, each province shows its own breakdown inline */}
           <div className="mb-5">
-            <h3 className="text-sm font-bold text-foreground">
-              IDPs by province
-            </h3>
+            <h3 className="text-sm font-bold text-foreground">IDPs by province</h3>
             <p className="text-[11px] text-muted-foreground mt-0.5">
               Displaced persons by administrative area
             </p>
@@ -414,9 +405,7 @@ export default function DisplacementDashboard() {
           ) : (
             <div className="space-y-4">
               {admin1Data.map((row) => {
-                const totalPct = Math.round(
-                  (row.total_idp / maxAdmin1Val) * 100,
-                );
+                const totalPct = Math.round((row.total_idp / maxAdmin1Val) * 100);
                 const hasData = row.total_idp > 0;
                 return (
                   <div key={row.admin1_name}>

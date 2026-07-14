@@ -105,7 +105,7 @@ export const dynamicDataService = {
     province?: string,
     district?: string,
     op?: string,
-    pageSize: number = 50
+    pageSize: number = 50,
   ): Promise<PaginatedResponse<EvacuationCentreRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/evacuation-centres/?page=${page}&page_size=${pageSize}`;
@@ -129,7 +129,7 @@ export const dynamicDataService = {
   updateEvacuationCentre: async (
     id: number,
     fields: Partial<EvacuationCentreRecord>,
-    token: string | null
+    token: string | null,
   ): Promise<EvacuationCentreRecord> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const res = await fetch(`${baseUrl}/api/evacuation-centres/${id}/`, {
@@ -160,7 +160,7 @@ export const dynamicDataService = {
     province?: string,
     district?: string,
     op?: string,
-    pageSize: number = 50
+    pageSize: number = 50,
   ): Promise<PaginatedResponse<DisplacementRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/displacements/?page=${page}&page_size=${pageSize}`;
@@ -184,7 +184,7 @@ export const dynamicDataService = {
   updateDisplacement: async (
     id: number,
     fields: Partial<DisplacementRecord>,
-    token: string | null
+    token: string | null,
   ): Promise<DisplacementRecord> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const res = await fetch(`${baseUrl}/api/displacements/${id}/`, {
@@ -210,7 +210,7 @@ export const dynamicDataService = {
 
   createEvacuationCentre: async (
     fields: Partial<EvacuationCentreRecord>,
-    token: string | null
+    token: string | null,
   ): Promise<EvacuationCentreRecord> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const res = await fetch(`${baseUrl}/api/evacuation-centres/`, {
@@ -236,7 +236,7 @@ export const dynamicDataService = {
 
   createDisplacement: async (
     fields: Partial<DisplacementRecord>,
-    token: string | null
+    token: string | null,
   ): Promise<DisplacementRecord> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const res = await fetch(`${baseUrl}/api/displacements/`, {
@@ -260,10 +260,7 @@ export const dynamicDataService = {
     return res.json();
   },
 
-  deleteEvacuationCentre: async (
-    id: number,
-    token: string | null
-  ): Promise<void> => {
+  deleteEvacuationCentre: async (id: number, token: string | null): Promise<void> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const res = await fetch(`${baseUrl}/api/evacuation-centres/${id}/`, {
       method: "DELETE",
@@ -272,10 +269,7 @@ export const dynamicDataService = {
     if (!res.ok) throw new Error("Failed to delete evacuation centre");
   },
 
-  deleteDisplacement: async (
-    id: number,
-    token: string | null
-  ): Promise<void> => {
+  deleteDisplacement: async (id: number, token: string | null): Promise<void> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const res = await fetch(`${baseUrl}/api/displacements/${id}/`, {
       method: "DELETE",
@@ -290,7 +284,7 @@ export const dynamicDataService = {
     province?: string,
     district?: string,
     op?: string,
-    search?: string
+    search?: string,
   ): Promise<Blob> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const params = new URLSearchParams();
@@ -300,10 +294,12 @@ export const dynamicDataService = {
     if (op) params.set("compound_function", op);
     if (search?.trim()) params.set("search", search.trim());
 
-    const res = await fetch(
-      `${baseUrl}/api/evacuation-centres/export/?${params.toString()}`,
-      { headers: { ...getHeaders(token), "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } }
-    );
+    const res = await fetch(`${baseUrl}/api/evacuation-centres/export/?${params.toString()}`, {
+      headers: {
+        ...getHeaders(token),
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    });
     if (!res.ok) throw new Error("Failed to export evacuation centres");
     return res.blob();
   },
@@ -314,7 +310,7 @@ export const dynamicDataService = {
     province?: string,
     district?: string,
     op?: string,
-    search?: string
+    search?: string,
   ): Promise<Blob> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const params = new URLSearchParams();
@@ -324,18 +320,17 @@ export const dynamicDataService = {
     if (op) params.set("operation", op);
     if (search?.trim()) params.set("search", search.trim());
 
-    const res = await fetch(
-      `${baseUrl}/api/displacements/export/?${params.toString()}`,
-      { headers: { ...getHeaders(token), "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" } }
-    );
+    const res = await fetch(`${baseUrl}/api/displacements/export/?${params.toString()}`, {
+      headers: {
+        ...getHeaders(token),
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    });
     if (!res.ok) throw new Error("Failed to export displacements");
     return res.blob();
   },
 
-  importEvacuationCentres: async (
-    file: File,
-    token: string | null
-  ): Promise<any> => {
+  importEvacuationCentres: async (file: File, token: string | null): Promise<any> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
     formData.append("file", file);
@@ -355,10 +350,7 @@ export const dynamicDataService = {
     return res.json();
   },
 
-  importDisplacements: async (
-    file: File,
-    token: string | null
-  ): Promise<any> => {
+  importDisplacements: async (file: File, token: string | null): Promise<any> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
     formData.append("file", file);

@@ -1,5 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { dynamicDataService, EvacuationCentreRecord, DisplacementRecord } from "@/services/dynamic-data";
+import {
+  dynamicDataService,
+  EvacuationCentreRecord,
+  DisplacementRecord,
+} from "@/services/dynamic-data";
 
 export function useDynamicData(
   slug: string,
@@ -9,7 +13,7 @@ export function useDynamicData(
   districtFilter: string,
   opFilter: string,
   token: string | null,
-  pageSize: number = 50
+  pageSize: number = 50,
 ) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
 
@@ -34,7 +38,7 @@ export function useDynamicData(
           provinceFilter,
           districtFilter,
           opFilter,
-          pageSize
+          pageSize,
         );
       } else {
         return dynamicDataService.fetchDisplacements(
@@ -44,7 +48,7 @@ export function useDynamicData(
           provinceFilter,
           districtFilter,
           opFilter,
-          pageSize
+          pageSize,
         );
       }
     },

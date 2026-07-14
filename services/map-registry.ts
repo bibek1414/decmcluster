@@ -11,7 +11,11 @@ export const mapRegistryService = {
     }
     return res.json();
   },
-  getMaps: async (page: number = 1, categorySlug?: string, search?: string): Promise<PaginatedResponse<MapData>> => {
+  getMaps: async (
+    page: number = 1,
+    categorySlug?: string,
+    search?: string,
+  ): Promise<PaginatedResponse<MapData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/map/?page=${page}&page_size=10`;
     if (categorySlug) {

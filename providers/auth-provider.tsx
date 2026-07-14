@@ -28,7 +28,7 @@ const decodeJwt = (token: string) => {
         .atob(base64)
         .split("")
         .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
+        .join(""),
     );
     return JSON.parse(jsonPayload);
   } catch (e) {
@@ -94,7 +94,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const resolvedUser: User = {
         email: decoded?.email || data.user?.email || data.email || credentials.email,
         role: mapBackendRole(decoded?.role || data.user?.role || data.role || credentials.role),
-        access_control: decoded?.access_control || data.user?.access_control || data.access_control || [],
+        access_control:
+          decoded?.access_control || data.user?.access_control || data.access_control || [],
       };
 
       setToken(authToken);

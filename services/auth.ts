@@ -15,7 +15,6 @@ export class ApiError extends Error {
 
 export const authService = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const response = await fetch(`${baseUrl}/api/account/login/`, {
       method: "POST",

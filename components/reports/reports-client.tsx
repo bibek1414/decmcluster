@@ -48,9 +48,7 @@ export default function ReportsClient() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [uploadName, setUploadName] = useState("");
   const [uploadType, setUploadType] = useState("Cyclone");
-  const [uploadDate, setUploadDate] = useState(
-    new Date().toISOString().split("T")[0],
-  );
+  const [uploadDate, setUploadDate] = useState(new Date().toISOString().split("T")[0]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadUrl, setUploadUrl] = useState("");
@@ -84,10 +82,7 @@ export default function ReportsClient() {
   }, [debouncedSearch]);
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-  const { data, isLoading, isPlaceholderData, error } = useReports(
-    page,
-    debouncedSearch,
-  );
+  const { data, isLoading, isPlaceholderData, error } = useReports(page, debouncedSearch);
 
   // Upload mutation
   const uploadMutation = useMutation({
@@ -126,11 +121,7 @@ export default function ReportsClient() {
       if (!editTarget) throw new Error("No report selected for editing");
       if (!editName.trim()) throw new Error("Please enter a name");
 
-      const fileArg = editTarget.file
-        ? editKeepFile
-          ? editTarget.file
-          : editFile
-        : editFile;
+      const fileArg = editTarget.file ? (editKeepFile ? editTarget.file : editFile) : editFile;
       const imageArg = editTarget.image
         ? editKeepImage
           ? editTarget.image
@@ -249,16 +240,11 @@ export default function ReportsClient() {
           {data && (
             <span className="text-xs text-muted-foreground font-semibold bg-muted/50 border border-border px-3 py-1 rounded-full shrink-0">
               Total Publications:{" "}
-              <strong className="text-foreground font-extrabold">
-                {data.count}
-              </strong>
+              <strong className="text-foreground font-extrabold">{data.count}</strong>
             </span>
           )}
           {canAdd && (
-            <Button
-              onClick={() => setIsUploadOpen(true)}
-              className="cursor-pointer font-bold h-9"
-            >
+            <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold h-9">
               <Plus className="mr-1.5 h-4 w-4" /> Upload Report
             </Button>
           )}
@@ -267,9 +253,7 @@ export default function ReportsClient() {
 
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-          <h3 className="text-xs font-bold text-muted-foreground">
-            Available Publications
-          </h3>
+          <h3 className="text-xs font-bold text-muted-foreground">Available Publications</h3>
           <div className="flex gap-2">
             <Input
               type="text"
@@ -287,9 +271,7 @@ export default function ReportsClient() {
             <div className="absolute inset-0 bg-background/30 backdrop-blur-[1px] flex items-center justify-center z-10 transition-opacity animate-fadeIn">
               <div className="bg-card border border-border px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-2">
                 <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <span className="text-[10px] font-bold text-foreground">
-                  Updating...
-                </span>
+                <span className="text-[10px] font-bold text-foreground">Updating...</span>
               </div>
             </div>
           )}
@@ -341,10 +323,7 @@ export default function ReportsClient() {
                           )}
                         </div>
                         <p className="text-[10px] text-muted-foreground mt-1">
-                          Published:{" "}
-                          {rep.date
-                            ? formatDate(rep.date)
-                            : formatDate(rep.created_at)}
+                          Published: {rep.date ? formatDate(rep.date) : formatDate(rep.created_at)}
                         </p>
                       </div>
                     </div>
@@ -369,11 +348,7 @@ export default function ReportsClient() {
                           className="cursor-pointer font-bold flex items-center gap-1.5"
                           asChild
                         >
-                          <a
-                            href={rep.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
+                          <a href={rep.url} target="_blank" rel="noopener noreferrer">
                             <ExternalLink className="w-3.5 h-3.5" />
                             Link
                           </a>
@@ -430,9 +405,7 @@ export default function ReportsClient() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
           <div className="bg-card border border-border w-full max-w-lg p-6 rounded-xl space-y-4 shadow-xl text-left max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload Report / Publication
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload Report / Publication</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -543,8 +516,7 @@ export default function ReportsClient() {
                 >
                   {uploadMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload"
@@ -561,9 +533,7 @@ export default function ReportsClient() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn">
           <div className="bg-card border border-border w-full max-w-lg p-6 rounded-xl space-y-4 shadow-xl text-left max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Edit Report / Publication
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Edit Report / Publication</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -756,8 +726,7 @@ export default function ReportsClient() {
                 >
                   {editMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Saving...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Saving...
                     </>
                   ) : (
                     "Save Changes"

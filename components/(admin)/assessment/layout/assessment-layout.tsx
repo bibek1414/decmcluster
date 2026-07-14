@@ -33,9 +33,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     if (roleLower === "superadmin") return true;
 
     const acList = user.access_control || [];
-    const normalized = acList.map((item: string) =>
-      item.toLowerCase().replace(/_/g, "-"),
-    );
+    const normalized = acList.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
 
     if (pathname?.startsWith("/assement/meeting-minutes")) {
       return normalized.includes("meeting-minutes");
@@ -50,9 +48,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
       return false;
     }
     if (pathname?.startsWith("/assement/tools")) {
-      return (
-        roleLower === "data enumerator" || roleLower === "field coordinator"
-      );
+      return roleLower === "data enumerator" || roleLower === "field coordinator";
     }
     // Guard for specific assessment slug details pages
     if (pathname?.startsWith("/assement/")) {
@@ -75,9 +71,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
       <div className="flex flex-col items-center justify-center min-h-[400px] py-24 animate-fadeIn">
         <div className="flex flex-col items-center gap-3 bg-card border border-border p-8 rounded-2xl shadow-sm">
           <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
-          <p className="text-xs text-muted-foreground font-semibold">
-            Verifying secure session...
-          </p>
+          <p className="text-xs text-muted-foreground font-semibold">Verifying secure session...</p>
         </div>
       </div>
     );
@@ -97,16 +91,12 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     const isDataEnumerator = user?.role === "Data Enumerator";
     const isFieldCoordinator = user?.role === "Field Coordinator";
     const ac = user?.access_control || [];
-    const normalizedAc = ac.map((item: string) =>
-      item.toLowerCase().replace(/_/g, "-"),
-    );
+    const normalizedAc = ac.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
 
-    const showMeetingMinutes =
-      isSuperAdmin || normalizedAc.includes("meeting-minutes");
+    const showMeetingMinutes = isSuperAdmin || normalizedAc.includes("meeting-minutes");
     const showSops = isSuperAdmin || normalizedAc.includes("sops");
     const showTools = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
-    const showSituationalReports =
-      isSuperAdmin || normalizedAc.includes("situational-reports");
+    const showSituationalReports = isSuperAdmin || normalizedAc.includes("situational-reports");
     const showUserManagement = isSuperAdmin;
 
     return (
@@ -266,9 +256,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
               <ShieldAlert className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-bold text-foreground">
-                {user?.email}
-              </p>
+              <p className="truncate text-xs font-bold text-foreground">{user?.email}</p>
               <p className="truncate text-[10px] text-muted-foreground font-semibold">
                 {user?.role}
               </p>
@@ -311,11 +299,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"
           >
-            {isMobileMenuOpen ? (
-              <X className="h-4 w-4" />
-            ) : (
-              <Menu className="h-4 w-4" />
-            )}
+            {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </Button>
         </header>
 
@@ -345,18 +329,13 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
                   <ShieldAlert className="w-6 h-6" />
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="text-base font-bold text-foreground">
-                    Access Denied
-                  </h3>
+                  <h3 className="text-base font-bold text-foreground">Access Denied</h3>
                   <p className="text-xs text-muted-foreground font-semibold leading-relaxed">
-                    You do not have permission to access this module. Please
-                    contact your system administrator to request access.
+                    You do not have permission to access this module. Please contact your system
+                    administrator to request access.
                   </p>
                 </div>
-                <Button
-                  asChild
-                  className="w-full text-xs font-bold cursor-pointer h-9 mt-2"
-                >
+                <Button asChild className="w-full text-xs font-bold cursor-pointer h-9 mt-2">
                   <Link href="/assement">Go to Displacement Data</Link>
                 </Button>
               </div>

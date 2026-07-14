@@ -47,10 +47,7 @@ import {
   EVACUATION_CENTRE_COLUMNS,
   EvacuationCentreFormFields,
 } from "./fields/evacuation-centre-form-fields";
-import {
-  DISPLACEMENT_COLUMNS,
-  DisplacementFormFields,
-} from "./fields/displacement-form-fields";
+import { DISPLACEMENT_COLUMNS, DisplacementFormFields } from "./fields/displacement-form-fields";
 
 interface DynamicDataTableProps {
   slug: string;
@@ -58,11 +55,7 @@ interface DynamicDataTableProps {
   canEdit: boolean;
 }
 
-export function DynamicDataTable({
-  slug,
-  token,
-  canEdit,
-}: DynamicDataTableProps) {
+export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps) {
   const isEvac = slug === "evacuation-centre-assessment-form";
   const columns = isEvac ? EVACUATION_CENTRE_COLUMNS : DISPLACEMENT_COLUMNS;
   const queryClient = useQueryClient();
@@ -155,9 +148,7 @@ export function DynamicDataTable({
   }, [slug, token]);
 
   // Export Columns & Selected Rows
-  const [selectedExportColumns, setSelectedExportColumns] = useState<string[]>(
-    [],
-  );
+  const [selectedExportColumns, setSelectedExportColumns] = useState<string[]>([]);
   const [selectedRowIds, setSelectedRowIds] = useState<number[]>([]);
 
   // Cell Inline Editing (Single-Click)
@@ -183,10 +174,7 @@ export function DynamicDataTable({
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        exportDropdownRef.current &&
-        !exportDropdownRef.current.contains(event.target as Node)
-      ) {
+      if (exportDropdownRef.current && !exportDropdownRef.current.contains(event.target as Node)) {
         setIsExportDropdownOpen(false);
       }
     }
@@ -283,8 +271,7 @@ export function DynamicDataTable({
     const initialFields: any = {};
     columns.forEach((col) => {
       if (!col.readonly) {
-        initialFields[col.key] =
-          col.type === "boolean" ? "" : col.type === "number" ? "" : "";
+        initialFields[col.key] = col.type === "boolean" ? "" : col.type === "number" ? "" : "";
       }
     });
     setModalFormData(initialFields);
@@ -327,9 +314,7 @@ export function DynamicDataTable({
   const performExport = async () => {
     // If no columns are explicitly selected, export all columns
     const columnsToExport =
-      selectedExportColumns.length > 0
-        ? selectedExportColumns
-        : columns.map((c) => c.key);
+      selectedExportColumns.length > 0 ? selectedExportColumns : columns.map((c) => c.key);
     setLoadingExport(true);
     try {
       let blob: Blob;
@@ -368,8 +353,6 @@ export function DynamicDataTable({
       setLoadingExport(false);
     }
   };
-
-
 
   return (
     <Card className="border border-border bg-card/65 backdrop-blur-sm rounded-2xl overflow-hidden shadow-none animate-fadeIn">
@@ -471,9 +454,7 @@ export function DynamicDataTable({
                   >
                     <span>
                       Export (
-                      {selectedExportColumns.length === 0
-                        ? "all"
-                        : selectedExportColumns.length}{" "}
+                      {selectedExportColumns.length === 0 ? "all" : selectedExportColumns.length}{" "}
                       columns)
                     </span>
                     <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono text-muted-foreground">
@@ -492,18 +473,14 @@ export function DynamicDataTable({
         {isLoading && (
           <div className="absolute inset-0 bg-background/50 flex flex-col items-center justify-center z-10">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            <p className="text-xs text-muted-foreground font-semibold mt-3">
-              Loading records...
-            </p>
+            <p className="text-xs text-muted-foreground font-semibold mt-3">Loading records...</p>
           </div>
         )}
 
         {isError && (
           <div className="flex flex-col items-center justify-center p-12 text-center h-[300px]">
             <X className="h-8 w-8 text-rose-500 mb-2" />
-            <p className="text-xs font-bold text-foreground">
-              Failed to load data
-            </p>
+            <p className="text-xs font-bold text-foreground">Failed to load data</p>
             <p className="text-[10px] text-muted-foreground mt-1">
               Please check your connection and credentials.
             </p>
@@ -513,12 +490,9 @@ export function DynamicDataTable({
         {!isLoading && !isError && results.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center h-[300px]">
             <Download className="h-8 w-8 text-muted-foreground/30 mb-2 animate-pulse" />
-            <p className="text-xs font-bold text-foreground">
-              No records found
-            </p>
+            <p className="text-xs font-bold text-foreground">No records found</p>
             <p className="text-[10px] text-muted-foreground mt-1 max-w-xs">
-              No dynamic data records matched your current query or filter
-              configuration.
+              No dynamic data records matched your current query or filter configuration.
             </p>
           </div>
         ) : null}
@@ -529,37 +503,24 @@ export function DynamicDataTable({
               <TableRow>
                 <TableHead className="w-12 text-center select-none pl-4">
                   <Checkbox
-                    checked={
-                      results.length > 0 &&
-                      selectedRowIds.length === results.length
-                    }
+                    checked={results.length > 0 && selectedRowIds.length === results.length}
                     onCheckedChange={handleSelectAllOnPage}
                   />
                 </TableHead>
                 {columns.map((col) => {
-                  const isExportSelected = selectedExportColumns.includes(
-                    col.key,
-                  );
+                  const isExportSelected = selectedExportColumns.includes(col.key);
                   return (
-                    <TableHead
-                      key={col.key}
-                      className="text-xs font-semibold  py-3 px-4"
-                    >
+                    <TableHead key={col.key} className="text-xs font-semibold  py-3 px-4">
                       <div className="flex items-center gap-1.5 py-1">
                         <Checkbox
                           checked={isExportSelected}
                           onCheckedChange={() => {
                             if (isExportSelected) {
                               setSelectedExportColumns(
-                                selectedExportColumns.filter(
-                                  (c) => c !== col.key,
-                                ),
+                                selectedExportColumns.filter((c) => c !== col.key),
                               );
                             } else {
-                              setSelectedExportColumns([
-                                ...selectedExportColumns,
-                                col.key,
-                              ]);
+                              setSelectedExportColumns([...selectedExportColumns, col.key]);
                             }
                           }}
                           title="Toggle export selection for this column"
@@ -581,9 +542,7 @@ export function DynamicDataTable({
                 <TableRow
                   key={row.id}
                   className={`hover:bg-muted/30 border-b border-border transition-colors cursor-pointer ${
-                    selectedRowIds.includes(row.id)
-                      ? "bg-primary/5 hover:bg-primary/10"
-                      : ""
+                    selectedRowIds.includes(row.id) ? "bg-primary/5 hover:bg-primary/10" : ""
                   }`}
                 >
                   <TableCell className="text-center pl-4 select-none">
@@ -593,9 +552,7 @@ export function DynamicDataTable({
                     />
                   </TableCell>
                   {columns.map((col) => {
-                    const isEditing =
-                      editingCell?.rowId === row.id &&
-                      editingCell?.key === col.key;
+                    const isEditing = editingCell?.rowId === row.id && editingCell?.key === col.key;
                     const value = row[col.key];
 
                     return (
@@ -613,19 +570,13 @@ export function DynamicDataTable({
                             ? "cursor-cell hover:bg-muted/15 relative group"
                             : ""
                         }`}
-                        title={
-                          !col.readonly && canEdit
-                            ? "Click to edit cell"
-                            : col.label
-                        }
+                        title={!col.readonly && canEdit ? "Click to edit cell" : col.label}
                       >
                         {isEditing ? (
                           col.type === "boolean" ? (
                             <select
                               value={String(inlineEditValue)}
-                              onChange={(e) =>
-                                setInlineEditValue(e.target.value)
-                              }
+                              onChange={(e) => setInlineEditValue(e.target.value)}
                               onBlur={handleInlineEditSave}
                               autoFocus
                               className="w-full h-7 rounded border border-ring bg-background text-[11px] focus:outline-none"
@@ -638,9 +589,7 @@ export function DynamicDataTable({
                             <input
                               type={col.type === "number" ? "number" : "text"}
                               value={inlineEditValue}
-                              onChange={(e) =>
-                                setInlineEditValue(e.target.value)
-                              }
+                              onChange={(e) => setInlineEditValue(e.target.value)}
                               onBlur={handleInlineEditSave}
                               onKeyDown={(e) => {
                                 if (e.key === "Enter") handleInlineEditSave();
@@ -713,11 +662,8 @@ export function DynamicDataTable({
           <span className="text-foreground font-bold">
             {results.length === 0 ? 0 : (page - 1) * 50 + 1}
           </span>{" "}
-          to{" "}
-          <span className="text-foreground font-bold">
-            {Math.min(page * 50, count)}
-          </span>{" "}
-          of <span className="text-foreground font-bold">{count}</span> records
+          to <span className="text-foreground font-bold">{Math.min(page * 50, count)}</span> of{" "}
+          <span className="text-foreground font-bold">{count}</span> records
         </span>
 
         <div className="flex items-center gap-1.5">
@@ -754,9 +700,7 @@ export function DynamicDataTable({
       >
         <DialogContent className="max-w-md w-full rounded-2xl border border-border bg-card shadow-none p-6">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-foreground">
-              Delete Record
-            </DialogTitle>
+            <DialogTitle className="text-base font-bold text-foreground">Delete Record</DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground leading-relaxed mt-2">
               Are you sure you want to delete this record (ID: {rowToDelete?.id}
               )? This action cannot be undone.
@@ -777,8 +721,7 @@ export function DynamicDataTable({
             >
               {isDeleting ? (
                 <>
-                  <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                  Deleting...
+                  <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Deleting...
                 </>
               ) : (
                 "Delete"
@@ -801,9 +744,7 @@ export function DynamicDataTable({
         <DialogContent className="max-w-3xl! w-full rounded-2xl border border-border bg-card shadow-none p-0 gap-0 overflow-hidden">
           <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
             <DialogTitle className="text-base font-bold">
-              {isCreating
-                ? "Create New Record"
-                : `Edit Record (ID: ${editingRow?.id})`}
+              {isCreating ? "Create New Record" : `Edit Record (ID: ${editingRow?.id})`}
             </DialogTitle>
             <DialogDescription className="text-[11px] text-muted-foreground font-semibold mt-0.5">
               {isCreating

@@ -52,10 +52,7 @@ export default function SopsClient() {
   }, [debouncedSearch]);
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-  const { data, isLoading, isPlaceholderData, error } = useSops(
-    page,
-    debouncedSearch,
-  );
+  const { data, isLoading, isPlaceholderData, error } = useSops(page, debouncedSearch);
 
   // Upload mutation
   const uploadMutation = useMutation({
@@ -117,11 +114,7 @@ export default function SopsClient() {
 
   const getIcon = (name: string) => {
     const lower = name.toLowerCase();
-    if (
-      lower.includes("collection") ||
-      lower.includes("survey") ||
-      lower.includes("form")
-    )
+    if (lower.includes("collection") || lower.includes("survey") || lower.includes("form"))
       return ClipboardList;
     if (
       lower.includes("validation") ||
@@ -130,11 +123,7 @@ export default function SopsClient() {
       lower.includes("check")
     )
       return ShieldCheck;
-    if (
-      lower.includes("role") ||
-      lower.includes("setting") ||
-      lower.includes("management")
-    )
+    if (lower.includes("role") || lower.includes("setting") || lower.includes("management"))
       return Settings;
     return BookOpen;
   };
@@ -160,10 +149,7 @@ export default function SopsClient() {
         <div className="flex flex-wrap items-center gap-3 shrink-0 self-start sm:self-center">
           {data && (
             <span className="text-xs text-muted-foreground font-semibold bg-muted/50 border border-border px-3 py-1 rounded-full shrink-0">
-              Total SOPs:{" "}
-              <strong className="text-foreground font-extrabold">
-                {data.count}
-              </strong>
+              Total SOPs: <strong className="text-foreground font-extrabold">{data.count}</strong>
             </span>
           )}
           {canAdd && (
@@ -176,9 +162,7 @@ export default function SopsClient() {
 
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-          <h3 className="text-xs font-bold text-muted-foreground">
-            Available Documents
-          </h3>
+          <h3 className="text-xs font-bold text-muted-foreground">Available Documents</h3>
           <div className="flex gap-2">
             <Input
               type="text"
@@ -196,9 +180,7 @@ export default function SopsClient() {
             <div className="absolute inset-0 bg-background/30 backdrop-blur-[1px] flex items-center justify-center z-10 transition-opacity animate-fadeIn">
               <div className="bg-card border border-border px-3 py-1.5 rounded-lg -sm flex items-center gap-2">
                 <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                <span className="text-[10px] font-bold text-foreground">
-                  Updating...
-                </span>
+                <span className="text-[10px] font-bold text-foreground">Updating...</span>
               </div>
             </div>
           )}
@@ -249,9 +231,7 @@ export default function SopsClient() {
                             </Button>
                           )}
                         </div>
-                        <h3 className="text-sm font-bold text-foreground">
-                          {sop.name}
-                        </h3>
+                        <h3 className="text-sm font-bold text-foreground">{sop.name}</h3>
                         {sop.description && (
                           <p className="text-xs text-muted-foreground leading-relaxed mt-2">
                             {sop.description}
@@ -310,7 +290,9 @@ export default function SopsClient() {
 
             <form onSubmit={handleUploadSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Document Title</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Document Title
+                </label>
                 <Input
                   value={uploadName}
                   onChange={(e) => setUploadName(e.target.value)}
@@ -331,7 +313,9 @@ export default function SopsClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Select File (PDF, Excel, Word, etc.)</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Select File (PDF, Excel, Word, etc.)
+                </label>
                 <FileUpload
                   selectedFile={selectedFile}
                   onFileSelect={setSelectedFile}

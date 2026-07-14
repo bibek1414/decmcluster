@@ -31,9 +31,7 @@ export default function LinksClient() {
             <LinkIcon className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-primary">
-              Useful Links
-            </h2>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-primary">Useful Links</h2>
             <p className="text-xs text-muted-foreground mt-1">
               Direct access keys to global partner networks and databases
             </p>
@@ -53,9 +51,7 @@ export default function LinksClient() {
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-xs font-bold text-muted-foreground">
-          External Database Links
-        </h3>
+        <h3 className="text-xs font-bold text-muted-foreground">External Database Links</h3>
 
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

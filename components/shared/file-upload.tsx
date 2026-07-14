@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import {
-  UploadCloud,
-  FileText,
-  FileSpreadsheet,
-  FileImage,
-  File,
-  X,
-} from "lucide-react";
+import { UploadCloud, FileText, FileSpreadsheet, FileImage, File, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -71,8 +64,7 @@ export function FileUpload({
     const ext = fileName.split(".").pop()?.toLowerCase();
     if (ext === "pdf") return FileText;
     if (["xlsx", "xls", "csv"].includes(ext || "")) return FileSpreadsheet;
-    if (["png", "jpg", "jpeg", "svg", "webp"].includes(ext || ""))
-      return FileImage;
+    if (["png", "jpg", "jpeg", "svg", "webp"].includes(ext || "")) return FileImage;
     return File;
   };
 
@@ -102,9 +94,7 @@ export function FileUpload({
             <FileIcon className="h-6 w-6" />
           </div>
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-xs font-bold text-foreground truncate">
-              {selectedFile.name}
-            </p>
+            <p className="text-xs font-bold text-foreground truncate">{selectedFile.name}</p>
             <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">
               {formatFileSize(selectedFile.size)}
             </p>
@@ -137,10 +127,7 @@ export function FileUpload({
               isDragActive && "scale-110 text-primary border-primary/30",
             )}
           >
-            <UploadCloud
-              className="h-6 w-6 animate-pulse"
-              style={{ animationDuration: "3s" }}
-            />
+            <UploadCloud className="h-6 w-6 animate-pulse" style={{ animationDuration: "3s" }} />
           </div>
           <div className="space-y-1">
             <p className="text-xs font-bold text-foreground">{helperText}</p>

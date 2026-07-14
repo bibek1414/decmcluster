@@ -89,11 +89,7 @@ export default function SOPsClient() {
   }, []);
 
   // Fetch SOP list
-  const { data, isLoading, isPlaceholderData, error } = useAdminSops(
-    page,
-    token,
-    debouncedSearch,
-  );
+  const { data, isLoading, isPlaceholderData, error } = useAdminSops(page, token, debouncedSearch);
   const sopsList = data?.results || [];
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -138,7 +134,7 @@ export default function SOPsClient() {
         onError: (err: any) => {
           toast.error(err.message || "Failed to upload SOP document");
         },
-      }
+      },
     );
   };
 
@@ -159,7 +155,7 @@ export default function SOPsClient() {
             toast.error(err.message || "Failed to delete SOP document");
             setDeleteTarget(null);
           },
-        }
+        },
       );
     }
   };
@@ -171,10 +167,7 @@ export default function SOPsClient() {
           title="Standard Operating Procedures (SOPs)"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>
-                Manage official cluster guidelines, standards, and operational
-                guidelines
-              </span>
+              <span>Manage official cluster guidelines, standards, and operational guidelines</span>
               {data && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
                   {data.count} total records
@@ -184,10 +177,7 @@ export default function SOPsClient() {
           }
           actions={
             canAdd && (
-              <Button
-                onClick={() => setIsUploadOpen(true)}
-                className="cursor-pointer font-bold"
-              >
+              <Button onClick={() => setIsUploadOpen(true)} className="cursor-pointer font-bold">
                 <Plus className="mr-1.5 h-4 w-4" /> Upload SOP
               </Button>
             )
@@ -264,21 +254,14 @@ export default function SOPsClient() {
                       : "N/A";
 
                     return (
-                      <tr
-                        key={item.id}
-                        className="hover:bg-muted/20 transition-colors"
-                      >
+                      <tr key={item.id} className="hover:bg-muted/20 transition-colors">
                         <td className="p-4 font-bold text-foreground">
-                          <span className="truncate max-w-xs block">
-                            {item.name}
-                          </span>
+                          <span className="truncate max-w-xs block">{item.name}</span>
                         </td>
                         <td className="p-4 text-muted-foreground max-w-xs truncate font-medium">
                           {item.description || "—"}
                         </td>
-                        <td className="p-4 text-muted-foreground font-semibold">
-                          {formattedDate}
-                        </td>
+                        <td className="p-4 text-muted-foreground font-semibold">{formattedDate}</td>
                         <td className="p-4">
                           {item.status === "verified" ? (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
@@ -301,9 +284,7 @@ export default function SOPsClient() {
                                 variant="outline"
                                 size="sm"
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
-                                onClick={() =>
-                                  window.open(getFileUrl(item.file), "_blank")
-                                }
+                                onClick={() => window.open(getFileUrl(item.file), "_blank")}
                               >
                                 <Eye className="w-3.5 h-3.5" /> View
                               </Button>
@@ -315,9 +296,7 @@ export default function SOPsClient() {
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 asChild
                               >
-                                <Link href={`/sops/verify/${item.id}`}>
-                                  Review
-                                </Link>
+                                <Link href={`/sops/verify/${item.id}`}>Review</Link>
                               </Button>
                             )}
                             {canAdd && item.status === "returned" && (
@@ -391,18 +370,16 @@ export default function SOPsClient() {
 
       {/* Upload Modal */}
       {isUploadOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => setIsUploadOpen(false)}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload SOP Document
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload SOP Document</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -427,9 +404,7 @@ export default function SOPsClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  Description
-                </label>
+                <label className="block text-xs font-bold text-muted-foreground">Description</label>
                 <textarea
                   value={uploadDescription}
                   onChange={(e) => setUploadDescription(e.target.value)}
@@ -467,8 +442,7 @@ export default function SOPsClient() {
                 >
                   {uploadMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload"
@@ -497,7 +471,7 @@ export default function SOPsClient() {
                   toast.error(err.message || "Failed to revert SOP status");
                   setReverifyTarget(null);
                 },
-              }
+              },
             );
           }
         }}
@@ -521,21 +495,19 @@ export default function SOPsClient() {
 
       {/* Upload New Version Modal */}
       {uploadNewTarget && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
           onClick={() => {
             setUploadNewTarget(null);
             setSelectedNewFile(null);
           }}
         >
-          <div 
+          <div
             className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Upload New Version
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Upload New Version</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -554,9 +526,8 @@ export default function SOPsClient() {
                 Uploading a new version for "{uploadNewTarget.name}"
               </p>
               <p>
-                Need to submit a revised file? Uploading a new file will
-                automatically reset this document's status to unverified for
-                verification.
+                Need to submit a revised file? Uploading a new file will automatically reset this
+                document's status to unverified for verification.
               </p>
             </div>
 
@@ -580,15 +551,13 @@ export default function SOPsClient() {
                     onError: (err: any) => {
                       toast.error(err.message || "Failed to upload new version");
                     },
-                  }
+                  },
                 );
               }}
               className="space-y-4"
             >
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  Select File
-                </label>
+                <label className="block text-xs font-bold text-muted-foreground">Select File</label>
                 <FileUpload
                   selectedFile={selectedNewFile}
                   onFileSelect={setSelectedNewFile}
@@ -616,8 +585,7 @@ export default function SOPsClient() {
                 >
                   {uploadNewMutation.isPending ? (
                     <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />{" "}
-                      Uploading...
+                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> Uploading...
                     </>
                   ) : (
                     "Upload Version"

@@ -14,11 +14,7 @@ export const responseTrackingService = {
     return res.json();
   },
 
-  create: async (
-    name: string,
-    file: File,
-    token: string | null
-  ): Promise<ResponseTrackingData> => {
+  create: async (name: string, file: File, token: string | null): Promise<ResponseTrackingData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
     formData.append("name", name);

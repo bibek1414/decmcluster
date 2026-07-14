@@ -60,8 +60,8 @@ export default function ContactForm() {
           Send Us a Message
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-          Have questions or feedback about the DECM Cluster Information System?
-          Fill out the form below and we will get back to you.
+          Have questions or feedback about the DECM Cluster Information System? Fill out the form
+          below and we will get back to you.
         </p>
       </div>
 
@@ -71,8 +71,7 @@ export default function ContactForm() {
             htmlFor="fullName"
             className="text-xs font-bold text-muted-foreground flex items-center gap-1.5"
           >
-            <User className="w-3.5 h-3.5" /> Full Name{" "}
-            <span className="text-rose-500">*</span>
+            <User className="w-3.5 h-3.5" /> Full Name <span className="text-rose-500">*</span>
           </label>
           <Input
             id="fullName"
@@ -128,10 +127,7 @@ export default function ContactForm() {
         </div>
 
         <div className="space-y-1.5">
-          <label
-            htmlFor="message"
-            className="text-xs font-bold text-muted-foreground"
-          >
+          <label htmlFor="message" className="text-xs font-bold text-muted-foreground">
             Your Message <span className="text-rose-500">*</span>
           </label>
           <textarea
@@ -166,10 +162,7 @@ export default function ContactForm() {
       {submitMutation.isSuccess && (
         <div className="p-3 bg-green-50/50 border border-green-200/50 text-green-800 text-xs rounded-xl flex items-center gap-2 animate-fadeIn dark:bg-green-950/10 dark:border-green-900/30 dark:text-green-400">
           <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
-          <span>
-            Your query has been recorded. Our team will review and contact you
-            shortly.
-          </span>
+          <span>Your query has been recorded. Our team will review and contact you shortly.</span>
         </div>
       )}
     </div>

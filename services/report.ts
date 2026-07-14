@@ -19,7 +19,7 @@ export const reportService = {
   listAdmin: async (
     page: number = 1,
     token: string | null,
-    search?: string
+    search?: string,
   ): Promise<PaginatedResponse<ReportData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/report/admin/?page=${page}&page_size=10`;
@@ -54,7 +54,7 @@ export const reportService = {
     urlValue: string | null,
     image: File | null,
     token: string | null,
-    isAdmin: boolean = false
+    isAdmin: boolean = false,
   ): Promise<ReportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -112,7 +112,7 @@ export const reportService = {
     file: File | null | string,
     urlValue: string | null,
     image: File | null | string,
-    token: string | null
+    token: string | null,
   ): Promise<ReportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -216,7 +216,7 @@ export const reportService = {
     id: number | string,
     status: string,
     comment: string,
-    token: string | null
+    token: string | null,
   ): Promise<ReportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {
@@ -287,7 +287,7 @@ export const reportService = {
   updateFile: async (
     id: number | string,
     file: File,
-    token: string | null
+    token: string | null,
   ): Promise<ReportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();

@@ -212,17 +212,24 @@ export default function ResponseTrackingClient() {
                       <Icon className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="text-xs sm:text-sm font-bold text-foreground">
-                        {item.name}
-                      </h4>
+                      <h4 className="text-xs sm:text-sm font-bold text-foreground">{item.name}</h4>
                       <p className="text-[10px] text-muted-foreground mt-1">
                         Updated: {formatDate(item.updated_at)}
                       </p>
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 shrink-0">
-                    <Button asChild variant="outline" size="sm" className="shrink-0 cursor-pointer font-bold">
-                      <a href={getFileUrl(item.file)} download className="flex items-center gap-1.5">
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0 cursor-pointer font-bold"
+                    >
+                      <a
+                        href={getFileUrl(item.file)}
+                        download
+                        className="flex items-center gap-1.5"
+                      >
                         <Download className="w-3.5 h-3.5" />
                         Download {format}
                       </a>
@@ -268,7 +275,9 @@ export default function ResponseTrackingClient() {
 
             <form onSubmit={handleUploadSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Document Title</label>
+                <label className="block text-xs font-bold text-muted-foreground">
+                  Document Title
+                </label>
                 <Input
                   value={uploadName}
                   onChange={(e) => setUploadName(e.target.value)}

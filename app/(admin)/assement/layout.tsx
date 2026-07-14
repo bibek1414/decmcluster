@@ -5,10 +5,6 @@ export const metadata: Metadata = {
   description: "Browse and manage all of your assessments.",
 };
 
-export default function AssessmentLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AssessmentLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

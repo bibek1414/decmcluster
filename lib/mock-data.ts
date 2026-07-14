@@ -118,10 +118,45 @@ export function getAssessment(id: string) {
   return assessments.find((a) => a.id === id);
 }
 
-const firstNames = ["Alex", "Jordan", "Taylor", "Morgan", "Riley", "Avery", "Casey", "Quinn", "Sam", "Drew", "Cameron", "Harper"];
-const lastNames = ["Walker", "Bennett", "Hughes", "Reed", "Foster", "Sullivan", "Brooks", "Parker", "Reyes", "Murphy", "Cole", "Wood"];
+const firstNames = [
+  "Alex",
+  "Jordan",
+  "Taylor",
+  "Morgan",
+  "Riley",
+  "Avery",
+  "Casey",
+  "Quinn",
+  "Sam",
+  "Drew",
+  "Cameron",
+  "Harper",
+];
+const lastNames = [
+  "Walker",
+  "Bennett",
+  "Hughes",
+  "Reed",
+  "Foster",
+  "Sullivan",
+  "Brooks",
+  "Parker",
+  "Reyes",
+  "Murphy",
+  "Cole",
+  "Wood",
+];
 const teams = ["Engineering", "Sales", "Marketing", "Product", "Support", "Design"];
-const cities = ["San Francisco", "London", "Berlin", "Tokyo", "Sydney", "Toronto", "Austin", "Lisbon"];
+const cities = [
+  "San Francisco",
+  "London",
+  "Berlin",
+  "Tokyo",
+  "Sydney",
+  "Toronto",
+  "Austin",
+  "Lisbon",
+];
 
 export interface CsvRow {
   id: number;
@@ -148,7 +183,8 @@ export function generateCsvData(count = 120): CsvRow[] {
     const c = cities[Math.floor(seeded(i + 4) * cities.length)];
     const score = Math.floor(40 + seeded(i + 5) * 60);
     const statusPick = seeded(i + 6);
-    const status: CsvRow["status"] = statusPick > 0.75 ? "Review" : statusPick > 0.25 ? "Pass" : "Fail";
+    const status: CsvRow["status"] =
+      statusPick > 0.75 ? "Review" : statusPick > 0.25 ? "Pass" : "Fail";
     const day = String(1 + Math.floor(seeded(i + 7) * 27)).padStart(2, "0");
     rows.push({
       id: i + 1,

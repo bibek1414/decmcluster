@@ -115,12 +115,7 @@ export function EvacuationCentreFormFields({
       "latitude",
       "longitude",
     ],
-    contact: [
-      "primary_contact",
-      "secondary_contact",
-      "organization",
-      "agency",
-    ],
+    contact: ["primary_contact", "secondary_contact", "organization", "agency"],
     capacity: [
       "no_of_buildings",
       "no_of_rooms",
@@ -165,9 +160,7 @@ export function EvacuationCentreFormFields({
 
         return (
           <div key={col.key} className="space-y-1">
-            <label className="block text-xs font-bold text-muted-foreground">
-              {col.label}
-            </label>
+            <label className="block text-xs font-bold text-muted-foreground">{col.label}</label>
             {col.type === "boolean" ? (
               <select
                 value={String(modalFormData[col.key] ?? "")}
@@ -175,8 +168,7 @@ export function EvacuationCentreFormFields({
                   const val = e.target.value;
                   setModalFormData((prev: any) => ({
                     ...prev,
-                    [col.key]:
-                      val === "true" ? true : val === "false" ? false : "",
+                    [col.key]: val === "true" ? true : val === "false" ? false : "",
                   }));
                 }}
                 className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"

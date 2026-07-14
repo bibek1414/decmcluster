@@ -19,7 +19,7 @@ export const sopService = {
   listAdmin: async (
     page: number = 1,
     token: string | null,
-    search?: string
+    search?: string,
   ): Promise<PaginatedResponse<SOPData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/sop/admin/?page=${page}&page_size=10`;
@@ -51,7 +51,7 @@ export const sopService = {
     description: string,
     file: File | null,
     token: string | null,
-    isAdmin: boolean = false
+    isAdmin: boolean = false,
   ): Promise<SOPData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
@@ -142,7 +142,7 @@ export const sopService = {
     id: number | string,
     status: string,
     comment: string,
-    token: string | null
+    token: string | null,
   ): Promise<SOPData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {
@@ -210,11 +210,7 @@ export const sopService = {
     return res.json();
   },
 
-  updateFile: async (
-    id: number | string,
-    file: File,
-    token: string | null
-  ): Promise<SOPData> => {
+  updateFile: async (id: number | string, file: File, token: string | null): Promise<SOPData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
     formData.append("file", file);

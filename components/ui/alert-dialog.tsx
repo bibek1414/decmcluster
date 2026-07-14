@@ -47,13 +47,13 @@ export function AlertDialog({
     pendingText || (variant === "destructive" ? "Deleting..." : "Processing...");
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm animate-fadeIn"
       onClick={() => {
         if (!isPending) onClose();
       }}
     >
-      <div 
+      <div
         className="bg-card border border-border w-full max-w-md p-6 rounded-xl space-y-4 shadow-xl mx-4"
         onClick={(e) => e.stopPropagation()}
       >
@@ -69,9 +69,7 @@ export function AlertDialog({
           </div>
           <div className="space-y-1">
             <h3 className="text-base font-bold text-foreground">{title}</h3>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              {description}
-            </p>
+            <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
           </div>
         </div>
 
@@ -91,9 +89,7 @@ export function AlertDialog({
             onClick={onConfirm}
             disabled={isPending}
             className={`h-9 font-bold cursor-pointer ${
-              variant === "destructive"
-                ? "bg-rose-600 hover:bg-rose-700 text-white"
-                : ""
+              variant === "destructive" ? "bg-rose-600 hover:bg-rose-700 text-white" : ""
             }`}
           >
             {isPending ? defaultPendingText : confirmText}

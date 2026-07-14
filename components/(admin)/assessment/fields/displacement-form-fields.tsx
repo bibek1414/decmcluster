@@ -78,12 +78,7 @@ export function DisplacementFormFields({
       "admin2_pcode",
       "admin_level",
     ],
-    timeline: [
-      "reporting_date",
-      "reporting_year",
-      "reporting_month",
-      "round_number",
-    ],
+    timeline: ["reporting_date", "reporting_year", "reporting_month", "round_number"],
     demographics: [
       "num_present_idps",
       "males_number",
@@ -117,9 +112,7 @@ export function DisplacementFormFields({
 
         return (
           <div key={col.key} className="space-y-1">
-            <label className="block text-xs font-bold text-muted-foreground">
-              {col.label}
-            </label>
+            <label className="block text-xs font-bold text-muted-foreground">{col.label}</label>
             {col.type === "number" ? (
               <Input
                 type="number"

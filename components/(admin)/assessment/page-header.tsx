@@ -12,16 +12,10 @@ export function PageHeader({ title, description, actions }: PageHeaderProps) {
       <div>
         <h1 className="text-2xl font-extrabold tracking-tight text-foreground">{title}</h1>
         {description && (
-          <div className="text-sm text-muted-foreground mt-1 font-medium">
-            {description}
-          </div>
+          <div className="text-sm text-muted-foreground mt-1 font-medium">{description}</div>
         )}
       </div>
-      {actions && (
-        <div className="flex items-center gap-2.5">
-          {actions}
-        </div>
-      )}
+      {actions && <div className="flex items-center gap-2.5">{actions}</div>}
     </div>
   );
 }

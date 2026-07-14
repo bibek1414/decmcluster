@@ -1,26 +1,8 @@
 "use client";
 
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-} from "react";
-import {
-  Tent,
-  Users,
-  Droplet,
-  Shield,
-  Heart,
-  Activity,
-  MapPin,
-  X,
-} from "lucide-react";
-import {
-  useEvacuationCentresStats,
-  useEvacuationCentreLocations,
-} from "@/hooks/use-dashboard";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { Tent, Users, Droplet, Shield, Heart, Activity, MapPin, X } from "lucide-react";
+import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
 
 export default function EvacuationCentresDashboard() {
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
@@ -35,10 +17,9 @@ export default function EvacuationCentresDashboard() {
     latitude: selectedCoordinates?.latitude,
     longitude: selectedCoordinates?.longitude,
   });
-  const { data: locations, isLoading: locationsLoading } =
-    useEvacuationCentreLocations({
-      province: selectedProvince || undefined,
-    });
+  const { data: locations, isLoading: locationsLoading } = useEvacuationCentreLocations({
+    province: selectedProvince || undefined,
+  });
 
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -115,15 +96,12 @@ export default function EvacuationCentresDashboard() {
         preferCanvas: false,
       }).setView([-16.5, 168.0], 7);
 
-      tileLayerRef.current = L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-          maxZoom: 19,
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          crossOrigin: true,
-        },
-      ).addTo(activeMap);
+      tileLayerRef.current = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        crossOrigin: true,
+      }).addTo(activeMap);
 
       setMap(activeMap);
 
@@ -173,7 +151,8 @@ export default function EvacuationCentresDashboard() {
         statusName = "Owner approved only";
       }
 
-      const isSelected = selectedCoordinates !== null &&
+      const isSelected =
+        selectedCoordinates !== null &&
         selectedCoordinates.latitude === loc.latitude &&
         selectedCoordinates.longitude === loc.longitude;
 
@@ -436,7 +415,12 @@ export default function EvacuationCentresDashboard() {
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="text-[11px] text-primary font-bold flex items-center gap-1">
                       <MapPin className="h-3.5 w-3.5" />
-                      {locations?.find(l => l.latitude === selectedCoordinates.latitude && l.longitude === selectedCoordinates.longitude)?.compound_name || `${selectedCoordinates.latitude}, ${selectedCoordinates.longitude}`}
+                      {locations?.find(
+                        (l) =>
+                          l.latitude === selectedCoordinates.latitude &&
+                          l.longitude === selectedCoordinates.longitude,
+                      )?.compound_name ||
+                        `${selectedCoordinates.latitude}, ${selectedCoordinates.longitude}`}
                     </span>
                     <button
                       onClick={() => setSelectedCoordinates(null)}
@@ -520,21 +504,15 @@ export default function EvacuationCentresDashboard() {
               </span>
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-[#10b981] border border-white shadow-xs" />
-                <span className="text-xs font-medium text-foreground">
-                  Government approved
-                </span>
+                <span className="text-xs font-medium text-foreground">Government approved</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-[#ef4444] border border-white shadow-xs" />
-                <span className="text-xs font-medium text-foreground">
-                  Not approved / unknown
-                </span>
+                <span className="text-xs font-medium text-foreground">Not approved / unknown</span>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="h-3 w-3 rounded-full bg-[#3b82f6] border border-white shadow-xs" />
-                <span className="text-xs font-medium text-foreground">
-                  Owner approved only
-                </span>
+                <span className="text-xs font-medium text-foreground">Owner approved only</span>
               </div>
             </div>
           </div>
@@ -544,16 +522,11 @@ export default function EvacuationCentresDashboard() {
         <div className="space-y-6">
           {/* ECs by province card - Clickable filters */}
           <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
-            <h3 className="text-sm font-bold text-foreground mb-4">
-              ECs by province
-            </h3>
+            <h3 className="text-sm font-bold text-foreground mb-4">ECs by province</h3>
             <div className="space-y-3.5">
               {provinceBreakdown.map((prov) => {
-                const percentage = Math.round(
-                  (prov.value / maxProvinceVal) * 100,
-                );
-                const isSelected =
-                  selectedProvince?.toLowerCase() === prov.name.toLowerCase();
+                const percentage = Math.round((prov.value / maxProvinceVal) * 100);
+                const isSelected = selectedProvince?.toLowerCase() === prov.name.toLowerCase();
                 return (
                   <button
                     key={prov.name}
@@ -568,13 +541,9 @@ export default function EvacuationCentresDashboard() {
                         className={`group-hover:text-primary transition-colors flex items-center gap-1.5 ${isSelected ? "text-primary font-bold" : ""}`}
                       >
                         {prov.name}
-                        {isSelected && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        )}
+                        {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
                       </span>
-                      <span className="text-primary font-bold">
-                        {prov.value}
-                      </span>
+                      <span className="text-primary font-bold">{prov.value}</span>
                     </div>
                     <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
                       <div
@@ -590,9 +559,7 @@ export default function EvacuationCentresDashboard() {
 
           {/* Readiness Indicators Card */}
           <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
-            <h3 className="text-sm font-bold text-foreground mb-4">
-              Readiness indicators
-            </h3>
+            <h3 className="text-sm font-bold text-foreground mb-4">Readiness indicators</h3>
             {showStatsLoading ? (
               <div className="space-y-4 py-2 animate-pulse w-full">
                 {Array.from({ length: 6 }).map((_, idx) => (
@@ -608,9 +575,7 @@ export default function EvacuationCentresDashboard() {
                   <div key={indicator.name}>
                     <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
                       <span>{indicator.name}</span>
-                      <span className="text-primary font-bold">
-                        {indicator.value}%
-                      </span>
+                      <span className="text-primary font-bold">{indicator.value}%</span>
                     </div>
                     <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
                       <div
@@ -628,9 +593,7 @@ export default function EvacuationCentresDashboard() {
 
       {/* WASH and facility indicators (Full width below) */}
       <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs">
-        <h3 className="text-sm font-bold text-foreground mb-4">
-          WASH and facility indicators
-        </h3>
+        <h3 className="text-sm font-bold text-foreground mb-4">WASH and facility indicators</h3>
         {showStatsLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-pulse">
             {Array.from({ length: 10 }).map((_, idx) => (
@@ -643,16 +606,12 @@ export default function EvacuationCentresDashboard() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-4">
             {washFacilityList.map((item) => {
-              const percentage = Math.round(
-                (item.value / maxWashFacilityVal) * 100,
-              );
+              const percentage = Math.round((item.value / maxWashFacilityVal) * 100);
               return (
                 <div key={item.name}>
                   <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
                     <span>{item.name}</span>
-                    <span className="text-primary font-bold">
-                      {item.value}
-                    </span>
+                    <span className="text-primary font-bold">{item.value}</span>
                   </div>
                   <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
                     <div

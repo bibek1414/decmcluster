@@ -26,9 +26,7 @@ export default function AssessmentsPage() {
             <ClipboardList className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-primary">
-              Assessment Tools
-            </h2>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-primary">Assessment Tools</h2>
             <p className="text-xs text-muted-foreground mt-1">
               Field survey forms, data schemas and mobile templates
             </p>
@@ -39,12 +37,9 @@ export default function AssessmentsPage() {
           <AssessmentsListClient />
 
           <div className="border-0 sm:border border-border rounded-none sm:rounded-xl p-0 sm:p-5 bg-transparent sm:bg-muted/30 space-y-4">
-            <h3 className="text-xs font-bold text-muted-foreground">
-              Data Import & Schema
-            </h3>
+            <h3 className="text-xs font-bold text-muted-foreground">Data Import & Schema</h3>
             <p className="text-xs text-muted-foreground">
-              Upload CSV/Excel spreadsheets manually to process raw assessment
-              reports.
+              Upload CSV/Excel spreadsheets manually to process raw assessment reports.
             </p>
             <div className="border-2 border-dashed border-border rounded-xl p-8 text-center bg-card">
               <FileSpreadsheet className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
