@@ -70,11 +70,14 @@ export const dashboardService = {
     return res.json();
   },
 
-  getEvacuationCentresStats: async (province?: string): Promise<EvacuationCentresStats> => {
+  getEvacuationCentresStats: async (filters?: { province?: string; latitude?: number; longitude?: number }): Promise<EvacuationCentresStats> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const url = province 
-      ? `${baseUrl}/api/evacuation-centres/stats/?province=${encodeURIComponent(province)}`
-      : `${baseUrl}/api/evacuation-centres/stats/`;
+    const params = new URLSearchParams();
+    if (filters?.province) params.append("province", filters.province);
+    if (filters?.latitude !== undefined) params.append("latitude", filters.latitude.toString());
+    if (filters?.longitude !== undefined) params.append("longitude", filters.longitude.toString());
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const url = `${baseUrl}/api/evacuation-centres/stats/${query}`;
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error("Failed to fetch evacuation centres stats");
@@ -82,11 +85,14 @@ export const dashboardService = {
     return res.json();
   },
 
-  getEvacuationCentreLocations: async (province?: string): Promise<EvacuationCentreLocation[]> => {
+  getEvacuationCentreLocations: async (filters?: { province?: string; latitude?: number; longitude?: number }): Promise<EvacuationCentreLocation[]> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const url = province 
-      ? `${baseUrl}/api/evacuation-centres/location/?province=${encodeURIComponent(province)}`
-      : `${baseUrl}/api/evacuation-centres/location/`;
+    const params = new URLSearchParams();
+    if (filters?.province) params.append("province", filters.province);
+    if (filters?.latitude !== undefined) params.append("latitude", filters.latitude.toString());
+    if (filters?.longitude !== undefined) params.append("longitude", filters.longitude.toString());
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const url = `${baseUrl}/api/evacuation-centres/location/${query}`;
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error("Failed to fetch evacuation centre locations");

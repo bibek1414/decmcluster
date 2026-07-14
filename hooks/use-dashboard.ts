@@ -43,17 +43,25 @@ export function useResponseTrackingSummary() {
   });
 }
 
-export function useEvacuationCentresStats(province?: string) {
+export function useEvacuationCentresStats(filters?: {
+  province?: string;
+  latitude?: number;
+  longitude?: number;
+}) {
   return useQuery({
-    queryKey: ["evacuation-centres-stats", province],
-    queryFn: () => dashboardService.getEvacuationCentresStats(province),
+    queryKey: ["evacuation-centres-stats", filters],
+    queryFn: () => dashboardService.getEvacuationCentresStats(filters),
   });
 }
 
-export function useEvacuationCentreLocations(province?: string) {
+export function useEvacuationCentreLocations(filters?: {
+  province?: string;
+  latitude?: number;
+  longitude?: number;
+}) {
   return useQuery({
-    queryKey: ["evacuation-centre-locations", province],
-    queryFn: () => dashboardService.getEvacuationCentreLocations(province),
+    queryKey: ["evacuation-centre-locations", filters],
+    queryFn: () => dashboardService.getEvacuationCentreLocations(filters),
   });
 }
 

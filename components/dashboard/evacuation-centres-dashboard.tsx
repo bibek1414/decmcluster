@@ -24,13 +24,23 @@ import {
 
 export default function EvacuationCentresDashboard() {
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedCoordinates, setSelectedCoordinates] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
-  // Fetch both stats and locations from backend filtered by province
-  const { data: stats, isLoading: statsLoading } = useEvacuationCentresStats(
-    selectedProvince || undefined,
-  );
+  // Fetch both stats and locations from backend filtered by province and coordinates
+  const { data: stats, isLoading: statsLoading } = useEvacuationCentresStats({
+    province: selectedProvince || undefined,
+    latitude: selectedCoordinates?.latitude,
+    longitude: selectedCoordinates?.longitude,
+  });
   const { data: locations, isLoading: locationsLoading } =
-    useEvacuationCentreLocations(selectedProvince || undefined);
+    useEvacuationCentreLocations({
+      province: selectedProvince || undefined,
+      latitude: selectedCoordinates?.latitude,
+      longitude: selectedCoordinates?.longitude,
+    });
 
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -165,13 +175,17 @@ export default function EvacuationCentresDashboard() {
         statusName = "Owner approved only";
       }
 
+      const isSelected = selectedCoordinates !== null &&
+        selectedCoordinates.latitude === loc.latitude &&
+        selectedCoordinates.longitude === loc.longitude;
+
       const marker = L.circleMarker([loc.latitude, loc.longitude], {
-        radius: 6,
+        radius: isSelected ? 10 : 6,
         fillColor: color,
-        color: "#ffffff",
-        weight: 1.5,
+        color: isSelected ? "#eab308" : "#ffffff",
+        weight: isSelected ? 3.5 : 1.5,
         opacity: 1,
-        fillOpacity: 0.85,
+        fillOpacity: isSelected ? 1 : 0.85,
       }).addTo(map);
 
       const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
@@ -188,9 +202,20 @@ export default function EvacuationCentresDashboard() {
           </a>
         </div>
       `);
+
+      marker.on("click", () => {
+        setSelectedCoordinates({ latitude: loc.latitude, longitude: loc.longitude });
+        setSelectedProvince(null);
+      });
+
+      if (isSelected) {
+        marker.openPopup();
+      }
     });
 
-    if (validCoords.length > 0 && selectedProvince) {
+    if (selectedCoordinates) {
+      map.setView([selectedCoordinates.latitude, selectedCoordinates.longitude], 12);
+    } else if (validCoords.length > 0 && selectedProvince) {
       map.fitBounds(L.latLngBounds(validCoords), { padding: [40, 40] });
     } else {
       map.setView([-16.5, 168.0], 7);
@@ -198,7 +223,7 @@ export default function EvacuationCentresDashboard() {
 
     // Ensure tiles are rendered after any layout shift
     requestAnimationFrame(() => map.invalidateSize());
-  }, [map, locations, selectedProvince]);
+  }, [map, locations, selectedProvince, selectedCoordinates]);
 
   // Total statistics indicators mapping (Exactly match Summary cards fields structure)
   const statsCards = useMemo(() => {
@@ -409,18 +434,37 @@ export default function EvacuationCentresDashboard() {
                 <h3 className="text-sm font-bold text-foreground">
                   EC location map by approval status
                 </h3>
-                <p className="text-[11px] text-muted-foreground mt-0.5">
-                  Dot size = recorded internal capacity
-                </p>
+                {selectedCoordinates ? (
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[11px] text-primary font-bold flex items-center gap-1">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {locations?.find(l => l.latitude === selectedCoordinates.latitude && l.longitude === selectedCoordinates.longitude)?.compound_name || `${selectedCoordinates.latitude}, ${selectedCoordinates.longitude}`}
+                    </span>
+                    <button
+                      onClick={() => setSelectedCoordinates(null)}
+                      className="p-0.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                      title="Clear Selection"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    Dot size = recorded internal capacity
+                  </p>
+                )}
               </div>
 
               {/* Province Selector Dropdown */}
               <div className="flex items-center space-x-2 shrink-0">
-                {selectedProvince && (
+                {(selectedProvince || selectedCoordinates) && (
                   <button
-                    onClick={() => setSelectedProvince(null)}
+                    onClick={() => {
+                      setSelectedProvince(null);
+                      setSelectedCoordinates(null);
+                    }}
                     className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold bg-muted hover:bg-muted-foreground/10 text-muted-foreground hover:text-foreground rounded-lg transition-colors cursor-pointer"
-                    title="Clear Filter"
+                    title="Clear Filters"
                   >
                     <X className="h-3 w-3" />
                     <span>Clear Filter</span>
@@ -429,7 +473,10 @@ export default function EvacuationCentresDashboard() {
                 <select
                   id="province-filter"
                   value={selectedProvince || ""}
-                  onChange={(e) => setSelectedProvince(e.target.value || null)}
+                  onChange={(e) => {
+                    setSelectedProvince(e.target.value || null);
+                    setSelectedCoordinates(null);
+                  }}
                   className="text-xs font-bold bg-muted hover:bg-muted/80 border border-border rounded-lg px-3 py-1.5 text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
                   <option value="">All Provinces</option>
@@ -512,9 +559,10 @@ export default function EvacuationCentresDashboard() {
                 return (
                   <button
                     key={prov.name}
-                    onClick={() =>
-                      setSelectedProvince(isSelected ? null : prov.name)
-                    }
+                    onClick={() => {
+                      setSelectedProvince(isSelected ? null : prov.name);
+                      setSelectedCoordinates(null);
+                    }}
                     className="w-full text-left block focus:outline-none group cursor-pointer"
                   >
                     <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
