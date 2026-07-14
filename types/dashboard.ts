@@ -125,6 +125,11 @@ export interface IDPByYear {
   total_male: number;
   total_female: number;
   total_idp: number;
+  total_vulnerable_hhs?: number;
+  total_0_4?: number;
+  total_5_17?: number;
+  total_18_59?: number;
+  total_60_plus?: number;
 }
 
 export interface IDPByAdmin1 {
@@ -132,6 +137,11 @@ export interface IDPByAdmin1 {
   total_male: number;
   total_female: number;
   total_idp: number;
+  total_vulnerable_hhs?: number;
+  total_0_4?: number;
+  total_5_17?: number;
+  total_18_59?: number;
+  total_60_plus?: number;
 }
 
 export interface DisplacementStats {
@@ -139,6 +149,11 @@ export interface DisplacementStats {
   total_male: number;
   total_female: number;
   operation_count: number;
+  total_vulnerable_hhs: number;
+  total_0_4: number;
+  total_5_17: number;
+  total_18_59: number;
+  total_60_plus: number;
   idps_by_year: IDPByYear[];
   idps_by_admin1: IDPByAdmin1[];
 }

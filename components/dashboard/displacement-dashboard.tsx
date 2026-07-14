@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { Users, User, UserCheck, Activity, Filter, X } from "lucide-react";
+import { Users, User, UserCheck, Activity, Filter, X, Home, Baby, Accessibility } from "lucide-react";
 import {
   useDisplacementStats,
   useDisplacementFilters,
@@ -46,9 +46,45 @@ export default function DisplacementDashboard() {
       },
       {
         id: "operation_count",
-        label: "Operations",
+        label: "Events",
         value: stats.operation_count.toLocaleString(),
         icon: Activity,
+      },
+    ];
+  }, [stats]);
+
+  const ageStatsCards = useMemo(() => {
+    if (!stats) return [];
+    return [
+      {
+        id: "total_vulnerable_hhs",
+        label: "Total Vulnerable HHs",
+        value: (stats.total_vulnerable_hhs ?? 0).toLocaleString(),
+        icon: Home,
+      },
+      {
+        id: "total_0_4",
+        label: "0-4 Years Total",
+        value: (stats.total_0_4 ?? 0).toLocaleString(),
+        icon: Baby,
+      },
+      {
+        id: "total_5_17",
+        label: "5-17 Years Total",
+        value: (stats.total_5_17 ?? 0).toLocaleString(),
+        icon: Users,
+      },
+      {
+        id: "total_18_59",
+        label: "18-59 Years Total",
+        value: (stats.total_18_59 ?? 0).toLocaleString(),
+        icon: User,
+      },
+      {
+        id: "total_60_plus",
+        label: "60+ Years Total",
+        value: (stats.total_60_plus ?? 0).toLocaleString(),
+        icon: Accessibility,
       },
     ];
   }, [stats]);
@@ -154,6 +190,38 @@ export default function DisplacementDashboard() {
               />
             ))
           : statsCards.map((card) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={card.id}
+                  className="p-4 rounded-lg border flex items-start gap-3.5 bg-card text-card-foreground border-primary/40 bg-primary/5 transition-all duration-300 hover:border-primary/60"
+                >
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-extrabold tracking-tight text-foreground leading-none">
+                      {card.value}
+                    </h3>
+                    <p className="text-[11px] font-bold text-muted-foreground mt-1 leading-tight">
+                      {card.label}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+      </div>
+
+      {/* 5 Age & Vulnerability Stats Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 mt-4">
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="p-4 rounded-lg border border-border bg-card flex items-start gap-3.5 animate-pulse h-[72px]"
+              />
+            ))
+          : ageStatsCards.map((card) => {
               const Icon = card.icon;
               return (
                 <div
