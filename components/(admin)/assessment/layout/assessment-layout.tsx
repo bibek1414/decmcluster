@@ -41,6 +41,9 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     if (pathname?.startsWith("/assement/evacuation-centre-assessment-form/imports")) {
       return normalized.includes("evacuation-centre-assessment-form");
     }
+    if (pathname?.startsWith("/assement/displacement-data/imports")) {
+      return normalized.includes("displacement-data");
+    }
     if (pathname?.startsWith("/assement/sops")) {
       return normalized.includes("sops");
     }

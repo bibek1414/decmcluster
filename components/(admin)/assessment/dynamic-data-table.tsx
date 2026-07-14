@@ -416,6 +416,18 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                       Import
                     </Link>
                   </Button>
+                ) : slug === "displacement-data" ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
+                  >
+                    <Link href="/assement/displacement-data/imports">
+                      <Upload className="h-4 w-4" />
+                      Import
+                    </Link>
+                  </Button>
                 ) : (
                   <>
                     <input

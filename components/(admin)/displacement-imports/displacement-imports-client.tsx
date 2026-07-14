@@ -18,12 +18,12 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  useEvacuationCentreImports,
-  useUploadEvacuationCentreImport,
-  useDeleteEvacuationCentreImport,
-  useReverifyEvacuationCentreImport,
-  useUploadNewEvacuationCentreImport,
-} from "@/hooks/use-evacuation-centre-imports";
+  useDisplacementImports,
+  useUploadDisplacementImport,
+  useDeleteDisplacementImport,
+  useReverifyDisplacementImport,
+  useUploadNewDisplacementImport,
+} from "@/hooks/use-displacement-imports";
 import { useDebounce } from "@/hooks/use-debounce";
 import { PageHeader } from "@/components/(admin)/assessment/page-header";
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ import { AlertDialog } from "@/components/ui/alert-dialog";
 import { FileUpload } from "@/components/shared/file-upload";
 import Link from "next/link";
 
-export default function EvacuationCentreImportsClient() {
+export default function DisplacementImportsClient() {
   const { user, token } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -85,8 +85,8 @@ export default function EvacuationCentreImportsClient() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Fetch evacuation centre imports list
-  const { data, isLoading, isPlaceholderData, error } = useEvacuationCentreImports(
+  // Fetch displacement imports list
+  const { data, isLoading, isPlaceholderData, error } = useDisplacementImports(
     page,
     token,
     debouncedSearch,
@@ -102,17 +102,11 @@ export default function EvacuationCentreImportsClient() {
     return `${baseUrl}${urlPath.startsWith("/") ? "" : "/"}${urlPath}`;
   };
 
-  // Upload mutation
-  const uploadMutation = useUploadEvacuationCentreImport();
-
-  // Delete mutation
-  const deleteMutation = useDeleteEvacuationCentreImport();
-
-  // Reverify mutation
-  const reverifyMutation = useReverifyEvacuationCentreImport();
-
-  // Upload new version mutation
-  const uploadNewMutation = useUploadNewEvacuationCentreImport();
+  // Mutations
+  const uploadMutation = useUploadDisplacementImport();
+  const deleteMutation = useDeleteDisplacementImport();
+  const reverifyMutation = useReverifyDisplacementImport();
+  const uploadNewMutation = useUploadNewDisplacementImport();
 
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +121,7 @@ export default function EvacuationCentreImportsClient() {
       },
       {
         onSuccess: () => {
-          toast.success("Evacuation centre import file uploaded successfully!");
+          toast.success("Displacement import file uploaded successfully!");
           setIsUploadOpen(false);
           setUploadName("");
           setSelectedFile(null);
@@ -165,18 +159,18 @@ export default function EvacuationCentreImportsClient() {
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
         <Link
-          href="/assement/evacuation-centre-assessment-form"
+          href="/assement"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors mb-2"
         >
-          <ChevronLeft className="h-4 w-4" /> Back to Evacuation Centre Data
+          <ChevronLeft className="h-4 w-4" /> Back to Displacement Data
         </Link>
 
         <PageHeader
-          title="Evacuation Centre Imports"
+          title="Displacement Imports"
           description={
             <div className="flex flex-col gap-0.5">
               <span>
-                Upload, manage, and verify evacuation centre registry spreadsheets
+                Upload, manage, and verify displacement registry spreadsheets
               </span>
               {data && (
                 <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
@@ -222,11 +216,11 @@ export default function EvacuationCentreImportsClient() {
           ) : importsList.length === 0 ? (
             <EmptyState
               icon={FileSpreadsheet}
-              title="No evacuation centre imports found"
+              title="No displacement imports found"
               description={
                 canAdd
-                  ? "Upload your first evacuation centre Excel/CSV list to submit for verification."
-                  : "No evacuation centre list imports have been uploaded yet."
+                  ? "Upload your first displacement Excel/CSV list to submit for verification."
+                  : "No displacement list imports have been uploaded yet."
               }
               action={
                 canAdd ? (
@@ -304,7 +298,7 @@ export default function EvacuationCentreImportsClient() {
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 asChild
                               >
-                                <Link href={`/evacuation-centre-imports/verify/${item.id}`}>Review</Link>
+                                <Link href={`/displacement-imports/verify/${item.id}`}>Review</Link>
                               </Button>
                             )}
                             {canAdd && item.status === "returned" && (
@@ -387,7 +381,7 @@ export default function EvacuationCentreImportsClient() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Upload Evacuation Centre Import</h3>
+              <h3 className="text-base font-bold text-foreground">Upload Displacement Import</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -406,7 +400,7 @@ export default function EvacuationCentreImportsClient() {
                 <Input
                   value={uploadName}
                   onChange={(e) => setUploadName(e.target.value)}
-                  placeholder="e.g. Shefa Province Evac Centres July 2026"
+                  placeholder="e.g. Shefa Province Displacements July 2026"
                   className="w-full bg-background"
                 />
               </div>
