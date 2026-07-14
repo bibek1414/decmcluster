@@ -554,7 +554,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                           }}
                           title="Toggle export selection for this column"
                         />
-                        <span>{col.label}</span>
+                        <span>{col.key === "id" ? "S.N." : col.label}</span>
                       </div>
                     </TableHead>
                   );
@@ -567,7 +567,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
               </TableRow>
             </TableHeader>
             <TableBody>
-              {results.map((row: any) => (
+              {results.map((row: any, index: number) => (
                 <TableRow
                   key={row.id}
                   className={`hover:bg-muted/30 border-b border-border transition-colors cursor-pointer ${
@@ -628,6 +628,8 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                               className="w-full h-7 px-1.5 rounded border border-ring bg-background text-[11px] focus:outline-none focus:ring-1 focus:ring-ring"
                             />
                           )
+                        ) : col.key === "id" ? (
+                          (page - 1) * 50 + index + 1
                         ) : (
                           <>
                             {value === null || value === undefined ? (
