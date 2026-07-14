@@ -38,8 +38,6 @@ export default function EvacuationCentresDashboard() {
   const { data: locations, isLoading: locationsLoading } =
     useEvacuationCentreLocations({
       province: selectedProvince || undefined,
-      latitude: selectedCoordinates?.latitude,
-      longitude: selectedCoordinates?.longitude,
     });
 
   const mapRef = useRef<HTMLDivElement>(null);
