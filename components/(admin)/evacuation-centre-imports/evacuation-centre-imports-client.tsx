@@ -175,14 +175,7 @@ export default function EvacuationCentreImportsClient() {
           title="Evacuation Centre Imports"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>
-                Upload, manage, and verify evacuation centre registry spreadsheets
-              </span>
-              {data && (
-                <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
-                  {data.count} total imports
-                </span>
-              )}
+              <span>Upload, manage, and verify evacuation centre registry spreadsheets</span>
             </div>
           }
           actions={
@@ -304,7 +297,9 @@ export default function EvacuationCentreImportsClient() {
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 asChild
                               >
-                                <Link href={`/evacuation-centre-imports/verify/${item.id}`}>Review</Link>
+                                <Link href={`/evacuation-centre-imports/verify/${item.id}`}>
+                                  Review
+                                </Link>
                               </Button>
                             )}
                             {canAdd && item.status === "returned" && (
@@ -387,7 +382,9 @@ export default function EvacuationCentreImportsClient() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Upload Evacuation Centre Import</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Upload Evacuation Centre Import
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"

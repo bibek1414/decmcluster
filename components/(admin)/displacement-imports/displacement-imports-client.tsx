@@ -169,14 +169,7 @@ export default function DisplacementImportsClient() {
           title="Displacement Imports"
           description={
             <div className="flex flex-col gap-0.5">
-              <span>
-                Upload, manage, and verify displacement registry spreadsheets
-              </span>
-              {data && (
-                <span className="text-xs text-muted-foreground/80 font-normal mt-0.5 block">
-                  {data.count} total imports
-                </span>
-              )}
+              <span>Upload, manage, and verify displacement registry spreadsheets</span>
             </div>
           }
           actions={
