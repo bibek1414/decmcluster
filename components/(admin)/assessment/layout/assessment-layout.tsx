@@ -38,6 +38,9 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     if (pathname?.startsWith("/assement/meeting-minutes")) {
       return normalized.includes("meeting-minutes");
     }
+    if (pathname?.startsWith("/assement/evacuation-centre-assessment-form/imports")) {
+      return normalized.includes("evacuation-centre-assessment-form");
+    }
     if (pathname?.startsWith("/assement/sops")) {
       return normalized.includes("sops");
     }

@@ -34,6 +34,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { dynamicDataService } from "@/services/dynamic-data";
 import {
@@ -403,27 +404,43 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
 
             {canEdit && (
               <>
-                <input
-                  type="file"
-                  accept=".csv,.xlsx,.xls"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={isImporting}
-                  onClick={() => fileInputRef.current?.click()}
-                  className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
-                >
-                  {isImporting ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                  ) : (
-                    <Upload className="h-4 w-4" />
-                  )}
-                  Import
-                </Button>
+                {isEvac ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
+                  >
+                    <Link href="/assement/evacuation-centre-assessment-form/imports">
+                      <Upload className="h-4 w-4" />
+                      Import
+                    </Link>
+                  </Button>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      accept=".csv,.xlsx,.xls"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isImporting}
+                      onClick={() => fileInputRef.current?.click()}
+                      className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
+                    >
+                      {isImporting ? (
+                        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                      ) : (
+                        <Upload className="h-4 w-4" />
+                      )}
+                      Import
+                    </Button>
+                  </>
+                )}
               </>
             )}
 
