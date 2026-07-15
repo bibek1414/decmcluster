@@ -93,11 +93,20 @@ export default function PowerBIView() {
 
   if (isLoading) {
     return (
-      <div className="w-full space-y-4">
-        <div className="h-10 bg-slate-900 rounded-lg animate-pulse w-48" />
-        <div className="w-full aspect-[16/9] min-h-[500px] bg-slate-900 rounded-2xl animate-pulse flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          <span className="text-xs text-muted-foreground font-medium">Loading PowerBI views...</span>
+      <div className="w-full space-y-6">
+        {/* Header Skeleton */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-2">
+            <div className="h-8 bg-muted/40 dark:bg-muted/20 rounded-xl w-64 animate-pulse" />
+            <div className="h-3 bg-muted/25 dark:bg-muted/10 rounded-lg w-80 sm:w-96 animate-pulse" />
+          </div>
+          <div className="h-9 bg-muted/35 dark:bg-muted/15 rounded-lg w-28 animate-pulse self-start sm:self-auto" />
+        </div>
+
+        {/* Viewport Skeleton */}
+        <div className="w-full aspect-[16/9] min-h-[500px] bg-slate-50/70 dark:bg-card/25 border border-border/50 rounded-2xl animate-pulse flex flex-col items-center justify-center gap-3">
+          <Loader2 className="w-6 h-6 text-primary/60 animate-spin" />
+          <span className="text-xs text-muted-foreground/80 font-bold tracking-wide">Loading PowerBI reports...</span>
         </div>
       </div>
     );
