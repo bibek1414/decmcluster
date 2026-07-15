@@ -33,7 +33,6 @@ import {
 
 import EvacuationCentresDashboard from "./evacuation-centres-dashboard";
 import DisplacementDashboard from "./displacement-dashboard";
-import PowerBIView from "./powerbi-view";
 
 import {
   useDashboardSummary,
@@ -73,7 +72,6 @@ export default function DashboardSection() {
     { id: "Protection", label: "Protection", icon: Shield },
     { id: "Basic Services", label: "Basic Services", icon: Heart },
     { id: "Response Tracking", label: "Response Tracking", icon: Truck },
-    { id: "PowerBI", label: "PowerBI Analytics", icon: Activity },
   ];
 
   // Dynamic Key Figures Stats data
@@ -548,14 +546,11 @@ export default function DashboardSection() {
           </div>
         </div>
 
-        {/* Right Content Area (9 cols) */}
         <div className="lg:col-span-9 xl:col-span-10 space-y-6">
           {activeMenu === "Evacuation Centres" ? (
             <EvacuationCentresDashboard />
           ) : activeMenu === "Displacement" ? (
             <DisplacementDashboard />
-          ) : activeMenu === "PowerBI" ? (
-            <PowerBIView />
           ) : (
             <>
               {/* Key Figures Grid */}

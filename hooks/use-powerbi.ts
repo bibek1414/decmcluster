@@ -15,13 +15,15 @@ export function useUpdatePowerBI() {
   return useMutation({
     mutationFn: ({
       id,
+      name,
       iframeLink,
       token,
     }: {
       id: number;
+      name: string;
       iframeLink: string;
       token: string | null;
-    }) => powerbiService.update(id, iframeLink, token),
+    }) => powerbiService.update(id, name, iframeLink, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["powerbi-config"] });
     },

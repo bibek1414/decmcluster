@@ -32,6 +32,7 @@ export const powerbiService = {
 
   update: async (
     id: number,
+    name: string,
     iframeLink: string,
     token: string | null,
   ): Promise<PowerBIData> => {
@@ -40,7 +41,7 @@ export const powerbiService = {
     const res = await fetch(url, {
       method: "PATCH",
       headers: getHeaders(token, "application/json"),
-      body: JSON.stringify({ iframe_link: iframeLink }),
+      body: JSON.stringify({ name, iframe_link: iframeLink }),
     });
 
     if (!res.ok) {
