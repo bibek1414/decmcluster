@@ -1,4 +1,5 @@
 import Hero from "@/components/layout/hero";
+import BannersSection from "@/components/dashboard/banners-section";
 import OverviewSection from "@/components/dashboard/overview-section";
 import LoginCard from "@/components/auth/login-card";
 import DashboardSection from "@/components/dashboard/dashboard-section";
@@ -15,12 +16,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
       <Hero />
 
-      {/* Main Container */}
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fadeIn">
-        {/* Top Grid: Overview + Login */}
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <OverviewSection />
@@ -30,13 +28,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Dashboard Section */}
         <DashboardSection />
 
-        {/* Modules Grid */}
         <ModulesGrid />
+      </div>
 
-        {/* Reports Grid Section */}
+      {/* Full Width Banner */}
+      <BannersSection />
+
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <ReportsSection />
       </div>
     </div>
