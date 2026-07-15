@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useUsefulLinks } from "@/hooks/use-useful-links";
 import { useDebounce } from "@/hooks/use-debounce";
 import { siteConfig } from "@/config/site";
+import { motion } from "framer-motion";
+
 
 export default function LinksClient() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,11 +73,33 @@ export default function LinksClient() {
             Failed to load useful links: {(error as Error).message}
           </div>
         ) : items.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.05,
+                },
+              },
+            }}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
             {items.map((link) => (
-              <div
+              <motion.div
                 key={link.id}
-                className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 transition-all flex flex-col justify-between gap-3 group"
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { type: "spring", stiffness: 100, damping: 15 },
+                  },
+                }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 transition-all flex flex-col justify-between gap-3 group hover:shadow-md duration-200"
               >
                 <div className="flex gap-4 items-start">
                   {link.image && (
@@ -108,9 +132,9 @@ export default function LinksClient() {
                   <span>Visit Site</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="p-8 text-center text-muted-foreground border border-border rounded-xl bg-card text-xs">
             No data available

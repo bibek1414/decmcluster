@@ -25,6 +25,8 @@ import { FileUpload } from "@/components/shared/file-upload";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { ReportData } from "@/types/report";
+import { motion } from "framer-motion";
+
 
 const REPORT_TYPES = [
   "Cyclone",
@@ -297,10 +299,27 @@ export default function ReportsClient() {
             </div>
           ) : reportsList.length > 0 ? (
             <div className="border border-border rounded-xl overflow-hidden bg-card">
-              <div className="divide-y divide-border">
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.04,
+                    },
+                  },
+                }}
+                initial="hidden"
+                animate="show"
+                className="divide-y divide-border"
+              >
                 {reportsList.map((rep) => (
-                  <div
+                  <motion.div
                     key={rep.id}
+                    variants={{
+                      hidden: { opacity: 0, x: -6 },
+                      show: { opacity: 1, x: 0, transition: { duration: 0.25 } },
+                    }}
                     className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-muted/30 transition-colors"
                   >
                     <div className="flex gap-3 items-center min-w-0">
@@ -377,9 +396,9 @@ export default function ReportsClient() {
                         </Button>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Reusable Pagination footer */}
               {data && (data.previous || data.next) && (

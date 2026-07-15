@@ -6,6 +6,8 @@ import { useContactMutation } from "@/hooks/use-contact";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
+
 
 export default function ContactForm() {
   const [fullName, setFullName] = useState("");
@@ -54,7 +56,12 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto text-card-foreground sm:rounded-2xl border border-border p-6 md:p-10 -lg space-y-6 mt-6">
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="max-w-2xl mx-auto text-card-foreground sm:rounded-2xl border border-border p-6 md:p-10 -lg space-y-6 mt-6"
+    >
       <div className="space-y-2 text-center">
         <h2 className="text-xl sm:text-2xl font-extrabold text-primary tracking-tight">
           Send Us a Message
@@ -143,28 +150,35 @@ export default function ContactForm() {
         </div>
 
         <div className="pt-2">
-          <Button
-            type="submit"
-            disabled={submitMutation.isPending}
-            className="w-full h-10 font-bold cursor-pointer flex items-center justify-center gap-2"
-          >
-            {submitMutation.isPending ? (
-              <>Sending Message...</>
-            ) : (
-              <>
-                <Send className="w-4 h-4" /> Send Message
-              </>
-            )}
-          </Button>
+          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+            <Button
+              type="submit"
+              disabled={submitMutation.isPending}
+              className="w-full h-10 font-bold cursor-pointer flex items-center justify-center gap-2"
+            >
+              {submitMutation.isPending ? (
+                <>Sending Message...</>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" /> Send Message
+                </>
+              )}
+            </Button>
+          </motion.div>
         </div>
       </form>
 
       {submitMutation.isSuccess && (
-        <div className="p-3 bg-green-50/50 border border-green-200/50 text-green-800 text-xs rounded-xl flex items-center gap-2 animate-fadeIn dark:bg-green-950/10 dark:border-green-900/30 dark:text-green-400">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="p-3 bg-green-50/50 border border-green-200/50 text-green-800 text-xs rounded-xl flex items-center gap-2 dark:bg-green-950/10 dark:border-green-900/30 dark:text-green-400"
+        >
           <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
           <span>Your query has been recorded. Our team will review and contact you shortly.</span>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

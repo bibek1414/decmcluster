@@ -25,6 +25,8 @@ import { FileUpload } from "@/components/shared/file-upload";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
 
 export default function SopsClient() {
   const { user, token } = useAuth();
@@ -207,13 +209,35 @@ export default function SopsClient() {
             </div>
           ) : sopsList.length > 0 ? (
             <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.05,
+                    },
+                  },
+                }}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
                 {sopsList.map((sop) => {
                   const Icon = getIcon(sop.name);
                   return (
-                    <div
+                    <motion.div
                       key={sop.id}
-                      className="p-5 rounded-xl border border-border flex flex-col justify-between gap-4 transition-all duration-200 -sm relative"
+                      variants={{
+                        hidden: { opacity: 0, y: 15 },
+                        show: {
+                          opacity: 1,
+                          y: 0,
+                          transition: { type: "spring", stiffness: 100, damping: 15 },
+                        },
+                      }}
+                      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                      className="p-5 rounded-xl border border-border flex flex-col justify-between gap-4 transition-shadow hover:shadow-md duration-200 bg-card -sm relative"
                     >
                       <div>
                         <div className="flex justify-between items-start">
@@ -248,10 +272,10 @@ export default function SopsClient() {
                           Read SOP Document <ChevronRight className="w-3 h-3" />
                         </a>
                       )}
-                    </div>
+                    </motion.div>
                   );
                 })}
-              </div>
+              </motion.div>
 
               {/* Reusable Pagination */}
               {data && (data.previous || data.next) && (

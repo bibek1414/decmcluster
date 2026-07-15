@@ -3,6 +3,8 @@
 import React from "react";
 import { Handshake, MapPin, ClipboardList, Activity } from "lucide-react";
 import { useAssessmentStats } from "@/hooks/use-assessment-stats";
+import { motion } from "framer-motion";
+
 
 export function AssessmentStatsGrid() {
   const { data, isLoading, error } = useAssessmentStats();
@@ -47,12 +49,34 @@ export function AssessmentStatsGrid() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full animate-fadeIn">
+    <motion.div
+      variants={{
+        hidden: { opacity: 0 },
+        show: {
+          opacity: 1,
+          transition: {
+            staggerChildren: 0.05,
+          },
+        },
+      }}
+      initial="hidden"
+      animate="show"
+      className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full"
+    >
       {stats.map((stat) => {
         const Icon = getIcon(stat.name);
         return (
-          <div
+          <motion.div
             key={stat.id}
+            variants={{
+              hidden: { opacity: 0, y: 10 },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: { type: "spring", stiffness: 100, damping: 15 },
+              },
+            }}
+            whileHover={{ y: -3, transition: { duration: 0.2 } }}
             className="p-4 rounded-xl border border-border flex items-center gap-4 bg-card text-card-foreground hover:border-primary/30 hover:bg-muted/10 transition-all duration-300 -sm"
           >
             <div className="p-2.5 rounded-xl bg-primary/10 text-primary shrink-0 transition-colors">
@@ -66,9 +90,9 @@ export function AssessmentStatsGrid() {
                 {stat.name}
               </p>
             </div>
-          </div>
+          </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }

@@ -12,6 +12,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+
 
 export default function ModulesGrid() {
   const modules = [
@@ -160,14 +162,36 @@ export default function ModulesGrid() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <motion.div
+        variants={{
+          hidden: { opacity: 0 },
+          show: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.05,
+            },
+          },
+        }}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
         {modules.map((mod, index) => {
           const Icon = mod.icon;
           return (
-            <div
+            <motion.div
               key={index}
+              variants={{
+                hidden: { opacity: 0, y: 15 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { type: "spring", stiffness: 100, damping: 15 },
+                },
+              }}
+              whileHover={{ y: -6, transition: { duration: 0.2, ease: "easeInOut" } }}
               className={cn(
-                "bg-card text-card-foreground rounded-2xl p-6 border border-border border-t-4 flex flex-col justify-between transition-colors duration-300 min-h-[380px]",
+                "bg-card text-card-foreground rounded-2xl p-6 border border-border border-t-4 flex flex-col justify-between min-h-[380px] hover:shadow-md transition-shadow duration-300",
                 mod.color,
               )}
             >
@@ -229,10 +253,10 @@ export default function ModulesGrid() {
                   </ul>
                 </div>
               )}
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useContactList } from "@/hooks/use-contact-list";
 import { useDebounce } from "@/hooks/use-debounce";
+import { motion } from "framer-motion";
+
 
 export default function PartnersClient() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,15 +97,38 @@ export default function PartnersClient() {
             if (catPoints.length === 0) return null;
 
             return (
-              <div key={cat} className="space-y-4">
+              <motion.div
+                key={cat}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-4"
+              >
                 <div className="flex items-center gap-2">
                   <h3 className="text-xs font-semibold text-muted-foreground ">{cat}</h3>
                 </div>
 
-                <div className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card">
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0 },
+                    show: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.04,
+                      },
+                    },
+                  }}
+                  initial="hidden"
+                  animate="show"
+                  className="divide-y divide-border border border-border rounded-xl overflow-hidden bg-card"
+                >
                   {catPoints.map((p) => (
-                    <div
+                    <motion.div
                       key={p.id}
+                      variants={{
+                        hidden: { opacity: 0, x: -6 },
+                        show: { opacity: 1, x: 0, transition: { duration: 0.25 } },
+                      }}
                       className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-muted/30 transition-colors"
                     >
                       <div className="flex items-center gap-4">
@@ -159,10 +184,10 @@ export default function PartnersClient() {
                           </a>
                         </Button>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             );
           })
         )}

@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { useTraining } from "@/hooks/use-training";
 import { useDebounce } from "@/hooks/use-debounce";
 import { Pagination } from "@/components/shared/pagination";
+import { motion } from "framer-motion";
+
 
 export default function TrainingClient() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -81,10 +83,32 @@ export default function TrainingClient() {
             </div>
           ) : modulesList.length > 0 ? (
             <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.05,
+                    },
+                  },
+                }}
+                initial="hidden"
+                animate="show"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              >
                 {modulesList.map((mod) => (
-                  <div
+                  <motion.div
                     key={mod.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 10 },
+                      show: {
+                        opacity: 1,
+                        y: 0,
+                        transition: { type: "spring", stiffness: 100, damping: 15 },
+                      },
+                    }}
+                    whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
                     className="p-4 rounded-xl border border-border bg-card hover:bg-muted/40 hover:border-primary/20 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full"
                   >
                     <div>
@@ -104,9 +128,9 @@ export default function TrainingClient() {
                         Start Course
                       </Button>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Reusable Pagination */}
               {data && (data.previous || data.next) && (
