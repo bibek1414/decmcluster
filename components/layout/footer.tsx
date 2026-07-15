@@ -3,7 +3,7 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/logo";
-import { Mail, ArrowRight } from "lucide-react";
+import { Mail, ChevronRight } from "lucide-react";
 
 const VALID_PATHS = [
   "/",
@@ -87,7 +87,7 @@ export default function Footer() {
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline hover:text-primary/80 transition-colors py-2.5 px-3 rounded-lg border border-primary/20 bg-primary/5 hover:bg-primary/10 w-fit cursor-pointer"
                 >
                   <span>Contact Form</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
