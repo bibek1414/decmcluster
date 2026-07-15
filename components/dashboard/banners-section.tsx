@@ -39,9 +39,22 @@ export default function BannersSection() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12 min-h-[300px]">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-        <span className="ml-3 text-muted-foreground text-sm font-medium">Loading banners...</span>
+      <div className="w-full flex overflow-hidden select-none">
+        {Array.from({ length: visibleCount }).map((_, idx) => (
+          <div
+            key={idx}
+            className="shrink-0"
+            style={{ width: `${100 / visibleCount}%` }}
+          >
+            <div className="animate-pulse relative overflow-hidden h-[260px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[500px] bg-slate-900 flex flex-col items-center pt-6 sm:pt-8 md:pt-10 px-4 sm:px-6">
+              {/* Title Placeholder */}
+              <div className="h-6 sm:h-8 w-40 sm:w-56 bg-slate-800 rounded-md mb-3" />
+              {/* Description Lines Placeholders */}
+              <div className="h-3 sm:h-4 w-48 sm:w-64 bg-slate-800/80 rounded-md mb-2" />
+              <div className="h-3 sm:h-4 w-32 sm:w-48 bg-slate-800/80 rounded-md" />
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -131,7 +144,7 @@ function BannerCard({ banner }: { banner: BannerData }) {
       <div
         className="absolute inset-0 bg-cover bg-center z-0 scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
         style={{
-          backgroundImage: `url('${banner.Image}')`,
+          backgroundImage: `url('${banner.image}')`,
         }}
       />
 
@@ -144,7 +157,7 @@ function BannerCard({ banner }: { banner: BannerData }) {
       {/* Content pinned to the top, matching reference layout */}
       <div className="relative z-20 flex flex-col items-center h-full pt-6 sm:pt-8 md:pt-10 px-4 sm:px-6 text-center text-white">
         <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 sm:mb-3 drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]">
-          {banner.name}
+          {banner.title}
         </h3>
         <p className="text-xs sm:text-sm md:text-base text-white/90 max-w-xs sm:max-w-sm font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)]">
           {banner.description}
