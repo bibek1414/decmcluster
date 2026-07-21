@@ -1,171 +1,219 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { useBanners } from "@/hooks/use-banners";
-import { BannerData } from "@/types/banner";
+import React from "react";
+import {
+  Megaphone,
+  FileText,
+  GraduationCap,
+  AlertTriangle,
+  Monitor,
+  ArrowRight,
+} from "lucide-react";
+
+interface TickerItem {
+  id: string;
+  title: string;
+  date: string;
+  icon: React.ElementType;
+  badgeBg: string;
+}
+
+interface FeatureCard {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  icon: React.ElementType;
+  primaryColor: string; // Tailwind text color
+  barColor: string; // Tailwind bg color
+  badgeBg: string; // Tailwind bg color for circle icon
+  linkText: string;
+}
+
+const TICKER_UPDATES: TickerItem[] = [
+  {
+    id: "1",
+    title: "New Situation Report Published",
+    date: "22 May 2025",
+    icon: FileText,
+    badgeBg: "bg-blue-600",
+  },
+  {
+    id: "2",
+    title: "IM Training Registration Now Open",
+    date: "20 May 2025",
+    icon: GraduationCap,
+    badgeBg: "bg-teal-600",
+  },
+  {
+    id: "3",
+    title: "Tropical Cyclone Advisory for Northern Provinces",
+    date: "19 May 2025",
+    icon: AlertTriangle,
+    badgeBg: "bg-red-500",
+  },
+  {
+    id: "4",
+    title: "DECM Portal Version 1.2 Released",
+    date: "18 May 2025",
+    icon: Monitor,
+    badgeBg: "bg-purple-600",
+  },
+];
+
+const FEATURE_CARDS: FeatureCard[] = [
+  {
+    id: "updates",
+    title: "Latest Updates",
+    description:
+      "Stay informed with the latest situation reports, assessments, data releases and portal updates from the DECM Cluster.",
+    image: "/images/banners/latest-updates.png",
+    icon: FileText,
+    primaryColor: "text-[#0B4893]",
+    barColor: "bg-[#0B4893]",
+    badgeBg: "bg-[#0B4893]",
+    linkText: "View Latest Updates",
+  },
+  {
+    id: "alerts",
+    title: "Emergency Alerts",
+    description:
+      "View active alerts, early warnings and critical information to support preparedness and response across Vanuatu.",
+    image: "/images/banners/emergency-alerts.png",
+    icon: AlertTriangle,
+    primaryColor: "text-[#DC2626]",
+    barColor: "bg-[#DC2626]",
+    badgeBg: "bg-[#DC2626]",
+    linkText: "View Emergency Alerts",
+  },
+  {
+    id: "announcements",
+    title: "Announcements",
+    description:
+      "Find important announcements, coordination notices, policy updates and messages from the DECM Cluster and partners.",
+    image: "/images/banners/announcements.png",
+    icon: Megaphone,
+    primaryColor: "text-[#497D39]",
+    barColor: "bg-[#497D39]",
+    badgeBg: "bg-[#497D39]",
+    linkText: "View Announcements",
+  },
+];
 
 export default function BannersSection() {
-  const { data: banners, isLoading, isError } = useBanners();
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  // Responsively calculate the number of visible items in the carousel
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setVisibleCount(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleCount(2);
-      } else {
-        setVisibleCount(3);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Reset index if visibleCount or banners change to prevent out of bounds
-  useEffect(() => {
-    if (!banners) return;
-    const maxIndex = Math.max(0, banners.length - visibleCount);
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(maxIndex);
-    }
-  }, [visibleCount, banners, currentIndex]);
-
-  if (isLoading) {
-    return (
-      <div className="w-full flex overflow-hidden select-none">
-        {Array.from({ length: visibleCount }).map((_, idx) => (
-          <div
-            key={idx}
-            className="shrink-0"
-            style={{ width: `${100 / visibleCount}%` }}
-          >
-            <div className="animate-pulse relative overflow-hidden h-[260px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[500px] bg-slate-900 flex flex-col items-center pt-6 sm:pt-8 md:pt-10 px-4 sm:px-6">
-              {/* Title Placeholder */}
-              <div className="h-6 sm:h-8 w-40 sm:w-56 bg-slate-800 rounded-md mb-3" />
-              {/* Description Lines Placeholders */}
-              <div className="h-3 sm:h-4 w-48 sm:w-64 bg-slate-800/80 rounded-md mb-2" />
-              <div className="h-3 sm:h-4 w-32 sm:w-48 bg-slate-800/80 rounded-md" />
+  return (
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 select-none">
+      {/* Top Section: Dark Blue Latest Updates Ticker Bar */}
+      <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#00275B] via-[#001D47] to-[#001433] p-4 sm:p-5 text-white -xl border border-blue-900/40">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
+          {/* Header Badge */}
+          <div className="flex items-center gap-3 shrink-0 self-start lg:self-auto">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#00275B] -md shrink-0">
+              <Megaphone className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-white">
+                LATEST
+              </span>
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-blue-100">
+                UPDATES
+              </span>
             </div>
           </div>
-        ))}
-      </div>
-    );
-  }
 
-  if (isError || !banners || banners.length === 0) {
-    return null; // Fallback handled inside service, but double safety
-  }
+          {/* Updates Items List */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-0 w-full xl:divide-x xl:divide-white/20">
+            {TICKER_UPDATES.map((item) => {
+              const ItemIcon = item.icon;
+              return (
+                <div key={item.id} className="flex items-center gap-3 px-2 sm:px-3">
+                  <div
+                    className={`w-9 h-9 rounded-full ${item.badgeBg} text-white flex items-center justify-center shrink-0 -sm`}
+                  >
+                    <ItemIcon className="w-4.5 h-4.5" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span
+                      className="text-xs font-semibold text-white truncate"
+                      title={item.title}
+                    >
+                      {item.title}
+                    </span>
+                    <span className="text-[11px] text-blue-200/80 font-medium">
+                      {item.date}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
 
-  const showCarousel = banners.length > visibleCount;
-  const maxIndex = Math.max(0, banners.length - visibleCount);
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  };
-
-  return (
-    <div className="w-full relative group/carousel select-none">
-      <div className="relative">
-        {/* Navigation Buttons — hidden on mobile, shown on hover for desktop */}
-        {showCarousel && (
-          <>
-            <button
-              onClick={handlePrev}
-              className="hidden sm:flex absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 items-center justify-center p-2 sm:p-3 rounded-full bg-slate-900/70 hover:bg-primary text-white border border-white/10 shadow-lg backdrop-blur-sm opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 active:scale-95 cursor-pointer"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-
-            <button
-              onClick={handleNext}
-              className="hidden sm:flex absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 items-center justify-center p-2 sm:p-3 rounded-full bg-slate-900/70 hover:bg-primary text-white border border-white/10 shadow-lg backdrop-blur-sm opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 active:scale-95 cursor-pointer"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-          </>
-        )}
-
-        {/* Edge-to-edge track — no gaps, no rounding, matches reference */}
-        <div className="overflow-hidden">
-          <div
-            ref={trackRef}
-            className="flex transition-transform duration-500 ease-in-out"
-            style={{
-              transform: `translateX(-${currentIndex * (100 / visibleCount)}%)`,
-            }}
+          {/* View All Button (No-op action for now) */}
+          <button
+            type="button"
+            onClick={(e) => e.preventDefault()}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/30 text-white text-xs font-medium hover:bg-white/10 transition-colors shrink-0 whitespace-nowrap cursor-pointer self-end lg:self-auto"
           >
-            {banners.map((banner) => (
-              <div key={banner.id} className="shrink-0" style={{ width: `${100 / visibleCount}%` }}>
-                <BannerCard banner={banner} />
-              </div>
-            ))}
-          </div>
+            View All Updates <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
-
-        {/* Indicators/Dots — only when carousel is active */}
-        {showCarousel && (
-          <div className="flex justify-center items-center gap-1.5 mt-4 sm:mt-5">
-            {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                  currentIndex === idx
-                    ? "w-5 sm:w-6 bg-primary"
-                    : "w-1.5 sm:w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
-    </div>
+
+      {/* Bottom Section: 3 Feature Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        {FEATURE_CARDS.map((card) => {
+          const CardIcon = card.icon;
+          return (
+            <div
+              key={card.id}
+              className="bg-white rounded-2xl border border-slate-200/80 -sm hover:-xl transition-all duration-300 flex flex-col overflow-hidden group"
+            >
+              {/* Card Image Banner */}
+              <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+
+                {/* Overlapping Round Icon Badge */}
+                <div
+                  className={`absolute -bottom-6 left-6 z-20 w-13 h-13 sm:w-14 sm:h-14 rounded-full ${card.badgeBg} flex items-center justify-center text-white border-4 border-white -md`}
+                >
+                  <CardIcon className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.2]" />
+                </div>
+              </div>
+
+              {/* Card Content Body */}
+              <div className="pt-9 sm:pt-10 px-6 pb-6 flex flex-col flex-1">
+                <h3 className={`text-xl sm:text-2xl font-bold ${card.primaryColor}`}>
+                  {card.title}
+                </h3>
+
+                {/* Decorative underline bar */}
+                <div className={`w-8 h-1 ${card.barColor} rounded-full my-3`} />
+
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed mb-6 flex-1 font-normal">
+                  {card.description}
+                </p>
+
+                {/* View Details Action (No-op action for now) */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={(e) => e.preventDefault()}
+                    className={`inline-flex items-center text-sm font-bold ${card.primaryColor} hover:underline group-hover:translate-x-1 transition-transform cursor-pointer`}
+                  >
+                    {card.linkText}{" "}
+                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
-function BannerCard({ banner }: { banner: BannerData }) {
-  return (
-    <div className="group relative overflow-hidden h-[260px] xs:h-[300px] sm:h-[340px] md:h-[380px] lg:h-[500px] bg-slate-950">
-      {/* Background Image with Hover Scale */}
-      <div
-        className="absolute inset-0 bg-cover bg-center z-0 scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
-        style={{
-          backgroundImage: `url('${banner.image}')`,
-        }}
-      />
-
-      {/* Top gradient overlay — anchors the title/description like the reference */}
-      <div className="absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-slate-950/90 via-slate-950/50 to-transparent z-10 pointer-events-none" />
-
-      {/* Subtle bottom shade for balance */}
-      <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/40 to-transparent z-10 pointer-events-none" />
-
-      {/* Content pinned to the top, matching reference layout */}
-      <div className="relative z-20 flex flex-col items-center h-full pt-6 sm:pt-8 md:pt-10 px-4 sm:px-6 text-center text-white">
-        <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-2 sm:mb-3 drop-shadow-[0_2px_6px_rgba(0,0,0,0.85)]">
-          {banner.title}
-        </h3>
-        <p className="text-xs sm:text-sm md:text-base text-white/90 max-w-xs sm:max-w-sm font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.85)]">
-          {banner.description}
-        </p>
-      </div>
-
-      {/* Hover border glow */}
-      <div className="absolute inset-0 border-2 border-transparent group-hover:border-primary/40 transition-colors duration-300 z-30 pointer-events-none" />
-    </div>
-  );
-}
