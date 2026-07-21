@@ -62,4 +62,44 @@ export const authService = {
 
     return responseData as LoginResponse;
   },
+
+  verifyEmail: async (token: string): Promise<{ message: string }> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const response = await fetch(`${baseUrl}/api/verify-email/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    let responseData: any = null;
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      responseData = await response.json();
+    } else {
+      responseData = await response.text();
+    }
+
+    if (!response.ok) {
+      let errorMessage = "An error occurred while verifying your email.";
+      if (responseData && typeof responseData === "object") {
+        if (responseData.detail) {
+          errorMessage = responseData.detail;
+        } else if (responseData.error) {
+          errorMessage = responseData.error;
+        } else {
+          const firstKey = Object.keys(responseData)[0];
+          if (firstKey) {
+            errorMessage = `${firstKey}: ${Array.isArray(responseData[firstKey]) ? responseData[firstKey].join(", ") : responseData[firstKey]}`;
+          }
+        }
+      } else if (typeof responseData === "string" && responseData.length < 150) {
+        errorMessage = responseData;
+      }
+      throw new ApiError(errorMessage, response.status, responseData);
+    }
+
+    return responseData;
+  },
 };
