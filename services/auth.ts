@@ -65,7 +65,7 @@ export const authService = {
 
   verifyEmail: async (token: string): Promise<{ message: string }> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    const response = await fetch(`${baseUrl}/api/verify-email/`, {
+    const response = await fetch(`${baseUrl}/api/account/verify-email/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
