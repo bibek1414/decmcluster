@@ -21,6 +21,7 @@ import { AlertDialog } from "@/components/ui/alert-dialog";
 import { useAssessments } from "@/hooks/use-assessments";
 
 const FALLBACK_ASSESSMENTS = [
+  { id: "displacement-data", label: "Displacement Data" },
   { id: "5w-response-data", label: "5W Response Data" },
   { id: "community-level-damage-assessment-form", label: "Community Level Damage Assessment Form" },
   { id: "durable-solution-relocation-survey", label: "Durable Solution & Relocation Survey" },
@@ -104,12 +105,10 @@ export default function UsersClient() {
   };
 
   // Toggle access control helpers
-  const folderIds = React.useMemo(() => ["meeting-minutes", "sops", "situational-reports"], []);
+  const folderIds = React.useMemo(() => ["meeting-minutes", "sops", "situational-reports", "im-tools"], []);
   const currentAssessmentIds = React.useMemo(() => {
-    return assessments.length > 0
-      ? assessments.map((a) => a.slug)
-      : FALLBACK_ASSESSMENTS.map((f) => f.id);
-  }, [assessments]);
+    return FALLBACK_ASSESSMENTS.map((f) => f.id);
+  }, []);
 
   const areAllFoldersSelected = React.useMemo(() => {
     return folderIds.every((id) => selectedFolders.includes(id));
@@ -407,6 +406,8 @@ export default function UsersClient() {
                         sops: "SOPs",
                         "situational-reports": "Situational Reports",
                         situational_reports: "Situational Reports",
+                        "im-tools": "IM Tools",
+                        im_tools: "IM Tools",
                       };
 
                       return (
@@ -625,6 +626,10 @@ export default function UsersClient() {
                             id: "situational-reports",
                             label: "Situational Reports",
                           },
+                          {
+                            id: "im-tools",
+                            label: "IM Tools",
+                          },
                         ].map((folder) => {
                           const isChecked = selectedFolders.includes(folder.id);
                           return (
@@ -668,10 +673,7 @@ export default function UsersClient() {
                         </button>
                       </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50 max-h-[160px] overflow-y-auto">
-                        {(assessments.length > 0
-                          ? assessments.map((a) => ({ id: a.slug, label: a.name }))
-                          : FALLBACK_ASSESSMENTS
-                        ).map((form) => {
+                        {FALLBACK_ASSESSMENTS.map((form) => {
                           const isChecked = selectedFolders.includes(form.id);
                           return (
                             <label
@@ -895,6 +897,10 @@ export default function UsersClient() {
                             id: "situational-reports",
                             label: "Situational Reports",
                           },
+                          {
+                            id: "im-tools",
+                            label: "IM Tools",
+                          },
                         ].map((folder) => {
                           const isChecked = editSelectedFolders.includes(folder.id);
                           return (
@@ -938,10 +944,7 @@ export default function UsersClient() {
                         </button>
                       </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50 max-h-[160px] overflow-y-auto">
-                        {(assessments.length > 0
-                          ? assessments.map((a) => ({ id: a.slug, label: a.name }))
-                          : FALLBACK_ASSESSMENTS
-                        ).map((form) => {
+                        {FALLBACK_ASSESSMENTS.map((form) => {
                           const isChecked = editSelectedFolders.includes(form.id);
                           return (
                             <label

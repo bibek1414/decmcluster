@@ -83,18 +83,12 @@ export function ToolsClient() {
 
   const filtered = useMemo(() => {
     return assessments.filter((a) => {
-      // Enforce access control for non-superadmins
-      if (!isSuperAdmin) {
-        const acList = user?.access_control || [];
-        const normalized = acList.map((item) => item.toLowerCase().replace(/_/g, "-"));
-        if (!normalized.includes(a.slug.toLowerCase())) {
-          return false;
-        }
-      }
       const matchesQuery = a.name.toLowerCase().includes(query.toLowerCase());
       return matchesQuery;
     });
-  }, [assessments, query, isSuperAdmin, user]);
+  }, [assessments, query]);
+
+  const hasImToolsAccess = isSuperAdmin || (user?.access_control || []).map((item) => item.toLowerCase().replace(/_/g, "-")).includes("im-tools");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,6 +172,18 @@ export function ToolsClient() {
       );
     }
   };
+
+  if (!hasImToolsAccess) {
+    return (
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
+        <EmptyState
+          icon={ClipboardList}
+          title="Access Denied"
+          description="You do not have permission to view IM Tools. Please request access from a Superadmin."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">

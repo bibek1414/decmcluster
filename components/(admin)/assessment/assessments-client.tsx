@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { useAuth } from "@/hooks/use-auth";
 
 interface StaticEntry {
   id: number;
@@ -94,7 +95,7 @@ const STATIC_FORMS: StaticEntry[] = [
   {
     id: 4,
     name: "Displacement Tracking Matrix Form",
-    slug: "displacement-tracking-matrix-form-doc",
+    slug: "displacement-tracking-matrix-form",
     description: "",
     pdf: null,
     excel: null,
@@ -281,11 +282,23 @@ function StaticCard({ entry }: { entry: StaticEntry }) {
 
 export function AssessmentsClient() {
   const [query, setQuery] = useState("");
+  const { user } = useAuth();
+
+  const isSuperAdmin = user?.role === "Superadmin";
 
   const filtered = useMemo(() => {
-    if (!query.trim()) return ALL_ENTRIES;
-    return ALL_ENTRIES.filter((e) => e.name.toLowerCase().includes(query.toLowerCase()));
-  }, [query]);
+    let list = ALL_ENTRIES;
+
+    if (!isSuperAdmin) {
+      const userAccess = (user?.access_control || []).map((item) =>
+        item.toLowerCase().replace(/_/g, "-")
+      );
+      list = list.filter((e) => userAccess.includes(e.slug.toLowerCase()));
+    }
+
+    if (!query.trim()) return list;
+    return list.filter((e) => e.name.toLowerCase().includes(query.toLowerCase()));
+  }, [query, isSuperAdmin, user]);
 
   return (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn relative">
