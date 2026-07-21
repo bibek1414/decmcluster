@@ -41,7 +41,8 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
   const isStatic =
     slug === "displacement-tracking-matrix-form" ||
     slug === "displacement-data" ||
-    slug === "evacuation-centre-assessment-form";
+    slug === "evacuation-centre-assessment-form" ||
+    slug === "village-assessment";
 
   // Queries
   const {
@@ -57,7 +58,9 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
             ? "Evacuation Centre Data"
             : slug === "displacement-tracking-matrix-form"
               ? "Displacement Tracking Matrix Data"
-              : "Displacement Data",
+              : slug === "village-assessment"
+                ? "Village Assessment Data"
+                : "Displacement Data",
       }
     : fetchedAssessment;
 
@@ -124,6 +127,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
         <div className="space-y-4">
           {slug === "evacuation-centre-assessment-form" ||
           slug === "displacement-tracking-matrix-form" ||
+          slug === "village-assessment" ||
           slug === "displacement-data" ? (
             <DynamicDataTable slug={slug} token={token} canEdit={canAdd} />
           ) : (

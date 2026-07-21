@@ -83,6 +83,125 @@ export interface DisplacementRecord {
   idp_destination_admin1_pcode: string | null;
 }
 
+export interface VillageAssessmentRecord {
+  id: number;
+  survey_start: string | null;
+  survey_end: string | null;
+  survey_date: string | null;
+  enumerator_username: string | null;
+  device_id: string | null;
+  audit_file: string | null;
+  audit_url: string | null;
+  consent: string | null;
+  methodology_individual_ki: string | null;
+  methodology_group_ki: string | null;
+  methodology_direct_observation: string | null;
+  methodology_other: string | null;
+  data_collection_method: string | null;
+  ki1_name: string | null;
+  ki1_type: string | null;
+  ki1_gender: string | null;
+  ki1_age: number | null;
+  ki1_contact: string | null;
+  ki2_name: string | null;
+  ki2_type: string | null;
+  ki2_gender: string | null;
+  ki2_age: number | null;
+  ki2_contact: string | null;
+  ki3_name: string | null;
+  ki3_type: string | null;
+  ki3_gender: string | null;
+  ki3_age: number | null;
+  ki3_contact: string | null;
+  ki4_name: string | null;
+  ki4_type: string | null;
+  ki4_gender: string | null;
+  ki4_age: number | null;
+  ki4_contact: string | null;
+  ki5_name: string | null;
+  ki5_type: string | null;
+  ki5_gender: string | null;
+  ki5_age: number | null;
+  ki5_contact: string | null;
+  ki6_name: string | null;
+  ki6_type: string | null;
+  ki6_gender: string | null;
+  ki6_age: number | null;
+  ki6_contact: string | null;
+  assessment_date: string | null;
+  assessment_start_time: string | null;
+  enumerator1_name: string | null;
+  enumerator1_phone: string | null;
+  enumerator1_gender: string | null;
+  enumerator2_name: string | null;
+  enumerator2_phone: string | null;
+  enumerator2_gender: string | null;
+  province: string | null;
+  area_council: string | null;
+  village_name: string | null;
+  village_other: string | null;
+  village_condition: string | null;
+  idp_present: boolean | null;
+  idp_households_total: number | null;
+  idp_infant_male: number | null;
+  idp_infant_female: number | null;
+  idp_child_1_5_male: number | null;
+  idp_child_1_5_female: number | null;
+  idp_child_6_12_male: number | null;
+  idp_child_6_12_female: number | null;
+  idp_adolescent_male: number | null;
+  idp_adolescent_female: number | null;
+  idp_adult_male: number | null;
+  idp_adult_female: number | null;
+  idp_elderly_male: number | null;
+  idp_elderly_female: number | null;
+  idp_male_total: number | null;
+  idp_female_total: number | null;
+  idp_individuals_total: number | null;
+  returnees_present: boolean | null;
+  returnee_households_total: number | null;
+  returnee_individuals_total: number | null;
+  pregnant_women_count: number | null;
+  female_headed_hh: number | null;
+  elderly_headed_hh: number | null;
+  male_headed_hh: number | null;
+  child_headed_hh: number | null;
+  pwd_total: number | null;
+  idp_pwd_total: number | null;
+  shelter_primary: string | null;
+  shelter_secondary: string | null;
+  displacement_shelter_type: string | null;
+  displaced_hh_estimated: number | null;
+  displacement_duration: string | null;
+  housing_type_pre_cyclone: string | null;
+  house_rebuild_duration: string | null;
+  rebuild_material_type: string | null;
+  house_cyclone_resilience: string | null;
+  remaining_idp_intention: string | null;
+  seasonal_worker_level: string | null;
+  community_participation: string | null;
+  cdccc_exists: boolean | null;
+  early_warning_received: boolean | null;
+  annual_population_displaced: number | null;
+  top_need_1: string | null;
+  top_need_2: string | null;
+  top_need_3: string | null;
+  gps_latitude: number | null;
+  gps_longitude: number | null;
+  gps_altitude: number | null;
+  gps_precision: number | null;
+  record_id: string | null;
+  record_uuid: string | null;
+  submission_time: string | null;
+  validation_status: string | null;
+  submission_status: string | null;
+  submitted_by: string | null;
+  form_version: string | null;
+  record_index: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 const getHeaders = (token: string | null) => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -369,4 +488,141 @@ export const dynamicDataService = {
     }
     return res.json();
   },
+
+  fetchVillageAssessments: async (
+    page: number = 1,
+    search: string = "",
+    token: string | null = null,
+    province?: string,
+    district?: string,
+    op?: string,
+    pageSize: number = 50,
+  ): Promise<PaginatedResponse<VillageAssessmentRecord>> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    let url = `${baseUrl}/api/village-assessments/?page=${page}&page_size=${pageSize}`;
+    if (search.trim()) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+    if (province) {
+      url += `&province=${encodeURIComponent(province)}`;
+    }
+    if (district) {
+      url += `&area_council=${encodeURIComponent(district)}`;
+    }
+    if (op) {
+      url += `&village_name=${encodeURIComponent(op)}`;
+    }
+    const res = await fetch(url, { headers: getHeaders(token) });
+    if (!res.ok) throw new Error("Failed to fetch village assessments data");
+    return res.json();
+  },
+
+  updateVillageAssessment: async (
+    id: number,
+    fields: Partial<VillageAssessmentRecord>,
+    token: string | null,
+  ): Promise<VillageAssessmentRecord> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/village-assessments/${id}/`, {
+      method: "PATCH",
+      headers: getHeaders(token),
+      body: JSON.stringify(fields),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update village assessment";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  createVillageAssessment: async (
+    fields: Partial<VillageAssessmentRecord>,
+    token: string | null,
+  ): Promise<VillageAssessmentRecord> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/village-assessments/`, {
+      method: "POST",
+      headers: getHeaders(token),
+      body: JSON.stringify(fields),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to create village assessment";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  deleteVillageAssessment: async (id: number, token: string | null): Promise<void> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/village-assessments/${id}/`, {
+      method: "DELETE",
+      headers: getHeaders(token),
+    });
+    if (!res.ok) throw new Error("Failed to delete village assessment");
+  },
+
+  exportVillageAssessments: async (
+    columns: string[],
+    token: string | null,
+    province?: string,
+    district?: string,
+    op?: string,
+    search?: string,
+  ): Promise<Blob> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const params = new URLSearchParams();
+    if (columns.length > 0) params.set("columns", columns.join(","));
+    if (province) params.set("province", province);
+    if (district) params.set("area_council", district);
+    if (op) params.set("village_name", op);
+    if (search?.trim()) params.set("search", search.trim());
+
+    const res = await fetch(`${baseUrl}/api/village-assessments/export/?${params.toString()}`, {
+      headers: {
+        ...getHeaders(token),
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    });
+    if (!res.ok) throw new Error("Failed to export village assessments");
+    return res.blob();
+  },
+
+  importVillageAssessments: async (file: File, token: string | null): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const headers = getHeaders(token);
+    delete headers["Content-Type"];
+
+    const res = await fetch(`${baseUrl}/api/village-assessments/import/`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || "Failed to import village assessments");
+    }
+    return res.json();
+  },
 };
+

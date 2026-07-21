@@ -134,10 +134,25 @@ const STATIC_FORMS: StaticEntry[] = [
   },
 ];
 
-// All 10 entries shown on Displacement Data page
+// Village Assessment also has interactive data
+const VILLAGE_ASSESSMENT_ENTRY: StaticEntry = {
+  id: -2,
+  name: "Village Assessment",
+  slug: "village-assessment",
+  description:
+    "Interactive database table for viewing, editing, and exporting village assessment records.",
+  pdf: null,
+  excel: null,
+  is_public: false,
+  created_at: "2026-07-21T00:00:00.000000Z",
+  isInteractive: true,
+};
+
+// All entries shown on Displacement Data page
 const ALL_ENTRIES: StaticEntry[] = [
   DISPLACEMENT_DATA_ENTRY,
   EVACUATION_DATA_ENTRY,
+  VILLAGE_ASSESSMENT_ENTRY,
   ...STATIC_FORMS,
 ];
 

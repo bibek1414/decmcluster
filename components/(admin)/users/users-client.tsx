@@ -31,6 +31,7 @@ const FALLBACK_ASSESSMENTS = [
   { id: "rapid-assessment-form-area-council", label: "Rapid Assessment Form (Area Council)" },
   { id: "damage-assessment-form-community-v2", label: "Damage Assessment Form (Community V2)" },
   { id: "evacuation-centre-assessment-form", label: "Evacuation Centre Assessment Form" },
+  { id: "village-assessment", label: "Village Assessment" },
 ];
 
 export default function UsersClient() {

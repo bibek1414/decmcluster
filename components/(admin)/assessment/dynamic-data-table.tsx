@@ -49,6 +49,10 @@ import {
   EvacuationCentreFormFields,
 } from "./fields/evacuation-centre-form-fields";
 import { DISPLACEMENT_COLUMNS, DisplacementFormFields } from "./fields/displacement-form-fields";
+import {
+  VILLAGE_ASSESSMENT_COLUMNS,
+  VillageAssessmentFormFields,
+} from "./fields/village-assessment-form-fields";
 
 interface DynamicDataTableProps {
   slug: string;
@@ -57,8 +61,14 @@ interface DynamicDataTableProps {
 }
 
 export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps) {
-  const isEvac = slug === "evacuation-centre-assessment-form";
-  const columns = isEvac ? EVACUATION_CENTRE_COLUMNS : DISPLACEMENT_COLUMNS;
+  const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
+  const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const columns = isEvac
+    ? EVACUATION_CENTRE_COLUMNS
+    : isVillage
+    ? VILLAGE_ASSESSMENT_COLUMNS
+    : DISPLACEMENT_COLUMNS;
+
   const queryClient = useQueryClient();
 
   // Pagination & Search States
@@ -263,7 +273,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       }
     });
     setModalFormData(initialFields);
-    setActiveModalTab(isEvac ? "general" : "general_displacement");
+    setActiveModalTab(isEvac ? "general" : isVillage ? "general" : "general_displacement");
   };
 
   const openCreateModal = () => {
@@ -276,7 +286,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       }
     });
     setModalFormData(initialFields);
-    setActiveModalTab(isEvac ? "general" : "general_displacement");
+    setActiveModalTab(isEvac ? "general" : isVillage ? "general" : "general_displacement");
   };
 
   const handleDeleteRow = async () => {
@@ -328,6 +338,15 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           selectedOpFilter,
           debouncedSearch,
         );
+      } else if (isVillage) {
+        blob = await dynamicDataService.exportVillageAssessments(
+          columnsToExport,
+          token,
+          selectedProvinceFilter,
+          selectedDistrictFilter,
+          selectedOpFilter,
+          debouncedSearch,
+        );
       } else {
         blob = await dynamicDataService.exportDisplacements(
           columnsToExport,
@@ -338,6 +357,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           debouncedSearch,
         );
       }
+
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -412,6 +432,18 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                     className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
                   >
                     <Link href="/assement/evacuation-centre-assessment-form/imports">
+                      <Upload className="h-4 w-4" />
+                      Import
+                    </Link>
+                  </Button>
+                ) : isVillage ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
+                  >
+                    <Link href="/assement/village-assessment/imports">
                       <Upload className="h-4 w-4" />
                       Import
                     </Link>
@@ -789,11 +821,36 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             {isEvac ? (
               <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
                 {[
-                  { key: "general", label: "General & Location" },
-                  { key: "contact", label: "Contact Info" },
+                  { key: "general", label: "General & Info" },
+                  { key: "contact", label: "Contacts & Agency" },
                   { key: "capacity", label: "Capacity & Buildings" },
-                  { key: "readiness", label: "Readiness & Status" },
-                  { key: "water_sanitation", label: "Water & Sanitation" },
+                  { key: "readiness", label: "Facilities & Readiness" },
+                  { key: "water_sanitation", label: "WASH (Water & Sanitation)" },
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveModalTab(tab.key)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                      activeModalTab === tab.key
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            ) : isVillage ? (
+              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                {[
+                  { key: "general", label: "General & Survey" },
+                  { key: "geography", label: "Geography" },
+                  { key: "key_informants", label: "Key Informants" },
+                  { key: "idp_statistics", label: "IDP & Returnees" },
+                  { key: "vulnerabilities_shelter", label: "Vulnerabilities & Shelter" },
+                  { key: "community_needs", label: "Community & Needs" },
+                  { key: "gps_submission", label: "GPS & Submission" },
                 ].map((tab) => (
                   <button
                     key={tab.key}
@@ -838,6 +895,12 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             <form onSubmit={handleModalSave} className="space-y-4">
               {isEvac ? (
                 <EvacuationCentreFormFields
+                  activeModalTab={activeModalTab}
+                  modalFormData={modalFormData}
+                  setModalFormData={setModalFormData}
+                />
+              ) : isVillage ? (
+                <VillageAssessmentFormFields
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
