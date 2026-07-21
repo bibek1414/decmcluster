@@ -166,26 +166,28 @@ export default function BannersSection() {
           return (
             <div
               key={card.id}
-              className="bg-white rounded-2xl border border-slate-200/80 -sm hover:-xl transition-all duration-300 flex flex-col overflow-hidden group"
+              className="bg-white rounded-2xl border border-slate-200/80 -sm hover:-xl transition-all duration-300 flex flex-col group relative"
             >
               {/* Card Image Banner */}
-              <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+              <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900 rounded-t-2xl">
                 <img
                   src={card.image}
                   alt={card.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
+              </div>
 
-                {/* Overlapping Round Icon Badge */}
+              {/* Overlapping Round Icon Badge (Unclipped) */}
+              <div className="relative px-6">
                 <div
-                  className={`absolute -bottom-6 left-6 z-20 w-13 h-13 sm:w-14 sm:h-14 rounded-full ${card.badgeBg} flex items-center justify-center text-white border-4 border-white -md`}
+                  className={`absolute -top-6 sm:-top-7 left-6 z-20 w-12 h-12 sm:w-14 sm:h-14 rounded-full ${card.badgeBg} flex items-center justify-center text-white border-4 border-white -md`}
                 >
-                  <CardIcon className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.2]" />
+                  <CardIcon className="w-5 h-5 sm:w-7 sm:h-7 stroke-[2.2]" />
                 </div>
               </div>
 
               {/* Card Content Body */}
-              <div className="pt-9 sm:pt-10 px-6 pb-6 flex flex-col flex-1">
+              <div className="pt-8 sm:pt-9 px-6 pb-6 flex flex-col flex-1">
                 <h3 className={`text-xl sm:text-2xl font-bold ${card.primaryColor}`}>
                   {card.title}
                 </h3>
