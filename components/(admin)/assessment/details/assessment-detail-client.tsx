@@ -42,7 +42,8 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
     slug === "displacement-tracking-matrix-form" ||
     slug === "displacement-data" ||
     slug === "evacuation-centre-assessment-form" ||
-    slug === "village-assessment";
+    slug === "village-assessment" ||
+    slug === "5w-response-data";
 
   // Queries
   const {
@@ -60,7 +61,9 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
               ? "Displacement Tracking Matrix Data"
               : slug === "village-assessment"
                 ? "Village Assessment Data"
-                : "Displacement Data",
+                : slug === "5w-response-data"
+                  ? "5W Response Data"
+                  : "Displacement Data",
       }
     : fetchedAssessment;
 
@@ -128,6 +131,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
           {slug === "evacuation-centre-assessment-form" ||
           slug === "displacement-tracking-matrix-form" ||
           slug === "village-assessment" ||
+          slug === "5w-response-data" ||
           slug === "displacement-data" ? (
             <DynamicDataTable slug={slug} token={token} canEdit={canAdd} />
           ) : (

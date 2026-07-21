@@ -4,6 +4,7 @@ import {
   EvacuationCentreRecord,
   DisplacementRecord,
   VillageAssessmentRecord,
+  FiveWActivityRecord,
 } from "@/services/dynamic-data";
 
 export function useDynamicData(
@@ -18,6 +19,7 @@ export function useDynamicData(
 ) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const isFiveW = slug === "5w-response-data" || slug === "fivew";
 
   return useQuery({
     queryKey: [
@@ -52,6 +54,16 @@ export function useDynamicData(
           opFilter,
           pageSize,
         );
+      } else if (isFiveW) {
+        return dynamicDataService.fetchFiveWActivities(
+          page,
+          search,
+          token,
+          provinceFilter,
+          districtFilter,
+          opFilter,
+          pageSize,
+        );
       } else {
         return dynamicDataService.fetchDisplacements(
           page,
@@ -70,6 +82,7 @@ export function useDynamicData(
 export function useCreateDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const isFiveW = slug === "5w-response-data" || slug === "fivew";
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -78,6 +91,8 @@ export function useCreateDynamicRecord(slug: string, token: string | null) {
         return dynamicDataService.createEvacuationCentre(fields, token);
       } else if (isVillage) {
         return dynamicDataService.createVillageAssessment(fields, token);
+      } else if (isFiveW) {
+        return dynamicDataService.createFiveWActivity(fields, token);
       } else {
         return dynamicDataService.createDisplacement(fields, token);
       }
@@ -91,6 +106,7 @@ export function useCreateDynamicRecord(slug: string, token: string | null) {
 export function useUpdateDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const isFiveW = slug === "5w-response-data" || slug === "fivew";
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -99,6 +115,8 @@ export function useUpdateDynamicRecord(slug: string, token: string | null) {
         return dynamicDataService.updateEvacuationCentre(id, fields, token);
       } else if (isVillage) {
         return dynamicDataService.updateVillageAssessment(id, fields, token);
+      } else if (isFiveW) {
+        return dynamicDataService.updateFiveWActivity(id, fields, token);
       } else {
         return dynamicDataService.updateDisplacement(id, fields, token);
       }
@@ -112,6 +130,7 @@ export function useUpdateDynamicRecord(slug: string, token: string | null) {
 export function useDeleteDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const isFiveW = slug === "5w-response-data" || slug === "fivew";
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -120,6 +139,8 @@ export function useDeleteDynamicRecord(slug: string, token: string | null) {
         return dynamicDataService.deleteEvacuationCentre(id, token);
       } else if (isVillage) {
         return dynamicDataService.deleteVillageAssessment(id, token);
+      } else if (isFiveW) {
+        return dynamicDataService.deleteFiveWActivity(id, token);
       } else {
         return dynamicDataService.deleteDisplacement(id, token);
       }
@@ -133,6 +154,7 @@ export function useDeleteDynamicRecord(slug: string, token: string | null) {
 export function useImportDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const isFiveW = slug === "5w-response-data" || slug === "fivew";
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -141,6 +163,8 @@ export function useImportDynamicRecord(slug: string, token: string | null) {
         return dynamicDataService.importEvacuationCentres(file, token);
       } else if (isVillage) {
         return dynamicDataService.importVillageAssessments(file, token);
+      } else if (isFiveW) {
+        return dynamicDataService.importFiveWActivities(file, token);
       } else {
         return dynamicDataService.importDisplacements(file, token);
       }

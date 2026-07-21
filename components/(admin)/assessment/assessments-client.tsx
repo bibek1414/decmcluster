@@ -148,12 +148,27 @@ const VILLAGE_ASSESSMENT_ENTRY: StaticEntry = {
   isInteractive: true,
 };
 
+// 5W Response Data interactive entry
+const FIVEW_RESPONSE_DATA_ENTRY: StaticEntry = {
+  id: 11,
+  name: "5W Response Data",
+  slug: "5w-response-data",
+  description:
+    "Interactive database table for viewing, editing, and exporting 5W response activity records.",
+  pdf: null,
+  excel: null,
+  is_public: false,
+  created_at: "2026-07-08T05:24:59.054843Z",
+  isInteractive: true,
+};
+
 // All entries shown on Displacement Data page
 const ALL_ENTRIES: StaticEntry[] = [
   DISPLACEMENT_DATA_ENTRY,
   EVACUATION_DATA_ENTRY,
   VILLAGE_ASSESSMENT_ENTRY,
-  ...STATIC_FORMS,
+  FIVEW_RESPONSE_DATA_ENTRY,
+  ...STATIC_FORMS.filter((f) => f.slug !== "5w-response-data"),
 ];
 
 function StaticCard({ entry }: { entry: StaticEntry }) {

@@ -47,6 +47,9 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     if (pathname?.startsWith("/assement/village-assessment/imports")) {
       return normalized.includes("village-assessment");
     }
+    if (pathname?.startsWith("/assement/5w-response-data/imports")) {
+      return normalized.includes("5w-response-data");
+    }
     if (pathname?.startsWith("/assement/sops")) {
       return normalized.includes("sops");
     }

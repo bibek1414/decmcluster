@@ -53,6 +53,7 @@ import {
   VILLAGE_ASSESSMENT_COLUMNS,
   VillageAssessmentFormFields,
 } from "./fields/village-assessment-form-fields";
+import { FIVEW_COLUMNS, FiveWFormFields } from "./fields/fivew-form-fields";
 
 interface DynamicDataTableProps {
   slug: string;
@@ -63,11 +64,15 @@ interface DynamicDataTableProps {
 export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
+  const isFiveW = slug === "5w-response-data" || slug === "fivew";
   const columns = isEvac
     ? EVACUATION_CENTRE_COLUMNS
     : isVillage
     ? VILLAGE_ASSESSMENT_COLUMNS
+    : isFiveW
+    ? FIVEW_COLUMNS
     : DISPLACEMENT_COLUMNS;
+
 
   const queryClient = useQueryClient();
 
@@ -273,7 +278,9 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       }
     });
     setModalFormData(initialFields);
-    setActiveModalTab(isEvac ? "general" : isVillage ? "general" : "general_displacement");
+    setActiveModalTab(
+      isEvac ? "general" : isVillage ? "general" : isFiveW ? "org_admin" : "general_displacement",
+    );
   };
 
   const openCreateModal = () => {
@@ -286,7 +293,9 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       }
     });
     setModalFormData(initialFields);
-    setActiveModalTab(isEvac ? "general" : isVillage ? "general" : "general_displacement");
+    setActiveModalTab(
+      isEvac ? "general" : isVillage ? "general" : isFiveW ? "org_admin" : "general_displacement",
+    );
   };
 
   const handleDeleteRow = async () => {
@@ -347,6 +356,15 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           selectedOpFilter,
           debouncedSearch,
         );
+      } else if (isFiveW) {
+        blob = await dynamicDataService.exportFiveWActivities(
+          columnsToExport,
+          token,
+          selectedProvinceFilter,
+          selectedDistrictFilter,
+          selectedOpFilter,
+          debouncedSearch,
+        );
       } else {
         blob = await dynamicDataService.exportDisplacements(
           columnsToExport,
@@ -357,6 +375,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           debouncedSearch,
         );
       }
+
 
 
       const url = URL.createObjectURL(blob);
@@ -444,6 +463,18 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                     className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
                   >
                     <Link href="/assement/village-assessment/imports">
+                      <Upload className="h-4 w-4" />
+                      Import
+                    </Link>
+                  </Button>
+                ) : isFiveW ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    asChild
+                    className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
+                  >
+                    <Link href="/assement/5w-response-data/imports">
                       <Upload className="h-4 w-4" />
                       Import
                     </Link>
@@ -866,6 +897,30 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   </button>
                 ))}
               </div>
+            ) : isFiveW ? (
+              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                {[
+                  { key: "org_admin", label: "Organization & Admin" },
+                  { key: "location_cluster", label: "Location & Cluster" },
+                  { key: "project_activity", label: "Project & Activity" },
+                  { key: "financial_modality", label: "Financial & Modality" },
+                  { key: "beneficiaries", label: "Beneficiaries & Reached" },
+                  { key: "indicators_sub", label: "Indicators & Sub-activities" },
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveModalTab(tab.key)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                      activeModalTab === tab.key
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             ) : (
               <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
                 {[
@@ -901,6 +956,12 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                 />
               ) : isVillage ? (
                 <VillageAssessmentFormFields
+                  activeModalTab={activeModalTab}
+                  modalFormData={modalFormData}
+                  setModalFormData={setModalFormData}
+                />
+              ) : isFiveW ? (
+                <FiveWFormFields
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}

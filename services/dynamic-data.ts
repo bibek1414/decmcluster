@@ -202,6 +202,70 @@ export interface VillageAssessmentRecord {
   updated_at: string;
 }
 
+export interface FiveWActivityRecord {
+  id: number;
+  donor: string | null;
+  donor_names: string | null;
+  reporting_org_name: string | null;
+  ro_code: string | null;
+  reporting_org_type: string | null;
+  other_ip_name: string | null;
+  ip_code: string | null;
+  ip_type: string | null;
+  reporting_month: string | null;
+  activity_status: string | null;
+  state_abyei: string | null;
+  admin1_code: string | null;
+  province: string | null;
+  admin2_code: string | null;
+  location_evac_name: string | null;
+  cluster_name: string | null;
+  hrp_non_hrp: string | null;
+  project_number: string | null;
+  project_name: string | null;
+  activity: string | null;
+  indicator: string | null;
+  unit: string | null;
+  target: number | null;
+  total_value: number | null;
+  new_beneficiaries: boolean | null;
+  beneficiaries_type_under_18: string | null;
+  child_male_under_18: number | null;
+  child_female_under_18: number | null;
+  adult_male_18_60: number | null;
+  adult_female_18_60: number | null;
+  elderly_male_60_plus: number | null;
+  elderly_female_60_plus: number | null;
+  total_beneficiaries_reached: number | null;
+  people_with_disability: number | null;
+  is_mpc: boolean | null;
+  modality: string | null;
+  type_of_modality: string | null;
+  delivery_mechanism: string | null;
+  number_of_transfers: number | null;
+  value_ssp: number | null;
+  value_usd: number | null;
+  comments: string | null;
+  contribute_hrp_aap: string | null;
+  hrp_aap_indicators: string | null;
+  activity_type: string | null;
+  sub_activity_type: string | null;
+  measurements: string | null;
+  achieved: number | null;
+  column1: string | null;
+  boys_above_5: number | null;
+  girls_above_5: number | null;
+  boys_5_17: number | null;
+  girls_5_17: number | null;
+  men_18_59: number | null;
+  women_18_59: number | null;
+  men_60_plus: number | null;
+  women_60_plus: number | null;
+  total_reached_quarter: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
 const getHeaders = (token: string | null) => {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -624,5 +688,142 @@ export const dynamicDataService = {
     }
     return res.json();
   },
+
+  fetchFiveWActivities: async (
+    page: number = 1,
+    search: string = "",
+    token: string | null = null,
+    province?: string,
+    district?: string,
+    op?: string,
+    pageSize: number = 50,
+  ): Promise<PaginatedResponse<FiveWActivityRecord>> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    let url = `${baseUrl}/api/fivew/activities/?page=${page}&page_size=${pageSize}`;
+    if (search.trim()) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+    if (province) {
+      url += `&province=${encodeURIComponent(province)}`;
+    }
+    if (district) {
+      url += `&cluster_name=${encodeURIComponent(district)}`;
+    }
+    if (op) {
+      url += `&reporting_org_name=${encodeURIComponent(op)}`;
+    }
+    const res = await fetch(url, { headers: getHeaders(token) });
+    if (!res.ok) throw new Error("Failed to fetch 5W response data");
+    return res.json();
+  },
+
+  updateFiveWActivity: async (
+    id: number,
+    fields: Partial<FiveWActivityRecord>,
+    token: string | null,
+  ): Promise<FiveWActivityRecord> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/fivew/activities/${id}/`, {
+      method: "PATCH",
+      headers: getHeaders(token),
+      body: JSON.stringify(fields),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update 5W activity";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  createFiveWActivity: async (
+    fields: Partial<FiveWActivityRecord>,
+    token: string | null,
+  ): Promise<FiveWActivityRecord> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/fivew/activities/`, {
+      method: "POST",
+      headers: getHeaders(token),
+      body: JSON.stringify(fields),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to create 5W activity";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  deleteFiveWActivity: async (id: number, token: string | null): Promise<void> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/fivew/activities/${id}/`, {
+      method: "DELETE",
+      headers: getHeaders(token),
+    });
+    if (!res.ok) throw new Error("Failed to delete 5W activity");
+  },
+
+  exportFiveWActivities: async (
+    columns: string[],
+    token: string | null,
+    province?: string,
+    district?: string,
+    op?: string,
+    search?: string,
+  ): Promise<Blob> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const params = new URLSearchParams();
+    if (columns.length > 0) params.set("columns", columns.join(","));
+    if (province) params.set("province", province);
+    if (district) params.set("cluster_name", district);
+    if (op) params.set("reporting_org_name", op);
+    if (search?.trim()) params.set("search", search.trim());
+
+    const res = await fetch(`${baseUrl}/api/fivew/activities/export/?${params.toString()}`, {
+      headers: {
+        ...getHeaders(token),
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    });
+    if (!res.ok) throw new Error("Failed to export 5W response data");
+    return res.blob();
+  },
+
+  importFiveWActivities: async (file: File, token: string | null): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const headers = getHeaders(token);
+    delete headers["Content-Type"];
+
+    const res = await fetch(`${baseUrl}/api/fivew/imports/`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || "Failed to import 5W response data");
+    }
+    return res.json();
+  },
 };
+
 
