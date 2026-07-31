@@ -7,24 +7,17 @@ import {
   Search,
   Calendar,
   ChevronRight,
-  FileText,
-  Megaphone,
-  Download,
-  ExternalLink,
   X,
   Share2,
-  Bell,
   Mail,
   Info,
-  CheckCircle,
-  AlertCircle,
   Tag,
-  ArrowRight,
   Sparkles,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
-import { latestUpdateService, FALLBACK_LATEST_UPDATES } from "@/services/latest-update";
-import { LatestUpdate } from "@/types/latest-update";
+import { latestUpdateService } from "@/services/latest-update";
+import { LatestUpdate, LatestUpdateCategory } from "@/types/latest-update";
 
 function parseDateComponents(dateStr: string) {
   try {
@@ -44,28 +37,60 @@ function parseDateComponents(dateStr: string) {
   }
 }
 
+function getCategoryName(item: LatestUpdate): string {
+  if (item.category_details?.name) {
+    return item.category_details.name;
+  }
+  if (item.is_featured) return "Announcement";
+  return "Resource";
+}
+
 function LatestUpdatesContent() {
   const searchParams = useSearchParams();
   const initialId = searchParams.get("id");
-  const initialFilter = searchParams.get("filter");
+  const initialCategory = searchParams.get("category") || searchParams.get("filter") || "all";
 
+  const [categories, setCategories] = useState<LatestUpdateCategory[]>([]);
   const [updates, setUpdates] = useState<LatestUpdate[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [selectedFilter, setSelectedFilter] = useState<string>(initialFilter || "all");
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [activeModalUpdate, setActiveModalUpdate] = useState<LatestUpdate | null>(null);
-  const [emailInput, setEmailInput] = useState<string>("");
-  const [subscribed, setSubscribed] = useState<boolean>(false);
 
+  // Fetch categories on mount
   useEffect(() => {
     let isMounted = true;
+    async function loadCategories() {
+      try {
+        const fetchedCats = await latestUpdateService.getCategories();
+        if (isMounted) {
+          setCategories(fetchedCats);
+        }
+      } catch (err) {
+        console.error("Failed to load categories:", err);
+      }
+    }
+    loadCategories();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Fetch updates whenever selectedCategory or searchQuery changes
+  useEffect(() => {
+    let isMounted = true;
+
     async function loadData() {
       setIsLoading(true);
       try {
-        const data = await latestUpdateService.getLatestUpdates();
+        const data = await latestUpdateService.getLatestUpdates({
+          category: selectedCategory !== "all" ? selectedCategory : undefined,
+          search: searchQuery.trim() || undefined,
+        });
+
         if (isMounted) {
-          setUpdates(data.length > 0 ? data : FALLBACK_LATEST_UPDATES);
-          if (initialId) {
+          setUpdates(data);
+          if (initialId && !activeModalUpdate) {
             const matched = data.find((item) => String(item.id) === String(initialId));
             if (matched) {
               setActiveModalUpdate(matched);
@@ -75,7 +100,7 @@ function LatestUpdatesContent() {
       } catch (err) {
         console.error("Failed to load updates:", err);
         if (isMounted) {
-          setUpdates(FALLBACK_LATEST_UPDATES);
+          setUpdates([]);
         }
       } finally {
         if (isMounted) {
@@ -83,47 +108,21 @@ function LatestUpdatesContent() {
         }
       }
     }
-    loadData();
+
+    const timer = setTimeout(() => {
+      loadData();
+    }, 250);
+
     return () => {
       isMounted = false;
+      clearTimeout(timer);
     };
-  }, [initialId]);
+  }, [selectedCategory, searchQuery, initialId]);
 
   // Featured update (is_featured === true or fallback to first element)
   const featuredUpdate = useMemo(() => {
     return updates.find((u) => u.is_featured) || updates[0] || null;
   }, [updates]);
-
-  // Filtered recent updates
-  const filteredUpdates = useMemo(() => {
-    return updates.filter((item) => {
-      // Category match
-      const category = (item.category || (item.is_featured ? "announcement" : "resource")).toLowerCase();
-      const matchesCategory =
-        selectedFilter === "all" ||
-        category.includes(selectedFilter.toLowerCase()) ||
-        (selectedFilter === "announcement" && item.is_featured);
-
-      // Search term match
-      const term = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !term ||
-        item.title.toLowerCase().includes(term) ||
-        item.short_description.toLowerCase().includes(term) ||
-        item.description.toLowerCase().includes(term);
-
-      return matchesCategory && matchesSearch;
-    });
-  }, [updates, selectedFilter, searchQuery]);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (emailInput.trim()) {
-      setSubscribed(true);
-      setEmailInput("");
-      setTimeout(() => setSubscribed(false), 5000);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#F4F6FB] text-[#17324D] font-sans antialiased pb-20">
@@ -205,26 +204,31 @@ function LatestUpdatesContent() {
             )}
           </div>
 
-          {/* Filter Buttons */}
-          <div className="flex items-center gap-2 flex-wrap" aria-label="Update filters">
-            {[
-              { id: "all", label: "All" },
-              { id: "announcement", label: "Announcements" },
-              { id: "report", label: "Reports" },
-              { id: "resource", label: "Resources" },
-            ].map((tab) => {
-              const isActive = selectedFilter === tab.id;
+          {/* Filter Category Buttons (Dynamically fetched from API) */}
+          <div className="flex items-center gap-2 flex-wrap" aria-label="Update category filters">
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                selectedCategory === "all"
+                  ? "bg-[#0752A3] text-white shadow-sm shadow-blue-500/30"
+                  : "bg-white border border-[#DCE5EF] text-[#17324D] hover:bg-slate-100"
+              }`}
+            >
+              All
+            </button>
+            {categories.map((cat) => {
+              const isActive = selectedCategory.toLowerCase() === cat.slug.toLowerCase();
               return (
                 <button
-                  key={tab.id}
-                  onClick={() => setSelectedFilter(tab.id)}
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.slug)}
                   className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     isActive
                       ? "bg-[#0752A3] text-white shadow-sm shadow-blue-500/30"
                       : "bg-white border border-[#DCE5EF] text-[#17324D] hover:bg-slate-100"
                   }`}
                 >
-                  {tab.label}
+                  {cat.name}
                 </button>
               );
             })}
@@ -236,7 +240,7 @@ function LatestUpdatesContent() {
           {/* Main Updates Section (8 cols) */}
           <section className="lg:col-span-8 space-y-8">
             {/* Featured Update Card */}
-            {featuredUpdate && selectedFilter === "all" && !searchQuery && (
+            {featuredUpdate && selectedCategory === "all" && !searchQuery && (
               <article className="bg-white border border-[#DCE5EF] rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 group">
                 <div className="relative min-h-[220px] sm:min-h-[280px] bg-slate-900 overflow-hidden flex items-end p-6 sm:p-8">
                   {featuredUpdate.thumbnail_image ? (
@@ -276,10 +280,10 @@ function LatestUpdatesContent() {
                   <div className="pt-2">
                     <button
                       onClick={() => setActiveModalUpdate(featuredUpdate)}
-                      className="inline-flex items-center gap-2 text-sm font-bold text-[#0752A3] hover:text-[#063C77] hover:gap-3 transition-all cursor-pointer"
+                      className="inline-flex items-center gap-2 text-sm font-bold text-[#0752A3] hover:text-[#063C77] hover:gap-2.5 transition-all cursor-pointer group/btn"
                     >
                       <span>Read full update</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </button>
                   </div>
                 </div>
@@ -291,7 +295,7 @@ function LatestUpdatesContent() {
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-[#063C77]">Recent Updates</h2>
                 <p className="text-xs text-[#5E7185] mt-0.5">
-                  Showing {filteredUpdates.length} update{filteredUpdates.length !== 1 ? "s" : ""}
+                  Showing {updates.length} update{updates.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </div>
@@ -302,7 +306,7 @@ function LatestUpdatesContent() {
                 <Loader2 className="w-8 h-8 text-[#0752A3] animate-spin mx-auto" />
                 <p className="text-sm text-[#5E7185] font-medium">Fetching updates from DECM API...</p>
               </div>
-            ) : filteredUpdates.length === 0 ? (
+            ) : updates.length === 0 ? (
               <div className="bg-white border border-[#DCE5EF] rounded-2xl p-12 text-center space-y-4 shadow-sm">
                 <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
                 <h3 className="text-base font-bold text-[#17324D]">No matching updates found</h3>
@@ -311,7 +315,7 @@ function LatestUpdatesContent() {
                 </p>
                 <button
                   onClick={() => {
-                    setSelectedFilter("all");
+                    setSelectedCategory("all");
                     setSearchQuery("");
                   }}
                   className="px-4 py-2 bg-[#0752A3] text-white text-xs font-bold rounded-xl hover:bg-[#063C77] transition-colors"
@@ -321,9 +325,9 @@ function LatestUpdatesContent() {
               </div>
             ) : (
               <div className="space-y-4">
-                {filteredUpdates.map((item) => {
+                {updates.map((item) => {
                   const dateInfo = parseDateComponents(item.created_at);
-                  const isFeaturedItem = item.is_featured;
+                  const categoryName = getCategoryName(item);
 
                   return (
                     <article
@@ -345,7 +349,7 @@ function LatestUpdatesContent() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#EAF3FB] text-[#063C77]">
                             <Tag className="w-3 h-3 text-[#0752A3]" />
-                            {isFeaturedItem ? "Featured" : item.category || "Resource"}
+                            {categoryName}
                           </span>
                           <span className="text-xs text-[#5E7185] font-medium">
                             • Published {dateInfo.full}
@@ -363,10 +367,10 @@ function LatestUpdatesContent() {
                         <div className="pt-2 flex flex-wrap gap-4 items-center">
                           <button
                             onClick={() => setActiveModalUpdate(item)}
-                            className="text-xs font-extrabold text-[#0752A3] hover:underline flex items-center gap-1 cursor-pointer"
+                            className="text-xs font-extrabold text-[#0752A3] hover:underline flex items-center gap-1 cursor-pointer group/link"
                           >
                             <span>Read full update</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
+                            <ChevronRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
                           </button>
                         </div>
                       </div>
@@ -399,13 +403,13 @@ function LatestUpdatesContent() {
                     className="flex items-center justify-between py-2.5 text-xs sm:text-sm font-bold text-[#17324D] hover:text-[#0752A3] transition-colors group cursor-pointer"
                   >
                     <span>{link.label}</span>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#0752A3] group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#0752A3] group-hover:translate-x-1 transition-all" />
                   </Link>
                 ))}
               </div>
             </div>
 
-            {/* Notice Card */}
+            {/* Information Notice Card */}
             <div className="bg-[#FFF7DF] border border-[#F0D98A] rounded-2xl p-6 shadow-sm space-y-3">
               <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
                 <Info className="w-4 h-4 text-amber-600 shrink-0" />
@@ -416,41 +420,6 @@ function LatestUpdatesContent() {
               </p>
             </div>
 
-            {/* Receive Updates Subscription Card */}
-            <div className="bg-white border border-[#DCE5EF] rounded-2xl p-6 shadow-sm space-y-4">
-              <div className="flex items-center gap-2 text-[#063C77]">
-                <Bell className="w-5 h-5 text-[#0752A3]" />
-                <h3 className="text-base font-bold">Receive Updates</h3>
-              </div>
-              <p className="text-xs text-[#5E7185] leading-relaxed">
-                Subscribe to get emergency notices and published IM reports sent directly to your inbox.
-              </p>
-
-              {subscribed ? (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-semibold flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Subscription confirmed! Thank you.</span>
-                </div>
-              ) : (
-                <form onSubmit={handleSubscribe} className="space-y-2">
-                  <input
-                    type="email"
-                    required
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="Enter email address"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#DCE5EF] text-xs focus:outline-none focus:ring-2 focus:ring-[#0752A3]"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full py-2.5 rounded-xl bg-[#0752A3] hover:bg-[#063C77] text-white text-xs font-extrabold transition-colors cursor-pointer"
-                  >
-                    Subscribe to Updates
-                  </button>
-                </form>
-              )}
-            </div>
-
             {/* Contact Secretariat Card */}
             <div className="bg-white border border-[#DCE5EF] rounded-2xl p-6 shadow-sm space-y-3">
               <h3 className="text-base font-bold text-[#063C77]">Contact Secretariat</h3>
@@ -459,10 +428,11 @@ function LatestUpdatesContent() {
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 text-xs font-extrabold text-[#0752A3] hover:underline cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-[#0752A3] hover:underline cursor-pointer group"
               >
                 <Mail className="w-4 h-4" />
-                <span>Contact the Secretariat →</span>
+                <span>Contact the Secretariat</span>
+                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </aside>
@@ -477,7 +447,7 @@ function LatestUpdatesContent() {
             <div className="p-6 border-b border-slate-100 flex items-start justify-between gap-4 sticky top-0 bg-white/95 backdrop-blur-md z-10 rounded-t-3xl">
               <div className="space-y-1">
                 <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#EAF3FB] text-[#063C77]">
-                  {activeModalUpdate.is_featured ? "Featured Update" : activeModalUpdate.category || "Resource"}
+                  {getCategoryName(activeModalUpdate)}
                 </span>
                 <p className="text-xs text-[#5E7185] font-semibold">
                   Published {parseDateComponents(activeModalUpdate.created_at).full}

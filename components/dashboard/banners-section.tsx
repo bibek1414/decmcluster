@@ -9,7 +9,7 @@ import {
   GraduationCap,
   AlertTriangle,
   Monitor,
-  ArrowRight,
+  ChevronRight,
   Loader2,
 } from "lucide-react";
 import { latestUpdateService } from "@/services/latest-update";
@@ -62,7 +62,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#DC2626]",
     badgeBg: "bg-[#DC2626]",
     linkText: "View Emergency Alerts",
-    href: "/latest-updates?filter=announcement",
+    href: "/latest-updates?category=announcement",
   },
   {
     id: "announcements",
@@ -75,7 +75,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#497D39]",
     badgeBg: "bg-[#497D39]",
     linkText: "View Announcements",
-    href: "/latest-updates?filter=announcement",
+    href: "/latest-updates?category=announcement",
   },
 ];
 
@@ -209,7 +209,7 @@ export default function BannersSection() {
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/30 text-white text-xs font-medium hover:bg-white/15 transition-colors shrink-0 whitespace-nowrap cursor-pointer self-end lg:self-auto group"
           >
             <span>View All Updates</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>
@@ -263,7 +263,7 @@ export default function BannersSection() {
                     className={`inline-flex items-center text-sm font-bold ${card.primaryColor} hover:underline group-hover:translate-x-1 transition-transform cursor-pointer`}
                   >
                     {card.linkText}{" "}
-                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                    <ChevronRight className="w-4 h-4 ml-1" />
                   </Link>
                 </div>
               </div>
