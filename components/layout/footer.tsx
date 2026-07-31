@@ -17,6 +17,7 @@ const VALID_PATHS = [
   "/partners",
   "/links",
   "/contact",
+  "/latest-updates",
 ];
 
 export default function Footer() {

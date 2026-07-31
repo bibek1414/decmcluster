@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Newspaper, Calendar, Tag, Loader2, Sparkles } from "lucide-react";
+import { Newspaper, Calendar, Tag, Loader2 } from "lucide-react";
 
 export function LatestUpdateSkeleton() {
   return (
@@ -9,10 +9,7 @@ export function LatestUpdateSkeleton() {
       {/* Featured Skeleton Card */}
       <div className="bg-card border border-border rounded-2xl overflow-hidden p-6 sm:p-8 space-y-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-primary/10 text-primary">
-            <Sparkles className="w-5 h-5 animate-spin" />
-          </div>
-          <div className="h-4 bg-muted rounded-md w-36" />
+          <div className="h-6 bg-muted rounded-full w-36" />
         </div>
         <div className="h-7 bg-muted rounded-lg w-3/4" />
         <div className="space-y-2 pt-1">
@@ -32,11 +29,11 @@ export function LatestUpdateSkeleton() {
       {[1, 2, 3].map((idx) => (
         <div
           key={idx}
-          className="bg-card border border-border rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-start"
+          className="bg-card border border-border rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:gap-5 items-start"
         >
           {/* Date Badge Skeleton */}
-          <div className="bg-muted/60 rounded-xl p-3.5 text-center min-w-[90px] sm:min-w-[100px] shrink-0 border border-border space-y-2 flex flex-col items-center justify-center">
-            <Newspaper className="w-5 h-5 text-muted-foreground/40" />
+          <div className="bg-muted/60 rounded-xl p-2.5 sm:p-3.5 min-w-0 w-full sm:w-auto sm:min-w-[100px] shrink-0 border border-border flex sm:flex-col items-center justify-between sm:justify-center gap-2">
+            <Newspaper className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground/40 shrink-0" />
             <div className="h-5 bg-muted rounded-md w-10" />
             <div className="h-3 bg-muted rounded-md w-12" />
           </div>

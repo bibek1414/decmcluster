@@ -62,22 +62,22 @@ export function UpdateDetailModal({
 
   return (
     <Dialog open={!!update} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="!max-w-2xl sm:!max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-border bg-card ">
-        <DialogHeader className="space-y-3 pb-2 text-left">
+      <DialogContent className="w-[94vw] sm:w-full sm:!max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-border bg-card">
+        <DialogHeader className="space-y-2 sm:space-y-3 pb-2 text-left">
           {/* Aligned Category Tag & Published Date Metadata Row */}
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-              <Tag className="w-3.5 h-3.5 text-primary" />
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+              <Tag className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary shrink-0" />
               {categoryName}
             </span>
-            <span className="text-muted-foreground/40 font-bold">•</span>
+            <span className="text-muted-foreground/40 font-bold text-xs">•</span>
             <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-              <Calendar className="w-3.5 h-3.5 text-primary" />
+              <Calendar className="w-3.5 h-3.5 text-primary shrink-0" />
               <span>Published {dateInfo.full}</span>
             </span>
           </div>
 
-          <DialogTitle className="text-xl sm:text-2xl font-bold text-foreground leading-snug tracking-tight">
+          <DialogTitle className="text-lg sm:text-2xl font-bold text-foreground leading-snug tracking-tight break-words">
             {update.title}
           </DialogTitle>
           <DialogDescription className="sr-only">
@@ -85,12 +85,12 @@ export function UpdateDetailModal({
           </DialogDescription>
         </DialogHeader>
 
-        <hr className="border-border/60 my-2" />
+        <hr className="border-border/60 my-1 sm:my-2" />
 
         {/* Modal Scrollable Content Body */}
-        <div className="space-y-6 flex-1 py-1">
+        <div className="space-y-4 sm:space-y-6 flex-1 py-1">
           {update.thumbnail_image && (
-            <div className="rounded-2xl overflow-hidden max-h-80 border border-border bg-muted/30">
+            <div className="rounded-xl sm:rounded-2xl overflow-hidden max-h-52 sm:max-h-80 border border-border bg-muted/30">
               <img
                 src={update.thumbnail_image}
                 alt={update.thumbnail_alt_desc || update.title}
@@ -99,12 +99,10 @@ export function UpdateDetailModal({
             </div>
           )}
 
-          <div className="prose prose-slate max-w-none text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-normal">
+          <div className="prose prose-slate max-w-none text-xs sm:text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-normal break-words">
             {update.description || update.short_description}
           </div>
         </div>
-
-        
       </DialogContent>
     </Dialog>
   );
