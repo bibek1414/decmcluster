@@ -1,38 +1,41 @@
 "use client";
 
-import { useEffect } from "react";
+import React from "react";
 import {
-  X,
   Tag,
   Calendar,
+  Share2,
+  Check,
 } from "lucide-react";
 import { LatestUpdate } from "@/types/latest-update";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface UpdateDetailModalProps {
   update: LatestUpdate | null;
   onClose: () => void;
   copiedId?: number | string | null;
   toastMsg?: string | null;
-  onCopyLink: (id: number | string, customMsg?: string) => void;
+  onCopyLink?: (id: number | string, customMsg?: string) => void;
 }
-
-
 
 function parseDateComponents(dateStr: string) {
   try {
     const d = new Date(dateStr);
-    if (isNaN(d.getTime())) return { day: "31", monthYear: "Jul 2026", full: dateStr };
-    const day = d.getDate().toString().padStart(2, "0");
-    const month = d.toLocaleDateString("en-US", { month: "short" });
-    const year = d.getFullYear();
+    if (isNaN(d.getTime())) return { full: dateStr };
     const full = d.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "long",
       year: "numeric",
     });
-    return { day, monthYear: `${month} ${year}`, full };
+    return { full };
   } catch {
-    return { day: "31", monthYear: "Jul 2026", full: dateStr };
+    return { full: dateStr };
   }
 }
 
@@ -47,57 +50,47 @@ function getCategoryName(item: LatestUpdate): string {
 export function UpdateDetailModal({
   update,
   onClose,
+  copiedId,
+  toastMsg,
+  onCopyLink,
 }: UpdateDetailModalProps) {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
-
   if (!update) return null;
-
-  
 
   const categoryName = getCategoryName(update);
   const dateInfo = parseDateComponents(update.created_at);
+  const isCopied = copiedId === update.id;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-card rounded-3xl border border-border max-w-2xl w-full max-h-[90vh] overflow-y-auto relative flex flex-col">
-        {/* Modal Header */}
-        <div className="p-6 border-b border-border flex items-start justify-between gap-4 sticky top-0 bg-card/95 backdrop-blur-md z-10 rounded-t-3xl">
-          <div className="space-y-1">
-            <span className="inline-flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-primary/10 text-primary">
-              <Tag className="w-3 h-3 text-primary" />
+    <Dialog open={!!update} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="!max-w-2xl sm:!max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 rounded-3xl border border-border bg-card ">
+        <DialogHeader className="space-y-3 pb-2 text-left">
+          {/* Aligned Category Tag & Published Date Metadata Row */}
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+              <Tag className="w-3.5 h-3.5 text-primary" />
               {categoryName}
             </span>
-            <p className="text-xs text-muted-foreground font-semibold flex items-center gap-1.5 mt-1">
+            <span className="text-muted-foreground/40 font-bold">•</span>
+            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
               <Calendar className="w-3.5 h-3.5 text-primary" />
               <span>Published {dateInfo.full}</span>
-            </p>
+            </span>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-            aria-label="Close dialog"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
 
-        {/* Modal Body */}
-        <div className="p-6 sm:p-8 space-y-6 flex-1">
-          <h2 className="text-2xl font-bold text-foreground leading-snug">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-foreground leading-snug tracking-tight">
             {update.title}
-          </h2>
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Details for update: {update.title}
+          </DialogDescription>
+        </DialogHeader>
 
+        <hr className="border-border/60 my-2" />
+
+        {/* Modal Scrollable Content Body */}
+        <div className="space-y-6 flex-1 py-1">
           {update.thumbnail_image && (
-            <div className="rounded-2xl overflow-hidden max-h-72 border border-border">
+            <div className="rounded-2xl overflow-hidden max-h-80 border border-border bg-muted/30">
               <img
                 src={update.thumbnail_image}
                 alt={update.thumbnail_alt_desc || update.title}
@@ -106,12 +99,14 @@ export function UpdateDetailModal({
             </div>
           )}
 
-          <div className="prose prose-slate max-w-none text-sm text-foreground leading-relaxed whitespace-pre-line">
+          <div className="prose prose-slate max-w-none text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-normal">
             {update.description || update.short_description}
           </div>
         </div>
 
-      </div>
-    </div>
+        
+      </DialogContent>
+    </Dialog>
   );
 }
+
