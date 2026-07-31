@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Megaphone,
   FileText,
@@ -8,14 +10,18 @@ import {
   AlertTriangle,
   Monitor,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
+import { latestUpdateService } from "@/services/latest-update";
+import { LatestUpdate } from "@/types/latest-update";
 
-interface TickerItem {
-  id: string;
+interface TickerDisplayItem {
+  id: string | number;
   title: string;
   date: string;
   icon: React.ElementType;
   badgeBg: string;
+  slug?: string;
 }
 
 interface FeatureCard {
@@ -28,38 +34,8 @@ interface FeatureCard {
   barColor: string; // Tailwind bg color
   badgeBg: string; // Tailwind bg color for circle icon
   linkText: string;
+  href: string;
 }
-
-const TICKER_UPDATES: TickerItem[] = [
-  {
-    id: "1",
-    title: "New Situation Report Published",
-    date: "22 May 2025",
-    icon: FileText,
-    badgeBg: "bg-blue-600",
-  },
-  {
-    id: "2",
-    title: "IM Training Registration Now Open",
-    date: "20 May 2025",
-    icon: GraduationCap,
-    badgeBg: "bg-teal-600",
-  },
-  {
-    id: "3",
-    title: "Tropical Cyclone Advisory for Northern Provinces",
-    date: "19 May 2025",
-    icon: AlertTriangle,
-    badgeBg: "bg-red-500",
-  },
-  {
-    id: "4",
-    title: "DECM Portal Version 1.2 Released",
-    date: "18 May 2025",
-    icon: Monitor,
-    badgeBg: "bg-purple-600",
-  },
-];
 
 const FEATURE_CARDS: FeatureCard[] = [
   {
@@ -73,6 +49,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#0B4893]",
     badgeBg: "bg-[#0B4893]",
     linkText: "View Latest Updates",
+    href: "/latest-updates",
   },
   {
     id: "alerts",
@@ -85,6 +62,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#DC2626]",
     badgeBg: "bg-[#DC2626]",
     linkText: "View Emergency Alerts",
+    href: "/latest-updates?filter=announcement",
   },
   {
     id: "announcements",
@@ -97,65 +75,142 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#497D39]",
     badgeBg: "bg-[#497D39]",
     linkText: "View Announcements",
+    href: "/latest-updates?filter=announcement",
   },
 ];
 
+function formatDateString(isoString: string): string {
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return isoString;
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return isoString;
+  }
+}
+
 export default function BannersSection() {
+  const router = useRouter();
+  const [updates, setUpdates] = useState<LatestUpdate[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadUpdates() {
+      try {
+        const data = await latestUpdateService.getLatestUpdates();
+        if (isMounted) {
+          setUpdates(data);
+        }
+      } catch (err) {
+        console.error("Failed to load updates in banner:", err);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadUpdates();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Map API updates into ticker items
+  const tickerItems: TickerDisplayItem[] = updates.slice(0, 4).map((item, index) => {
+    const icons = [FileText, GraduationCap, AlertTriangle, Monitor];
+    const badges = ["bg-blue-600", "bg-teal-600", "bg-amber-600", "bg-purple-600"];
+    const IconComponent = icons[index % icons.length];
+    const badgeColor = badges[index % badges.length];
+
+    return {
+      id: item.id,
+      title: item.title,
+      date: formatDateString(item.created_at),
+      icon: IconComponent,
+      badgeBg: badgeColor,
+      slug: item.slug,
+    };
+  });
+
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 select-none">
       {/* Top Section: Dark Blue Latest Updates Ticker Bar */}
-      <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#00275B] via-[#001D47] to-[#001433] p-4 sm:p-5 text-white -xl border border-blue-900/40">
+      <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#00275B] via-[#001D47] to-[#001433] p-4 sm:p-5 text-white shadow-xl border border-blue-900/40">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
           {/* Header Badge */}
-          <div className="flex items-center gap-3 shrink-0 self-start lg:self-auto">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#00275B] -md shrink-0">
+          <Link
+            href="/latest-updates"
+            className="flex items-center gap-3 shrink-0 self-start lg:self-auto group cursor-pointer"
+          >
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#00275B] shadow-md shrink-0 group-hover:scale-105 transition-transform">
               <Megaphone className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-white">
+              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-white group-hover:text-blue-200 transition-colors">
                 LATEST
               </span>
               <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-blue-100">
                 UPDATES
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* Updates Items List */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-0 w-full xl:divide-x xl:divide-white/20">
-            {TICKER_UPDATES.map((item) => {
-              const ItemIcon = item.icon;
-              return (
-                <div key={item.id} className="flex items-center gap-3 px-2 sm:px-3">
-                  <div
-                    className={`w-9 h-9 rounded-full ${item.badgeBg} text-white flex items-center justify-center shrink-0 -sm`}
+            {isLoading ? (
+              <div className="col-span-full flex items-center justify-center py-2 text-blue-200 text-xs gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
+                <span>Loading latest updates...</span>
+              </div>
+            ) : tickerItems.length === 0 ? (
+              <div className="col-span-full text-xs text-blue-200 py-2">
+                No updates available
+              </div>
+            ) : (
+              tickerItems.map((item) => {
+                const ItemIcon = item.icon;
+                return (
+                  <Link
+                    key={item.id}
+                    href={`/latest-updates?id=${item.id}`}
+                    className="flex items-center gap-3 px-2 sm:px-3 hover:bg-white/10 py-1.5 rounded-lg transition-colors group cursor-pointer"
                   >
-                    <ItemIcon className="w-4.5 h-4.5" />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span
-                      className="text-xs font-semibold text-white truncate"
-                      title={item.title}
+                    <div
+                      className={`w-9 h-9 rounded-full ${item.badgeBg} text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}
                     >
-                      {item.title}
-                    </span>
-                    <span className="text-[11px] text-blue-200/80 font-medium">
-                      {item.date}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+                      <ItemIcon className="w-4 h-4" />
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span
+                        className="text-xs font-semibold text-white truncate group-hover:text-blue-200 transition-colors"
+                        title={item.title}
+                      >
+                        {item.title}
+                      </span>
+                      <span className="text-[11px] text-blue-200/80 font-medium">
+                        {item.date}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })
+            )}
           </div>
 
-          {/* View All Button (No-op action for now) */}
-          <button
-            type="button"
-            onClick={(e) => e.preventDefault()}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/30 text-white text-xs font-medium hover:bg-white/10 transition-colors shrink-0 whitespace-nowrap cursor-pointer self-end lg:self-auto"
+          {/* View All Button */}
+          <Link
+            href="/latest-updates"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/30 text-white text-xs font-medium hover:bg-white/15 transition-colors shrink-0 whitespace-nowrap cursor-pointer self-end lg:self-auto group"
           >
-            View All Updates <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+            <span>View All Updates</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </div>
 
@@ -166,7 +221,8 @@ export default function BannersSection() {
           return (
             <div
               key={card.id}
-              className="bg-white rounded-2xl border border-slate-200/80 -sm hover:-xl transition-all duration-300 flex flex-col group relative"
+              onClick={() => router.push(card.href)}
+              className="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group relative cursor-pointer"
             >
               {/* Card Image Banner */}
               <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900 rounded-t-2xl">
@@ -177,10 +233,10 @@ export default function BannersSection() {
                 />
               </div>
 
-              {/* Overlapping Round Icon Badge (Unclipped) */}
+              {/* Overlapping Round Icon Badge */}
               <div className="relative px-6">
                 <div
-                  className={`absolute -top-6 sm:-top-7 left-6 z-20 w-12 h-12 sm:w-14 sm:h-14 rounded-full ${card.badgeBg} flex items-center justify-center text-white border-4 border-white -md`}
+                  className={`absolute -top-6 sm:-top-7 left-6 z-20 w-12 h-12 sm:w-14 sm:h-14 rounded-full ${card.badgeBg} flex items-center justify-center text-white border-4 border-white shadow-md`}
                 >
                   <CardIcon className="w-5 h-5 sm:w-7 sm:h-7 stroke-[2.2]" />
                 </div>
@@ -199,16 +255,16 @@ export default function BannersSection() {
                   {card.description}
                 </p>
 
-                {/* View Details Action (No-op action for now) */}
+                {/* View Details Action */}
                 <div>
-                  <button
-                    type="button"
-                    onClick={(e) => e.preventDefault()}
+                  <Link
+                    href={card.href}
+                    onClick={(e) => e.stopPropagation()}
                     className={`inline-flex items-center text-sm font-bold ${card.primaryColor} hover:underline group-hover:translate-x-1 transition-transform cursor-pointer`}
                   >
                     {card.linkText}{" "}
                     <ArrowRight className="w-4 h-4 ml-1.5" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -218,4 +274,3 @@ export default function BannersSection() {
     </section>
   );
 }
-
