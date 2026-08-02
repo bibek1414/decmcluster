@@ -31,6 +31,8 @@ export interface HistoricalEvent {
   event: string;
   year: number;
   impact: string;
+  image?: string | null;
+  description?: string | null;
 }
 
 export interface EvacuationCentre {

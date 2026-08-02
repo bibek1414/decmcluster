@@ -30,6 +30,19 @@ export const powerbiService = {
     return res.json();
   },
 
+  getById: async (id: number, token: string | null): Promise<PowerBIData> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const url = `${baseUrl}/api/dashboard/powerbi-iframe/${id}/`;
+    const res = await fetch(url, {
+      method: "GET",
+      headers: getHeaders(token),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch PowerBI dashboard detail");
+    }
+    return res.json();
+  },
+
   update: async (
     id: number,
     name: string,

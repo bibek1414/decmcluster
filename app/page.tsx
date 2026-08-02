@@ -3,6 +3,7 @@ import BannersSection from "@/components/dashboard/banners-section";
 import OverviewSection from "@/components/dashboard/overview-section";
 import LoginCard from "@/components/auth/login-card";
 import DashboardSection from "@/components/dashboard/dashboard-section";
+import HomePowerBISection from "@/components/dashboard/home-powerbi-section";
 import ModulesGrid from "@/components/dashboard/modules-grid";
 import ReportsSection from "@/components/dashboard/reports-section";
 import ScrollAnimate from "@/components/shared/scroll-animate";
@@ -33,6 +34,10 @@ export default function Home() {
 
         <ScrollAnimate>
           <DashboardSection isHomePage={true} />
+        </ScrollAnimate>
+
+        <ScrollAnimate>
+          <HomePowerBISection />
         </ScrollAnimate>
 
         <ScrollAnimate>

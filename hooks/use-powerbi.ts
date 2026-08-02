@@ -9,6 +9,14 @@ export function usePowerBI(token: string | null) {
   });
 }
 
+export function usePowerBIDetail(id: number | null, token: string | null) {
+  return useQuery<PowerBIData>({
+    queryKey: ["powerbi-detail", id],
+    queryFn: () => powerbiService.getById(id!, token),
+    enabled: !!id,
+  });
+}
+
 export function useUpdatePowerBI() {
   const queryClient = useQueryClient();
 
