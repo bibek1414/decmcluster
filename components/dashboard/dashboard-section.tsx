@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import Link from "next/link";
 import { EvacuationCenterProvinceInfo } from "@/types/dashboard";
 import {
   List,
@@ -20,6 +21,8 @@ import {
   Search,
   Filter,
   Info,
+  ChevronRight,
+  Calendar,
 } from "lucide-react";
 
 import {
@@ -45,7 +48,11 @@ import {
 } from "@/hooks/use-dashboard";
 import { useDebounce } from "@/hooks/use-debounce";
 
-export default function DashboardSection() {
+interface DashboardSectionProps {
+  isHomePage?: boolean;
+}
+
+export default function DashboardSection({ isHomePage = false }: DashboardSectionProps) {
   const [activeMenu, setActiveMenu] = useState("Summary");
   const [ecSearch, setEcSearch] = useState("");
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
@@ -364,7 +371,7 @@ export default function DashboardSection() {
     return sectorSummaryData || defaultSummary;
   }, [sectorSummaryData]);
 
-  // Historical events mapping
+  // Historical events mapping for dashboard
   const historicalEvents = useMemo(() => {
     const defaultEvents = [
       { id: 1, event: "TC Pam", year: 2015, impact: "High Impact" },
@@ -374,6 +381,74 @@ export default function DashboardSection() {
       { id: 5, event: "Earthquake", year: 2024, impact: "Urban Impact" },
     ];
     return historicalEventsData || defaultEvents;
+  }, [historicalEventsData]);
+
+  // Historical events visual cards mapping for homepage
+  const historicalEventsCards = useMemo(() => {
+    const defaultEvents = [
+      {
+        id: 1,
+        event: "TC Pam",
+        year: 2015,
+        impact: "Catastrophic (Cat 5)",
+        description: "Category 5 cyclone impacting over 188,000 people across Shefa and Tafea provinces.",
+        image: "https://images.unsplash.com/photo-1527482797697-8795b05a13fe?auto=format&fit=crop&w=800&q=80",
+        link: "/dashboard",
+      },
+      {
+        id: 2,
+        event: "Ambae Volcano",
+        year: 2017,
+        impact: "Island Evacuation",
+        description: "Mandatory island-wide evacuation of 11,000+ residents from Ambae to Santo & Maewo.",
+        image: "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80",
+        link: "/dashboard",
+      },
+      {
+        id: 3,
+        event: "TC Harold",
+        year: 2020,
+        impact: "Severe Impact",
+        description: "Devastated Sanma, Penama, and Malampa provinces amidst pandemic response.",
+        image: "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80",
+        link: "/dashboard",
+      },
+      {
+        id: 4,
+        event: "TC Judy & Kevin",
+        year: 2023,
+        impact: "Twin Cyclones",
+        description: "Back-to-back Category 4 & 5 cyclones causing widespread shelter and WASH damage.",
+        image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
+        link: "/dashboard",
+      },
+      {
+        id: 5,
+        event: "Earthquake",
+        year: 2024,
+        impact: "Urban Shaking",
+        description: "Moderate to severe seismic shaking impacting coastal settlements and public infrastructure.",
+        image: "https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80",
+        link: "/dashboard",
+      },
+    ];
+
+    if (!historicalEventsData || historicalEventsData.length === 0) {
+      return defaultEvents;
+    }
+
+    return historicalEventsData.map((evt, idx) => {
+      const fallback = defaultEvents[idx % defaultEvents.length];
+      return {
+        id: evt.id || idx + 1,
+        event: evt.event || fallback.event,
+        year: evt.year || fallback.year,
+        impact: evt.impact || fallback.impact,
+        description: fallback.description,
+        image: fallback.image,
+        link: fallback.link,
+      };
+    });
   }, [historicalEventsData]);
 
   const eventColors = [
@@ -483,6 +558,154 @@ export default function DashboardSection() {
 
   const isLoading = activeMenu === "Evacuation Centres" ? isEcStatsLoading : isSummaryLoading;
   const currentStats = activeMenu === "Evacuation Centres" ? ecStats : baseStats;
+
+  if (isHomePage) {
+    return (
+      <div className="space-y-6">
+        {/* Dashboard Top Banner */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-primary text-primary-foreground px-6 py-4 rounded-lg border border-border">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-primary-foreground/10 border border-primary-foreground/20">
+              <Activity className="w-6 h-6 text-primary-foreground animate-pulse" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold tracking-tight">Displacement Overview</h2>
+              <p className="text-xs text-primary-foreground/80">
+                Historical displacement overview for Vanuatu
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start sm:self-auto bg-primary-foreground/10 border border-primary-foreground/20 px-3 py-1.5 rounded-lg text-xs font-semibold">
+            <Info className="w-3.5 h-3.5 text-primary-foreground/90" />
+            <span>Historical Overview</span>
+          </div>
+        </div>
+
+        {/* Key Figures Grid */}
+        {isSummaryLoading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
+            {Array.from({ length: 10 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="p-4 rounded-lg border border-border bg-card text-card-foreground flex items-start gap-3.5 animate-pulse"
+              >
+                <div className="p-2.5 rounded-xl bg-muted w-10 h-10 shrink-0" />
+                <div className="space-y-2 w-full">
+                  <div className="h-6 bg-muted rounded w-2/3" />
+                  <div className="h-3 bg-muted rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3.5 animate-fadeIn">
+            {baseStats.map((stat, idx) => {
+              const Icon = stat.icon;
+              return (
+                <div
+                  key={idx}
+                  className="p-4 rounded-lg border flex items-start gap-3.5 bg-card text-card-foreground transition-all duration-300 border-primary/40 bg-primary/5 hover:bg-primary/10 hover:shadow-sm"
+                >
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary transition-colors shrink-0">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl md:text-xl font-extrabold tracking-tight text-foreground leading-none">
+                      {stat.value}
+                    </h3>
+                    <p className="text-[11px] font-bold text-muted-foreground mt-1 leading-tight">
+                      {stat.label}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Historical Events Snapshot Cards */}
+        <div className="bg-card text-card-foreground rounded-lg border border-border overflow-hidden">
+          <div className="bg-primary text-primary-foreground px-4 py-3 text-sm font-bold flex items-center justify-between">
+            <span>Historical Events Snapshot</span>
+            <Link
+              href="/dashboard"
+              className="text-xs font-semibold text-primary-foreground/90 hover:text-primary-foreground flex items-center gap-1 transition-colors"
+            >
+              <span>View Full Dashboard</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="p-4 sm:p-5 space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Major disaster displacement events tracked in the Vanuatu DECM database
+            </p>
+
+            {isEventsLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-pulse">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="h-64 rounded-xl border border-border/40 bg-muted/40"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-fadeIn">
+                {historicalEventsCards.map((evt, idx) => (
+                  <div
+                    key={evt.id || idx}
+                    className="group rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between overflow-hidden"
+                  >
+                    <div>
+                      {/* Image container */}
+                      <div className="relative h-36 w-full overflow-hidden bg-muted">
+                        <img
+                          src={evt.image}
+                          alt={evt.event}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute top-2.5 left-2.5 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2 py-0.5 rounded border border-border/50 shadow-xs flex items-center gap-1">
+                          <Calendar className="w-3 h-3 text-primary" />
+                          <span>{evt.year}</span>
+                        </div>
+                        <div className="absolute bottom-2 left-2.5 right-2.5">
+                          <span className="bg-primary/95 text-primary-foreground text-[10px] font-extrabold px-2 py-0.5 rounded shadow-sm inline-block max-w-full truncate">
+                            {evt.impact}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Card Content */}
+                      <div className="p-3.5 space-y-1.5">
+                        <h4 className="text-sm font-extrabold text-foreground leading-snug group-hover:text-primary transition-colors">
+                          {evt.event}
+                        </h4>
+                        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
+                          {evt.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Footer link */}
+                    <div className="p-3.5 pt-0">
+                      <Link
+                        href={evt.link || "/dashboard"}
+                        className="inline-flex items-center justify-between text-xs font-bold text-primary hover:text-primary/80 transition-colors w-full pt-2.5 border-t border-border"
+                      >
+                        <span>Learn More</span>
+                        <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -32,24 +32,26 @@ export default function Home() {
         </ScrollAnimate>
 
         <ScrollAnimate>
-          <DashboardSection />
+          <DashboardSection isHomePage={true} />
         </ScrollAnimate>
-
+        
+  <ScrollAnimate>
+        <BannersSection />
+      </ScrollAnimate>
+       <ScrollAnimate>
+        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <ReportsSection />
+        </div>
+      </ScrollAnimate>
         <ScrollAnimate>
           <ModulesGrid />
         </ScrollAnimate>
       </div>
 
       {/* Full Width Banner */}
-      <ScrollAnimate>
-        <BannersSection />
-      </ScrollAnimate>
+    
 
-      <ScrollAnimate>
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <ReportsSection />
-        </div>
-      </ScrollAnimate>
+     
     </div>
   );
 }
