@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { Map, MapPin, X, Tent, Users, Shield, CheckCircle2 } from "lucide-react";
+import { Map, X, Tent, Users, Shield, CheckCircle2 } from "lucide-react";
 import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
 import MapRegistry from "./map-registry";
 
@@ -149,8 +149,8 @@ export default function MappingClient() {
       }
 
       // Calculate radius based on capacity (Dot size = recorded internal capacity)
-      const cap = loc.capacity_hhs || loc.capacity_persons || 20;
-      const radiusSize = Math.max(5, Math.min(18, Math.sqrt(cap) * 1.2));
+      const cap = (loc as any).capacity_hhs || (loc as any).capacity_persons || (loc as any).hhs || 20;
+      const radiusSize = Math.max(6, Math.min(18, Math.sqrt(cap) * 1.2));
 
       const isSelected =
         selectedCoordinates !== null &&
