@@ -40,7 +40,7 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 relative z-10">
         <div className="max-w-3xl">
           {/* Radio Badge */}
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-white border border-white/20 text-[10px] font-extrabold tracking-wider uppercase mb-5 ">

@@ -139,7 +139,7 @@ export default function BannersSection() {
   });
 
   return (
-    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 select-none">
+    <section className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 space-y-8 select-none">
       {/* Top Section: Dark Blue Latest Updates Ticker Bar */}
       <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#00275B] via-[#001D47] to-[#001433] p-4 sm:p-5 text-white shadow-xl border border-blue-900/40">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">

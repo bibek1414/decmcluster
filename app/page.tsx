@@ -19,13 +19,13 @@ export default function Home() {
     <div className="flex flex-col">
       <Hero />
 
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 space-y-8">
         <ScrollAnimate>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="lg:col-span-2 xl:col-span-3">
               <OverviewSection />
             </div>
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 xl:col-span-1">
               <LoginCard />
             </div>
           </div>
@@ -34,15 +34,14 @@ export default function Home() {
         <ScrollAnimate>
           <DashboardSection isHomePage={true} />
         </ScrollAnimate>
-        
-  <ScrollAnimate>
-        <BannersSection />
-      </ScrollAnimate>
-       <ScrollAnimate>
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <ScrollAnimate>
+          <BannersSection />
+        </ScrollAnimate>
+
+        <ScrollAnimate>
           <ReportsSection />
-        </div>
-      </ScrollAnimate>
+        </ScrollAnimate>
         <ScrollAnimate>
           <ModulesGrid />
         </ScrollAnimate>

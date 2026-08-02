@@ -63,7 +63,7 @@ export default function TrainingClient() {
 
         <div className="relative">
           {isLoading || isPlaceholderData ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-pulse">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
@@ -95,7 +95,7 @@ export default function TrainingClient() {
                 }}
                 initial="hidden"
                 animate="show"
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
               >
                 {modulesList.map((mod) => (
                   <motion.div

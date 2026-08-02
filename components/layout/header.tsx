@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className="bg-primary text-primary-foreground border-b border-border">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5">
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-5">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
           {/* Left: Logo + Title */}
           <div className="flex items-start gap-3 min-w-0 flex-1">

@@ -56,7 +56,7 @@ export default function LinksClient() {
         <h3 className="text-xs font-bold text-muted-foreground">External Database Links</h3>
 
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
@@ -85,7 +85,7 @@ export default function LinksClient() {
             }}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           >
             {items.map((link) => (
               <motion.div

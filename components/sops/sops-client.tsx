@@ -188,7 +188,7 @@ export default function SopsClient() {
           )}
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+            <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -221,7 +221,7 @@ export default function SopsClient() {
                 }}
                 initial="hidden"
                 animate="show"
-                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-6"
               >
                 {sopsList.map((sop) => {
                   const Icon = getIcon(sop.name);
