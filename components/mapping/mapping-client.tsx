@@ -1,140 +1,228 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Map,
-  Globe2,
-  AlertTriangle,
-  Flame,
-  Tent,
-  Navigation,
-  Wind,
-  Info,
-  Layers,
-} from "lucide-react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import { Map, MapPin, X, Tent, Users, Shield, CheckCircle2 } from "lucide-react";
+import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
 import MapRegistry from "./map-registry";
 
-interface MapItem {
-  id: string;
-  type: "center" | "hazard" | "road" | "volcano";
-  title: string;
-  desc: string;
-  stats?: Record<string, string | number>;
-}
-
 export default function MappingClient() {
-  const [layers, setLayers] = useState({
-    centers: true,
-    tcHazard: false,
-    roads: false,
-    volcano: false,
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedCoordinates, setSelectedCoordinates] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+
+  // Fetch live stats & locations from backend
+  const { data: stats, isLoading: statsLoading } = useEvacuationCentresStats({
+    province: selectedProvince || undefined,
+    latitude: selectedCoordinates?.latitude,
+    longitude: selectedCoordinates?.longitude,
   });
 
-  const [selectedItem, setSelectedItem] = useState<MapItem | null>(null);
+  const { data: locations, isLoading: locationsLoading } = useEvacuationCentreLocations({
+    province: selectedProvince || undefined,
+  });
 
-  const toggleLayer = (key: keyof typeof layers) => {
-    setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [map, setMap] = useState<any>(null);
+  const tileLayerRef = useRef<any>(null);
 
-  const handleItemClick = (item: MapItem) => {
-    setSelectedItem(item);
-  };
+  // Dynamically load Leaflet library on client side
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-  // Coordinates data for mapping overlay visual items
-  const evacuationCenters: MapItem[] = [
-    {
-      id: "ec-1",
-      type: "center",
-      title: "Port Vila Area Council Hall",
-      desc: "Primary evacuation hub in Shefa province, fully stocked with WASH kits and temporary shelter partition kits.",
-      stats: {
-        province: "Shefa",
-        status: "Open",
-        capacity_hhs: 220,
-        type: "Community Hall",
-      },
-    },
-    {
-      id: "ec-2",
-      type: "center",
-      title: "Luganville Community Centre",
-      desc: "Emergency relief staging site in Sanma province with standby generators and food rations.",
-      stats: {
-        province: "Sanma",
-        status: "Open",
-        capacity_hhs: 185,
-        type: "School",
-      },
-    },
-    {
-      id: "ec-3",
-      type: "center",
-      title: "Isangel School Compound",
-      desc: "Active monitoring shelter in Tafea. Access roads are cleared, medical officers on standby.",
-      stats: {
-        province: "Tafea",
-        status: "Monitoring",
-        capacity_hhs: 95,
-        type: "School",
-      },
-    },
-    {
-      id: "ec-4",
-      type: "center",
-      title: "Lakatoro Church Hall",
-      desc: "Worship center converted to a central distribution depot for Malampa province displaced families.",
-      stats: {
-        province: "Malampa",
-        status: "Open",
-        capacity_hhs: 130,
-        type: "Church",
-      },
-    },
-  ];
+    const hasScript = !!(window as any).L;
+    const hasCss = !!document.querySelector('link[href*="leaflet.css"]');
 
-  const blockedRoad: MapItem = {
-    id: "road-1",
-    type: "road",
-    title: "Sarakata River Bridge Closure",
-    desc: "Severe flooding has submerged the low-crossing bridge structure. All vehicle traffic is currently suspended.",
-    stats: {
-      province: "Sanma",
-      river_level: "High (+2.4m)",
-      reroute: "East Bypass Rd",
-      status: "Closed",
-    },
-  };
+    if (hasScript && hasCss) {
+      setMapLoaded(true);
+      return;
+    }
 
-  const volcanoAlert: MapItem = {
-    id: "volcano-1",
-    type: "volcano",
-    title: "Mount Ambae Volcano Warning",
-    desc: "Vanuatu Meteorology and Geo-Hazards Department (VMGD) reports active steam and ash emissions.",
-    stats: {
-      location: "Ambae Island",
-      alert_level: "Level 2",
-      safety_radius: "2km",
-      hazard: "Ash Fall",
-    },
-  };
+    let cssLoaded = hasCss;
+    let jsLoaded = hasScript;
 
-  const tcHazardZone: MapItem = {
-    id: "tc-1",
-    type: "hazard",
-    title: "Cyclone Judy/Kevin Track",
-    desc: "Historic Category 4 cyclone trajectory showing the high wind-speed warning boundary and coastal surge zones.",
-    stats: {
-      pressure: "945 hPa",
-      wind_speed: "165 km/h",
-      surge_risk: "Extreme",
-      storm_category: "Cat 4",
-    },
-  };
+    const checkLoaded = () => {
+      if (cssLoaded && jsLoaded) {
+        setMapLoaded(true);
+      }
+    };
+
+    if (!hasCss) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      link.onload = () => {
+        cssLoaded = true;
+        checkLoaded();
+      };
+      link.onerror = () => {
+        cssLoaded = true;
+        checkLoaded();
+      };
+      document.head.appendChild(link);
+    }
+
+    if (!hasScript) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.async = true;
+      script.onload = () => {
+        jsLoaded = true;
+        checkLoaded();
+      };
+      script.onerror = () => {
+        jsLoaded = true;
+        checkLoaded();
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  // Initialize Map ONCE when Leaflet is loaded
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return;
+    const L = (window as any).L;
+    if (!L || map) return;
+
+    let activeMap: any = null;
+
+    const initMap = () => {
+      if (!mapRef.current) return;
+      activeMap = L.map(mapRef.current, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+        preferCanvas: false,
+      }).setView([-16.5, 168.0], 7);
+
+      tileLayerRef.current = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        crossOrigin: true,
+      }).addTo(activeMap);
+
+      setMap(activeMap);
+
+      requestAnimationFrame(() => {
+        activeMap.invalidateSize();
+        setTimeout(() => activeMap.invalidateSize(), 300);
+        setTimeout(() => activeMap.invalidateSize(), 800);
+      });
+    };
+
+    requestAnimationFrame(initMap);
+
+    return () => {
+      if (activeMap) {
+        activeMap.remove();
+      }
+      setMap(null);
+      tileLayerRef.current = null;
+    };
+  }, [mapLoaded]);
+
+  // Update Markers when locations or filters change
+  useEffect(() => {
+    const L = (window as any).L;
+    if (!map || !L || !locations) return;
+
+    map.eachLayer((layer: any) => {
+      if (layer !== tileLayerRef.current) map.removeLayer(layer);
+    });
+
+    const validCoords: [number, number][] = [];
+
+    locations.forEach((loc) => {
+      if (loc.latitude === 0 && loc.longitude === 0) return;
+      validCoords.push([loc.latitude, loc.longitude]);
+
+      let color = "#ef4444";
+      let statusName = "Not approved / unknown";
+      if (loc.is_ec_govt_approved) {
+        color = "#10b981";
+        statusName = "Government approved";
+      } else if (loc.is_ec_owner_approved) {
+        color = "#3b82f6";
+        statusName = "Owner approved only";
+      }
+
+      // Calculate radius based on capacity (Dot size = recorded internal capacity)
+      const cap = loc.capacity_hhs || loc.capacity_persons || 20;
+      const radiusSize = Math.max(5, Math.min(18, Math.sqrt(cap) * 1.2));
+
+      const isSelected =
+        selectedCoordinates !== null &&
+        selectedCoordinates.latitude === loc.latitude &&
+        selectedCoordinates.longitude === loc.longitude;
+
+      const marker = L.circleMarker([loc.latitude, loc.longitude], {
+        radius: isSelected ? radiusSize + 4 : radiusSize,
+        fillColor: color,
+        color: isSelected ? "#eab308" : "#ffffff",
+        weight: isSelected ? 3.5 : 1.5,
+        opacity: 1,
+        fillOpacity: isSelected ? 1 : 0.85,
+      }).addTo(map);
+
+      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.latitude},${loc.longitude}`;
+      marker.bindPopup(`
+        <div style="font-family: sans-serif; font-size: 12px; padding: 4px; min-width: 190px;">
+          <h4 style="margin: 0 0 6px 0; font-weight: bold; color: #1e293b; font-size: 13px;">${loc.compound_name}</h4>
+          <p style="margin: 0 0 8px 0; color: #475569; line-height: 1.4;">
+            <strong>Province:</strong> ${loc.province || "N/A"}<br/>
+            <strong>Capacity:</strong> ${cap} HHs<br/>
+            <strong>Status:</strong> <span style="color: ${color}; font-weight: bold;">${statusName}</span>
+          </p>
+          <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer"
+             style="display: block; width: 100%; background-color: #2563eb; color: white; padding: 5px 8px; border-radius: 4px; text-decoration: none; font-weight: 600; text-align: center; box-sizing: border-box; font-size: 11px;">
+             View on Google Maps
+          </a>
+        </div>
+      `);
+
+      marker.on("click", () => {
+        setSelectedCoordinates({ latitude: loc.latitude, longitude: loc.longitude });
+      });
+
+      if (isSelected) {
+        marker.openPopup();
+      }
+    });
+
+    if (selectedCoordinates) {
+      map.setView([selectedCoordinates.latitude, selectedCoordinates.longitude], 12);
+    } else if (validCoords.length > 0 && selectedProvince) {
+      map.fitBounds(L.latLngBounds(validCoords), { padding: [40, 40] });
+    } else {
+      map.setView([-16.5, 168.0], 7);
+    }
+
+    requestAnimationFrame(() => map.invalidateSize());
+  }, [map, locations, selectedProvince, selectedCoordinates]);
+
+  // Province Breakdown
+  const provinceBreakdown = useMemo(() => {
+    if (!stats?.ec_by_province) return [];
+    const items = stats.ec_by_province.map((item) => ({
+      name: item.province.replace(" Province", "").trim(),
+      value: item.count,
+    }));
+    return items.sort((a, b) => b.value - a.value);
+  }, [stats]);
+
+  const maxProvinceVal = useMemo(() => {
+    if (provinceBreakdown.length === 0) return 1;
+    return Math.max(...provinceBreakdown.map((i) => i.value), 1);
+  }, [provinceBreakdown]);
+
+  const showLoading = statsLoading || locationsLoading;
 
   return (
     <div className="space-y-8 flex flex-col">
       <div className="bg-transparent sm:bg-card text-card-foreground sm:rounded-2xl p-0 sm:p-6 md:p-8 border-0 sm:border border-border space-y-6">
-        {/* Header section */}
+        {/* Page Header */}
         <div className="border-b border-border pb-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-xl bg-primary/10 text-primary">
@@ -145,476 +233,206 @@ export default function MappingClient() {
                 GIS & Spatial Mapping
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
-                Interactive coordinates and evacuation shelter mapping
+                EC location map by approval status & spatial data catalog
               </p>
             </div>
           </div>
         </div>
 
-        {/* Map + Sidebar Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Map Window (Left 2 cols) */}
-          <div className="lg:col-span-2 bg-muted/40 rounded-xl border border-border h-[460px] flex items-center justify-center relative overflow-hidden group select-none">
-            {/* Topographic Background Grid Pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-              </svg>
+        {/* Map-Related Key Figures Summary Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+          <div className="p-4 rounded-xl border border-primary/30 bg-primary/5 flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+              <Tent className="w-5 h-5" />
             </div>
-
-            {/* Map Compass Rose */}
-            <div className="absolute bottom-4 left-4 p-2 rounded-lg bg-card/80 border border-border/80 backdrop-blur-sm flex flex-col items-center justify-center text-[10px] text-muted-foreground font-semibold shadow-sm pointer-events-none">
-              <Navigation className="w-4 h-4 text-primary mb-1 rotate-[45deg]" />
-              <span>GIS-M PORTAL</span>
-            </div>
-
-            {/* SVG Map Archipelago representation */}
-            <div className="relative w-72 h-[400px]">
-              <svg
-                className="w-full h-full"
-                viewBox="0 0 200 280"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Vanuatu Island Shapes (SVG Paths) */}
-                <g className="text-muted-foreground/35">
-                  {/* Torba */}
-                  <circle
-                    cx="70"
-                    cy="30"
-                    r="10"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-                  <circle
-                    cx="95"
-                    cy="22"
-                    r="6"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-
-                  {/* Sanma (Luganville / Espiritu Santo) */}
-                  <polygon
-                    points="25,75 55,60 65,95 30,110"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-
-                  {/* Penama (Ambae & Pentecost) */}
-                  <path
-                    d="M 85,68 Q 95,78 92,98 Q 80,92 85,68 Z"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-
-                  {/* Malampa (Malekula & Ambrym) */}
-                  <polygon
-                    points="45,115 70,105 80,135 50,145"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-                  <circle
-                    cx="90"
-                    cy="125"
-                    r="8"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-
-                  {/* Shefa (Efate / Port Vila) */}
-                  <path
-                    d="M 105,170 Q 125,175 118,192 Q 102,188 105,170 Z"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-
-                  {/* Tafea (Tanna & Erromango) */}
-                  <circle
-                    cx="125"
-                    cy="215"
-                    r="9"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-                  <polygon
-                    points="135,240 155,250 145,268 128,255"
-                    className="fill-current hover:text-primary/20 transition-colors cursor-pointer"
-                  />
-                </g>
-
-                {/* Volcano Ash Layer (Overlay) */}
-                {layers.volcano && (
-                  <g className="animate-pulse">
-                    {/* Ash dispersion radius */}
-                    <circle
-                      cx="88"
-                      cy="85"
-                      r="24"
-                      className="fill-amber-500/10 stroke-amber-500/30 stroke-dasharray-[2,2] cursor-pointer"
-                      onClick={() => handleItemClick(volcanoAlert)}
-                    />
-                    {/* Active Volcano Pin */}
-                    <circle
-                      cx="88"
-                      cy="85"
-                      r="4"
-                      className="fill-amber-600 stroke-amber-200 cursor-pointer"
-                      onClick={() => handleItemClick(volcanoAlert)}
-                    />
-                  </g>
-                )}
-
-                {/* Cyclone Track Layer (Overlay) */}
-                {layers.tcHazard && (
-                  <g className="opacity-80">
-                    {/* Cyclone center track line */}
-                    <path
-                      d="M 180,25 Q 120,90 98,180 T 50,270"
-                      fill="none"
-                      stroke="url(#stormGradient)"
-                      strokeWidth="3"
-                      className="stroke-rose-500/50 cursor-pointer"
-                      onClick={() => handleItemClick(tcHazardZone)}
-                    />
-                    {/* Outer impact zone circle */}
-                    <circle
-                      cx="120"
-                      cy="90"
-                      r="35"
-                      className="fill-rose-500/5 stroke-rose-500/20 stroke-1 cursor-pointer"
-                      onClick={() => handleItemClick(tcHazardZone)}
-                    />
-                    {/* Cyclone Eye marker */}
-                    <g
-                      transform="translate(120, 90) rotate(45)"
-                      className="cursor-pointer"
-                      onClick={() => handleItemClick(tcHazardZone)}
-                    >
-                      <circle
-                        cx="0"
-                        cy="0"
-                        r="6"
-                        className="fill-rose-600 animate-ping opacity-75"
-                      />
-                      <circle cx="0" cy="0" r="4" className="fill-rose-700 stroke-rose-100" />
-                    </g>
-                    <defs>
-                      <linearGradient id="stormGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ef4444" stopOpacity="0.2" />
-                        <stop offset="50%" stopColor="#f43f5e" stopOpacity="0.8" />
-                        <stop offset="100%" stopColor="#e11d48" stopOpacity="0.2" />
-                      </linearGradient>
-                    </defs>
-                  </g>
-                )}
-
-                {/* Road Network & Bridge Warning Layer (Overlay) */}
-                {layers.roads && (
-                  <g>
-                    {/* Road paths connecting Sanma */}
-                    <path
-                      d="M 28,88 L 48,80 L 58,95"
-                      fill="none"
-                      stroke="#6b7280"
-                      strokeWidth="1.5"
-                      strokeDasharray="3,1.5"
-                    />
-                    {/* Blocked bridge coordinates */}
-                    <g className="cursor-pointer" onClick={() => handleItemClick(blockedRoad)}>
-                      {/* Ring ping */}
-                      <circle
-                        cx="48"
-                        cy="80"
-                        r="5"
-                        className="fill-rose-500/30 stroke-rose-500 animate-ping"
-                      />
-                      <circle cx="48" cy="80" r="3" className="fill-rose-600 stroke-rose-100" />
-                    </g>
-                  </g>
-                )}
-
-                {/* Evacuation Centers (Overlay) */}
-                {layers.centers && (
-                  <g>
-                    {/* Port Vila (Shefa) */}
-                    <g
-                      className="cursor-pointer"
-                      onClick={() => handleItemClick(evacuationCenters[0])}
-                    >
-                      <circle
-                        cx="112"
-                        cy="182"
-                        r="5"
-                        className="fill-emerald-500 animate-pulse opacity-90"
-                      />
-                      <circle
-                        cx="112"
-                        cy="182"
-                        r="3.5"
-                        className="fill-emerald-600 stroke-emerald-100"
-                      />
-                    </g>
-
-                    {/* Luganville (Sanma) */}
-                    <g
-                      className="cursor-pointer"
-                      onClick={() => handleItemClick(evacuationCenters[1])}
-                    >
-                      <circle
-                        cx="46"
-                        cy="85"
-                        r="5"
-                        className="fill-emerald-500 animate-pulse opacity-90"
-                      />
-                      <circle
-                        cx="46"
-                        cy="85"
-                        r="3.5"
-                        className="fill-emerald-600 stroke-emerald-100"
-                      />
-                    </g>
-
-                    {/* Isangel (Tafea) */}
-                    <g
-                      className="cursor-pointer"
-                      onClick={() => handleItemClick(evacuationCenters[2])}
-                    >
-                      <circle
-                        cx="142"
-                        cy="254"
-                        r="5"
-                        className="fill-amber-500 animate-pulse opacity-90"
-                      />
-                      <circle
-                        cx="142"
-                        cy="254"
-                        r="3.5"
-                        className="fill-amber-600 stroke-amber-100"
-                      />
-                    </g>
-
-                    {/* Lakatoro (Malampa) */}
-                    <g
-                      className="cursor-pointer"
-                      onClick={() => handleItemClick(evacuationCenters[3])}
-                    >
-                      <circle
-                        cx="62"
-                        cy="125"
-                        r="5"
-                        className="fill-emerald-500 animate-pulse opacity-90"
-                      />
-                      <circle
-                        cx="62"
-                        cy="125"
-                        r="3.5"
-                        className="fill-emerald-600 stroke-emerald-100"
-                      />
-                    </g>
-                  </g>
-                )}
-
-                {/* Static Island Labels */}
-                <g className="pointer-events-none select-none font-bold fill-foreground/30 text-[9px]">
-                  <text x="82" y="32">
-                    Torba
-                  </text>
-                  <text x="14" y="96">
-                    Sanma
-                  </text>
-                  <text x="96" y="98">
-                    Penama
-                  </text>
-                  <text x="46" y="142">
-                    Malampa
-                  </text>
-                  <text x="122" y="190">
-                    Shefa
-                  </text>
-                  <text x="144" y="246">
-                    Tafea
-                  </text>
-                </g>
-              </svg>
+            <div>
+              <h3 className="text-xl font-extrabold text-foreground">
+                {(stats?.total_ec || 0).toLocaleString()}
+              </h3>
+              <p className="text-[11px] font-bold text-muted-foreground">Total ECs Mapped</p>
             </div>
           </div>
 
-          {/* Sidebar Controls & Inspector (Right 1 col) */}
-          <div className="space-y-6">
-            {/* Layer Controls Panel */}
-            <div className="space-y-3.5">
-              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
-                <Layers className="w-3.5 h-3.5" />
-                <span>Map Controls & Layers</span>
+          <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-600">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-foreground">
+                {(stats?.is_govt_approved || 0).toLocaleString()}
+              </h3>
+              <p className="text-[11px] font-bold text-muted-foreground">Govt Approved</p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/5 flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-600">
+              <Shield className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-foreground">
+                {stats?.readiness_indicators?.is_ec_owner_approved || 0}%
+              </h3>
+              <p className="text-[11px] font-bold text-muted-foreground">Owner Approved</p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-primary/30 bg-primary/5 flex items-center gap-3">
+            <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+              <Users className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-xl font-extrabold text-foreground">
+                {(stats?.total_internal_capacity || 0).toLocaleString()}
+              </h3>
+              <p className="text-[11px] font-bold text-muted-foreground">Internal Capacity</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Map Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* Main Map Card */}
+          <div className="lg:col-span-2 bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs flex flex-col justify-between">
+            {/* Map Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border">
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-foreground">
+                  EC location map by approval status
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5 font-medium">
+                  Dot size = recorded internal capacity
+                </p>
               </div>
 
-              <div className="space-y-2.5">
-                {/* Evacuation Center Layer checkbox */}
-                <div
-                  onClick={() => toggleLayer("centers")}
-                  className={`p-3 rounded-xl border flex items-start justify-between gap-3 cursor-pointer transition-all duration-200 ${
-                    layers.centers
-                      ? "bg-primary/5 border-primary/20 text-primary-foreground"
-                      : "bg-card border-border hover:bg-muted/40"
-                  }`}
+              {/* Province Selector Dropdown */}
+              <div className="flex items-center space-x-2 shrink-0">
+                {(selectedProvince || selectedCoordinates) && (
+                  <button
+                    onClick={() => {
+                      setSelectedProvince(null);
+                      setSelectedCoordinates(null);
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 text-[10px] font-bold bg-muted hover:bg-muted-foreground/10 text-muted-foreground hover:text-foreground rounded-lg transition-colors cursor-pointer"
+                  >
+                    <X className="h-3 w-3" />
+                    <span>Clear Filter</span>
+                  </button>
+                )}
+                <select
+                  value={selectedProvince || ""}
+                  onChange={(e) => {
+                    setSelectedProvince(e.target.value || null);
+                    setSelectedCoordinates(null);
+                  }}
+                  className="text-xs font-bold bg-muted border border-border rounded-lg px-3 py-1.5 text-foreground cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  <div className="flex gap-2.5">
-                    <div
-                      className={`p-1.5 rounded-lg border ${layers.centers ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground border-border"}`}
-                    >
-                      <Tent className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-foreground">Evacuation Centers</h4>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        Locations of all active registered shelters
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={layers.centers}
-                    onChange={() => {}} // Controlled via click handler on parent container
-                    className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 mt-0.5 pointer-events-none"
-                  />
-                </div>
-
-                {/* Cyclone Hazard Layer checkbox */}
-                <div
-                  onClick={() => toggleLayer("tcHazard")}
-                  className={`p-3 rounded-xl border flex items-start justify-between gap-3 cursor-pointer transition-all duration-200 ${
-                    layers.tcHazard
-                      ? "bg-primary/5 border-primary/20 text-primary-foreground"
-                      : "bg-card border-border hover:bg-muted/40"
-                  }`}
-                >
-                  <div className="flex gap-2.5">
-                    <div
-                      className={`p-1.5 rounded-lg border ${layers.tcHazard ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground border-border"}`}
-                    >
-                      <Wind className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-foreground">TC Hazard Impact Zone</h4>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        Wind speeds & surge hazard boundaries
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={layers.tcHazard}
-                    onChange={() => {}}
-                    className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 mt-0.5 pointer-events-none"
-                  />
-                </div>
-
-                {/* Roads Accessibility Layer checkbox */}
-                <div
-                  onClick={() => toggleLayer("roads")}
-                  className={`p-3 rounded-xl border flex items-start justify-between gap-3 cursor-pointer transition-all duration-200 ${
-                    layers.roads
-                      ? "bg-primary/5 border-primary/20 text-primary-foreground"
-                      : "bg-card border-border hover:bg-muted/40"
-                  }`}
-                >
-                  <div className="flex gap-2.5">
-                    <div
-                      className={`p-1.5 rounded-lg border ${layers.roads ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground border-border"}`}
-                    >
-                      <AlertTriangle className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-foreground">Road Network Warnings</h4>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        Track blocked bridge and river crossings
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={layers.roads}
-                    onChange={() => {}}
-                    className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 mt-0.5 pointer-events-none"
-                  />
-                </div>
-
-                {/* Volcano Warning Layer checkbox */}
-                <div
-                  onClick={() => toggleLayer("volcano")}
-                  className={`p-3 rounded-xl border flex items-start justify-between gap-3 cursor-pointer transition-all duration-200 ${
-                    layers.volcano
-                      ? "bg-primary/5 border-primary/20 text-primary-foreground"
-                      : "bg-card border-border hover:bg-muted/40"
-                  }`}
-                >
-                  <div className="flex gap-2.5">
-                    <div
-                      className={`p-1.5 rounded-lg border ${layers.volcano ? "bg-primary/10 text-primary border-primary/20" : "bg-muted text-muted-foreground border-border"}`}
-                    >
-                      <Flame className="w-3.5 h-3.5" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-foreground">Volcanic Ash Fall Zones</h4>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
-                        Warning zones around active volcanos
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={layers.volcano}
-                    onChange={() => {}}
-                    className="rounded border-input text-primary focus:ring-ring h-3.5 w-3.5 mt-0.5 pointer-events-none"
-                  />
-                </div>
+                  <option value="">All Provinces</option>
+                  <option value="Malampa">Malampa</option>
+                  <option value="Penama">Penama</option>
+                  <option value="Sanma">Sanma</option>
+                  <option value="Shefa">Shefa</option>
+                  <option value="Tafea">Tafea</option>
+                  <option value="Torba">Torba</option>
+                </select>
               </div>
             </div>
 
-            {/* Details Inspector Panel */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
-                <Info className="w-3.5 h-3.5" />
-                <span>Layer Feature Inspector</span>
-              </div>
-
-              {selectedItem ? (
-                <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 space-y-3 animate-fadeIn relative">
-                  <div className="flex justify-between items-start">
-                    <h4 className="text-xs font-extrabold text-primary leading-tight">
-                      {selectedItem.title}
-                    </h4>
-                    <button
-                      onClick={() => setSelectedItem(null)}
-                      className="text-[10px] bg-muted hover:bg-muted/80 text-muted-foreground px-2 py-0.5 rounded font-bold cursor-pointer transition-colors border border-border"
-                    >
-                      Clear
-                    </button>
+            {/* Map Viewport Container */}
+            <div
+              className="mt-4 relative w-full rounded-xl border border-border z-0 overflow-hidden"
+              style={{ height: "480px" }}
+            >
+              {(!mapLoaded || showLoading) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-card/75 backdrop-blur-[2px] rounded-xl z-[1000]">
+                  <div className="flex flex-col items-center space-y-2 bg-popover px-5 py-3.5 rounded-xl border border-border shadow-md">
+                    <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xs font-semibold text-muted-foreground">
+                      {!mapLoaded ? "Loading interactive map..." : "Updating spatial data..."}
+                    </span>
                   </div>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    {selectedItem.desc}
-                  </p>
-                  {selectedItem.stats && (
-                    <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-border text-[10px]">
-                      {Object.entries(selectedItem.stats).map(([key, val]) => (
-                        <div key={key}>
-                          <span className="text-muted-foreground font-semibold block capitalize">
-                            {key.replace("_", " ")}
-                          </span>
-                          <span className="font-extrabold text-foreground">{String(val)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="p-5 rounded-xl border border-dashed border-border text-center text-xs text-muted-foreground bg-muted/20">
-                  Click a map layer feature dot or shape to view operational parameters.
                 </div>
               )}
+              <div
+                ref={mapRef}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </div>
+
+            {/* Map Legend */}
+            <div className="mt-4 flex flex-wrap gap-4 pt-3.5 border-t border-border">
+              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider w-full">
+                Approval Status Legend
+              </span>
+              <div className="flex items-center space-x-2">
+                <span className="h-3 w-3 rounded-full bg-[#10b981] border border-white shadow-xs" />
+                <span className="text-xs font-semibold text-foreground">Government approved</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="h-3 w-3 rounded-full bg-[#3b82f6] border border-white shadow-xs" />
+                <span className="text-xs font-semibold text-foreground">Owner approved only</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="h-3 w-3 rounded-full bg-[#ef4444] border border-white shadow-xs" />
+                <span className="text-xs font-semibold text-foreground">Not approved / unknown</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: ECs by Province Breakdown */}
+          <div className="bg-card text-card-foreground rounded-xl border border-border p-5 shadow-xs space-y-4">
+            <div>
+              <h3 className="text-sm font-bold text-foreground">Mapped ECs by province</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">Click province to filter map view</p>
+            </div>
+            <div className="space-y-3.5 pt-2 border-t border-border">
+              {provinceBreakdown.map((prov) => {
+                const percentage = Math.round((prov.value / maxProvinceVal) * 100);
+                const isSelected = selectedProvince?.toLowerCase() === prov.name.toLowerCase();
+                return (
+                  <button
+                    key={prov.name}
+                    onClick={() => {
+                      setSelectedProvince(isSelected ? null : prov.name);
+                      setSelectedCoordinates(null);
+                    }}
+                    className="w-full text-left block focus:outline-none group cursor-pointer"
+                  >
+                    <div className="flex justify-between text-xs font-semibold text-foreground mb-1">
+                      <span
+                        className={`group-hover:text-primary transition-colors flex items-center gap-1.5 ${
+                          isSelected ? "text-primary font-bold" : ""
+                        }`}
+                      >
+                        {prov.name}
+                        {isSelected && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                      </span>
+                      <span className="text-primary font-bold">{prov.value} ECs</span>
+                    </div>
+                    <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ${
+                          isSelected ? "bg-primary" : "bg-blue-900 group-hover:bg-blue-800"
+                        }`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Map Registry Catalog Below */}
       <MapRegistry />
     </div>
   );
 }
+
+
+
