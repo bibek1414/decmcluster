@@ -30,9 +30,9 @@ interface FeatureCard {
   description: string;
   image: string;
   icon: React.ElementType;
-  primaryColor: string; // Tailwind text color
-  barColor: string; // Tailwind bg color
-  badgeBg: string; // Tailwind bg color for circle icon
+  primaryColor: string;
+  barColor: string;
+  badgeBg: string;
   linkText: string;
   href: string;
 }
@@ -62,7 +62,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#DC2626]",
     badgeBg: "bg-[#DC2626]",
     linkText: "View Emergency Alerts",
-    href: "/latest-updates?category=announcement",
+    href: "/emergency-alerts",
   },
   {
     id: "announcements",
@@ -75,7 +75,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     barColor: "bg-[#497D39]",
     badgeBg: "bg-[#497D39]",
     linkText: "View Announcements",
-    href: "/latest-updates?category=announcement",
+    href: "/announcements",
   },
 ];
 
@@ -141,78 +141,7 @@ export default function BannersSection() {
   return (
     <section className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 space-y-8 select-none">
       {/* Top Section: Dark Blue Latest Updates Ticker Bar */}
-      <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-[#00275B] via-[#001D47] to-[#001433] p-4 sm:p-5 text-white shadow-xl border border-blue-900/40">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-6">
-          {/* Header Badge */}
-          <Link
-            href="/latest-updates"
-            className="flex items-center gap-3 shrink-0 self-start lg:self-auto group cursor-pointer"
-          >
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white flex items-center justify-center text-[#00275B] shadow-md shrink-0 group-hover:scale-105 transition-transform">
-              <Megaphone className="w-5 h-5 sm:w-6 sm:h-6 fill-current" />
-            </div>
-            <div className="flex flex-col leading-tight">
-              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-white group-hover:text-blue-200 transition-colors">
-                LATEST
-              </span>
-              <span className="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-blue-100">
-                UPDATES
-              </span>
-            </div>
-          </Link>
-
-          {/* Updates Items List */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 xl:gap-0 w-full xl:divide-x xl:divide-white/20">
-            {isLoading ? (
-              <div className="col-span-full flex items-center justify-center py-2 text-blue-200 text-xs gap-2">
-                <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
-                <span>Loading latest updates...</span>
-              </div>
-            ) : tickerItems.length === 0 ? (
-              <div className="col-span-full text-xs text-blue-200 py-2">
-                No updates available
-              </div>
-            ) : (
-              tickerItems.map((item) => {
-                const ItemIcon = item.icon;
-                return (
-                  <Link
-                    key={item.id}
-                    href={`/latest-updates?id=${item.id}`}
-                    className="flex items-center gap-3 px-2 sm:px-3 hover:bg-white/10 py-1.5 rounded-lg transition-colors group cursor-pointer"
-                  >
-                    <div
-                      className={`w-9 h-9 rounded-full ${item.badgeBg} text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-110 transition-transform`}
-                    >
-                      <ItemIcon className="w-4 h-4" />
-                    </div>
-                    <div className="flex flex-col min-w-0">
-                      <span
-                        className="text-xs font-semibold text-white truncate group-hover:text-blue-200 transition-colors"
-                        title={item.title}
-                      >
-                        {item.title}
-                      </span>
-                      <span className="text-[11px] text-blue-200/80 font-medium">
-                        {item.date}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })
-            )}
-          </div>
-
-          {/* View All Button */}
-          <Link
-            href="/latest-updates"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-white/30 text-white text-xs font-medium hover:bg-white/15 transition-colors shrink-0 whitespace-nowrap cursor-pointer self-end lg:self-auto group"
-          >
-            <span>View All Updates</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-      </div>
+     
 
       {/* Bottom Section: 3 Feature Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
@@ -262,7 +191,7 @@ export default function BannersSection() {
                     onClick={(e) => e.stopPropagation()}
                     className={`inline-flex items-center text-sm font-bold ${card.primaryColor} hover:underline group-hover:translate-x-1 transition-transform cursor-pointer`}
                   >
-                    {card.linkText}{" "}
+                    <span>{card.linkText}</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </Link>
                 </div>

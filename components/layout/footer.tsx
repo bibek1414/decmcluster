@@ -18,6 +18,8 @@ const VALID_PATHS = [
   "/links",
   "/contact",
   "/latest-updates",
+  "/emergency-alerts",
+  "/announcements",
 ];
 
 export default function Footer() {

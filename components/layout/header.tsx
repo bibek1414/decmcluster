@@ -17,6 +17,9 @@ const VALID_PATHS = [
   "/partners",
   "/links",
   "/contact",
+  "/latest-updates",
+  "/emergency-alerts",
+  "/announcements",
 ];
 
 export default function Header() {
