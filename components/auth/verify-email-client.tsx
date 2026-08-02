@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, Loader2, Eye, EyeOff, Lock, ChevronRight, KeyR, ChevronRightound } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Eye, EyeOff, Lock, ChevronRight, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authService } from "@/services/auth";

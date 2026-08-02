@@ -429,7 +429,7 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         impact: "Urban Impact",
         description: "Moderate to severe seismic shaking impacting coastal settlements and public infrastructure.",
         image: "https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80",
-        link: "/dashboard",
+        link: "/historical-events",
       },
     ];
 
@@ -446,7 +446,7 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         impact: evt.impact || fallback.impact,
         description: evt.description || fallback.description,
         image: evt.image || fallback.image,
-        link: fallback.link,
+        link: "/historical-events",
       };
     });
   }, [historicalEventsData]);
@@ -628,10 +628,10 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
           <div className="bg-primary text-primary-foreground px-4 py-3 text-sm font-bold flex items-center justify-between">
             <span>Historical Events Snapshot</span>
             <Link
-              href="/dashboard"
+              href="/historical-events"
               className="text-xs font-semibold text-primary-foreground/90 hover:text-primary-foreground flex items-center gap-1 transition-colors"
             >
-              <span>View Full Dashboard</span>
+              <span>View All Events</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -653,9 +653,10 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-fadeIn">
                 {historicalEventsCards.map((evt, idx) => (
-                  <div
+                  <Link
                     key={evt.id || idx}
-                    className="group rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between overflow-hidden"
+                    href={`/historical-events/${evt.id}`}
+                    className="group rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between overflow-hidden cursor-pointer"
                   >
                     <div>
                       {/* Image container */}
@@ -689,15 +690,12 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
 
                     {/* Footer link */}
                     <div className="p-3.5 pt-0">
-                      <Link
-                        href={evt.link || "/dashboard"}
-                        className="inline-flex items-center justify-between text-xs font-bold text-primary hover:text-primary/80 transition-colors w-full pt-2.5 border-t border-border"
-                      >
+                      <div className="inline-flex items-center justify-between text-xs font-bold text-primary hover:text-primary/80 transition-colors w-full pt-2.5 border-t border-border">
                         <span>Learn More</span>
                         <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

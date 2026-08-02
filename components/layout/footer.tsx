@@ -20,12 +20,17 @@ const VALID_PATHS = [
   "/latest-updates",
   "/emergency-alerts",
   "/announcements",
+  "/historical-events",
+  "/powerbi-dashboards",
 ];
 
 export default function Footer() {
   const pathname = usePathname();
   const isAdminPath = pathname?.startsWith("/assement");
-  const is404Path = pathname && !isAdminPath && !VALID_PATHS.includes(pathname);
+  const isValidRoute =
+    pathname &&
+    (VALID_PATHS.includes(pathname) || pathname.startsWith("/powerbi-dashboards"));
+  const is404Path = pathname && !isAdminPath && !isValidRoute;
 
   if (isAdminPath || is404Path) return null;
   return (

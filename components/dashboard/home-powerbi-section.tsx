@@ -1,19 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  BarChart3,
-  ExternalLink,
-  ChevronRight,
-  Loader2,
-  X,
-  Maximize2,
-  Calendar,
-} from "lucide-react";
+import React from "react";
+import { BarChart3, ChevronRight, Maximize2 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { usePowerBI, usePowerBIDetail } from "@/hooks/use-powerbi";
+import { usePowerBI } from "@/hooks/use-powerbi";
 import { PowerBIData } from "@/types/powerbi";
-import { Button } from "@/components/ui/button";
 
 const FALLBACK_POWERBI_DATA: PowerBIData[] = [
   {
@@ -42,39 +33,8 @@ export default function HomePowerBISection() {
   const { token } = useAuth();
   const { data: apiData = [], isLoading } = usePowerBI(token);
 
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [selectedFallbackItem, setSelectedFallbackItem] = useState<PowerBIData | null>(null);
-
-  const { data: detailData, isLoading: isDetailLoading } = usePowerBIDetail(selectedId, token);
-
   // Use API data if available, otherwise use fallback data from prompt
   const displayItems = apiData && apiData.length > 0 ? apiData : FALLBACK_POWERBI_DATA;
-
-  // Active item inside detail modal
-  const activeItem = detailData || selectedFallbackItem;
-
-  const handleOpenModal = (item: PowerBIData) => {
-    setSelectedId(item.id);
-    setSelectedFallbackItem(item);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedId(null);
-    setSelectedFallbackItem(null);
-  };
-
-  // Close modal on Escape key press
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleCloseModal();
-      }
-    };
-    if (selectedId !== null) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedId]);
 
   return (
     <section className="space-y-6 select-none">
@@ -91,8 +51,17 @@ export default function HomePowerBISection() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 self-start sm:self-auto bg-blue-600/20 border border-blue-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-300">
-          <span>{displayItems.length} Reports Available</span>
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <div className="hidden sm:flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-300">
+            <span>{displayItems.length} Reports Available</span>
+          </div>
+          <a
+            href="/powerbi-dashboards"
+            className="flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+          >
+            <span>View All</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </a>
         </div>
       </div>
 
@@ -120,9 +89,9 @@ export default function HomePowerBISection() {
               "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80";
 
             return (
-              <div
+              <a
                 key={item.id}
-                onClick={() => handleOpenModal(item)}
+                href={`/powerbi-dashboards/${item.id}`}
                 className="group bg-card text-card-foreground rounded-2xl border border-border hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col overflow-hidden cursor-pointer relative"
               >
                 {/* Thumbnail Image Banner */}
@@ -163,120 +132,14 @@ export default function HomePowerBISection() {
                     Interactive visualization report for {item.name}
                   </p>
 
-                  <Button
-                    size="sm"
-                    className="font-bold text-xs flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg cursor-pointer transition-transform group-hover:translate-x-0.5"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOpenModal(item);
-                    }}
-                  >
+                  <div className="font-bold text-xs flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-2 rounded-lg transition-transform group-hover:translate-x-0.5">
                     <span>View More</span>
                     <ChevronRight className="w-4 h-4" />
-                  </Button>
+                  </div>
                 </div>
-              </div>
+              </a>
             );
           })}
-        </div>
-      )}
-
-      {/* Power BI Interactive Detail Modal */}
-      {selectedId !== null && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 sm:p-6 animate-fadeIn"
-          onClick={handleCloseModal}
-        >
-          <div
-            className="bg-card text-card-foreground border border-border w-full max-w-5xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-muted/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                  <BarChart3 className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-extrabold text-foreground leading-tight">
-                    {activeItem?.name || "PowerBI Report Detail"}
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Interactive Report View (GET /api/dashboard/powerbi-iframe/{selectedId}/)
-                  </p>
-                </div>
-              </div>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleCloseModal}
-                className="h-9 w-9 rounded-xl text-muted-foreground hover:text-foreground cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Modal Body - Embedded PowerBI Iframe */}
-            <div className="relative w-full flex-1 min-h-[500px] sm:min-h-[600px] bg-slate-950 p-2 sm:p-4 overflow-hidden flex flex-col justify-center items-center">
-              {isDetailLoading && !activeItem?.iframe_link ? (
-                <div className="flex flex-col items-center gap-3 text-white">
-                  <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                  <span className="text-xs font-semibold">Loading PowerBI report data...</span>
-                </div>
-              ) : activeItem?.iframe_link ? (
-                <iframe
-                  title={`DECM Cluster - ${activeItem.name}`}
-                  src={activeItem.iframe_link}
-                  frameBorder="0"
-                  allowFullScreen={true}
-                  className="w-full h-full min-h-[480px] sm:min-h-[560px] rounded-xl shadow-lg border border-slate-800"
-                />
-              ) : (
-                <div className="text-center text-muted-foreground p-8">
-                  <p className="text-sm font-semibold">PowerBI iframe report is not configured.</p>
-                </div>
-              )}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-3.5 border-t border-border bg-muted/20">
-              <div className="text-xs text-muted-foreground font-medium">
-                {activeItem?.updated_at && (
-                  <span>
-                    Last updated:{" "}
-                    {new Date(activeItem.updated_at).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                {activeItem?.iframe_link && (
-                  <a
-                    href={activeItem.iframe_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Open in New Tab</span>
-                  </a>
-                )}
-                <Button
-                  onClick={handleCloseModal}
-                  size="sm"
-                  variant="outline"
-                  className="font-bold text-xs cursor-pointer"
-                >
-                  Close
-                </Button>
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </section>
