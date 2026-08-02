@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Users, Trash2, X, Loader2, Eye, EyeOff, Pencil, Edit } from "lucide-react";
+import { Plus, Search, Users, Trash2, X, Loader2, Pencil, Edit } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useAdminUsers,
@@ -60,8 +60,6 @@ export default function UsersClient() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("viewer");
   const [selectedFolders, setSelectedFolders] = useState<string[]>([]);
 
@@ -83,8 +81,6 @@ export default function UsersClient() {
   const [editFirstName, setEditFirstName] = useState("");
   const [editLastName, setEditLastName] = useState("");
   const [editEmail, setEditEmail] = useState("");
-  const [editPassword, setEditPassword] = useState("");
-  const [showEditPassword, setShowEditPassword] = useState(false);
   const [editRole, setEditRole] = useState("viewer");
   const [editSelectedFolders, setEditSelectedFolders] = useState<string[]>([]);
 
@@ -93,7 +89,6 @@ export default function UsersClient() {
     setEditFirstName(item.first_name || "");
     setEditLastName(item.last_name || "");
     setEditEmail(item.email || "");
-    setEditPassword("");
     setEditRole(item.role || "viewer");
     setEditSelectedFolders(item.access_control || []);
   };
@@ -205,11 +200,9 @@ export default function UsersClient() {
     if (!firstName.trim()) return toast.error("First name is required");
     if (!lastName.trim()) return toast.error("Last name is required");
     if (!email.trim()) return toast.error("Email is required");
-    if (!password) return toast.error("Password is required");
 
     const payload = {
       email: email.trim(),
-      password,
       first_name: firstName.trim(),
       last_name: lastName.trim(),
       role,
@@ -225,7 +218,6 @@ export default function UsersClient() {
           setFirstName("");
           setLastName("");
           setEmail("");
-          setPassword("");
           setRole("viewer");
           setSelectedFolders([]);
         },
@@ -251,10 +243,6 @@ export default function UsersClient() {
       access_control: editSelectedFolders,
     };
 
-    if (editPassword) {
-      payload.password = editPassword;
-    }
-
     updateMutation.mutate(
       { id: editTarget.id, payload, token },
       {
@@ -264,7 +252,6 @@ export default function UsersClient() {
           setEditFirstName("");
           setEditLastName("");
           setEditEmail("");
-          setEditPassword("");
           setEditRole("viewer");
           setEditSelectedFolders([]);
         },
@@ -557,27 +544,6 @@ export default function UsersClient() {
               </div>
 
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">Password</label>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-background pr-10"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer focus:outline-none"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-1">
                 <label className="block text-xs font-bold text-muted-foreground">User Role</label>
                 <select
                   value={role}
@@ -821,35 +787,6 @@ export default function UsersClient() {
                   className="w-full bg-background"
                   required
                 />
-              </div>
-
-              <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  New Password{" "}
-                  <span className="text-muted-foreground/60 font-normal">
-                    (leave blank to keep current)
-                  </span>
-                </label>
-                <div className="relative">
-                  <Input
-                    type={showEditPassword ? "text" : "password"}
-                    value={editPassword}
-                    onChange={(e) => setEditPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-background pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowEditPassword(!showEditPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer focus:outline-none"
-                  >
-                    {showEditPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
               </div>
 
               <div className="space-y-1">

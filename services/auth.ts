@@ -63,14 +63,18 @@ export const authService = {
     return responseData as LoginResponse;
   },
 
-  verifyEmail: async (token: string): Promise<{ message: string }> => {
+  verifyEmail: async (token: string, password?: string): Promise<{ message: string }> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const bodyData: Record<string, string> = { token };
+    if (password) {
+      bodyData.password = password;
+    }
     const response = await fetch(`${baseUrl}/api/account/verify-email/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify(bodyData),
     });
 
     let responseData: any = null;
