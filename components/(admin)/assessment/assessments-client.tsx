@@ -162,9 +162,24 @@ const FIVEW_RESPONSE_DATA_ENTRY: StaticEntry = {
   isInteractive: true,
 };
 
+// Archives interactive entry
+const ARCHIVE_DATA_ENTRY: StaticEntry = {
+  id: -3,
+  name: "Archives",
+  slug: "archives",
+  description:
+    "Interactive repository of survey records, tools, and archived displacement data files ready for download.",
+  pdf: null,
+  excel: null,
+  is_public: false,
+  created_at: "2026-08-02T10:38:51.669584Z",
+  isInteractive: true,
+};
+
 // All entries shown on Displacement Data page
 const ALL_ENTRIES: StaticEntry[] = [
   DISPLACEMENT_DATA_ENTRY,
+  ARCHIVE_DATA_ENTRY,
   EVACUATION_DATA_ENTRY,
   VILLAGE_ASSESSMENT_ENTRY,
   FIVEW_RESPONSE_DATA_ENTRY,

@@ -106,7 +106,10 @@ export default function UsersClient() {
   };
 
   // Toggle access control helpers
-  const folderIds = React.useMemo(() => ["meeting-minutes", "sops", "situational-reports", "im-tools"], []);
+  const folderIds = React.useMemo(
+    () => ["archives", "meeting-minutes", "sops", "situational-reports", "im-tools"],
+    [],
+  );
   const currentAssessmentIds = React.useMemo(() => {
     return FALLBACK_ASSESSMENTS.map((f) => f.id);
   }, []);
@@ -371,10 +374,10 @@ export default function UsersClient() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
-                    <th className="p-4 w-[30%]">Name</th>
-                    <th className="p-4 w-[30%]">Email</th>
-                    <th className="p-4 w-[15%]">Role</th>
-                    <th className="p-4 w-[15%]">Folder Access</th>
+                    <th className="p-4 w-[20%]">Name</th>
+                    <th className="p-4 w-[22%]">Email</th>
+                    <th className="p-4 w-[13%]">Role</th>
+                    <th className="p-4 w-[35%]">Folder Access</th>
                     {canDelete && <th className="p-4 w-[10%] text-right">Actions</th>}
                   </tr>
                 </thead>
@@ -402,6 +405,7 @@ export default function UsersClient() {
                       }
 
                       const labels: Record<string, string> = {
+                        archives: "Archives",
                         "meeting-minutes": "Meeting Minutes",
                         meeting_minutes: "Meeting Minutes",
                         sops: "SOPs",
@@ -412,7 +416,7 @@ export default function UsersClient() {
                       };
 
                       return (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto pr-1 py-0.5">
                           {ac.map((val) => {
                             const normalized = val.toLowerCase().replace(/_/g, "-");
                             const label =
@@ -420,7 +424,7 @@ export default function UsersClient() {
                             return (
                               <span
                                 key={val}
-                                className="inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border text-[9px] font-semibold"
+                                className="inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border text-[9px] font-semibold whitespace-nowrap"
                               >
                                 {label}
                               </span>
@@ -615,6 +619,10 @@ export default function UsersClient() {
                       </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
                         {[
+                          {
+                            id: "archives",
+                            label: "Archives",
+                          },
                           {
                             id: "meeting-minutes",
                             label: "Coordination Meeting Minutes",
@@ -886,6 +894,10 @@ export default function UsersClient() {
                       </div>
                       <div className="space-y-2 bg-muted/30 p-3 rounded-xl border border-border/50">
                         {[
+                          {
+                            id: "archives",
+                            label: "Archives",
+                          },
                           {
                             id: "meeting-minutes",
                             label: "Coordination Meeting Minutes",

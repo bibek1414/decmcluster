@@ -15,6 +15,7 @@ import {
   FileSpreadsheet,
   Users,
   Wrench,
+  Archive,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -35,6 +36,9 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     const acList = user.access_control || [];
     const normalized = acList.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
 
+    if (pathname?.startsWith("/assement/archives")) {
+      return normalized.includes("archives") || normalized.includes("displacement-data");
+    }
     if (pathname?.startsWith("/assement/meeting-minutes")) {
       return normalized.includes("meeting-minutes");
     }
@@ -140,6 +144,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
                   pathname === "/assement" ||
                   (pathname?.startsWith("/assement/") &&
+                    !pathname.startsWith("/assement/archives") &&
                     !pathname.startsWith("/assement/meeting-minutes") &&
                     !pathname.startsWith("/assement/sops") &&
                     !pathname.startsWith("/assement/situational-reports") &&
@@ -151,6 +156,18 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
               >
                 <ClipboardList className="h-4 w-4 shrink-0" />
                 <span>Displacement Data</span>
+              </Link>
+              <Link
+                href="/assement/archives"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                  pathname?.startsWith("/assement/archives")
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                }`}
+              >
+                <Archive className="h-4 w-4 shrink-0" />
+                <span>Archives</span>
               </Link>
             </div>
 
