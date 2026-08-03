@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: path.join(__dirname),
   /* config options here */
-  allowedDevOrigins: ["192.168.1.80"],
   images: {
     remotePatterns: [
       {
