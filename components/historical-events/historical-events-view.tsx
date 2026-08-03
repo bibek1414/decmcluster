@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import  { useState, useMemo } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -8,124 +8,26 @@ import {
   ChevronRight,
   X,
   Info,
-  Tag,
   AlertTriangle,
-  MapPin,
-  Users,
-  Shield,
-  FileText,
-  Mail,
-  ExternalLink,
 } from "lucide-react";
 import { useHistoricalEvents } from "@/hooks/use-dashboard";
-import { HistoricalEvent } from "@/types/dashboard";
-
-interface DetailedHistoricalEvent extends HistoricalEvent {
-  description: string;
-  image: string;
-  affectedProvinces: string[];
-  estimatedDisplaced: string;
-  responseStatus: string;
-}
-
-const DEFAULT_HISTORICAL_EVENTS: DetailedHistoricalEvent[] = [
-  {
-    id: 1,
-    event: "TC Pam",
-    year: 2015,
-    impact: "High Impact",
-    description:
-      "Category 5 tropical cyclone causing catastrophic damage across 5 provinces. Damaged over 17,000 buildings, destroyed water infrastructure, and displaced tens of thousands of residents across Vanuatu.",
-    image:
-      "https://images.unsplash.com/photo-1527482797697-8795b05a13fe?auto=format&fit=crop&w=800&q=80",
-    affectedProvinces: ["Shefa", "Tafea", "Malampa", "Penama"],
-    estimatedDisplaced: "65,000+",
-    responseStatus: "Completed",
-  },
-  {
-    id: 2,
-    event: "Ambae Volcano",
-    year: 2017,
-    impact: "Displacement",
-    description:
-      "Volcanic activity led to a historic mandatory island-wide evacuation. Over 11,000 residents were relocated from Ambae Island to Santo, Maewo, and Pentecost with multi-sector cluster support.",
-    image:
-      "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80",
-    affectedProvinces: ["Penama", "Sanma"],
-    estimatedDisplaced: "11,000+",
-    responseStatus: "Completed",
-  },
-  {
-    id: 3,
-    event: "TC Harold",
-    year: 2020,
-    impact: "Severe Impact",
-    description:
-      "Category 5 cyclone impacting northern islands including Santo, Malekula, and Pentecost during COVID-19 pandemic protocol. Caused major destruction to shelter and health facilities.",
-    image:
-      "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80",
-    affectedProvinces: ["Sanma", "Penama", "Malampa"],
-    estimatedDisplaced: "27,000+",
-    responseStatus: "Completed",
-  },
-  {
-    id: 4,
-    event: "TC Judy/Kevin",
-    year: 2023,
-    impact: "Multi-island",
-    description:
-      "Twin Category 4 and Category 5 tropical cyclones hitting Vanuatu within 48 hours. Affected over 80% of the population, severely damaging electrical grids, water networks, and community centres.",
-    image:
-      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
-    affectedProvinces: ["Shefa", "Tafea", "Sanma", "Malampa", "Penama"],
-    estimatedDisplaced: "40,000+",
-    responseStatus: "Completed",
-  },
-  {
-    id: 5,
-    event: "Earthquake",
-    year: 2024,
-    impact: "Urban Impact",
-    description:
-      "Moderate to severe seismic activity resulting in structural shaking, localized landslides, and temporary evacuation of urban settlements in Shefa and coastal zones.",
-    image:
-      "https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80",
-    affectedProvinces: ["Shefa"],
-    estimatedDisplaced: "3,500+",
-    responseStatus: "Completed",
-  },
-];
 
 export function HistoricalEventsView() {
   const { data: apiEvents = [], isLoading } = useHistoricalEvents();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedImpact, setSelectedImpact] = useState<string>("all");
-  const [activeModalEvent, setActiveModalEvent] = useState<DetailedHistoricalEvent | null>(null);
 
-  // Combine API data with fallback details
-  const events = useMemo(() => {
-    if (!apiEvents || apiEvents.length === 0) {
-      return DEFAULT_HISTORICAL_EVENTS;
-    }
-    return apiEvents.map((evt, idx) => {
-      const fallback = DEFAULT_HISTORICAL_EVENTS[idx % DEFAULT_HISTORICAL_EVENTS.length];
-      return {
-        id: evt.id || idx + 1,
-        event: evt.event || fallback.event,
-        year: evt.year || fallback.year,
-        impact: evt.impact || fallback.impact,
-        description: evt.description || fallback.description,
-        image: evt.image || fallback.image,
-        affectedProvinces: fallback.affectedProvinces,
-        estimatedDisplaced: fallback.estimatedDisplaced,
-        responseStatus: fallback.responseStatus,
-      };
-    });
+  // Dynamic list of impact types from API data
+  const impactTypes = useMemo(() => {
+    const uniqueImpacts = Array.from(
+      new Set(apiEvents.map((evt) => evt.impact).filter(Boolean))
+    );
+    return ["all", ...uniqueImpacts];
   }, [apiEvents]);
 
-  // Filtered events
+  // Filtered events directly from API
   const filteredEvents = useMemo(() => {
-    return events.filter((evt) => {
+    return apiEvents.filter((evt) => {
       const matchesSearch =
         evt.event.toLowerCase().includes(searchQuery.toLowerCase()) ||
         String(evt.year).includes(searchQuery) ||
@@ -134,14 +36,11 @@ export function HistoricalEventsView() {
         selectedImpact === "all" || evt.impact.toLowerCase() === selectedImpact.toLowerCase();
       return matchesSearch && matchesImpact;
     });
-  }, [events, searchQuery, selectedImpact]);
-
-  // Unique impact filter options
-  const impactTypes = ["all", "High Impact", "Displacement", "Severe Impact", "Multi-island", "Urban Impact"];
+  }, [apiEvents, searchQuery, selectedImpact]);
 
   return (
     <div className="bg-background text-foreground font-sans antialiased pb-12 sm:pb-20">
-      {/* Hero Header matching screenshot style */}
+      {/* Hero Header */}
       <section className="bg-primary py-8 sm:py-12 lg:py-16 relative overflow-hidden select-none">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-foreground/10 via-transparent to-transparent pointer-events-none" />
 
@@ -166,7 +65,7 @@ export function HistoricalEventsView() {
                 Historical Events Snapshot
               </h1>
               <p className="text-sm sm:text-lg text-primary-foreground/90 max-w-2xl font-normal leading-relaxed">
-                Major disaster displacement events, evacuation records and impact history tracked in the Vanuatu DECM database.
+                Major disaster displacement events and impact history tracked in the Vanuatu DECM database.
               </p>
             </div>
 
@@ -175,7 +74,7 @@ export function HistoricalEventsView() {
                 Page Purpose
               </strong>
               <p className="text-xs text-primary-foreground/90 leading-relaxed">
-                This page provides a consolidated record of disaster events, displacement figures, evacuation centre logs and multi-sector response history across Vanuatu.
+                This page provides a consolidated record of disaster events and response history retrieved directly from the API backend.
               </p>
             </div>
           </div>
@@ -263,57 +162,66 @@ export function HistoricalEventsView() {
                   <Link
                     key={evt.id}
                     href={`/historical-events/${evt.id}`}
-                    className="group bg-card text-card-foreground border border-border hover:border-primary/50 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between cursor-pointer"
+                    className="group bg-card text-card-foreground border border-border hover:border-primary/50 rounded-2xl overflow-hidden transition-all duration-300 -sm hover:-xl flex flex-col justify-between cursor-pointer"
                   >
                     <div>
-                      {/* Image Banner */}
-                      <div className="relative h-48 w-full overflow-hidden bg-slate-900">
-                        <img
-                          src={evt.image}
-                          alt={evt.event}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                      {/* Image Banner or Placeholder Header */}
+                      {evt.image && evt.image.trim() !== "" ? (
+                        <div className="relative h-48 w-full overflow-hidden bg-slate-900">
+                          <img
+                            src={evt.image}
+                            alt={evt.event}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-                        <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md border border-border/50 shadow-xs flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5 text-primary" />
-                          <span>Year {evt.year}</span>
-                        </div>
+                          <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md border border-border/50 -xs flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5 text-primary" />
+                            <span>Year {evt.year}</span>
+                          </div>
 
-                        <div className="absolute bottom-3 left-3 right-3">
-                          <span className="bg-primary/95 text-primary-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm inline-block max-w-full truncate">
-                            {evt.impact}
-                          </span>
+                          <div className="absolute bottom-3 left-3 right-3">
+                            <span className="bg-primary/95 text-primary-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md -sm inline-block max-w-full truncate">
+                              {evt.impact}
+                            </span>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="bg-gradient-to-r from-primary/90 to-primary p-5 text-primary-foreground space-y-2 relative">
+                          <div className="flex items-center justify-between">
+                            <span className="bg-primary-foreground/20 text-primary-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md flex items-center gap-1">
+                              <Calendar className="w-3.5 h-3.5" />
+                              Year {evt.year}
+                            </span>
+                            <span className="bg-primary-foreground/20 text-primary-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md">
+                              {evt.impact}
+                            </span>
+                          </div>
+                          <h3 className="text-xl font-extrabold pt-2">{evt.event}</h3>
+                        </div>
+                      )}
 
                       {/* Content */}
                       <div className="p-5 space-y-3">
-                        <h3 className="text-xl font-extrabold text-foreground group-hover:text-primary transition-colors">
-                          {evt.event}
-                        </h3>
+                        {evt.image && (
+                          <h3 className="text-xl font-extrabold text-foreground group-hover:text-primary transition-colors">
+                            {evt.event}
+                          </h3>
+                        )}
 
-                        <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                          {evt.description}
-                        </p>
-
-                        <div className="pt-2 flex flex-wrap gap-2 text-[11px] font-semibold text-muted-foreground">
-                          <span className="flex items-center gap-1 bg-muted px-2.5 py-1 rounded-md">
-                            <MapPin className="w-3 h-3 text-primary" />
-                            {evt.affectedProvinces.join(", ")}
-                          </span>
-                          <span className="flex items-center gap-1 bg-muted px-2.5 py-1 rounded-md">
-                            <Users className="w-3 h-3 text-primary" />
-                            {evt.estimatedDisplaced} Displaced
-                          </span>
-                        </div>
+                        <div
+                          className="text-xs text-muted-foreground line-clamp-3 leading-relaxed [&_p]:inline [&_p]:mb-0"
+                          dangerouslySetInnerHTML={{
+                            __html: evt.description || "No description available for this event.",
+                          }}
+                        />
                       </div>
                     </div>
 
                     {/* Footer */}
                     <div className="px-5 py-3.5 bg-muted/20 border-t border-border flex items-center justify-between">
                       <span className="text-xs font-extrabold text-primary group-hover:underline flex items-center gap-1">
-                        View Detailed Record
+                        View More
                       </span>
                       <ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -347,16 +255,6 @@ export function HistoricalEventsView() {
                   </Link>
                 ))}
               </div>
-            </div>
-
-            <div className="bg-primary/10 border border-primary/20 rounded-2xl p-5 space-y-3">
-              <div className="flex items-center gap-2 text-primary font-bold text-sm">
-                <Info className="w-4 h-4 shrink-0" />
-                <span>Historical Database Notice</span>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                Historical displacement logs are archived by the NDMO and DECM Cluster. Data is compiled from rapid displacement assessments (RDAs) and post-disaster needs assessments.
-              </p>
             </div>
           </aside>
         </div>
