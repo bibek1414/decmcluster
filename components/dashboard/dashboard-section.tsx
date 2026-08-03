@@ -604,7 +604,7 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
               return (
                 <div
                   key={idx}
-                  className="p-4 rounded-lg border flex items-start gap-3.5 bg-card text-card-foreground transition-all duration-300 border-primary/40 bg-primary/5 hover:bg-primary/10 hover:shadow-sm"
+                  className="p-4 rounded-lg border flex items-start gap-3.5 bg-card text-card-foreground transition-all duration-300 border-primary/40 bg-primary/5 hover:bg-primary/10 hover:-sm"
                 >
                   <div className="p-2.5 rounded-xl bg-primary/10 text-primary transition-colors shrink-0">
                     <Icon className="w-5 h-5" />
@@ -656,7 +656,7 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
                   <Link
                     key={evt.id || idx}
                     href={`/historical-events/${evt.id}`}
-                    className="group rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between overflow-hidden cursor-pointer"
+                    className="group rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-300 -sm hover:-md flex flex-col justify-between overflow-hidden cursor-pointer"
                   >
                     <div>
                       {/* Image container */}
@@ -666,12 +666,12 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
                           alt={evt.event}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute top-2.5 left-2.5 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2 py-0.5 rounded border border-border/50 shadow-xs flex items-center gap-1">
+                        <div className="absolute top-2.5 left-2.5 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2 py-0.5 rounded border border-border/50 -xs flex items-center gap-1">
                           <Calendar className="w-3 h-3 text-primary" />
                           <span>{evt.year}</span>
                         </div>
                         <div className="absolute bottom-2 left-2.5 right-2.5">
-                          <span className="bg-primary/95 text-primary-foreground text-[10px] font-extrabold px-2 py-0.5 rounded shadow-sm inline-block max-w-full truncate">
+                          <span className="bg-primary/95 text-primary-foreground text-[10px] font-extrabold px-2 py-0.5 rounded -sm inline-block max-w-full truncate">
                             {evt.impact}
                           </span>
                         </div>
@@ -682,9 +682,12 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
                         <h4 className="text-sm font-extrabold text-foreground leading-snug group-hover:text-primary transition-colors">
                           {evt.event}
                         </h4>
-                        <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed">
-                          {evt.description}
-                        </p>
+                        <div
+                          className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed [&_p]:inline [&_p]:mb-0"
+                          dangerouslySetInnerHTML={{
+                            __html: evt.description || "No description available for this event.",
+                          }}
+                        />
                       </div>
                     </div>
 

@@ -80,12 +80,12 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="bg-primary text-primary-foreground sticky top-0 z-50 border-b border-border">
-      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-6">
-        <div className="flex items-center justify-between h-14">
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center w-full justify-between">
-            <div className="flex items-center space-x-1 xl:space-x-2">
+    <nav className="bg-primary text-primary-foreground sticky top-0 z-50 border-b border-border w-full">
+      <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="flex items-center justify-between h-14 min-w-0">
+          {/* Desktop Navigation - visible on xl screens (1280px+) */}
+          <div className="hidden xl:flex items-center w-full justify-between min-w-0 gap-2">
+            <div className="flex items-center gap-1 xl:gap-1.5 min-w-0 flex-1 overflow-x-auto no-scrollbar scrollbar-none py-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.path;
@@ -93,14 +93,14 @@ export default function Navigation() {
                   <Link
                     key={item.id}
                     href={item.path}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[10px] font-semibold transition-all duration-200 cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1.5 xl:px-3 xl:py-2 rounded-lg text-[11px] font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
                       isActive
                         ? "bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/20"
                         : "text-primary-foreground/80 hover:bg-primary-foreground/5 hover:text-primary-foreground border border-transparent"
                     }`}
                   >
                     <Icon
-                      className={`w-4 h-4 ${isActive ? "text-primary-foreground" : "text-primary-foreground/60"}`}
+                      className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-primary-foreground" : "text-primary-foreground/60"}`}
                     />
                     <span>{item.label}</span>
                   </Link>
@@ -109,16 +109,17 @@ export default function Navigation() {
             </div>
 
             {isLoggedIn && (
-              <div className="relative ml-4 animate-fadeIn" ref={dropdownRef}>
+              <div className="relative shrink-0 animate-fadeIn" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-foreground/10 border border-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/15 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-primary-foreground/10 border border-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/15 transition-all cursor-pointer"
+                  title={`${user?.email} (${user?.role})`}
                 >
-                  <UserIcon className="w-3.5 h-3.5" />
-                  <span>
-                    {user?.email} ({user?.role})
+                  <UserIcon className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate max-w-[130px] 2xl:max-w-[190px]">
+                    {user?.email}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-primary-foreground/60" />
+                  <ChevronDown className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
                 </button>
 
                 {isDropdownOpen && (
@@ -158,7 +159,7 @@ export default function Navigation() {
             )}
           </div>
 
-          <div className="flex lg:hidden items-center justify-between w-full">
+          <div className="flex xl:hidden items-center justify-between w-full">
             <span className="text-xs font-bold text-primary-foreground/80">DECM Portal Menu</span>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -172,7 +173,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-primary border-t border-border px-2 pt-2 pb-3 space-y-1 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
+        <div className="xl:hidden bg-primary border-t border-border px-2 pt-2 pb-3 space-y-1 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.path;
