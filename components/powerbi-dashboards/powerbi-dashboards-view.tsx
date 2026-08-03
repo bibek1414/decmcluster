@@ -165,10 +165,10 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
 
         {/* Embedded PowerBI Iframe Viewport */}
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg space-y-0">
-          <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800">
+          <div className="bg-card text-card-foreground px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-              <h2 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <h2 className="text-base sm:text-lg font-extrabold text-foreground flex items-center gap-2">
                 {activeReport?.name}
               </h2>
             </div>
@@ -178,7 +178,7 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                 href={activeReport.iframe_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-400/30 text-blue-300 rounded-lg text-xs font-bold transition-colors self-start sm:self-auto"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 border border-primary/20 text-primary rounded-lg text-xs font-bold transition-colors self-start sm:self-auto"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Open in New Tab</span>
@@ -186,11 +186,11 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
             )}
           </div>
 
-          <div className="relative w-full aspect-[16/9] min-h-[550px] sm:min-h-[680px] bg-slate-950 flex flex-col items-center justify-center p-2 sm:p-4">
+          <div className="relative w-full aspect-[16/9] min-h-[550px] sm:min-h-[680px] bg-muted/40 flex flex-col items-center justify-center p-2 sm:p-4">
             {isLoading || (isSingleLoading && !activeReport?.iframe_link) ? (
-              <div className="flex flex-col items-center gap-3 text-white">
+              <div className="flex flex-col items-center gap-3 text-foreground">
                 <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                <span className="text-xs font-bold">Loading PowerBI report iframe...</span>
+                <span className="text-xs font-bold text-muted-foreground">Loading PowerBI report iframe...</span>
               </div>
             ) : activeReport?.iframe_link ? (
               <iframe
@@ -198,7 +198,7 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                 src={activeReport.iframe_link}
                 frameBorder="0"
                 allowFullScreen={true}
-                className="w-full h-full min-h-[520px] sm:min-h-[640px] rounded-xl border border-slate-800"
+                className="w-full h-full min-h-[520px] sm:min-h-[640px] rounded-xl border border-border shadow-sm"
               />
             ) : (
               <div className="text-center text-muted-foreground p-8">
@@ -229,7 +229,7 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                     isActive ? "border-primary ring-2 ring-primary/20 shadow-md" : "border-border hover:border-primary/50"
                   }`}
                 >
-                  <div className="relative h-48 w-full bg-slate-950 overflow-hidden">
+                  <div className="relative h-48 w-full bg-muted border-b border-border overflow-hidden">
                     <img
                       src={hasImage ? item.image! : fallbackImage}
                       alt={item.name}
@@ -238,9 +238,9 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                         (e.target as HTMLImageElement).src = fallbackImage;
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                    <div className="absolute bottom-3 left-4 right-4 text-white">
-                      <h4 className="text-lg font-extrabold">{item.name}</h4>
+                    <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/40 to-transparent" />
+                    <div className="absolute bottom-3 left-4 right-4 text-foreground">
+                      <h4 className="text-lg font-extrabold text-foreground">{item.name}</h4>
                     </div>
                   </div>
 

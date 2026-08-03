@@ -71,7 +71,7 @@ export default function HomePowerBISection() {
                 className="group bg-card text-card-foreground rounded-2xl border border-border hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col overflow-hidden cursor-pointer relative"
               >
                 {/* Thumbnail Image Banner */}
-                <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-slate-950">
+                <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-muted border-b border-border">
                   <img
                     src={hasImage ? item.image! : fallbackImage}
                     alt={item.name}
@@ -81,22 +81,22 @@ export default function HomePowerBISection() {
                       (e.target as HTMLImageElement).src = fallbackImage;
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/30 to-transparent" />
 
                   {/* Badge */}
-                  <div className="absolute top-3.5 left-3.5 bg-blue-600/90 backdrop-blur-md text-white text-[11px] font-extrabold px-3 py-1 rounded-full border border-blue-400/30 shadow-md flex items-center gap-1.5">
+                  <div className="absolute top-3.5 left-3.5 bg-primary text-primary-foreground text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
                     <BarChart3 className="w-3.5 h-3.5" />
                     <span>Power BI Report</span>
                   </div>
 
                   {/* Overlay Expand Icon */}
-                  <div className="absolute top-3.5 right-3.5 bg-slate-900/80 text-white p-2 rounded-full border border-slate-700/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
+                  <div className="absolute top-3.5 right-3.5 bg-background/80 text-foreground p-2 rounded-full border border-border opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md">
                     <Maximize2 className="w-4 h-4" />
                   </div>
 
                   {/* Bottom Title on Image */}
-                  <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <h3 className="text-xl font-extrabold tracking-tight drop-shadow-md group-hover:text-blue-300 transition-colors">
+                  <div className="absolute bottom-4 left-4 right-4 text-foreground">
+                    <h3 className="text-xl font-extrabold tracking-tight group-hover:text-primary transition-colors">
                       {item.name}
                     </h3>
                   </div>

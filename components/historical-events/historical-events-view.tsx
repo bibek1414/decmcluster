@@ -162,26 +162,26 @@ export function HistoricalEventsView() {
                   <Link
                     key={evt.id}
                     href={`/historical-events/${evt.id}`}
-                    className="group bg-card text-card-foreground border border-border hover:border-primary/50 rounded-2xl overflow-hidden transition-all duration-300 -sm hover:-xl flex flex-col justify-between cursor-pointer"
+                    className="group bg-card text-card-foreground border border-border hover:border-primary/50 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between cursor-pointer"
                   >
                     <div>
                       {/* Image Banner or Placeholder Header */}
                       {evt.image && evt.image.trim() !== "" ? (
-                        <div className="relative h-48 w-full overflow-hidden bg-slate-900">
+                        <div className="relative h-48 w-full overflow-hidden bg-muted border-b border-border">
                           <img
                             src={evt.image}
                             alt={evt.event}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/30 to-transparent" />
 
-                          <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md border border-border/50 -xs flex items-center gap-1.5">
+                          <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm text-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md border border-border/50 shadow-xs flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5 text-primary" />
                             <span>Year {evt.year}</span>
                           </div>
 
                           <div className="absolute bottom-3 left-3 right-3">
-                            <span className="bg-primary/95 text-primary-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md -sm inline-block max-w-full truncate">
+                            <span className="bg-primary/95 text-primary-foreground text-[11px] font-extrabold px-2.5 py-1 rounded-md shadow-sm inline-block max-w-full truncate">
                               {evt.impact}
                             </span>
                           </div>

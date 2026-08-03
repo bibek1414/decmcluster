@@ -121,20 +121,20 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           <div className="lg:col-span-8 space-y-6">
             {/* Event Banner */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden -md">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-md">
               {event.image && event.image.trim() !== "" ? (
-                <div className="relative h-64 sm:h-96 w-full bg-slate-900">
+                <div className="relative h-64 sm:h-96 w-full bg-muted border-b border-border">
                   <img
                     src={event.image}
                     alt={event.event}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-6 right-6 text-white">
-                    <span className="text-xs font-extrabold uppercase tracking-wider text-blue-400 block">
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/40 to-transparent" />
+                  <div className="absolute bottom-4 left-6 right-6 text-foreground">
+                    <span className="text-xs font-extrabold uppercase tracking-wider text-primary block">
                       Disaster Event Overview
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-white">{event.event}</h2>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">{event.event}</h2>
                   </div>
                 </div>
               ) : (
