@@ -30,16 +30,11 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Copy static assets to standalone output
-        run: |
-          cp -r public .next/standalone/public
-          cp -r .next/static .next/standalone/.next/static
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .next/standalone
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,5 +50,5 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'decmcluster-frontend'
+          app-name: decmcluster-frontend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DECMCLUSTER_FRONTEND }}
