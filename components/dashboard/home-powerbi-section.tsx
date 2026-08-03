@@ -39,31 +39,7 @@ export default function HomePowerBISection() {
   return (
     <section className="space-y-6 select-none">
       {/* Section Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 text-white px-6 py-4 rounded-xl border border-slate-800 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-400">
-            <BarChart3 className="w-6 h-6 animate-pulse" />
-          </div>
-          <div>
-            <h2 className="text-lg font-extrabold tracking-tight">Power BI Dashboards</h2>
-            <p className="text-xs text-slate-300">
-              Interactive real-time visualization reports & operational statistics
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 self-start sm:self-auto">
-          <div className="hidden sm:flex items-center gap-2 bg-blue-600/20 border border-blue-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-300">
-            <span>{displayItems.length} Reports Available</span>
-          </div>
-          <a
-            href="/powerbi-dashboards"
-            className="flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
-          >
-            <span>View All</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </a>
-        </div>
-      </div>
+       
 
       {/* Grid of Two Cards */}
       {isLoading ? (

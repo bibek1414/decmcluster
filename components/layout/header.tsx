@@ -1,33 +1,9 @@
-"use client";
-
 import React from "react";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Logo } from "@/components/ui/logo";
 
-const VALID_PATHS = [
-  "/",
-  "/dashboard",
-  "/mapping",
-  "/assessments-tools",
-  "/reports",
-  "/sops",
-  "/response-tracking",
-  "/training",
-  "/partners",
-  "/links",
-  "/contact",
-  "/latest-updates",
-  "/emergency-alerts",
-  "/announcements",
-];
-
 export default function Header() {
-  const pathname = usePathname();
-  const isAdminPath = pathname?.startsWith("/assement");
-  const is404Path = pathname && !isAdminPath && !VALID_PATHS.includes(pathname);
 
-  if (isAdminPath || is404Path) return null;
 
   return (
     <header className="bg-primary text-primary-foreground border-b border-border">

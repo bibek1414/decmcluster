@@ -1,39 +1,10 @@
-"use client";
-
 import React from "react";
-import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/logo";
 import { Mail, ChevronRight } from "lucide-react";
 
-const VALID_PATHS = [
-  "/",
-  "/dashboard",
-  "/mapping",
-  "/assessments-tools",
-  "/reports",
-  "/sops",
-  "/response-tracking",
-  "/training",
-  "/partners",
-  "/links",
-  "/contact",
-  "/latest-updates",
-  "/emergency-alerts",
-  "/announcements",
-  "/historical-events",
-  "/powerbi-dashboards",
-];
-
 export default function Footer() {
-  const pathname = usePathname();
-  const isAdminPath = pathname?.startsWith("/assement");
-  const isValidRoute =
-    pathname &&
-    (VALID_PATHS.includes(pathname) || pathname.startsWith("/powerbi-dashboards"));
-  const is404Path = pathname && !isAdminPath && !isValidRoute;
-
-  if (isAdminPath || is404Path) return null;
   return (
+
     <footer className="bg-card text-card-foreground border-t border-border mt-16">
       <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">

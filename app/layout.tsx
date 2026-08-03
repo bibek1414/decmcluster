@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import Header from "@/components/layout/header";
-import Navigation from "@/components/layout/navigation";
-import Footer from "@/components/layout/footer";
 import Providers from "@/providers";
 import "./globals.css";
 
@@ -18,21 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
-      <body className="min-h-full  flex flex-col font-sans">
-        <Providers>
-          {/* Header Panel */}
-          <Header />
-
-          {/* Main Navigation */}
-          <Navigation />
-
-          {/* Main Container */}
-          <main className="flex-grow">{children}</main>
-
-          {/* Footer Panel */}
-          <Footer />
-        </Providers>
+      <body className="min-h-full flex flex-col font-sans">
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
 }
+
