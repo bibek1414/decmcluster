@@ -46,7 +46,7 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
   if (!event) {
     return (
       <div className="bg-background text-foreground font-sans antialiased py-20 px-4 text-center">
-        <div className="max-w-md mx-auto space-y-4 bg-card border border-border p-8 rounded-2xl shadow-sm">
+        <div className="max-w-md mx-auto space-y-4 bg-card border border-border p-8 rounded-2xl -sm">
           <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto" />
           <h2 className="text-xl font-bold text-foreground">Historical Event Not Found</h2>
           <p className="text-sm text-muted-foreground">
@@ -121,7 +121,7 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           <div className="lg:col-span-8 space-y-6">
             {/* Event Banner */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-md">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden -md">
               {event.image && event.image.trim() !== "" ? (
                 <div className="relative h-64 sm:h-96 w-full bg-muted border-b border-border">
                   <img

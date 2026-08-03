@@ -89,10 +89,6 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
             <Link href="/" className="hover:text-primary-foreground transition-colors flex items-center gap-1">
               Home
             </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
-            <Link href="/powerbi-dashboards" className="hover:text-primary-foreground transition-colors">
-              PowerBI Dashboards
-            </Link>
             {activeReport && (
               <>
                 <ChevronRight className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
@@ -130,44 +126,12 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
 
       {/* Main Content */}
       <main className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 -mt-5 sm:-mt-6 relative z-20 space-y-6 sm:space-y-8">
-        {/* Report Selector Tabs Bar */}
-        <div className="bg-card rounded-2xl border border-border p-3.5 sm:p-5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-xl bg-primary/10 text-primary">
-              <BarChart3 className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-extrabold text-foreground">Select Dashboard Report</h3>
-              <p className="text-xs text-muted-foreground">Switch between active PowerBI embedded views</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 max-w-full">
-            {reports.map((report) => {
-              const isActive = report.id === selectedId;
-              return (
-                <button
-                  key={report.id}
-                  onClick={() => setSelectedId(report.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
-                    isActive
-                      ? "bg-primary text-primary-foreground shadow-md"
-                      : "bg-card border border-border text-foreground hover:bg-muted"
-                  }`}
-                >
-                  <BarChart3 className="w-3.5 h-3.5" />
-                  <span>{report.name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+       
 
         {/* Embedded PowerBI Iframe Viewport */}
-        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg space-y-0">
+        <div className="bg-card border border-border rounded-2xl overflow-hidden -lg space-y-0">
           <div className="bg-card text-card-foreground px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border">
             <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
               <h2 className="text-base sm:text-lg font-extrabold text-foreground flex items-center gap-2">
                 {activeReport?.name}
               </h2>
@@ -198,67 +162,13 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                 src={activeReport.iframe_link}
                 frameBorder="0"
                 allowFullScreen={true}
-                className="w-full h-full min-h-[520px] sm:min-h-[640px] rounded-xl border border-border shadow-sm"
+                className="w-full h-full min-h-[520px] sm:min-h-[640px] rounded-xl border border-border -sm"
               />
             ) : (
               <div className="text-center text-muted-foreground p-8">
                 <p className="text-sm font-semibold">PowerBI report link is not configured.</p>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Other Available Reports Section */}
-        <div className="space-y-4 pt-4">
-          <h3 className="text-lg font-extrabold text-primary flex items-center gap-2">
-            <span>All Available PowerBI Reports</span>
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {reports.map((item) => {
-              const isActive = item.id === selectedId;
-              const hasImage = item.image && item.image.trim() !== "";
-              const fallbackImage =
-                "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80";
-
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => setSelectedId(item.id)}
-                  className={`group bg-card text-card-foreground rounded-2xl border transition-all duration-300 shadow-sm flex flex-col overflow-hidden cursor-pointer ${
-                    isActive ? "border-primary ring-2 ring-primary/20 shadow-md" : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <div className="relative h-48 w-full bg-muted border-b border-border overflow-hidden">
-                    <img
-                      src={hasImage ? item.image! : fallbackImage}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = fallbackImage;
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/40 to-transparent" />
-                    <div className="absolute bottom-3 left-4 right-4 text-foreground">
-                      <h4 className="text-lg font-extrabold text-foreground">{item.name}</h4>
-                    </div>
-                  </div>
-
-                  <div className="p-4 flex items-center justify-between bg-card">
-                    <span className="text-xs text-muted-foreground font-medium">
-                      GET /api/dashboard/powerbi-iframe/{item.id}/
-                    </span>
-                    <Button
-                      size="sm"
-                      variant={isActive ? "default" : "outline"}
-                      className="text-xs font-bold"
-                    >
-                      {isActive ? "Currently Viewing" : "Load Report"}
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </main>
