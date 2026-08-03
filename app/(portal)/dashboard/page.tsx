@@ -1,5 +1,4 @@
 import DashboardSection from "@/components/dashboard/dashboard-section";
-import PowerBIView from "@/components/dashboard/powerbi-view";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,7 +10,6 @@ export default function DashboardPage() {
   return (
     <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 space-y-8 animate-fadeIn">
       <DashboardSection />
-      <PowerBIView />
     </div>
   );
 }
