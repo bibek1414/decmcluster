@@ -1,12 +1,10 @@
 "use client";
 
-import  { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import {  ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight, ExternalLink } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { usePowerBI, usePowerBIDetail } from "@/hooks/use-powerbi";
-
-
 
 interface PowerBIDashboardsViewProps {
   reportId?: number;
@@ -117,8 +115,8 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                     Page Purpose
                   </strong>
                   <p className="text-xs text-primary-foreground/90 leading-relaxed">
-                    This page provides interactive data analytics, spatial visualizations and cluster
-                    metrics powered by Microsoft PowerBI. Data is updated in real time.
+                    This page provides interactive data analytics, spatial visualizations and
+                    cluster metrics powered by Microsoft PowerBI. Data is updated in real time.
                   </p>
                 </>
               )}
@@ -180,4 +178,3 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
     </div>
   );
 }
-

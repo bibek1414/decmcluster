@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, ChevronRight,  } from "lucide-react";
+import { BarChart3, ChevronRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { usePowerBI } from "@/hooks/use-powerbi";
 
@@ -20,17 +20,13 @@ export default function HomePowerBISection() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           {/* Icon/Image Block */}
-        
 
           <div>
             <h2 className="text-lg sm:text-xl font-extrabold text-primary tracking-tight">
               PowerBI Analytics
             </h2>
-            
           </div>
         </div>
-
-        
       </div>
 
       {/* Grid of Cards */}
@@ -83,9 +79,7 @@ export default function HomePowerBISection() {
 
                 {/* Card Content Body */}
                 <div className="pt-8 sm:pt-9 px-6 pb-6 flex flex-col flex-1">
-                  <h3 className="text-xl sm:text-2xl font-bold text-primary">
-                    {item.name}
-                  </h3>
+                  <h3 className="text-xl sm:text-2xl font-bold text-primary">{item.name}</h3>
 
                   {/* Decorative underline bar */}
                   <div className="w-8 h-1 bg-primary rounded-full my-3" />
