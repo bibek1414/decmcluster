@@ -8,7 +8,6 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { siteConfig } from "@/config/site";
 import { motion } from "framer-motion";
 
-
 export default function LinksClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 300);

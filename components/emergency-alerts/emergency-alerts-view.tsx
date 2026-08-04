@@ -18,7 +18,11 @@ import {
 import { emergencyAlertService } from "@/services/emergency-alert";
 import { EmergencyAlert } from "@/types/emergency-alert";
 
-function formatDateComponents(isoString?: string): { day: string; monthYear: string; full: string } {
+function formatDateComponents(isoString?: string): {
+  day: string;
+  monthYear: string;
+  full: string;
+} {
   if (!isoString) return { day: "--", monthYear: "Active", full: "Date not specified" };
   try {
     const d = new Date(isoString);
@@ -70,7 +74,7 @@ function EmergencyAlertsContent() {
     if (!searchQuery.trim()) return alerts;
     const q = searchQuery.toLowerCase().trim();
     return alerts.filter(
-      (item) => item.title.toLowerCase().includes(q) || item.slug.toLowerCase().includes(q)
+      (item) => item.title.toLowerCase().includes(q) || item.slug.toLowerCase().includes(q),
     );
   }, [alerts, searchQuery]);
 
@@ -102,7 +106,10 @@ function EmergencyAlertsContent() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
 
         <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 relative z-10">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 text-xs text-red-200 mb-4 sm:mb-6 font-medium flex-wrap">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs text-red-200 mb-4 sm:mb-6 font-medium flex-wrap"
+          >
             <Link href="/" className="hover:text-white transition-colors flex items-center gap-1">
               Home
             </Link>
@@ -120,7 +127,8 @@ function EmergencyAlertsContent() {
                 Emergency Alerts
               </h1>
               <p className="text-sm sm:text-lg text-red-100 max-w-2xl font-normal leading-relaxed">
-                Access official emergency alerts, early warnings, and critical hazard information issued by NDMO, VMGD, and DECM Cluster authorities across Vanuatu.
+                Access official emergency alerts, early warnings, and critical hazard information
+                issued by NDMO, VMGD, and DECM Cluster authorities across Vanuatu.
               </p>
             </div>
 
@@ -129,7 +137,9 @@ function EmergencyAlertsContent() {
                 Page Purpose
               </strong>
               <p className="text-xs text-red-100 leading-relaxed">
-                This page lists active emergency alerts and early warning resources. For urgent emergency safety guidance, follow official directions from local PEOC and NDMO personnel.
+                This page lists active emergency alerts and early warning resources. For urgent
+                emergency safety guidance, follow official directions from local PEOC and NDMO
+                personnel.
               </p>
             </div>
           </div>
@@ -300,7 +310,8 @@ function EmergencyAlertsContent() {
                 <span>Information Notice</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                Emergency alerts and warning communications are published by authorized cluster focal points and government partners.
+                Emergency alerts and warning communications are published by authorized cluster
+                focal points and government partners.
               </p>
             </div>
 
@@ -327,7 +338,9 @@ function EmergencyAlertsContent() {
 
 export function EmergencyAlertsView() {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-xs">Loading emergency alerts page...</div>}>
+    <Suspense
+      fallback={<div className="p-12 text-center text-xs">Loading emergency alerts page...</div>}
+    >
       <EmergencyAlertsContent />
     </Suspense>
   );

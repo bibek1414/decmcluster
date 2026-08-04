@@ -391,8 +391,10 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         event: "TC Pam",
         year: 2015,
         impact: "High Impact",
-        description: "Category 5 cyclone impacting over 188,000 people across Shefa and Tafea provinces.",
-        image: "https://images.unsplash.com/photo-1527482797697-8795b05a13fe?auto=format&fit=crop&w=800&q=80",
+        description:
+          "Category 5 cyclone impacting over 188,000 people across Shefa and Tafea provinces.",
+        image:
+          "https://images.unsplash.com/photo-1527482797697-8795b05a13fe?auto=format&fit=crop&w=800&q=80",
         link: "/dashboard",
       },
       {
@@ -400,8 +402,10 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         event: "Ambae Volcano",
         year: 2017,
         impact: "Displacement",
-        description: "Mandatory island-wide evacuation of 11,000+ residents from Ambae to Santo & Maewo.",
-        image: "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80",
+        description:
+          "Mandatory island-wide evacuation of 11,000+ residents from Ambae to Santo & Maewo.",
+        image:
+          "https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=800&q=80",
         link: "/dashboard",
       },
       {
@@ -410,7 +414,8 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         year: 2020,
         impact: "Severe Impact",
         description: "Devastated Sanma, Penama, and Malampa provinces amidst pandemic response.",
-        image: "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80",
+        image:
+          "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&w=800&q=80",
         link: "/dashboard",
       },
       {
@@ -418,8 +423,10 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         event: "TC Judy/Kevin",
         year: 2023,
         impact: "Multi-island",
-        description: "Back-to-back Category 4 & 5 cyclones causing widespread shelter and WASH damage.",
-        image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
+        description:
+          "Back-to-back Category 4 & 5 cyclones causing widespread shelter and WASH damage.",
+        image:
+          "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
         link: "/dashboard",
       },
       {
@@ -427,8 +434,10 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
         event: "Earthquake",
         year: 2024,
         impact: "Urban Impact",
-        description: "Moderate to severe seismic shaking impacting coastal settlements and public infrastructure.",
-        image: "https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80",
+        description:
+          "Moderate to severe seismic shaking impacting coastal settlements and public infrastructure.",
+        image:
+          "https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80",
         link: "/historical-events",
       },
     ];
@@ -644,10 +653,7 @@ export default function DashboardSection({ isHomePage = false }: DashboardSectio
             {isEventsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 animate-pulse">
                 {Array.from({ length: 5 }).map((_, idx) => (
-                  <div
-                    key={idx}
-                    className="h-64 rounded-xl border border-border/40 bg-muted/40"
-                  />
+                  <div key={idx} className="h-64 rounded-xl border border-border/40 bg-muted/40" />
                 ))}
               </div>
             ) : (

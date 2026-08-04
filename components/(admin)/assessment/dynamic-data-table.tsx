@@ -68,11 +68,10 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const columns = isEvac
     ? EVACUATION_CENTRE_COLUMNS
     : isVillage
-    ? VILLAGE_ASSESSMENT_COLUMNS
-    : isFiveW
-    ? FIVEW_COLUMNS
-    : DISPLACEMENT_COLUMNS;
-
+      ? VILLAGE_ASSESSMENT_COLUMNS
+      : isFiveW
+        ? FIVEW_COLUMNS
+        : DISPLACEMENT_COLUMNS;
 
   const queryClient = useQueryClient();
 
@@ -375,8 +374,6 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           debouncedSearch,
         );
       }
-
-
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");

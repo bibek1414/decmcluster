@@ -825,5 +825,3 @@ export const dynamicDataService = {
     return res.json();
   },
 };
-
-

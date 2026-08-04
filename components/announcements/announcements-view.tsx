@@ -17,7 +17,11 @@ import {
 import { announcementService } from "@/services/announcement";
 import { Announcement } from "@/types/announcement";
 
-function formatDateComponents(isoString?: string): { day: string; monthYear: string; full: string } {
+function formatDateComponents(isoString?: string): {
+  day: string;
+  monthYear: string;
+  full: string;
+} {
   if (!isoString) return { day: "--", monthYear: "Active", full: "Date not specified" };
   try {
     const d = new Date(isoString);
@@ -69,7 +73,7 @@ function AnnouncementsContent() {
     if (!searchQuery.trim()) return announcements;
     const q = searchQuery.toLowerCase().trim();
     return announcements.filter(
-      (item) => item.title.toLowerCase().includes(q) || item.slug.toLowerCase().includes(q)
+      (item) => item.title.toLowerCase().includes(q) || item.slug.toLowerCase().includes(q),
     );
   }, [announcements, searchQuery]);
 
@@ -101,7 +105,10 @@ function AnnouncementsContent() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
 
         <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 relative z-10">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 text-xs text-emerald-200 mb-4 sm:mb-6 font-medium flex-wrap">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs text-emerald-200 mb-4 sm:mb-6 font-medium flex-wrap"
+          >
             <Link href="/" className="hover:text-white transition-colors flex items-center gap-1">
               Home
             </Link>
@@ -119,7 +126,8 @@ function AnnouncementsContent() {
                 Announcements
               </h1>
               <p className="text-sm sm:text-lg text-emerald-100 max-w-2xl font-normal leading-relaxed">
-                Find official announcements, coordination notices, policy updates, and operational messages from the DECM Cluster Secretariat and partner institutions.
+                Find official announcements, coordination notices, policy updates, and operational
+                messages from the DECM Cluster Secretariat and partner institutions.
               </p>
             </div>
 
@@ -128,7 +136,8 @@ function AnnouncementsContent() {
                 Page Purpose
               </strong>
               <p className="text-xs text-emerald-100 leading-relaxed">
-                This page lists active announcements and notices verified by DECM Cluster working groups and partner agencies.
+                This page lists active announcements and notices verified by DECM Cluster working
+                groups and partner agencies.
               </p>
             </div>
           </div>
@@ -169,7 +178,8 @@ function AnnouncementsContent() {
                   Recent Announcements
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Showing {filteredAnnouncements.length} announcement{filteredAnnouncements.length !== 1 ? "s" : ""}
+                  Showing {filteredAnnouncements.length} announcement
+                  {filteredAnnouncements.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </div>
@@ -299,7 +309,8 @@ function AnnouncementsContent() {
                 <span>Information Notice</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                Announcements and cluster communications are published by authorized cluster focal points and government partners.
+                Announcements and cluster communications are published by authorized cluster focal
+                points and government partners.
               </p>
             </div>
 
@@ -326,7 +337,9 @@ function AnnouncementsContent() {
 
 export function AnnouncementsView() {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-xs">Loading announcements page...</div>}>
+    <Suspense
+      fallback={<div className="p-12 text-center text-xs">Loading announcements page...</div>}
+    >
       <AnnouncementsContent />
     </Suspense>
   );

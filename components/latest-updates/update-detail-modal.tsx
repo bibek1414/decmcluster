@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Tag,
-  Calendar,
-  Share2,
-  Check,
-} from "lucide-react";
+import { Tag, Calendar, Share2, Check } from "lucide-react";
 import { LatestUpdate } from "@/types/latest-update";
 import {
   Dialog,
@@ -61,7 +56,12 @@ export function UpdateDetailModal({
   const isCopied = copiedId === update.id;
 
   return (
-    <Dialog open={!!update} onOpenChange={(open) => { if (!open) onClose(); }}>
+    <Dialog
+      open={!!update}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent className="w-[94vw] sm:w-full sm:!max-w-2xl max-h-[88vh] sm:max-h-[85vh] overflow-y-auto p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-border bg-card">
         <DialogHeader className="space-y-2 sm:space-y-3 pb-2 text-left">
           {/* Aligned Category Tag & Published Date Metadata Row */}
@@ -107,4 +107,3 @@ export function UpdateDetailModal({
     </Dialog>
   );
 }
-

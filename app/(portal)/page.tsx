@@ -53,9 +53,6 @@ export default function Home() {
       </div>
 
       {/* Full Width Banner */}
-    
-
-     
     </div>
   );
 }

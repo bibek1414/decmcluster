@@ -27,7 +27,6 @@ import { toast } from "sonner";
 import { ReportData } from "@/types/report";
 import { motion } from "framer-motion";
 
-
 const REPORT_TYPES = [
   "Cyclone",
   "Cyclone Response",

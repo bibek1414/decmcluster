@@ -5,7 +5,6 @@ import { Handshake, MapPin, ClipboardList, Activity } from "lucide-react";
 import { useAssessmentStats } from "@/hooks/use-assessment-stats";
 import { motion } from "framer-motion";
 
-
 export function AssessmentStatsGrid() {
   const { data, isLoading, error } = useAssessmentStats();
 

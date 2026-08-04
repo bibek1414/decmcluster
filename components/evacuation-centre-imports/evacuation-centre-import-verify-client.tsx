@@ -122,8 +122,8 @@ export default function EvacuationCentreImportVerifyClient({ id }: Props) {
           <div className="space-y-2">
             <h3 className="text-base font-bold text-foreground">Access Denied</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Your account <strong>{user?.email}</strong> does not have permission to verify evacuation
-              centre imports. Please request verification rights from the administrator.
+              Your account <strong>{user?.email}</strong> does not have permission to verify
+              evacuation centre imports. Please request verification rights from the administrator.
             </p>
           </div>
           <div className="flex flex-col gap-2 pt-2">

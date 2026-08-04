@@ -88,7 +88,11 @@ export function ToolsClient() {
     });
   }, [assessments, query]);
 
-  const hasImToolsAccess = isSuperAdmin || (user?.access_control || []).map((item) => item.toLowerCase().replace(/_/g, "-")).includes("im-tools");
+  const hasImToolsAccess =
+    isSuperAdmin ||
+    (user?.access_control || [])
+      .map((item) => item.toLowerCase().replace(/_/g, "-"))
+      .includes("im-tools");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

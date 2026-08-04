@@ -33,7 +33,11 @@ export const displacementImportService = {
     return res.json();
   },
 
-  create: async (name: string, file: File, token: string | null): Promise<DisplacementImportData> => {
+  create: async (
+    name: string,
+    file: File,
+    token: string | null,
+  ): Promise<DisplacementImportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
     formData.append("name", name);

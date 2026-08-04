@@ -336,7 +336,7 @@ export function AssessmentsClient() {
 
     if (!isSuperAdmin) {
       const userAccess = (user?.access_control || []).map((item) =>
-        item.toLowerCase().replace(/_/g, "-")
+        item.toLowerCase().replace(/_/g, "-"),
       );
       list = list.filter((e) => userAccess.includes(e.slug.toLowerCase()));
     }

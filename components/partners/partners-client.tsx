@@ -8,7 +8,6 @@ import { useContactList } from "@/hooks/use-contact-list";
 import { useDebounce } from "@/hooks/use-debounce";
 import { motion } from "framer-motion";
 
-
 export default function PartnersClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 300);

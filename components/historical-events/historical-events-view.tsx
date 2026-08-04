@@ -1,15 +1,8 @@
 "use client";
 
-import  { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import {
-  Search,
-  Calendar,
-  ChevronRight,
-  X,
-  Info,
-  AlertTriangle,
-} from "lucide-react";
+import { Search, Calendar, ChevronRight, X, Info, AlertTriangle } from "lucide-react";
 import { useHistoricalEvents } from "@/hooks/use-dashboard";
 
 export function HistoricalEventsView() {
@@ -19,9 +12,7 @@ export function HistoricalEventsView() {
 
   // Dynamic list of impact types from API data
   const impactTypes = useMemo(() => {
-    const uniqueImpacts = Array.from(
-      new Set(apiEvents.map((evt) => evt.impact).filter(Boolean))
-    );
+    const uniqueImpacts = Array.from(new Set(apiEvents.map((evt) => evt.impact).filter(Boolean)));
     return ["all", ...uniqueImpacts];
   }, [apiEvents]);
 
@@ -49,7 +40,10 @@ export function HistoricalEventsView() {
             aria-label="Breadcrumb"
             className="flex items-center gap-1.5 sm:gap-2 text-xs text-primary-foreground/80 mb-4 sm:mb-6 font-medium flex-wrap"
           >
-            <Link href="/" className="hover:text-primary-foreground transition-colors flex items-center gap-1">
+            <Link
+              href="/"
+              className="hover:text-primary-foreground transition-colors flex items-center gap-1"
+            >
               Home
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
@@ -65,7 +59,8 @@ export function HistoricalEventsView() {
                 Historical Events Snapshot
               </h1>
               <p className="text-sm sm:text-lg text-primary-foreground/90 max-w-2xl font-normal leading-relaxed">
-                Major disaster displacement events and impact history tracked in the Vanuatu DECM database.
+                Major disaster displacement events and impact history tracked in the Vanuatu DECM
+                database.
               </p>
             </div>
 
@@ -74,7 +69,8 @@ export function HistoricalEventsView() {
                 Page Purpose
               </strong>
               <p className="text-xs text-primary-foreground/90 leading-relaxed">
-                This page provides a consolidated record of disaster events and response history retrieved directly from the API backend.
+                This page provides a consolidated record of disaster events and response history
+                retrieved directly from the API backend.
               </p>
             </div>
           </div>
@@ -131,7 +127,8 @@ export function HistoricalEventsView() {
               <div>
                 <h2 className="text-lg sm:text-2xl font-bold text-primary">Disaster Events</h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Showing {filteredEvents.length} historical record{filteredEvents.length !== 1 ? "s" : ""}
+                  Showing {filteredEvents.length} historical record
+                  {filteredEvents.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </div>
@@ -145,7 +142,9 @@ export function HistoricalEventsView() {
             ) : filteredEvents.length === 0 ? (
               <div className="bg-card border border-border rounded-2xl p-8 text-center space-y-3">
                 <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto" />
-                <h3 className="text-base font-bold text-foreground">No events found matching criteria</h3>
+                <h3 className="text-base font-bold text-foreground">
+                  No events found matching criteria
+                </h3>
                 <button
                   onClick={() => {
                     setSearchQuery("");

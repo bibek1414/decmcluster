@@ -40,7 +40,6 @@ export default function Navigation() {
     };
   }, []);
 
-
   const navItems = [
     { id: "home", label: "Home", icon: Home, path: "/" },
     {
@@ -116,9 +115,7 @@ export default function Navigation() {
                   title={`${user?.email} (${user?.role})`}
                 >
                   <UserIcon className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate max-w-[130px] 2xl:max-w-[190px]">
-                    {user?.email}
-                  </span>
+                  <span className="truncate max-w-[130px] 2xl:max-w-[190px]">{user?.email}</span>
                   <ChevronDown className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
                 </button>
 

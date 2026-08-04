@@ -160,8 +160,14 @@ function LatestUpdatesContent() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-foreground/10 via-transparent to-transparent pointer-events-none" />
 
         <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 relative z-10">
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 text-xs text-primary-foreground/80 mb-4 sm:mb-6 font-medium flex-wrap">
-            <Link href="/" className="hover:text-primary-foreground transition-colors flex items-center gap-1">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs text-primary-foreground/80 mb-4 sm:mb-6 font-medium flex-wrap"
+          >
+            <Link
+              href="/"
+              className="hover:text-primary-foreground transition-colors flex items-center gap-1"
+            >
               Home
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
@@ -177,7 +183,8 @@ function LatestUpdatesContent() {
                 Latest Updates
               </h1>
               <p className="text-sm sm:text-lg text-primary-foreground/90 max-w-2xl font-normal leading-relaxed">
-                Access recent announcements, situation reports, assessments, data releases, meeting outcomes, technical guidance and portal updates from the DECM Cluster.
+                Access recent announcements, situation reports, assessments, data releases, meeting
+                outcomes, technical guidance and portal updates from the DECM Cluster.
               </p>
             </div>
 
@@ -186,7 +193,8 @@ function LatestUpdatesContent() {
                 Page Purpose
               </strong>
               <p className="text-xs text-primary-foreground/90 leading-relaxed">
-                This page provides a consolidated record of key DECM Cluster information products and operational developments. Content is verified by cluster focal points.
+                This page provides a consolidated record of key DECM Cluster information products
+                and operational developments. Content is verified by cluster focal points.
               </p>
             </div>
           </div>
@@ -216,7 +224,10 @@ function LatestUpdatesContent() {
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 max-w-full" aria-label="Update category filters">
+          <div
+            className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 max-w-full"
+            aria-label="Update category filters"
+          >
             <button
               onClick={() => setSelectedCategory("all")}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
@@ -432,14 +443,16 @@ function LatestUpdatesContent() {
                 <span>Information Notice</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                Figures and documents published on this page may be revised following verification. Refer to the publication date and version number before use.
+                Figures and documents published on this page may be revised following verification.
+                Refer to the publication date and version number before use.
               </p>
             </div>
 
             <div className="bg-card border border-border rounded-2xl p-5 sm:p-6 space-y-3">
               <h3 className="text-base font-bold text-primary">Contact Secretariat</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                For corrections, document submissions or requests for additional information, contact the DECM Cluster team.
+                For corrections, document submissions or requests for additional information,
+                contact the DECM Cluster team.
               </p>
               <Link
                 href="/contact"

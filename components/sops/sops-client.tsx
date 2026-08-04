@@ -27,7 +27,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-
 export default function SopsClient() {
   const { user, token } = useAuth();
   const queryClient = useQueryClient();

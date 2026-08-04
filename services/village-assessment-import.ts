@@ -33,7 +33,11 @@ export const villageAssessmentImportService = {
     return res.json();
   },
 
-  create: async (name: string, file: File, token: string | null): Promise<VillageAssessmentImportData> => {
+  create: async (
+    name: string,
+    file: File,
+    token: string | null,
+  ): Promise<VillageAssessmentImportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const formData = new FormData();
     formData.append("name", name);
@@ -154,7 +158,10 @@ export const villageAssessmentImportService = {
     return res.json();
   },
 
-  reverify: async (id: number | string, token: string | null): Promise<VillageAssessmentImportData> => {
+  reverify: async (
+    id: number | string,
+    token: string | null,
+  ): Promise<VillageAssessmentImportData> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {};
     if (token) {

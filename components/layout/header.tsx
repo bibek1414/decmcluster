@@ -3,8 +3,6 @@ import Image from "next/image";
 import { Logo } from "@/components/ui/logo";
 
 export default function Header() {
-
-
   return (
     <header className="bg-primary text-primary-foreground border-b border-border">
       <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-5">

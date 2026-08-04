@@ -2,7 +2,16 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, Loader2, Eye, EyeOff, Lock, ChevronRight, KeyRound } from "lucide-react";
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Eye,
+  EyeOff,
+  Lock,
+  ChevronRight,
+  KeyRound,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authService } from "@/services/auth";
@@ -19,10 +28,10 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [status, setStatus] = useState<"form" | "verifying" | "success" | "error">(
-    token ? "form" : "error"
+    token ? "form" : "error",
   );
   const [errorMessage, setErrorMessage] = useState(
-    token ? "" : "No verification token provided. Please check your email link."
+    token ? "" : "No verification token provided. Please check your email link.",
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +60,9 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
       setStatus("success");
     } catch (err: any) {
       setStatus("error");
-      setErrorMessage(err.message || "Failed to verify email. The link may have expired or is invalid.");
+      setErrorMessage(
+        err.message || "Failed to verify email. The link may have expired or is invalid.",
+      );
     }
   };
 
@@ -199,7 +210,8 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
                   Email Verified!
                 </h2>
                 <p className="text-sm text-muted-foreground px-4">
-                  Your email address has been successfully verified and your password has been created.
+                  Your email address has been successfully verified and your password has been
+                  created.
                 </p>
               </div>
               <Link href="/" className="w-full mt-4">
@@ -227,9 +239,7 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
                 <h2 className="text-2xl font-bold tracking-tight text-foreground">
                   Verification Failed
                 </h2>
-                <p className="text-sm text-rose-500/90 font-medium px-4">
-                  {errorMessage}
-                </p>
+                <p className="text-sm text-rose-500/90 font-medium px-4">{errorMessage}</p>
               </div>
               <div className="w-full space-y-2 mt-4">
                 {token && (
@@ -241,7 +251,10 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
                   </Button>
                 )}
                 <Link href="/contact" className="w-full block">
-                  <Button variant="outline" className="w-full rounded-xl h-11 text-sm font-bold cursor-pointer">
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-xl h-11 text-sm font-bold cursor-pointer"
+                  >
                     Contact Support
                   </Button>
                 </Link>
@@ -253,4 +266,3 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
     </div>
   );
 }
-

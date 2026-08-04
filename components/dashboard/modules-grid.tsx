@@ -14,7 +14,6 @@ import {
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
-
 export default function ModulesGrid() {
   const modules = [
     {

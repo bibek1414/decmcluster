@@ -95,7 +95,8 @@ export const archiveService = {
 
     if (payload.survey_type !== undefined) formData.append("survey_type", payload.survey_type);
     if (payload.date !== undefined) formData.append("date", payload.date);
-    if (payload.survery_tools !== undefined) formData.append("survery_tools", payload.survery_tools);
+    if (payload.survery_tools !== undefined)
+      formData.append("survery_tools", payload.survery_tools);
     if (payload.level !== undefined) formData.append("level", payload.level);
     if (payload.file) {
       formData.append("file", payload.file);

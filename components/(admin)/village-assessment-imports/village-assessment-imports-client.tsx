@@ -291,7 +291,9 @@ export default function VillageAssessmentImportsClient() {
                                 className="h-8 px-2.5 font-bold cursor-pointer gap-1"
                                 asChild
                               >
-                                <Link href={`/village-assessment-imports/verify/${item.id}`}>Review</Link>
+                                <Link href={`/village-assessment-imports/verify/${item.id}`}>
+                                  Review
+                                </Link>
                               </Button>
                             )}
                             {canAdd && item.status === "returned" && (
@@ -374,7 +376,9 @@ export default function VillageAssessmentImportsClient() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">Upload Village Assessment Import</h3>
+              <h3 className="text-base font-bold text-foreground">
+                Upload Village Assessment Import
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"

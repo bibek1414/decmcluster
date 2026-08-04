@@ -82,7 +82,11 @@ export default function ArchivesClient() {
   }, []);
 
   // Fetch archives query
-  const { data, isLoading, isPlaceholderData, error } = useAdminArchives(page, token, debouncedSearch);
+  const { data, isLoading, isPlaceholderData, error } = useAdminArchives(
+    page,
+    token,
+    debouncedSearch,
+  );
   const archivesList = data?.results || [];
 
   const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
@@ -353,7 +357,9 @@ export default function ArchivesClient() {
                                 variant="ghost"
                                 size="icon"
                                 className="h-7 w-7 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 cursor-pointer"
-                                onClick={() => setDeleteTarget({ id: item.id, name: item.survey_type })}
+                                onClick={() =>
+                                  setDeleteTarget({ id: item.id, name: item.survey_type })
+                                }
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
                               </Button>
@@ -454,7 +460,9 @@ export default function ArchivesClient() {
                 <textarea
                   value={surveyTools}
                   onChange={(e) => setSurveyTools(e.target.value)}
-                  placeholder={"Displaced Household Registration form\r\nHost Household Reporting Form"}
+                  placeholder={
+                    "Displaced Household Registration form\r\nHost Household Reporting Form"
+                  }
                   rows={4}
                   className="w-full rounded-xl border border-input bg-background p-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none font-mono"
                 />

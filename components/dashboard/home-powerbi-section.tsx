@@ -39,7 +39,6 @@ export default function HomePowerBISection() {
   return (
     <section className="space-y-6 select-none">
       {/* Section Header Banner */}
-       
 
       {/* Grid of Two Cards */}
       {isLoading ? (

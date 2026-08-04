@@ -9,7 +9,6 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Pagination } from "@/components/shared/pagination";
 import { motion } from "framer-motion";
 
-
 export default function TrainingClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);

@@ -86,7 +86,10 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
             aria-label="Breadcrumb"
             className="flex items-center gap-1.5 sm:gap-2 text-xs text-primary-foreground/80 mb-4 sm:mb-6 font-medium flex-wrap"
           >
-            <Link href="/" className="hover:text-primary-foreground transition-colors flex items-center gap-1">
+            <Link
+              href="/"
+              className="hover:text-primary-foreground transition-colors flex items-center gap-1"
+            >
               Home
             </Link>
             {activeReport && (
@@ -108,7 +111,8 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                 {activeReport?.name || "PowerBI Dashboards"}
               </h1>
               <p className="text-sm sm:text-lg text-primary-foreground/90 max-w-2xl font-normal leading-relaxed">
-                Interactive real-time visualization reports, spatial analytics and operational statistics for Vanuatu DECM Cluster.
+                Interactive real-time visualization reports, spatial analytics and operational
+                statistics for Vanuatu DECM Cluster.
               </p>
             </div>
 
@@ -117,7 +121,8 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
                 Page Purpose
               </strong>
               <p className="text-xs text-primary-foreground/90 leading-relaxed">
-                This page provides interactive data analytics, spatial visualizations and cluster metrics powered by Microsoft PowerBI. Data is updated in real time.
+                This page provides interactive data analytics, spatial visualizations and cluster
+                metrics powered by Microsoft PowerBI. Data is updated in real time.
               </p>
             </div>
           </div>
@@ -126,8 +131,6 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
 
       {/* Main Content */}
       <main className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 -mt-5 sm:-mt-6 relative z-20 space-y-6 sm:space-y-8">
-       
-
         {/* Embedded PowerBI Iframe Viewport */}
         <div className="bg-card border border-border rounded-2xl overflow-hidden -lg space-y-0">
           <div className="bg-card text-card-foreground px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border">
@@ -154,7 +157,9 @@ export function PowerBIDashboardsView({ reportId }: PowerBIDashboardsViewProps) 
             {isLoading || (isSingleLoading && !activeReport?.iframe_link) ? (
               <div className="flex flex-col items-center gap-3 text-foreground">
                 <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                <span className="text-xs font-bold text-muted-foreground">Loading PowerBI report iframe...</span>
+                <span className="text-xs font-bold text-muted-foreground">
+                  Loading PowerBI report iframe...
+                </span>
               </div>
             ) : activeReport?.iframe_link ? (
               <iframe

@@ -4,7 +4,6 @@ import { Mail, ChevronRight } from "lucide-react";
 
 export default function Footer() {
   return (
-
     <footer className="bg-card text-card-foreground border-t border-border mt-16">
       <div className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">

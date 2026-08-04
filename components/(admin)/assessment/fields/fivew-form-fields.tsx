@@ -107,14 +107,7 @@ export function FiveWFormFields({
       "cluster_name",
       "hrp_non_hrp",
     ],
-    project_activity: [
-      "project_number",
-      "project_name",
-      "activity",
-      "indicator",
-      "unit",
-      "target",
-    ],
+    project_activity: ["project_number", "project_name", "activity", "indicator", "unit", "target"],
     financial_modality: [
       "total_value",
       "new_beneficiaries",

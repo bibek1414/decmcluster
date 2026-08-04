@@ -2,11 +2,7 @@
 
 import React, { useMemo } from "react";
 import Link from "next/link";
-import {
-  Calendar,
-  ChevronRight,
-  AlertTriangle,
-} from "lucide-react";
+import { Calendar, ChevronRight, AlertTriangle } from "lucide-react";
 import { useHistoricalEvents } from "@/hooks/use-dashboard";
 
 interface HistoricalEventDetailViewProps {
@@ -20,7 +16,6 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
   const event = useMemo(() => {
     return apiEvents.find((evt) => evt.id === eventId) || null;
   }, [apiEvents, eventId]);
-
 
   if (isLoading) {
     return (
@@ -50,7 +45,8 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
           <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto" />
           <h2 className="text-xl font-bold text-foreground">Historical Event Not Found</h2>
           <p className="text-sm text-muted-foreground">
-            The requested historical event record (ID: {eventId}) does not exist in the API database.
+            The requested historical event record (ID: {eventId}) does not exist in the API
+            database.
           </p>
           <Link
             href="/historical-events"
@@ -74,11 +70,17 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
             aria-label="Breadcrumb"
             className="flex items-center gap-1.5 sm:gap-2 text-xs text-primary-foreground/80 mb-4 sm:mb-6 font-medium flex-wrap"
           >
-            <Link href="/" className="hover:text-primary-foreground transition-colors flex items-center gap-1">
+            <Link
+              href="/"
+              className="hover:text-primary-foreground transition-colors flex items-center gap-1"
+            >
               Home
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
-            <Link href="/historical-events" className="hover:text-primary-foreground transition-colors">
+            <Link
+              href="/historical-events"
+              className="hover:text-primary-foreground transition-colors"
+            >
               Historical Events
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-primary-foreground/60 shrink-0" />
@@ -116,7 +118,6 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
 
       {/* Main Detail Body */}
       <main className="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 -mt-5 sm:-mt-6 relative z-20 space-y-6 sm:space-y-8">
-
         {/* Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           <div className="lg:col-span-8 space-y-6">
@@ -124,17 +125,15 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
             <div className="bg-card border border-border rounded-2xl overflow-hidden -md">
               {event.image && event.image.trim() !== "" ? (
                 <div className="relative h-64 sm:h-96 w-full bg-muted border-b border-border">
-                  <img
-                    src={event.image}
-                    alt={event.event}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={event.image} alt={event.event} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-card/95 via-card/40 to-transparent" />
                   <div className="absolute bottom-4 left-6 right-6 text-foreground">
                     <span className="text-xs font-extrabold uppercase tracking-wider text-primary block">
                       Disaster Event Overview
                     </span>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">{event.event}</h2>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground">
+                      {event.event}
+                    </h2>
                   </div>
                 </div>
               ) : (
@@ -142,7 +141,9 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
                   <span className="text-xs font-extrabold uppercase tracking-wider text-primary-foreground/80 block">
                     Disaster Event Record
                   </span>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold">{event.event} ({event.year})</h2>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold">
+                    {event.event} ({event.year})
+                  </h2>
                 </div>
               )}
 
@@ -162,14 +163,14 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
           <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
             <div className="bg-card border border-border rounded-2xl p-6 space-y-5 -sm">
               <h3 className="text-base font-bold text-primary border-b border-border pb-3">
-              Historical   Event  Details
+                Historical Event Details
               </h3>
 
               <div className="space-y-4">
-              
-
                 <div className="bg-muted/50 border border-border p-4 rounded-xl space-y-1">
-                  <span className="text-xs text-muted-foreground font-semibold block">Event Name</span>
+                  <span className="text-xs text-muted-foreground font-semibold block">
+                    Event Name
+                  </span>
                   <strong className="text-lg font-extrabold text-foreground">{event.event}</strong>
                 </div>
 
@@ -179,7 +180,9 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
                 </div>
 
                 <div className="bg-muted/50 border border-border p-4 rounded-xl space-y-1">
-                  <span className="text-xs text-muted-foreground font-semibold block">Impact Level</span>
+                  <span className="text-xs text-muted-foreground font-semibold block">
+                    Impact Level
+                  </span>
                   <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md">
                     {event.impact}
                   </span>
@@ -192,4 +195,3 @@ export function HistoricalEventDetailView({ eventId }: HistoricalEventDetailView
     </div>
   );
 }
-

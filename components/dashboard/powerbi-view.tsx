@@ -21,12 +21,11 @@ export default function PowerBIView() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<DashboardItem | null>(null);
-  
+
   const [nameInput, setNameInput] = useState("");
   const [iframeInput, setIframeInput] = useState("");
 
-  const isAdmin =
-    user?.role === "Superadmin" || user?.role === "Field Coordinator";
+  const isAdmin = user?.role === "Superadmin" || user?.role === "Field Coordinator";
 
   // Pre-populate input when modal opens
   useEffect(() => {
@@ -106,7 +105,9 @@ export default function PowerBIView() {
         {/* Viewport Skeleton */}
         <div className="w-full aspect-[16/9] min-h-[500px] bg-slate-50/70 dark:bg-card/25 border border-border/50 rounded-2xl animate-pulse flex flex-col items-center justify-center gap-3">
           <Loader2 className="w-6 h-6 text-primary/60 animate-spin" />
-          <span className="text-xs text-muted-foreground/80 font-bold tracking-wide">Loading PowerBI reports...</span>
+          <span className="text-xs text-muted-foreground/80 font-bold tracking-wide">
+            Loading PowerBI reports...
+          </span>
         </div>
       </div>
     );
@@ -140,7 +141,8 @@ export default function PowerBIView() {
                   PowerBI Dashboard Not Configured
                 </h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Report: <strong>{item.name}</strong>. Paste the active PowerBI iframe embed code or link to enable this section.
+                  Report: <strong>{item.name}</strong>. Paste the active PowerBI iframe embed code
+                  or link to enable this section.
                 </p>
               </div>
               <Button
@@ -220,9 +222,7 @@ export default function PowerBIView() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-base font-bold text-foreground">
-                Configure Dashboard Report
-              </h3>
+              <h3 className="text-base font-bold text-foreground">Configure Dashboard Report</h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -235,9 +235,7 @@ export default function PowerBIView() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="block text-xs font-bold text-muted-foreground">
-                  Report Name
-                </label>
+                <label className="block text-xs font-bold text-muted-foreground">Report Name</label>
                 <Input
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
@@ -253,12 +251,13 @@ export default function PowerBIView() {
                 <textarea
                   value={iframeInput}
                   onChange={(e) => setIframeInput(e.target.value)}
-                  placeholder='Paste embed URL (https://app.powerbi.com/view...) or the HTML <iframe> code'
+                  placeholder="Paste embed URL (https://app.powerbi.com/view...) or the HTML <iframe> code"
                   rows={5}
                   className="w-full rounded-xl border border-input bg-background p-3 text-sm focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none text-foreground"
                 />
                 <p className="text-[10px] text-muted-foreground leading-relaxed">
-                  Tip: Copy the standard HTML embed code directly from PowerBI (File &gt; Embed report &gt; Publish to web). We will automatically extract the source link.
+                  Tip: Copy the standard HTML embed code directly from PowerBI (File &gt; Embed
+                  report &gt; Publish to web). We will automatically extract the source link.
                 </p>
               </div>
 

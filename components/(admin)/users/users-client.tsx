@@ -213,7 +213,9 @@ export default function UsersClient() {
       { payload, token },
       {
         onSuccess: () => {
-          toast.success("User created successfully! A verification email has been sent to their inbox.");
+          toast.success(
+            "User created successfully! A verification email has been sent to their inbox.",
+          );
           setIsAddOpen(false);
           setFirstName("");
           setLastName("");

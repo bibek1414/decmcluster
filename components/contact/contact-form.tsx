@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
-
 export default function ContactForm() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");

@@ -15,13 +15,8 @@ export function useAdminArchives(page: number, token: string | null, search?: st
 export function useCreateArchive() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      payload,
-      token,
-    }: {
-      payload: ArchiveCreatePayload;
-      token: string | null;
-    }) => archiveService.create(payload, token),
+    mutationFn: ({ payload, token }: { payload: ArchiveCreatePayload; token: string | null }) =>
+      archiveService.create(payload, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-archives-list"] });
     },
