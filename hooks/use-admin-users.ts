@@ -44,3 +44,10 @@ export function useDeleteUser() {
     },
   });
 }
+
+export function useResendVerification() {
+  return useMutation({
+    mutationFn: ({ userId, token }: { userId: number; token: string | null }) =>
+      userService.resendVerification(userId, token),
+  });
+}

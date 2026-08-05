@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Users, Trash2, X, Loader2, Pencil, Edit } from "lucide-react";
+import { Plus, Search, Users, Trash2, X, Loader2, Pencil, Edit, BadgeCheck, BadgeX, Mail } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useAdminUsers,
   useCreateUser,
   useUpdateUser,
   useDeleteUser,
+  useResendVerification,
 } from "@/hooks/use-admin-users";
 import { useDebounce } from "@/hooks/use-debounce";
 import { UserData } from "@/types/admin/user";
@@ -195,6 +196,23 @@ export default function UsersClient() {
   // Update mutation
   const updateMutation = useUpdateUser();
 
+  // Resend Verification mutation
+  const resendVerificationMutation = useResendVerification();
+
+  const handleResendVerification = (userId: number) => {
+    resendVerificationMutation.mutate(
+      { userId, token },
+      {
+        onSuccess: () => {
+          toast.success("Verification email resent successfully!");
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to resend verification email");
+        },
+      },
+    );
+  };
+
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName.trim()) return toast.error("First name is required");
@@ -364,16 +382,16 @@ export default function UsersClient() {
                 <thead>
                   <tr className="bg-muted/40 border-b border-border text-xs font-bold text-muted-foreground">
                     <th className="p-4 w-[20%]">Name</th>
-                    <th className="p-4 w-[22%]">Email</th>
+                    <th className="p-4 w-[25%]">Email</th>
                     <th className="p-4 w-[13%]">Role</th>
-                    <th className="p-4 w-[35%]">Folder Access</th>
-                    {canDelete && <th className="p-4 w-[10%] text-right">Actions</th>}
+                    <th className="p-4 w-[27%]">Folder Access</th>
+                    {canDelete && <th className="p-4 w-[15%] text-right">Actions</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60 text-xs">
                   {usersList.map((item) => {
                     const fullName =
-                      `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
+                       `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
 
                     const renderAccessControlBadges = (userData: typeof item) => {
                       const roleLower = userData.role?.toLowerCase();
@@ -429,7 +447,20 @@ export default function UsersClient() {
                           <span className="truncate max-w-xs block">{fullName}</span>
                         </td>
                         <td className="p-4 text-muted-foreground font-semibold">
-                          {item.email || "—"}
+                          <div className="flex items-center gap-1.5">
+                            <span className="truncate max-w-[180px] block" title={item.email}>
+                              {item.email || "—"}
+                            </span>
+                            {item.is_active ? (
+                              <span title="Active">
+                                <BadgeCheck className="h-4 w-4 shrink-0 text-emerald-500 cursor-help" />
+                              </span>
+                            ) : (
+                              <span title="Inactive">
+                                <BadgeX className="h-4 w-4 shrink-0 text-rose-500 cursor-help" />
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="p-4">
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-primary text-white border border-primary capitalize">
@@ -440,10 +471,27 @@ export default function UsersClient() {
                         {canDelete && (
                           <td className="p-4 text-right">
                             <div className="inline-flex items-center justify-end gap-2">
+                              {!item.is_active && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-8 px-2.5 font-bold text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/20 border-border/80 cursor-pointer gap-1"
+                                  onClick={() => handleResendVerification(item.id)}
+                                  disabled={resendVerificationMutation.isPending}
+                                >
+                                  {resendVerificationMutation.isPending &&
+                                  resendVerificationMutation.variables?.userId === item.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : (
+                                    <Mail className="w-3.5 h-3.5" />
+                                  )}
+                                  Resend
+                                </Button>
+                              )}
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="h-8 px-2.5 font-bold  hover:bg-blue-50 dark:hover:bg-blue-950/20 border-border/80 cursor-pointer gap-1"
+                                className="h-8 px-2.5 font-bold hover:bg-blue-50 dark:hover:bg-blue-950/20 border-border/80 cursor-pointer gap-1"
                                 onClick={() => handleEditClick(item)}
                               >
                                 <Edit className="w-3.5 h-3.5" /> Edit

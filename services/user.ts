@@ -134,4 +134,40 @@ export const userService = {
 
     return res.json();
   },
+
+  resendVerification: async (userId: number, token: string | null): Promise<{ message?: string }> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      if (token.startsWith("eyJ") || token.includes(".")) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else {
+        headers["Authorization"] = `Token ${token}`;
+      }
+    }
+
+    const res = await fetch(`${baseUrl}/api/account/resend-verification/`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ user_id: userId }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to resend verification email";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch {}
+      throw new Error(errorMsg);
+    }
+
+    return res.json();
+  },
 };

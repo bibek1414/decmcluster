@@ -72,7 +72,7 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
         initial={{ opacity: 0, y: 20, scale: 0.95 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md bg-card/60 backdrop-blur-xl shadow-2xl rounded-3xl border border-border/50 p-8 text-center relative overflow-hidden"
+        className="w-full max-w-md bg-card/60 backdrop-blur-xl -2xl rounded-3xl border border-border/50 p-8 text-center relative overflow-hidden"
       >
         {/* Subtle background glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-[300px] pointer-events-none">
@@ -161,7 +161,7 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
 
                 <Button
                   type="submit"
-                  className="w-full rounded-xl h-11 text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer mt-2"
+                  className="w-full rounded-xl h-11 text-sm font-bold -lg -primary/20 cursor-pointer mt-2"
                 >
                   <Lock className="w-4 h-4 mr-2" />
                   Verify Email & Save Password
@@ -215,7 +215,7 @@ export default function VerifyEmailClient({ token }: VerifyEmailClientProps) {
                 </p>
               </div>
               <Link href="/" className="w-full mt-4">
-                <Button className="w-full rounded-xl h-11 text-sm font-bold shadow-lg shadow-primary/20 cursor-pointer group">
+                <Button className="w-full rounded-xl h-11 text-sm font-bold -lg -primary/20 cursor-pointer group">
                   Continue to Login
                   <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
