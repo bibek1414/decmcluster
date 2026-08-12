@@ -2,8 +2,20 @@ import ResponseTrackingClient from "@/components/response-tracking/response-trac
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Response Tracking — DECM Cluster Vanuatu",
-  description: "Reporting templates, situation reports, and response data.",
+  title: "Emergency Response & 5W Tracking Matrix",
+  description:
+    "5W humanitarian response tracking matrix, relief supply distribution tracking, emergency sector monitoring, and operational status in Vanuatu.",
+  keywords: [
+    "Vanuatu 5W Response Matrix",
+    "DECM Response Tracking",
+    "Relief Distribution Vanuatu",
+    "Humanitarian Operational Status NDMO",
+  ],
+  openGraph: {
+    title: "Emergency Response & 5W Tracking Matrix | DECM Cluster Vanuatu",
+    description:
+      "5W humanitarian response tracking matrix, relief supply distribution tracking, emergency sector monitoring, and operational status in Vanuatu.",
+  },
 };
 
 export default function ResponseTrackingPage() {

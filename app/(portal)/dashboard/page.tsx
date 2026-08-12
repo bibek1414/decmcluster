@@ -2,8 +2,20 @@ import DashboardSection from "@/components/dashboard/dashboard-section";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard — DECM Cluster Vanuatu",
-  description: "Displacement tracking, evacuation centres, and sector summaries for Vanuatu.",
+  title: "National Operations Dashboard",
+  description:
+    "Real-time national disaster operations dashboard, evacuation centre metrics, displacement statistics, and sector summaries for NDMO & DECM Cluster Vanuatu.",
+  keywords: [
+    "Vanuatu Disaster Dashboard",
+    "Evacuation Centre Capacity Vanuatu",
+    "Displacement Statistics Vanuatu",
+    "DECM Cluster Metrics",
+  ],
+  openGraph: {
+    title: "National Operations Dashboard | DECM Cluster Vanuatu",
+    description:
+      "Real-time national disaster operations dashboard, evacuation centre metrics, displacement statistics, and sector summaries for NDMO & DECM Cluster Vanuatu.",
+  },
 };
 
 export default function DashboardPage() {

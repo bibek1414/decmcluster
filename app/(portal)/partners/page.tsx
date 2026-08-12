@@ -2,8 +2,20 @@ import PartnersClient from "@/components/partners/partners-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cluster Focal Points — DECM Cluster Vanuatu",
-  description: "Directory of National, Provincial, and Inter-Cluster coordinators.",
+  title: "Humanitarian Partners & Cluster Directory",
+  description:
+    "Official directory of humanitarian partner organizations, inter-cluster coordinators, NDMO focal points, and IOM representatives in Vanuatu.",
+  keywords: [
+    "DECM Partners Vanuatu",
+    "Humanitarian Cluster Directory Vanuatu",
+    "IOM Vanuatu Partners",
+    "NDMO Cluster Coordinators",
+  ],
+  openGraph: {
+    title: "Humanitarian Partners & Cluster Directory | DECM Cluster Vanuatu",
+    description:
+      "Official directory of humanitarian partner organizations, inter-cluster coordinators, NDMO focal points, and IOM representatives in Vanuatu.",
+  },
 };
 
 export default function PartnersPage() {

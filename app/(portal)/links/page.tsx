@@ -2,8 +2,20 @@ import LinksClient from "@/components/links/links-client";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Useful Links — DECM Cluster Vanuatu",
-  description: "Direct access keys to global partner networks and databases.",
+  title: "Useful Links & External Resources",
+  description:
+    "Curated portal links to official disaster management databases, VMGD weather alerts, IOM DTM portals, and Pacific humanitarian networks.",
+  keywords: [
+    "Vanuatu Disaster Links",
+    "VMGD Weather Alerts",
+    "IOM DTM Portal Links",
+    "Pacific Data Hub Links",
+  ],
+  openGraph: {
+    title: "Useful Links & External Resources | DECM Cluster Vanuatu",
+    description:
+      "Curated portal links to official disaster management databases, VMGD weather alerts, IOM DTM portals, and Pacific humanitarian networks.",
+  },
 };
 
 export default function LinksPage() {

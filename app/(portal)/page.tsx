@@ -10,9 +10,21 @@ import ScrollAnimate from "@/components/shared/scroll-animate";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "DECM Cluster Vanuatu — Information Management & Data Portal",
+  title: "Information Management & Data Portal",
   description:
-    "Displacement, Evacuation Centre and Response Information System for NDMO, IOM and Partners in Vanuatu.",
+    "Official Displacement, Evacuation Centre, and Emergency Response Information Portal for National Disaster Management Office (NDMO), IOM, and Partners in Vanuatu.",
+  keywords: [
+    "DECM Cluster Vanuatu",
+    "NDMO Vanuatu Portal",
+    "Displacement Information System",
+    "Evacuation Centre Management Vanuatu",
+    "Vanuatu Emergency Response",
+  ],
+  openGraph: {
+    title: "Information Management & Data Portal | DECM Cluster Vanuatu",
+    description:
+      "Official Displacement, Evacuation Centre, and Emergency Response Information Portal for National Disaster Management Office (NDMO), IOM, and Partners in Vanuatu.",
+  },
 };
 
 export default function Home() {

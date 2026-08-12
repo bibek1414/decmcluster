@@ -6,8 +6,20 @@ import AssessmentRegistryTable from "./assessment-registry-table";
 import { AssessmentStatsGrid } from "./assessment-stats-grid";
 
 export const metadata: Metadata = {
-  title: "Assessment Tools — DECM Cluster Vanuatu",
-  description: "Field survey forms, data schemas, and mobile templates.",
+  title: "Field Assessment Tools & Survey Forms",
+  description:
+    "Field survey forms, evacuation shelter assessment tools, DTM multi-sectoral schemas, and data entry templates for Vanuatu disaster enumerators.",
+  keywords: [
+    "Vanuatu Disaster Assessment Forms",
+    "Evacuation Centre Assessment Tool",
+    "DTM Vanuatu Survey Tools",
+    "NDMO Field Enumeration",
+  ],
+  openGraph: {
+    title: "Field Assessment Tools & Survey Forms | DECM Cluster Vanuatu",
+    description:
+      "Field survey forms, evacuation shelter assessment tools, DTM multi-sectoral schemas, and data entry templates for Vanuatu disaster enumerators.",
+  },
 };
 
 export default function AssessmentsPage() {
