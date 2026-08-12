@@ -558,9 +558,9 @@ export default function LeafletMapView({
             break-inside: avoid !important;
           }
           #printable-vanuatu-map-canvas .map-frame {
-            height: calc(100vh - 130px) !important;
-            max-height: calc(100vh - 130px) !important;
-            margin-top: 6px !important;
+            height: calc(100vh - 50px) !important;
+            max-height: calc(100vh - 50px) !important;
+            margin-top: 0px !important;
           }
           .no-print {
             display: none !important;
@@ -702,23 +702,8 @@ export default function LeafletMapView({
           id="printable-vanuatu-map-canvas"
           className="order-1 lg:order-2 lg:col-span-8 xl:col-span-9 bg-card text-card-foreground rounded-xl border border-border p-4 shadow-xs flex flex-col justify-between"
         >
-          {/* PDF Export Banner Title Header (Visible only when printing PDF) */}
-          <div className="hidden print:block mb-2 pb-2 border-b border-gray-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-base font-extrabold text-gray-900">{activeMapTitle}</h1>
-                <p className="text-[10.5px] text-gray-600 font-medium">DECM Cluster Vanuatu & National Disaster Management Office (NDMO)</p>
-              </div>
-              <div className="text-right text-xs">
-                <span className="inline-block px-2 py-0.5 bg-gray-100 text-gray-800 font-bold rounded border border-gray-300 text-[11px]">
-                  {selectedProvince ? `${selectedProvince} Province` : "Vanuatu Archipelago"}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Map Header Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border">
+          {/* Map Header Controls (Hidden during PDF print download) */}
+          <div className="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border">
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-foreground">Interactive Spatial Map</h3>

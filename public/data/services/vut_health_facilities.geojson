@@ -4,108 +4,2210 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Vila Central Hospital (VCH)",
-        "type": "National Referral Hospital",
-        "beds": 220,
-        "island": "Efate",
-        "province": "Shefa",
-        "emergency_phone": "112"
+        "name": "Aid Post #1",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3410782918"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.322,
-          -17.742
+          168.29953,
+          -17.726
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Northern Provincial Hospital",
-        "type": "Provincial Referral Hospital",
-        "beds": 110,
-        "island": "Espiritu Santo",
-        "province": "Sanma",
-        "emergency_phone": "36345"
+        "name": "Lolovange Dispensary",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "4270754292"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.185,
-          -15.512
+          168.41516,
+          -17.63143
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Lenakel Provincial Hospital",
-        "type": "Provincial Hospital",
-        "beds": 45,
-        "island": "Tanna",
-        "province": "Tafea",
-        "emergency_phone": "88624"
+        "name": "Aid Post #3",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408815284"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          169.27,
-          -19.525
+          168.44171,
+          -17.61626
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Norsup Regional Hospital",
-        "type": "Regional Hospital",
-        "beds": 50,
-        "island": "Malekula",
-        "province": "Malampa",
-        "emergency_phone": "48410"
+        "name": "Aid Post #4",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028684"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.395,
-          -16.078
+          168.45195,
+          -17.57899
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Lolowai Hospital",
-        "type": "District Hospital",
-        "beds": 30,
-        "island": "Ambae",
-        "province": "Penama",
-        "emergency_phone": "38330"
+        "name": "Aid Post #5",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231683"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.975,
-          -15.285
+          168.54432,
+          -17.51233
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Sola Health Centre",
-        "type": "Health Centre",
-        "beds": 12,
-        "island": "Vanua Lava",
-        "province": "Torba",
-        "emergency_phone": "38510"
+        "name": "Aid Post #6",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3405475569"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.55,
-          -13.85
+          168.6194,
+          -17.45919
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #7",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807595"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5994,
+          -17.41197
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #8",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807596"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70129,
+          -17.3503
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #9",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807597"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.72445,
+          -17.26531
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #10",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807598"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78937,
+          -17.20896
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807599"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.80074,
+          -17.14195
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807600"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85939,
+          -17.07959
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #13",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "5141856956"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.35611,
+          -17.04833
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Northern District Hospital",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3058689638"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.39183,
+          -16.93709
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Church of christ medical Centre",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6130108715"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.41752,
+          -16.85888
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #16",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416606339"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.47007,
+          -16.84416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #17",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416606340"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5422,
+          -16.78189
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #18",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416606341"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.57377,
+          -16.75771
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #19",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416606346"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.6131,
+          -17.73014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #20",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416626025"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.69541,
+          -17.71633
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #21",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416626027"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7328,
+          -17.65745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416626028"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73511,
+          -17.5845
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #23",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416534383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78792,
+          -17.52202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #24",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3415798460"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.89364,
+          -17.46473
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Silimoli Health Dispensary",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3415407316"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.31465,
+          -17.35276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #26",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3409522144"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.37476,
+          -17.29959
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414872571"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46083,
+          -17.25344
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #28",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414914705"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5103,
+          -17.21028
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #29",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414744832"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54351,
+          -17.1161
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #30",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3413389360"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.53957,
+          -17.11776
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #31",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3413389370"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.61312,
+          -17.05542
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #32",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411854933"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71081,
+          -16.91315
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #33",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411854934"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.6927,
+          -16.86283
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #34",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411854935"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.8017,
+          -16.81478
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #35",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411854944"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.8533,
+          -16.74547
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #36",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411760758"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84809,
+          -16.74567
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #37",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411454249"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.34844,
+          -17.70697
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #38",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411438748"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.37218,
+          -17.63798
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #39",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411297300"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.39455,
+          -17.57824
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #40",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411008867"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5116,
+          -17.51216
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #41",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3410541092"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.48808,
+          -17.50792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #42",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3409521104"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59403,
+          -17.42893
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #43",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3409160044"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.58717,
+          -17.38677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #44",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3409182627"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70621,
+          -17.33322
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #45",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408785161"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.76635,
+          -17.29014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #46",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408785163"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7504,
+          -17.2158
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #47",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408815283"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.87029,
+          -17.1682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pharmacy",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408815285"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.86072,
+          -17.03721
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pharmacy",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408801051"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3408,
+          -17.04969
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #50",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231681"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33309,
+          -16.91842
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #51",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231685"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4591,
+          -16.88133
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231690"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.48324,
+          -16.83701
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #53",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231689"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50347,
+          -16.74592
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #54",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028686"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59144,
+          -16.73371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #55",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028687"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63018,
+          -17.72859
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #56",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028688"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71633,
+          -17.68821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #57",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028689"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7431,
+          -17.63237
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #58",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028690"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.76807,
+          -17.51783
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #59",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028692"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.80184,
+          -17.53341
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #60",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807594"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84533,
+          -17.47233
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #61",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3405279221"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.31282,
+          -17.40746
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #62",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416626026"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.37226,
+          -17.32501
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #63",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414872563"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4429,
+          -17.23844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414914390"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46479,
+          -17.17645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3264276742"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.53148,
+          -17.11864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #66",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411812858"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.58113,
+          -17.10682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #67",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411812867"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64283,
+          -17.02965
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #68",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3410498284"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.65367,
+          -16.93217
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ngota aid post",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6159996647"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.72294,
+          -16.89914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marino Aid Post",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6160006453"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73565,
+          -16.85158
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #71",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "4326445116"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.87135,
+          -16.81383
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #72",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "4253792984"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.87149,
+          -16.69171
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Healthcare Pharmacy",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "1863316801"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.30621,
+          -17.7183
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #74",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416130862"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.41757,
+          -17.65437
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #75",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416606338"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.42386,
+          -17.58871
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #76",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028682"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.51499,
+          -17.50978
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #77",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028685"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.51906,
+          -17.53306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #78",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3409149200"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.55667,
+          -17.43761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #79",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414914382"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59491,
+          -17.36282
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #80",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416130857"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70919,
+          -17.29106
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #81",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416130856"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.74429,
+          -17.29276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lausake Aid Post",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3340950964"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78944,
+          -17.21436
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #83",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411319592"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.8699,
+          -17.11609
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vila Bay Medical Centre",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "652374416"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.86251,
+          -17.04647
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #85",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3411297301"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.29521,
+          -16.9926
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Family Tarip Clinic",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "5349181725"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36954,
+          -16.93407
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nebul Health Clinic",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6859956672"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.40347,
+          -16.91443
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #88",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416534382"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50367,
+          -16.85879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #89",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416534384"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50291,
+          -16.80965
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #90",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3416606342"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54622,
+          -16.74099
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Malau Health Centre",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "2985828944"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63486,
+          -17.7126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "H\u00f4pital de Tanna",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3401245073"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71302,
+          -17.65847
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bonkovio Moliana Aid-post",
+        "amenity": "Doctors",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6952955787"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.6854,
+          -17.61791
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #94",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3414744831"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.77849,
+          -17.58126
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #95",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6876649786"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.86467,
+          -17.47392
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Paunangisu Health Centre",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6782143843"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85241,
+          -17.43229
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #97",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6625288731"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36613,
+          -17.36496
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nduindui hospital",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6347063315"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4158,
+          -17.32833
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Capricorn dispensary",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6300469507"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.43392,
+          -17.21696
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Walaha health center",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6347063607"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4436,
+          -17.19501
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ambanga aid post",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6339211076"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.48568,
+          -17.16836
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marian paia disability and health center",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6317724529"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59614,
+          -17.06328
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaturei aid post",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6317725224"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63622,
+          -16.9689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vules Epe health center",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6317724531"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.66826,
+          -16.90886
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saint Michael Friendly Clinic",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6300605686"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.68736,
+          -16.92625
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vanuatu Family Health Association",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6300605611"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.77977,
+          -16.85236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #107",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "9342245424"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.80875,
+          -16.72954
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #108",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028683"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.89709,
+          -16.73713
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #109",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3413389359"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33225,
+          -17.74334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #110",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231686"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.40879,
+          -17.70467
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #111",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3407807601"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.44996,
+          -17.57556
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #112",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231688"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46193,
+          -17.51409
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #113",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231682"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50944,
+          -17.53538
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #114",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231684"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.57425,
+          -17.3975
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #115",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408028691"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59561,
+          -17.40027
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #116",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "5371385923"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.67151,
+          -17.34352
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #117",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408231687"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.76155,
+          -17.21498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #118",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3408785162"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.80005,
+          -17.1701
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dispensaire",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "2246093968"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85198,
+          -17.16112
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "DISPENSAIRE",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "2264724256"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.87931,
+          -17.09814
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #121",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3410541091"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36232,
+          -17.05529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sanma Health",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "5141857678"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.38534,
+          -16.98674
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bethel Clinic",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "5349196322"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.43996,
+          -16.8787
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Health Center",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3410744198"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46524,
+          -16.81689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Healthwise Pharmacie",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "5686152366"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.56646,
+          -16.747
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Pharmacy",
+        "amenity": "Pharmacy",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "12462954010"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.62017,
+          -16.70276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #127",
+        "amenity": "Clinic",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "3413401678"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.587,
+          -17.70181
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #128",
+        "amenity": "Yes",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "6302679802"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64023,
+          -17.65785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aid Post #129",
+        "amenity": "Hospital",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "11836538203"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71542,
+          -17.59879
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GeolabXP",
+        "amenity": "Laboratory",
+        "building": "Health Facility",
+        "city": "Vanuatu",
+        "osm_id": "12461005331"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73602,
+          -17.5214
         ]
       }
     }
