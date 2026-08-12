@@ -4,34 +4,374 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Malapoa College",
-        "level": "Secondary",
-        "students": 1200,
-        "island": "Efate",
-        "province": "Shefa"
+        "name": "School Facility #332976735",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332976735"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.305,
-          -17.725
+          168.289,
+          -17.72215
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Port Vila International School",
-        "level": "Primary & Secondary",
-        "students": 450,
-        "island": "Efate",
-        "province": "Shefa"
+        "name": "SDA Kindergarden",
+        "amenity": "Kindergarten",
+        "building": "kindergarten",
+        "city": "Vanuatu",
+        "osm_id": "332826411"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.33,
-          -17.738
+          168.34486,
+          -17.7013
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pango French School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "434695451"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.42114,
+          -17.61438
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Agence Universite de la Francophonie",
+        "amenity": "University",
+        "building": "",
+        "city": "Port-vila",
+        "osm_id": "333018099"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.29396,
+          -17.70193
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "National Universite de Vanuatu",
+        "amenity": "University",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "333013946"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.44938,
+          -17.53955
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "tassiriki primary school",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332759607"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.52743,
+          -17.50581
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "tassiriki primary school",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332759609"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54291,
+          -17.47118
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289410",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289410"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.6106,
+          -17.37131
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289411",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289411"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.65414,
+          -17.35566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289412",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289412"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64752,
+          -17.25855
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289413",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289413"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.74285,
+          -17.20883
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289414",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289414"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73944,
+          -17.19608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289415",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289415"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.79393,
+          -17.09672
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289418",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289418"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.81474,
+          -17.11588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saratamata Pre-School",
+        "amenity": "Kindergarten",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "402321315"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.8953,
+          -17.0055
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Olal Kindy",
+        "amenity": "Kindergarten",
+        "building": "commercial",
+        "city": "Vanuatu",
+        "osm_id": "332991495"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.34538,
+          -16.95873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Olal Kindy",
+        "amenity": "Kindergarten",
+        "building": "commercial",
+        "city": "Vanuatu",
+        "osm_id": "332991496"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.40485,
+          -16.9304
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Grounds",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1012619289"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.41116,
+          -16.89302
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "french school",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "427549738"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.45648,
+          -16.80695
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332976712",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332976712"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.49319,
+          -16.75436
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #336894601",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "336894601"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.49067,
+          -17.71693
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #302009601",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "302009601"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.55015,
+          -17.70507
         ]
       }
     },
@@ -39,33 +379,2498 @@
       "type": "Feature",
       "properties": {
         "name": "Matevulu College",
-        "level": "Secondary Boarding School",
-        "students": 850,
-        "island": "Espiritu Santo",
-        "province": "Sanma"
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "304957678"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.195,
-          -15.42
+          168.58562,
+          -17.66692
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Ranwadi High School",
-        "level": "Secondary",
-        "students": 600,
-        "island": "Pentecost",
-        "province": "Penama"
+        "name": "Talua Bible College",
+        "amenity": "College",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "302162704"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.18,
-          -15.82
+          168.62924,
+          -17.61522
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Aore Adventist Academy",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "304351098"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.67619,
+          -17.52245
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hog Harbour Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "336161098"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70376,
+          -17.49369
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "leboroe sckool",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334879517"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.80193,
+          -17.45194
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rensaire College",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332655677"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.81573,
+          -17.37146
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334433630"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.86533,
+          -17.35961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Selusa Kindi",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334420659"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.87736,
+          -17.31023
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lamenu Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334424843"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3382,
+          -17.19414
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #302008141",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "302008141"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.38177,
+          -17.17874
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Orap School (Collegi d'Orap)",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334437273"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.42908,
+          -17.10587
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #295845275",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "295845275"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.40957,
+          -17.10498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tautu Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334421636"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46842,
+          -17.04806
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tautu Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334421639"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.56243,
+          -17.00642
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Velo Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334418999"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.55217,
+          -16.90319
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Amelvet Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334419220"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59865,
+          -16.87086
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Amelvet Secondary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334419491"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64371,
+          -16.80014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Amelvet Kindergarten (\"Kindy\")",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334419591"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.66673,
+          -16.80211
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Amelvet Secondary School Kitchen & Dining Hall",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334419781"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70802,
+          -17.72839
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vao Primary",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332998904"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.79883,
+          -17.67653
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vao Primary",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332998907"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78455,
+          -17.64135
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Wala Rano School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334420569"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84776,
+          -17.5435
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Junior Secondary School - Boys Dormitory",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332750002"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85077,
+          -17.56603
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Junior Secondary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332750004"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3372,
+          -17.51453
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Junior Secondary School - Girl's Dormitory",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332750000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36077,
+          -17.40993
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Junior Secondary School - Classroom",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332749997"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.39753,
+          -17.41822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Class 3&4 and Class 5&6 (local materials)",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334420692"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.44933,
+          -17.29361
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Class 7 & 8 (permanent building)",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334420376"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.51586,
+          -17.24561
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tautu Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334421638"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54466,
+          -17.27238
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lakatoro School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334423660"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.56996,
+          -17.16876
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lakatoro School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334423661"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.61828,
+          -17.15195
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lakatoro Secondary School Offices",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334423662"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64178,
+          -17.11438
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332976701",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332976701"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.72331,
+          -17.037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Reynold's Primary School (Nangole)",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436428"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70807,
+          -16.95323
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334436906",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436906"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.74129,
+          -16.93325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tautu Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334421640"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.83664,
+          -16.85029
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rensaire Primary",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332655671"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85812,
+          -16.84942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ishia",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "333288239"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85923,
+          -16.77458
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pot Melou Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332749998"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33015,
+          -17.7123
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pot Melou Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332853583"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36943,
+          -17.66101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole primaire de Lamnatu",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332801916"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.39293,
+          -17.67325
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lonest Kindy",
+        "amenity": "Kindergarten",
+        "building": "kindergarten",
+        "city": "Vanuatu",
+        "osm_id": "434693028"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.48133,
+          -17.62174
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332768369",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332768369"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.51353,
+          -17.503
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332809158",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332809158"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.49163,
+          -17.4987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332724555",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332724555"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.60276,
+          -17.40306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332822785",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332822785"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.60588,
+          -17.41645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole Publique de Kutudaula",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "329234213"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.66785,
+          -17.36776
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vauleli Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "327959886"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.65727,
+          -17.26203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vaum Junior Secondary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "327954096"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73098,
+          -17.23528
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332724559",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332724559"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.79679,
+          -17.2021
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197102020",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197102020"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78394,
+          -17.13945
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #327517150",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "327517150"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.86539,
+          -17.08016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197510321",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197510321"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.87194,
+          -17.05721
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197102021",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197102021"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33899,
+          -16.94369
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197102019",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197102019"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36841,
+          -16.93825
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197102016",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197102016"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.38498,
+          -16.91362
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197102018",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197102018"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.45406,
+          -16.84625
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Naone Kindergarten",
+        "amenity": "Kindergarten",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "332931462"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46462,
+          -16.80489
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Naone Primary school",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "333169461"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.53749,
+          -17.76762
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #333014660",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "333014660"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59943,
+          -17.70498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lyc\u00e9e Fran\u00e7ais J.M.G. Le Cl\u00e9zio Port-Vila",
+        "amenity": "School",
+        "building": "",
+        "city": "Port Vila",
+        "osm_id": "304727899"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.29267,
+          -17.70453
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hog Harbour Secondary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1012619292"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.66052,
+          -17.60426
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole maternelle de Lowanatom",
+        "amenity": "Kindergarten",
+        "building": "kindergarten",
+        "city": "Vanuatu",
+        "osm_id": "566811008"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.65758,
+          -17.55616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vila East School",
+        "amenity": "School",
+        "building": "",
+        "city": "Port-Vila",
+        "osm_id": "416516667"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33268,
+          -17.69846
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Olal Kindy",
+        "amenity": "Kindergarten",
+        "building": "commercial",
+        "city": "Vanuatu",
+        "osm_id": "332991500"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78977,
+          -17.43549
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332762662",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332762662"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78223,
+          -17.3587
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Luganville French primary school",
+        "amenity": "School",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "670786145"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84148,
+          -17.36555
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vanuatu Agriculture College",
+        "amenity": "College",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "302174528"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.88436,
+          -17.28941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332834206",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332834206"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.34087,
+          -17.21497
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334433629"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33487,
+          -17.14457
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332878804"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.39414,
+          -17.14109
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332878813"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.42689,
+          -17.05437
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332878820"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.48289,
+          -17.05808
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332878823"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50928,
+          -16.98955
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332878852"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.60086,
+          -16.95332
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Junior Secondary School - Teacher's Kitchen",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332935344"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63591,
+          -16.88785
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Junior Secondary School - Teacher's House",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332935346"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.61105,
+          -16.82927
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #333169458",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "333169458"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71388,
+          -16.74336
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gambule",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332830691"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.76111,
+          -17.69578
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #294934466",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "294934466"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7403,
+          -17.6554
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kindergarten Facility #332948960",
+        "amenity": "Kindergarten",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332948960"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7841,
+          -17.63445
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Baitora Primary school",
+        "amenity": "School",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "334433363"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.81169,
+          -17.59122
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ecole centrale",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "307559649"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.92582,
+          -17.54298
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole Primaire de Lehili",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "327956264"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.34973,
+          -17.50208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "lalinda SDA school",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "426061494"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36084,
+          -17.4369
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lonest Primary School (kindy-6)",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "434692982"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.44663,
+          -17.34671
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sangland Centre School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "390403868"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.46447,
+          -17.32884
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #327517149",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "327517149"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.47074,
+          -17.31092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #333014566",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "333014566"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.53333,
+          -17.1958
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "tassiriki primary school",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332759593"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.58684,
+          -17.17992
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ranwadi School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332834525"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.61373,
+          -17.16873
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332864719",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332864719"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.67522,
+          -17.08307
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ecole publique d'anamburu",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "435753073"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.72386,
+          -17.06071
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Avunatari Pre-school",
+        "amenity": "Kindergarten",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "402634168"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.70187,
+          -17.01689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saint Patrick's School, Vureas",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332779609"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78102,
+          -16.9257
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #336038245",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "336038245"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.77659,
+          -16.90448
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Selusa Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "327956256"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.8267,
+          -16.80208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mangarongo Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "304335116"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.89655,
+          -16.77574
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Simon Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "402560559"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33369,
+          -17.73976
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334972382",
+        "amenity": "School",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "334972382"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.40178,
+          -17.68148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #336932801",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "336932801"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4243,
+          -17.65696
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #333043384",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "333043384"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.43866,
+          -17.60421
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332758932",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332758932"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.471,
+          -17.51956
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #303754150",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "303754150"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54715,
+          -17.49801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334420527",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334420527"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.56366,
+          -17.4675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334419903",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334419903"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64669,
+          -17.34342
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289419",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289419"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.62405,
+          -17.36744
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289417",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289417"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.72166,
+          -17.30208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University Facility #670289416",
+        "amenity": "University",
+        "building": "university",
+        "city": "Vanuatu",
+        "osm_id": "670289416"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.75734,
+          -17.20283
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Teruja",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "333288926"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73962,
+          -17.19374
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334424931",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334424931"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.82328,
+          -17.1066
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #333935931",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "333935931"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.88598,
+          -17.07437
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332758934",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332758934"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84763,
+          -17.02098
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Umej",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "333288925"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.31095,
+          -16.95793
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kindergarden",
+        "amenity": "Kindergarten",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "332835995"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.40211,
+          -16.92023
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole Primaire de Manuapen",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332731326"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.37623,
+          -16.91256
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332940169",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332940169"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.45126,
+          -16.86474
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332940173",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332940173"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.49539,
+          -16.80151
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332940164",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332940164"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50329,
+          -17.71589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332940156",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332940156"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54812,
+          -17.67256
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332940180",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332940180"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63943,
+          -17.63422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bakanao Primary School JICA-Funded Classroom",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334433831"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.61438,
+          -17.55561
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bakanao Primary School old classroom",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332843417"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.66913,
+          -17.53941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bakanao Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334424550"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.74869,
+          -17.52302
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332741257",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332741257"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.74796,
+          -17.42233
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lausake Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "304337306"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.81113,
+          -17.364
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332779485",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332779485"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.80777,
+          -17.33909
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Irumori",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332721864"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.91765,
+          -17.31728
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #197510317",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "197510317"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33065,
+          -17.20099
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Anelcauhat Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332918244"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3736,
+          -17.15653
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1253253718",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "1253253718"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3772,
+          -17.16145
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1253253720",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "1253253720"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.47892,
+          -17.09864
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole primaire de Lowanatom",
+        "amenity": "School",
+        "building": "",
+        "city": "Lowanatom",
+        "osm_id": "566812364"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.51586,
+          -17.00961
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334436910",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436910"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.50381,
+          -16.95139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334436426",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436426"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.53522,
+          -16.95334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334436706",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436706"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63773,
+          -16.86089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1225737732",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1225737732"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.65665,
+          -16.84079
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sanlan\u0304 School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "390404191"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.72139,
+          -16.81094
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sanlan\u0304 School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "319934436"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7651,
+          -17.70413
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Classroom",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "319934349"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.79751,
+          -17.65844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sanlan\u0304 School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "319934387"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.82593,
+          -17.67132
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #303939065",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "303939065"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.88147,
+          -17.59673
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vocational School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "390404805"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.91613,
+          -17.50912
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tangovawia Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "327517148"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.30834,
+          -17.45844
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1193646642",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1193646642"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33565,
+          -17.41031
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Naworaone Public School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "329234214"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.43569,
+          -17.35353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Matanvat Centre School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334420098"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.47233,
+          -17.35551
         ]
       }
     },
@@ -73,33 +2878,747 @@
       "type": "Feature",
       "properties": {
         "name": "Onesua Presbyterian College",
-        "level": "Secondary Boarding",
-        "students": 700,
-        "island": "Efate",
-        "province": "Shefa"
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332728754"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.45,
-          -17.55
+          168.47142,
+          -17.28648
         ]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Tafea College",
-        "level": "Secondary",
-        "students": 650,
-        "island": "Tanna",
-        "province": "Tafea"
+        "name": "Natawa School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1012619283"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          169.275,
-          -19.535
+          168.50521,
+          -17.20967
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bene School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1012619286"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54245,
+          -17.22141
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1194115144",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1194115144"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63615,
+          -17.14704
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Olal Kindy",
+        "amenity": "Kindergarten",
+        "building": "commercial",
+        "city": "Vanuatu",
+        "osm_id": "332990623"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.62933,
+          -17.04595
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "South West Bay Presbyterian College",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332881678"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.67897,
+          -17.02198
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Freswota skul",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "429398160"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.7299,
+          -16.94481
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "tassiriki primary school",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332759597"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.73623,
+          -16.89816
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Iethvekar Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "402643716"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.78129,
+          -16.84567
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vutekai Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "327959897"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.82824,
+          -16.7963
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1253253719",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "1253253719"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.88177,
+          -16.81463
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #1253253721",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "1253253721"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.31209,
+          -17.71502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Grounds",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1012619288"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.36791,
+          -17.6748
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #303149450",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "303149450"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.41313,
+          -17.64248
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334420454",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334420454"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4637,
+          -17.60292
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Qwatuneala Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "334420434"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.52105,
+          -17.57316
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pango Centre School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "434695314"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.54455,
+          -17.48022
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Class 1 & 2 and Library Building (permanent building)",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334420631"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.58065,
+          -17.41394
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332836044",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332836044"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5726,
+          -17.39416
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332768370",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332768370"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.63342,
+          -17.32016
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "No. 2 SDA Primary School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "723058126"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71484,
+          -17.29819
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "\u00c9cole primaire de Lamlu",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "572195624"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.71103,
+          -17.21572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334436908",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436908"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.75967,
+          -17.19856
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "coconak primary school",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "294934473"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.79065,
+          -17.14111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #334436905",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "334436905"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84064,
+          -17.11312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Olal Kindy",
+        "amenity": "Kindergarten",
+        "building": "yes",
+        "city": "Vanuatu",
+        "osm_id": "332991501"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.90119,
+          -16.99807
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Londua school",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "427552115"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33624,
+          -16.95108
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pango Kindy",
+        "amenity": "Kindergarten",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332878093"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.37083,
+          -16.94922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332949853",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332949853"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.38995,
+          -16.92327
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Port Vila International School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "307090741"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4534,
+          -16.83891
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332949865",
+        "amenity": "School",
+        "building": "school",
+        "city": "Vanuatu",
+        "osm_id": "332949865"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.4842,
+          -16.77092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "School Facility #332961961",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "332961961"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5041,
+          -17.73793
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "University of the South Pacific",
+        "amenity": "University",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "41958385"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.59909,
+          -17.68545
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "vila north school area",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1192789381"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.58058,
+          -17.60962
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lifechanger Christian College",
+        "amenity": "College",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "1346327534"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.64824,
+          -17.61652
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Coll\u00e8ge Technique - Lyc\u00e9e Lowanatom",
+        "amenity": "School",
+        "building": "",
+        "city": "Lowanatom",
+        "osm_id": "566810115"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.67382,
+          -17.52266
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mamau Seventh-day Adventist School",
+        "amenity": "School",
+        "building": "school",
+        "city": "Port Vila",
+        "osm_id": "1449617242"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.34709,
+          -17.70783
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kindergarten Facility #17256361",
+        "amenity": "Kindergarten",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "17256361"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.74497,
+          -17.41948
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Iethvekar Pre-school",
+        "amenity": "Kindergarten",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "17257188"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.76895,
+          -17.40737
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Avunatari Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "6037215"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.84501,
+          -17.35371
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ambaebulu School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "6034177"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.85283,
+          -17.25532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Najaraiwelu Primary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "6037262"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33738,
+          -17.24014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tagaga French Secondary School",
+        "amenity": "School",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "6036459"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.38271,
+          -17.20775
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Torgil Rural Training Centre",
+        "amenity": "College",
+        "building": "",
+        "city": "Vanuatu",
+        "osm_id": "6034339"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.38652,
+          -17.13375
         ]
       }
     }

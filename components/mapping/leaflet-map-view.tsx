@@ -98,9 +98,46 @@ export default function LeafletMapView({
     let isMounted = true;
     LAYERS.forEach(async (l) => {
       try {
-        const r = await fetch(l.url);
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const j = await r.json();
+        let fetchUrl = l.url;
+        if (l.id === "evacuation_centres") {
+          fetchUrl = "https://api.decmcluster.org/api/evacuation-centres/location/";
+        }
+
+        let r = await fetch(fetchUrl).catch(() => null);
+        
+        // Fallback for Evacuation Centres if remote API is unreachable or blocked by CORS
+        if ((!r || !r.ok) && l.id === "evacuation_centres") {
+          r = await fetch("/data/decm/evacuation_centres.geojson").catch(() => null);
+        }
+
+        if (!r || !r.ok) throw new Error(`HTTP ${r?.status || 500}`);
+        let j = await r.json();
+
+        // Normalize array from API (e.g. https://api.decmcluster.org/api/evacuation-centres/location/) into GeoJSON FeatureCollection
+        if (Array.isArray(j)) {
+          j = {
+            type: "FeatureCollection",
+            features: j.map((item: any) => ({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [Number(item.longitude || item.lon), Number(item.latitude || item.lat)],
+              },
+              properties: {
+                name: item.compound_name || item.name || "Evacuation Centre",
+                province: item.province || "",
+                approval_status: item.is_ec_govt_approved
+                  ? "Approved"
+                  : item.is_ec_owner_approved
+                  ? "Under Review"
+                  : "Pending",
+                recorded_internal_capacity: item.recorded_internal_capacity || item.capacity || 250,
+                ...item,
+              },
+            })),
+          };
+        }
+
         if (isMounted) {
           setLayerData((d) => ({ ...d, [l.id]: j }));
         }
@@ -181,7 +218,11 @@ export default function LeafletMapView({
         zoomControl: false,
         scrollWheelZoom: true,
         preferCanvas: true,
-      }).setView(VANUATU_CENTER, 7);
+        maxBounds: VANUATU_BOUNDS,
+        maxBoundsViscosity: 1.0,
+        minZoom: 6,
+        maxZoom: 18,
+      }).fitBounds(VANUATU_BOUNDS);
 
       L.control.zoom({ position: "bottomright" }).addTo(activeMap);
       L.control.scale({ position: "bottomleft", imperial: false }).addTo(activeMap);
@@ -255,117 +296,141 @@ export default function LeafletMapView({
       const layerGroup = L.featureGroup();
 
       data.features.forEach((feature: any, idx: number) => {
-        if (!feature.geometry) return;
+        try {
+          if (!feature || !feature.geometry) return;
 
-        const geomType = feature.geometry.type;
-        const props = feature.properties || {};
-        const title = titleOf(props);
+          const geomType = feature.geometry.type;
+          const props = feature.properties || {};
+          const title = titleOf(props);
 
-        // Build popup HTML
-        const rows = Object.entries(props)
-          .filter(
-            ([k, v]) =>
-              v !== null && v !== "" && v !== undefined && k !== "osm_id" && k !== "osm_type",
-          )
-          .slice(0, 10);
+          // Build popup HTML
+          const rows = Object.entries(props)
+            .filter(
+              ([k, v]) =>
+                v !== null && v !== "" && v !== undefined && k !== "osm_id" && k !== "osm_type",
+            )
+            .slice(0, 10);
 
-        let coordsText = "";
-        let googleMapsUrl = "";
+          let coordsText = "";
+          let googleMapsUrl = "";
 
-        if (geomType === "Point") {
-          const [lng, lat] = feature.geometry.coordinates;
-          coordsText = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
-          googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-        }
+          if (geomType === "Point") {
+            const coords = feature.geometry.coordinates;
+            if (!Array.isArray(coords) || coords.length < 2) return;
+            const lng = Number(coords[0]);
+            const lat = Number(coords[1]);
+            if (isNaN(lat) || isNaN(lng)) return;
 
-        const popupContent = `
-          <div style="font-family: var(--font-sans, system-ui, sans-serif); min-width: 220px; max-width: 280px; padding: 2px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0;">
-              <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: ${config.color || config.style?.color || "#2563eb"}; background: rgba(37, 99, 235, 0.08); padding: 2px 6px; border-radius: 4px;">
-                ${config.name}
-              </span>
-              ${coordsText ? `<span style="font-size: 10px; color: #64748b; font-weight: 600;">${coordsText}</span>` : ""}
-            </div>
-            <h4 style="margin: 0 0 6px 0; font-size: 13px; font-weight: 800; color: #0f172a; line-height: 1.3;">
-              ${title}
-            </h4>
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 8px;">
-              <tbody>
-                ${rows
-                  .map(
-                    ([k, v]) => `
-                  <tr>
-                    <td style="padding: 2px 4px; color: #64748b; font-weight: 600; text-transform: capitalize; border-top: 1px solid #f1f5f9; width: 45%;">${k.replaceAll("_", " ")}</td>
-                    <td style="padding: 2px 4px; color: #1e293b; font-weight: 700; border-top: 1px solid #f1f5f9;">${safe(v)}</td>
-                  </tr>
-                `,
-                  )
-                  .join("")}
-              </tbody>
-            </table>
-            ${
-              googleMapsUrl
-                ? `<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer"
-                     style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #2563eb; color: #ffffff; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 11px; text-align: center; box-sizing: border-box; transition: background 0.2s;">
-                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-                     View on Google Maps
-                   </a>`
-                : ""
-            }
-          </div>
-        `;
-
-        if (geomType === "Point") {
-          const [lng, lat] = feature.geometry.coordinates;
-          let markerColor = config.color || config.style?.color || "#2563eb";
-          let radius = config.group === "DECM Operational" ? 7 : config.group === "Hazards" ? 8 : 5;
-
-          // Special dynamic sizing & approval status color for Evacuation Centres
-          if (config.id === "evacuation_centres") {
-            const status = (props.approval_status || props.status || "").toLowerCase();
-            if (status.includes("approved")) {
-              markerColor = "#10b981"; // Emerald
-            } else if (status.includes("review") || status.includes("pending")) {
-              markerColor = "#f59e0b"; // Amber
-            } else if (status.includes("draft")) {
-              markerColor = "#0284c7"; // Sky Blue
-            } else if (status.includes("closed") || status.includes("deferred")) {
-              markerColor = "#ef4444"; // Red
-            }
-
-            const cap = Number(props.recorded_internal_capacity || props.capacity_hhs || props.capacity || 100);
-            radius = Math.min(Math.max(Math.sqrt(cap) * 0.5, 6), 24);
+            coordsText = `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+            googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
           }
 
-          const marker = L.circleMarker([lat, lng], {
-            radius,
-            fillColor: markerColor,
-            color: "#ffffff",
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.85,
-          });
+          const popupContent = `
+            <div style="font-family: var(--font-sans, system-ui, sans-serif); min-width: 220px; max-width: 280px; padding: 2px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0;">
+                <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: ${config.color || config.style?.color || "#2563eb"}; background: rgba(37, 99, 235, 0.08); padding: 2px 6px; border-radius: 4px;">
+                  ${config.name}
+                </span>
+                ${coordsText ? `<span style="font-size: 10px; color: #64748b; font-weight: 600;">${coordsText}</span>` : ""}
+              </div>
+              <h4 style="margin: 0 0 6px 0; font-size: 13px; font-weight: 800; color: #0f172a; line-height: 1.3;">
+                ${title}
+              </h4>
+              <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 8px;">
+                <tbody>
+                  ${rows
+                    .map(
+                      ([k, v]) => `
+                    <tr>
+                      <td style="padding: 2px 4px; color: #64748b; font-weight: 600; text-transform: capitalize; border-top: 1px solid #f1f5f9; width: 45%;">${String(k).replaceAll("_", " ")}</td>
+                      <td style="padding: 2px 4px; color: #1e293b; font-weight: 700; border-top: 1px solid #f1f5f9;">${safe(v)}</td>
+                    </tr>
+                  `,
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+              ${
+                googleMapsUrl
+                  ? `<a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer"
+                       style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: #2563eb; color: #ffffff; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 11px; text-align: center; box-sizing: border-box; transition: background 0.2s;">
+                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                       View on Google Maps
+                     </a>`
+                  : ""
+              }
+            </div>
+          `;
 
-          marker.bindPopup(popupContent);
-          marker.on("click", () => {
-            if (onCoordinatesChange) {
-              onCoordinatesChange({ latitude: lat, longitude: lng });
+          if (geomType === "Point") {
+            const coords = feature.geometry.coordinates;
+            if (!Array.isArray(coords) || coords.length < 2) return;
+            const lng = Number(coords[0]);
+            const lat = Number(coords[1]);
+            if (isNaN(lat) || isNaN(lng)) return;
+
+            let markerColor = config.color || config.style?.color || "#2563eb";
+            let radius = config.group === "DECM Operational" ? 7 : config.group === "Hazards" ? 8 : 5;
+
+            // Special dynamic sizing & approval status color for Evacuation Centres
+            if (config.id === "evacuation_centres") {
+              const status = (props.approval_status || props.status || "").toLowerCase();
+              if (status.includes("approved")) {
+                markerColor = "#10b981"; // Emerald
+              } else if (status.includes("review") || status.includes("pending")) {
+                markerColor = "#f59e0b"; // Amber
+              } else if (status.includes("draft")) {
+                markerColor = "#0284c7"; // Sky Blue
+              } else if (status.includes("closed") || status.includes("deferred")) {
+                markerColor = "#ef4444"; // Red
+              }
+
+              const cap = Number(props.recorded_internal_capacity || props.capacity_hhs || props.capacity || 100);
+              radius = Math.min(Math.max(Math.sqrt(cap) * 0.5, 6), 24);
             }
-          });
-          layerGroup.addLayer(marker);
-        } else {
-          const style = config.style || {
-            color: config.color || "#2563eb",
-            weight: 2,
-            fillOpacity: 0.1,
-          };
-          const geoJsonLayer = L.geoJSON(feature, {
-            style: () => style,
-            onEachFeature: (_: any, layer: any) => {
-              layer.bindPopup(popupContent);
-            },
-          });
-          layerGroup.addLayer(geoJsonLayer);
+
+            const marker = L.circleMarker([lat, lng], {
+              radius,
+              fillColor: markerColor,
+              color: "#ffffff",
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.85,
+            });
+
+            marker.bindPopup(popupContent);
+            marker.on("click", () => {
+              if (onCoordinatesChange) {
+                onCoordinatesChange({ latitude: lat, longitude: lng });
+              }
+            });
+            layerGroup.addLayer(marker);
+          } else {
+            const isRoad = config.id === "roads" || config.type === "line";
+            const style = isRoad
+              ? {
+                  color: config.color || "#dc2626",
+                  weight: 3.5,
+                  opacity: 0.9,
+                  fill: false,
+                  fillOpacity: 0,
+                }
+              : config.style || {
+                  color: config.color || "#2563eb",
+                  weight: 2,
+                  fillOpacity: 0.1,
+                };
+
+            const geoJsonLayer = L.geoJSON(feature, {
+              style: () => style,
+              onEachFeature: (_: any, layer: any) => {
+                layer.bindPopup(popupContent);
+              },
+            });
+            layerGroup.addLayer(geoJsonLayer);
+          }
+        } catch (err) {
+          // Ignore individual malformed features gracefully
         }
       });
 
@@ -446,63 +511,67 @@ export default function LeafletMapView({
 
   const showLoading = statsLoading || locationsLoading;
 
+  const activeLayerNames = LAYERS.filter((l) => enabledLayers[l.id]).map((l) => l.name);
+  const activeMapTitle =
+    activeLayerNames.length > 0
+      ? `Vanuatu ${activeLayerNames.join(" & ")} Map`
+      : "Vanuatu Spatial GIS Map";
+
   return (
     <div className="space-y-6">
-      {/* 1. Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        <div className="p-4 rounded-xl border border-primary/30 bg-primary/5 flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
-            <Tent className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-xl font-extrabold text-foreground">
-              {(stats?.total_ec || 6).toLocaleString()}
-            </h3>
-            <p className="text-[11px] font-bold text-muted-foreground">Evacuation Centres</p>
-          </div>
-        </div>
+      {/* Printable Map CSS for 1-Page PDF Download */}
+      <style jsx global>{`
+        @page {
+          size: A4 landscape;
+          margin: 0;
+        }
+        @media print {
+          html, body {
+            height: 100% !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          body * {
+            visibility: hidden !important;
+          }
+          #printable-vanuatu-map-canvas,
+          #printable-vanuatu-map-canvas * {
+            visibility: visible !important;
+          }
+          #printable-vanuatu-map-canvas {
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            margin: 0 !important;
+            padding: 12px 16px !important;
+            background: #ffffff !important;
+            box-sizing: border-box !important;
+            overflow: hidden !important;
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+            break-after: avoid !important;
+            break-inside: avoid !important;
+          }
+          #printable-vanuatu-map-canvas .map-frame {
+            height: calc(100vh - 130px) !important;
+            max-height: calc(100vh - 130px) !important;
+            margin-top: 6px !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}</style>
 
-        <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-600">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-xl font-extrabold text-foreground">
-              {(stats?.is_govt_approved || 5).toLocaleString()}
-            </h3>
-            <p className="text-[11px] font-bold text-muted-foreground">Govt Approved Shelters</p>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-500/5 flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-600">
-            <Shield className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-xl font-extrabold text-foreground">
-              {stats?.readiness_indicators?.is_ec_owner_approved || 100}%
-            </h3>
-            <p className="text-[11px] font-bold text-muted-foreground">Owner Verified</p>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/5 flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-600">
-            <Users className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-xl font-extrabold text-foreground">
-              {(stats?.total_internal_capacity || 2750).toLocaleString()}
-            </h3>
-            <p className="text-[11px] font-bold text-muted-foreground">Internal Shelter Capacity</p>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Main GIS Spatial Map Area */}
+      {/* Main GIS Spatial Map Area */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left GIS Spatial Layer Filter Panel */}
-        <div className="lg:col-span-4 xl:col-span-3 bg-card text-card-foreground rounded-xl border border-border p-4 shadow-xs space-y-4">
+        {/* Left GIS Spatial Layer Filter Panel (Order 2 on mobile, Order 1 on desktop) */}
+        <div className="order-2 lg:order-1 no-print lg:col-span-4 xl:col-span-3 bg-card text-card-foreground rounded-xl border border-border p-4 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-primary" />
@@ -619,45 +688,35 @@ export default function LeafletMapView({
             })}
           </div>
 
-          {/* EC Approval Status & Capacity Sizing Legend */}
-          <div className="p-3 bg-muted/40 border border-border/70 rounded-lg text-[11px] space-y-2">
-            <span className="font-extrabold text-foreground block">
-              EC Approval Status & Capacity Legend
-            </span>
-            <div className="grid grid-cols-2 gap-1.5 text-[10px]">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
-                <span className="font-bold text-foreground">Approved</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
-                <span className="font-bold text-foreground">Under Review</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shrink-0"></span>
-                <span className="font-bold text-foreground">Draft</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
-                <span className="font-bold text-foreground">Closed / Deferred</span>
-              </div>
-            </div>
-            <p className="text-[10px] text-muted-foreground pt-1 border-t border-border/50">
-              <span className="font-extrabold text-foreground">Dot Size</span> = Scale of Recorded Internal Capacity (HHs / Individuals).
-            </p>
-          </div>
 
           <div className="p-3 bg-muted/30 border border-border/60 rounded-lg text-[11px] text-muted-foreground space-y-1">
             <span className="font-bold text-foreground block">Data Governance</span>
             <p className="line-clamp-3">
-              Spatial layers harmonized from NDMO/VMGD, SPC Pacific Data Hub, OCHA COD, and
-              OpenStreetMap.
+              Spatial layers harmonized from OpenStreetMap, HDX (HumData), Vanuatu NDMO/VMGD, and SPC Pacific Data Hub.
             </p>
           </div>
         </div>
 
-        {/* Right Map Canvas Section */}
-        <div className="lg:col-span-8 xl:col-span-9 bg-card text-card-foreground rounded-xl border border-border p-4 shadow-xs flex flex-col justify-between">
+        {/* Right Map Canvas Section (Order 1 on mobile, Order 2 on desktop) */}
+        <div
+          id="printable-vanuatu-map-canvas"
+          className="order-1 lg:order-2 lg:col-span-8 xl:col-span-9 bg-card text-card-foreground rounded-xl border border-border p-4 shadow-xs flex flex-col justify-between"
+        >
+          {/* PDF Export Banner Title Header (Visible only when printing PDF) */}
+          <div className="hidden print:block mb-2 pb-2 border-b border-gray-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-base font-extrabold text-gray-900">{activeMapTitle}</h1>
+                <p className="text-[10.5px] text-gray-600 font-medium">DECM Cluster Vanuatu & National Disaster Management Office (NDMO)</p>
+              </div>
+              <div className="text-right text-xs">
+                <span className="inline-block px-2 py-0.5 bg-gray-100 text-gray-800 font-bold rounded border border-gray-300 text-[11px]">
+                  {selectedProvince ? `${selectedProvince} Province` : "Vanuatu Archipelago"}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Map Header Controls */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border">
             <div>
@@ -673,7 +732,7 @@ export default function LeafletMapView({
             </div>
 
             {/* Filter controls & province selector */}
-            <div className="flex items-center space-x-2 shrink-0">
+            <div className="no-print flex items-center space-x-2 shrink-0">
               {(selectedProvince || selectedCoordinates) && (
                 <button
                   onClick={() => {
@@ -686,6 +745,19 @@ export default function LeafletMapView({
                   <span>Clear Filter</span>
                 </button>
               )}
+              <button
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.print();
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors cursor-pointer shadow-xs"
+                title="Download or Print PDF Map of Vanuatu"
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span>Download Map PDF</span>
+              </button>
+
               <select
                 value={selectedProvince || ""}
                 onChange={(e) => {
@@ -707,7 +779,7 @@ export default function LeafletMapView({
 
           {/* Leaflet Map Canvas Container */}
           <div
-            className="mt-4 relative w-full rounded-xl border border-border z-0 overflow-hidden"
+            className="map-frame mt-4 relative w-full rounded-xl border border-border z-0 overflow-hidden"
             style={{ height: "600px" }}
           >
             {(!mapLoaded || showLoading) && (
@@ -716,7 +788,7 @@ export default function LeafletMapView({
                   <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                   <span className="text-xs font-semibold text-muted-foreground">
                     {!mapLoaded
-                      ? "Initializing Google Maps Engine..."
+                      ? "Initializing OpenStreetMap Engine..."
                       : "Updating Spatial Layers..."}
                   </span>
                 </div>
@@ -755,6 +827,16 @@ export default function LeafletMapView({
             <div className="text-[11px] text-muted-foreground font-medium">
               Click any spatial feature or road to inspect attributes & Google Maps links
             </div>
+          </div>
+
+          {/* Map Sources & Vanuatu Disclaimer Footer */}
+          <div className="mt-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground/80 space-y-0.5">
+            <p className="font-semibold text-muted-foreground">
+              Map Sources: OpenStreetMap, HDX (HumData), Vanuatu NDMO / DECM Cluster, SPC Pacific Data Hub.
+            </p>
+            <p className="italic text-[10.5px]">
+              The boundaries and names shown and the designations used on this map do not imply official endorsement or acceptance by the Government of Vanuatu or the DECM Cluster.
+            </p>
           </div>
         </div>
       </div>
