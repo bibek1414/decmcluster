@@ -3,122 +3,242 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {
-        "ec_name": "Freshwota School Shelter",
-        "compound_name": "Freshwota Primary Hall",
-        "province": "Shefa",
-        "capacity_hhs": 140,
-        "capacity_persons": 700,
-        "is_govt_approved": true,
-        "is_ec_owner_approved": true,
-        "status": "Active / Prepared"
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.328,
-          -17.728
+          168.318,
+          -17.733
         ]
+      },
+      "properties": {
+        "name": "Port Vila Community & Area Council Hall",
+        "province": "Shefa",
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 650,
+        "centre_type": "Community Centre",
+        "wash_facilities": "Operational Water Supply & Standard Latrines",
+        "power_generator": "Standby 15kVA Diesel Generator",
+        "status": "Active Registered Evacuation Shelter"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "ec_name": "Mele Community Centre",
-        "compound_name": "Mele Village Hall",
-        "province": "Shefa",
-        "capacity_hhs": 95,
-        "capacity_persons": 475,
-        "is_govt_approved": true,
-        "is_ec_owner_approved": true,
-        "status": "Active / Prepared"
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.262,
-          -17.682
+          168.324,
+          -17.702
         ]
+      },
+      "properties": {
+        "name": "Bauerfield Malapoa Academic Shelter",
+        "province": "Shefa",
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 1200,
+        "centre_type": "School / Educational Institution",
+        "wash_facilities": "Enhanced Emergency Sanitation Blocks",
+        "power_generator": "Grid Power with Dual Backup Solar",
+        "status": "Active Registered Evacuation Shelter"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.177,
+          -16.796
+        ]
+      },
       "properties": {
-        "ec_name": "Luganville Youth Center",
-        "compound_name": "Luganville Municipal Complex",
+        "name": "Epi Island Valesdir Relief Centre",
+        "province": "Shefa",
+        "approval_status": "Under Review",
+        "recorded_internal_capacity": 320,
+        "centre_type": "Church / Assembly Hall",
+        "wash_facilities": "Rainwater Tank System",
+        "power_generator": "Solar Battery Storage",
+        "status": "Pending Inspection Approval"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.181,
+          -15.518
+        ]
+      },
+      "properties": {
+        "name": "Luganville Northern Regional Relief Depot",
         "province": "Sanma",
-        "capacity_hhs": 110,
-        "capacity_persons": 550,
-        "is_govt_approved": true,
-        "is_ec_owner_approved": true,
-        "status": "Active / Prepared"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.182,
-          -15.508
-        ]
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 850,
+        "centre_type": "Multipurpose Sports Complex",
+        "wash_facilities": "High Capacity Municipal WASH Station",
+        "power_generator": "30kVA Generator & Solar Array",
+        "status": "Active Registered Evacuation Shelter"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.165,
+          -15.42
+        ]
+      },
       "properties": {
-        "ec_name": "Lenakel Presbyterian Hall",
-        "compound_name": "Lenakel Parish Center",
+        "name": "Matevulu College Emergency Compound",
+        "province": "Sanma",
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 550,
+        "centre_type": "School",
+        "wash_facilities": "Standard School Sanitation",
+        "power_generator": "10kVA Standby Generator",
+        "status": "Active Registered Evacuation Shelter"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.262,
+          -19.516
+        ]
+      },
+      "properties": {
+        "name": "Lenakel Provincial Administration Complex",
         "province": "Tafea",
-        "capacity_hhs": 80,
-        "capacity_persons": 400,
-        "is_govt_approved": false,
-        "is_ec_owner_approved": true,
-        "status": "Standby"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          169.272,
-          -19.528
-        ]
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 420,
+        "centre_type": "Government Building",
+        "wash_facilities": "Onsite Water Storage & Sanitary Facilities",
+        "power_generator": "Backup Diesel Generator",
+        "status": "Active Registered Evacuation Shelter"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.283,
+          -18.856
+        ]
+      },
       "properties": {
-        "ec_name": "Lakatoro Cultural Centre",
-        "compound_name": "Lakatoro Provincial Hall",
+        "name": "Erromango Ipota Community Hall",
+        "province": "Tafea",
+        "approval_status": "Pending",
+        "recorded_internal_capacity": 210,
+        "centre_type": "Community Centre",
+        "wash_facilities": "Gravity Fed Water Supply",
+        "power_generator": "Solar Lighting System",
+        "status": "Under Review Approval"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.401,
+          -16.079
+        ]
+      },
+      "properties": {
+        "name": "Norsup Regional Shelter Compound",
         "province": "Malampa",
-        "capacity_hhs": 60,
-        "capacity_persons": 300,
-        "is_govt_approved": true,
-        "is_ec_owner_approved": true,
-        "status": "Active / Prepared"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.422,
-          -16.098
-        ]
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 480,
+        "centre_type": "Community Centre",
+        "wash_facilities": "Borehole Pump & Tank System",
+        "power_generator": "12kVA Generator",
+        "status": "Active Registered Evacuation Shelter"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "ec_name": "Saratamata Community Hall",
-        "compound_name": "North Ambae Relief Hub",
-        "province": "Penama",
-        "capacity_hhs": 75,
-        "capacity_persons": 375,
-        "is_govt_approved": true,
-        "is_ec_owner_approved": true,
-        "status": "Active / Prepared"
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.982,
-          -15.272
+          168.301,
+          -16.329
         ]
+      },
+      "properties": {
+        "name": "Ambrym Island Ul\u00e9i Emergency Shelter",
+        "province": "Malampa",
+        "approval_status": "Draft",
+        "recorded_internal_capacity": 180,
+        "centre_type": "School Hall",
+        "wash_facilities": "Rainwater Catchment",
+        "power_generator": "Solar DC Array",
+        "status": "Draft Registration"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.967,
+          -15.306
+        ]
+      },
+      "properties": {
+        "name": "Ambae Longana Emergency Relief Station",
+        "province": "Penama",
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 380,
+        "centre_type": "Health Centre Compound",
+        "wash_facilities": "Rainwater Tanks & Emergency Latrines",
+        "power_generator": "Standby Generator",
+        "status": "Active Registered Evacuation Shelter"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.172,
+          -15.865
+        ]
+      },
+      "properties": {
+        "name": "Pentecost Island Lonorore Shelter",
+        "province": "Penama",
+        "approval_status": "Under Review",
+        "recorded_internal_capacity": 290,
+        "centre_type": "Community Hall",
+        "wash_facilities": "Stream Feed & Filtration Tanks",
+        "power_generator": "Portable Generator",
+        "status": "Pending Inspection Approval"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.537,
+          -13.851
+        ]
+      },
+      "properties": {
+        "name": "Sola Provincial Headquarters Shelter",
+        "province": "Torba",
+        "approval_status": "Approved",
+        "recorded_internal_capacity": 340,
+        "centre_type": "Provincial Assembly Hall",
+        "wash_facilities": "Desalination & Tank System",
+        "power_generator": "Solar & Standby Generator",
+        "status": "Active Registered Evacuation Shelter"
       }
     }
   ]

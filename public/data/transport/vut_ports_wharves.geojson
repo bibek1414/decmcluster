@@ -3,116 +3,46 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {
-        "name": "Port Vila Main Wharf",
-        "code": "VU-VLI",
-        "city": "Port Vila",
-        "island": "Efate",
-        "province": "Shefa",
-        "type": "Deepwater Sea Port",
-        "depth_m": 12.5
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.312,
-          -17.745
+          167.1814,
+          -15.5181
         ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Lapetasi International Container Terminal",
-        "code": "VU-LPT",
-        "city": "Port Vila",
-        "island": "Efate",
-        "province": "Shefa",
-        "type": "Container Terminal",
-        "depth_m": 13
       },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          168.318,
-          -17.752
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "properties": {
-        "name": "Luganville Main International Wharf",
-        "code": "VU-SON",
-        "city": "Luganville",
-        "island": "Espiritu Santo",
+        "name": "Luganville Port Terminal",
+        "port_code": "port669",
         "province": "Sanma",
-        "type": "Deepwater Sea Port",
-        "depth_m": 14
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.17,
-          -15.52
-        ]
+        "facility_type": "Maritime Deepwater Port",
+        "total_port_calls_recorded": 510,
+        "container_imports_teu": 199828,
+        "total_imports_cargo_tonnes": 443046,
+        "total_exports_cargo_tonnes": 127739,
+        "last_activity_date": "2026-08-07",
+        "status": "Active Operational Port"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Litzlitz Wharf",
-        "code": "VU-LTZ",
-        "city": "Lakatoro",
-        "island": "Malekula",
-        "province": "Malampa",
-        "type": "Inter-Island Ferry Dock",
-        "depth_m": 6.5
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.435,
-          -16.14
+          168.3142,
+          -17.7472
         ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Lenakel Wharf",
-        "code": "VU-LNK",
-        "city": "Lenakel",
-        "island": "Tanna",
-        "province": "Tafea",
-        "type": "Inter-Island Wharf",
-        "depth_m": 5.8
       },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          169.265,
-          -19.53
-        ]
-      }
-    },
-    {
-      "type": "Feature",
       "properties": {
-        "name": "Saratamata Wharf",
-        "code": "VU-STM",
-        "city": "Saratamata",
-        "island": "Ambae",
-        "province": "Penama",
-        "type": "Coastal Jetty",
-        "depth_m": 4.5
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.98,
-          -15.27
-        ]
+        "name": "Port Vila Port Terminal",
+        "port_code": "port980",
+        "province": "Shefa",
+        "facility_type": "Maritime Deepwater Port",
+        "total_port_calls_recorded": 940,
+        "container_imports_teu": 514051,
+        "total_imports_cargo_tonnes": 753052,
+        "total_exports_cargo_tonnes": 156287,
+        "last_activity_date": "2026-08-07",
+        "status": "Active Operational Port"
       }
     }
   ]

@@ -26,11 +26,16 @@ import {
   GraduationCap,
   Building2,
   Home,
+  Download,
 } from "lucide-react";
 import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
 import { LAYERS, TILE_PROVIDERS, LayerConfig, TileProvider } from "./layers-config";
 
 const VANUATU_CENTER: [number, number] = [-16.3, 167.8];
+const VANUATU_BOUNDS: [[number, number], [number, number]] = [
+  [-20.8, 165.5],
+  [-12.6, 170.8],
+];
 
 interface LeafletMapViewProps {
   selectedProvince?: string | null;
@@ -312,9 +317,25 @@ export default function LeafletMapView({
 
         if (geomType === "Point") {
           const [lng, lat] = feature.geometry.coordinates;
-          const markerColor = config.color || config.style?.color || "#2563eb";
-          const radius =
-            config.group === "DECM Operational" ? 7 : config.group === "Hazards" ? 8 : 6;
+          let markerColor = config.color || config.style?.color || "#2563eb";
+          let radius = config.group === "DECM Operational" ? 7 : config.group === "Hazards" ? 8 : 5;
+
+          // Special dynamic sizing & approval status color for Evacuation Centres
+          if (config.id === "evacuation_centres") {
+            const status = (props.approval_status || props.status || "").toLowerCase();
+            if (status.includes("approved")) {
+              markerColor = "#10b981"; // Emerald
+            } else if (status.includes("review") || status.includes("pending")) {
+              markerColor = "#f59e0b"; // Amber
+            } else if (status.includes("draft")) {
+              markerColor = "#0284c7"; // Sky Blue
+            } else if (status.includes("closed") || status.includes("deferred")) {
+              markerColor = "#ef4444"; // Red
+            }
+
+            const cap = Number(props.recorded_internal_capacity || props.capacity_hhs || props.capacity || 100);
+            radius = Math.min(Math.max(Math.sqrt(cap) * 0.5, 6), 24);
+          }
 
           const marker = L.circleMarker([lat, lng], {
             radius,
@@ -322,7 +343,7 @@ export default function LeafletMapView({
             color: "#ffffff",
             weight: 2,
             opacity: 1,
-            fillOpacity: 0.9,
+            fillOpacity: 0.85,
           });
 
           marker.bindPopup(popupContent);
@@ -596,6 +617,34 @@ export default function LeafletMapView({
                 </div>
               );
             })}
+          </div>
+
+          {/* EC Approval Status & Capacity Sizing Legend */}
+          <div className="p-3 bg-muted/40 border border-border/70 rounded-lg text-[11px] space-y-2">
+            <span className="font-extrabold text-foreground block">
+              EC Approval Status & Capacity Legend
+            </span>
+            <div className="grid grid-cols-2 gap-1.5 text-[10px]">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0"></span>
+                <span className="font-bold text-foreground">Approved</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+                <span className="font-bold text-foreground">Under Review</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shrink-0"></span>
+                <span className="font-bold text-foreground">Draft</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
+                <span className="font-bold text-foreground">Closed / Deferred</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground pt-1 border-t border-border/50">
+              <span className="font-extrabold text-foreground">Dot Size</span> = Scale of Recorded Internal Capacity (HHs / Individuals).
+            </p>
           </div>
 
           <div className="p-3 bg-muted/30 border border-border/60 rounded-lg text-[11px] text-muted-foreground space-y-1">

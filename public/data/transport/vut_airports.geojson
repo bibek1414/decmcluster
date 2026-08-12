@@ -3,173 +3,758 @@
   "features": [
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.320007,
+          -17.699301
+        ]
+      },
       "properties": {
-        "name": "Bauerfield International Airport (VLI)",
-        "code": "VLI",
-        "city": "Port Vila",
-        "island": "Efate",
+        "name": "Bauerfield International Airport",
+        "iata_code": "VLI",
+        "icao_code": "NVVV",
+        "type": "Large Airport",
+        "elevation_ft": 70,
+        "municipality": "Port Vila",
         "province": "Shefa",
-        "type": "International Airport",
-        "runway_m": 2600
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          168.32,
-          -17.699
-        ]
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Bauerfield_International_Airport"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.220001221,
+          -15.505000114399998
+        ]
+      },
       "properties": {
-        "name": "Santo Pekoa International Airport (SON)",
-        "code": "SON",
-        "city": "Luganville",
-        "island": "Espiritu Santo",
+        "name": "Santo Pekoa International Airport",
+        "iata_code": "SON",
+        "icao_code": "NVSS",
+        "type": "Medium Airport",
+        "elevation_ft": 184,
+        "municipality": "Luganville",
         "province": "Sanma",
-        "type": "International Airport",
-        "runway_m": 2000
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.22,
-          -15.505
-        ]
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Santo-Pekoa_International_Airport"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.223999,
+          -19.455099
+        ]
+      },
       "properties": {
-        "name": "Whitegrass International Airport (TAH)",
-        "code": "TAH",
-        "city": "Lenakel",
-        "island": "Tanna",
+        "name": "Whitegrass Airport",
+        "iata_code": "TAH",
+        "icao_code": "NVVW",
+        "type": "Medium Airport",
+        "elevation_ft": 19,
+        "municipality": "Tanna Island",
         "province": "Tafea",
-        "type": "Regional Airport",
-        "runway_m": 1480
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          169.225,
-          -19.455
-        ]
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/White_Grass_Airport"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Norsup Airport (NUS)",
-        "code": "NUS",
-        "city": "Lakatoro",
-        "island": "Malekula",
-        "province": "Malampa",
-        "type": "Domestic Airstrip",
-        "runway_m": 950
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.399,
-          -16.082
+          169.283333,
+          -18.856389
         ]
+      },
+      "properties": {
+        "name": "Ipota Airport",
+        "iata_code": "IPA",
+        "icao_code": "NVVI",
+        "type": "Small Airport",
+        "elevation_ft": 23,
+        "municipality": "Ipota",
+        "province": "Tafea",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Ipota_Airport"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Craig Cove Airport (CCV)",
-        "code": "CCV",
-        "city": "Craig Cove",
-        "island": "Ambrym",
-        "province": "Malampa",
-        "type": "Domestic Airstrip",
-        "runway_m": 820
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          167.921,
-          -16.265
+          167.966995239,
+          -15.3066997528
         ]
-      }
-    },
-    {
-      "type": "Feature",
+      },
       "properties": {
-        "name": "Longana Airport (LOD)",
-        "code": "LOD",
-        "city": "Longana",
-        "island": "Ambae",
+        "name": "Longana Airport",
+        "iata_code": "LOD",
+        "icao_code": "NVSG",
+        "type": "Small Airport",
+        "elevation_ft": 167,
+        "municipality": "Longana",
         "province": "Penama",
-        "type": "Domestic Airstrip",
-        "runway_m": 780
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.967,
-          -15.305
-        ]
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Longana_Airport"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.17199707,
+          -15.865599632299999
+        ]
+      },
       "properties": {
-        "name": "Sola Airport (SLH)",
-        "code": "SLH",
-        "city": "Sola",
-        "island": "Vanua Lava",
+        "name": "Lonorore Airport",
+        "iata_code": "LNE",
+        "icao_code": "NVSO",
+        "type": "Small Airport",
+        "elevation_ft": 43,
+        "municipality": "Lonorore",
+        "province": "Penama",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Lonorore_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.587006,
+          -14.2181
+        ]
+      },
+      "properties": {
+        "name": "Gaua Island Airport",
+        "iata_code": "ZGU",
+        "icao_code": "NVSQ",
+        "type": "Medium Airport",
+        "elevation_ft": 100,
+        "municipality": "Gaua Island",
         "province": "Torba",
-        "type": "Domestic Airstrip",
-        "runway_m": 850
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.552,
-          -13.854
-        ]
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Gaua_Airport"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3011,
+          -16.3297
+        ]
+      },
       "properties": {
-        "name": "Ipota Airport (IPA)",
-        "code": "IPA",
-        "city": "Ipota",
-        "island": "Erromango",
+        "name": "Ul\u00e9i Airport",
+        "iata_code": "ULB",
+        "icao_code": "NVSU",
+        "type": "Small Airport",
+        "elevation_ft": 170,
+        "municipality": "Ambrym Island",
+        "province": "Malampa",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Ulei_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.770758,
+          -20.249142
+        ]
+      },
+      "properties": {
+        "name": "Aneityum Airport",
+        "iata_code": "AUY",
+        "icao_code": "NVVA",
+        "type": "Small Airport",
+        "elevation_ft": 7,
+        "municipality": "Anatom Island",
         "province": "Tafea",
-        "type": "Domestic Airstrip",
-        "runway_m": 900
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          169.006,
-          -18.81
-        ]
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Anatom_Airport"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Linua Airstrip (TOH)",
-        "code": "TOH",
-        "city": "Linua",
-        "island": "Torres Islands",
-        "province": "Torba",
-        "type": "Remote Airstrip",
-        "runway_m": 700
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          166.636,
-          -13.257
+          168.158996582,
+          -16.584199905400002
         ]
+      },
+      "properties": {
+        "name": "Lamen Bay Airport",
+        "iata_code": "LNB",
+        "icao_code": "NVSM",
+        "type": "Small Airport",
+        "elevation_ft": 7,
+        "municipality": "Lamen Bay",
+        "province": "Shefa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Lamen_Bay_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.151992798,
+          -15.4708003998
+        ]
+      },
+      "properties": {
+        "name": "Sara Airport",
+        "iata_code": "SSR",
+        "icao_code": "NVSH",
+        "type": "Small Airport",
+        "elevation_ft": 493,
+        "municipality": "Pentecost Island",
+        "province": "Penama",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Sara_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.52699279785156,
+          -17.701099395751953
+        ]
+      },
+      "properties": {
+        "name": "Forari Airport",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Small Airport",
+        "elevation_ft": 351,
+        "municipality": "Forari",
+        "province": "Shefa",
+        "scheduled_service": "No",
+        "wikipedia_link": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.442001,
+          -17.540001
+        ]
+      },
+      "properties": {
+        "name": "Quoin Hill Airfield",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Closed",
+        "elevation_ft": 16,
+        "municipality": "Quoin Hill",
+        "province": "Shefa",
+        "scheduled_service": "No",
+        "wikipedia_link": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.1319,
+          -15.5155
+        ]
+      },
+      "properties": {
+        "name": "Luganville Airfield",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Closed",
+        "elevation_ft": 484,
+        "municipality": "Espiritu Santo Is.",
+        "province": "Sanma",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Luganville_Airfield"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.712006,
+          -13.666
+        ]
+      },
+      "properties": {
+        "name": "Mota Lava Airport",
+        "iata_code": "MTV",
+        "icao_code": "NVSA",
+        "type": "Small Airport",
+        "elevation_ft": 63,
+        "municipality": "Ablow",
+        "province": "Torba",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Mota_Lava_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.6009,
+          -19.2346
+        ]
+      },
+      "properties": {
+        "name": "Aniwa Airport",
+        "iata_code": "AWD",
+        "icao_code": "NVVB",
+        "type": "Small Airport",
+        "elevation_ft": 69,
+        "municipality": "Aniwa",
+        "province": "Tafea",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Aniwa_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.923996,
+          -16.264999
+        ]
+      },
+      "properties": {
+        "name": "Craig Cove Airport",
+        "iata_code": "CCV",
+        "icao_code": "NVSF",
+        "type": "Small Airport",
+        "elevation_ft": 69,
+        "municipality": "Craig Cove",
+        "province": "Malampa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Craig_Cove_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.001007,
+          -18.7694
+        ]
+      },
+      "properties": {
+        "name": "Dillon's Bay Airport",
+        "iata_code": "DLY",
+        "icao_code": "NVVD",
+        "type": "Small Airport",
+        "elevation_ft": 630,
+        "municipality": "Dillon's Bay",
+        "province": "Tafea",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Dillon's_Bay_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.343002,
+          -17.0903
+        ]
+      },
+      "properties": {
+        "name": "Siwo Airport",
+        "iata_code": "EAE",
+        "icao_code": "NVSE",
+        "type": "Small Airport",
+        "elevation_ft": 7,
+        "municipality": "Emae Island",
+        "province": "Shefa",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Siwo_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.177001953,
+          -16.796100616500002
+        ]
+      },
+      "properties": {
+        "name": "Valesdir Airport",
+        "iata_code": "VLS",
+        "icao_code": "NVSV",
+        "type": "Small Airport",
+        "elevation_ft": 10,
+        "municipality": "Epi Island",
+        "province": "Shefa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Valesdir_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          170.231994629,
+          -19.516399383499998
+        ]
+      },
+      "properties": {
+        "name": "Futuna Airport",
+        "iata_code": "FTA",
+        "icao_code": "NVVF",
+        "type": "Small Airport",
+        "elevation_ft": 95,
+        "municipality": "Futuna Island",
+        "province": "Tafea",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Futuna_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.829253,
+          -16.4611228
+        ]
+      },
+      "properties": {
+        "name": "Lamap Airport",
+        "iata_code": "LPM",
+        "icao_code": "NVSL",
+        "type": "Small Airport",
+        "elevation_ft": 7,
+        "municipality": "Lamap",
+        "province": "Malampa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Malekoula_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.638,
+          -13.328
+        ]
+      },
+      "properties": {
+        "name": "Torres Airstrip",
+        "iata_code": "TOH",
+        "icao_code": "NVSD",
+        "type": "Small Airport",
+        "elevation_ft": 75,
+        "municipality": "Loh/Linua",
+        "province": "Torba",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Torres_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.081111,
+          -14.997222
+        ]
+      },
+      "properties": {
+        "name": "Maewo-Naone Airport",
+        "iata_code": "MWF",
+        "icao_code": "NVSN",
+        "type": "Small Airport",
+        "elevation_ft": 509,
+        "municipality": "Maewo Island",
+        "province": "Penama",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Maewo-Naone_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.4472,
+          -16.4864
+        ]
+      },
+      "properties": {
+        "name": "Southwest Bay Airport",
+        "iata_code": "SWJ",
+        "icao_code": "NVSX",
+        "type": "Small Airport",
+        "elevation_ft": 68,
+        "municipality": "Malekula Island",
+        "province": "Malampa",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/South_West_Bay_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.401001,
+          -16.0797
+        ]
+      },
+      "properties": {
+        "name": "Norsup Airport",
+        "iata_code": "NUS",
+        "icao_code": "NVSP",
+        "type": "Small Airport",
+        "elevation_ft": 23,
+        "municipality": "Norsup",
+        "province": "Malampa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Norsup_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.557998657,
+          -14.881699562099998
+        ]
+      },
+      "properties": {
+        "name": "North West Santo Airport",
+        "iata_code": "OLJ",
+        "icao_code": "NVSZ",
+        "type": "Small Airport",
+        "elevation_ft": 50,
+        "municipality": "Olpoi",
+        "province": "Sanma",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Olpoi_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.235511,
+          -16.431955
+        ]
+      },
+      "properties": {
+        "name": "Tavie Airport",
+        "iata_code": "PBJ",
+        "icao_code": "NVSI",
+        "type": "Small Airport",
+        "elevation_ft": 69,
+        "municipality": "Paama Island",
+        "province": "Malampa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Paama_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.835007,
+          -15.472
+        ]
+      },
+      "properties": {
+        "name": "Redcliffe Airport",
+        "iata_code": "RCL",
+        "icao_code": "NVSR",
+        "type": "Small Airport",
+        "elevation_ft": 36,
+        "municipality": "Redcliffe",
+        "province": "Penama",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Redcliffe_Airport_(Vanuatu)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.537002563,
+          -13.8516998291
+        ]
+      },
+      "properties": {
+        "name": "Sola Airport",
+        "iata_code": "SLH",
+        "icao_code": "NVSC",
+        "type": "Small Airport",
+        "elevation_ft": 7,
+        "municipality": "Sola",
+        "province": "Torba",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Vanua_Lava_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.550994873,
+          -16.8910999298
+        ]
+      },
+      "properties": {
+        "name": "Tongoa Airport",
+        "iata_code": "TGH",
+        "icao_code": "NVST",
+        "type": "Small Airport",
+        "elevation_ft": 443,
+        "municipality": "Tongoa Island",
+        "province": "Shefa",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Tongoa_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.690994,
+          -15.412
+        ]
+      },
+      "properties": {
+        "name": "Walaha Airport",
+        "iata_code": "WLH",
+        "icao_code": "NVSW",
+        "type": "Small Airport",
+        "elevation_ft": 151,
+        "municipality": "Walaha",
+        "province": "Penama",
+        "scheduled_service": "Yes",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Walaha_Airport"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.2625,
+          -19.5161
+        ]
+      },
+      "properties": {
+        "name": "Lenakel Airport",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Small Airport",
+        "elevation_ft": 246,
+        "municipality": "Lenakel",
+        "province": "Tafea",
+        "scheduled_service": "No",
+        "wikipedia_link": ""
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.147,
+          -15.555
+        ]
+      },
+      "properties": {
+        "name": "Luganville Seaplane Base",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Closed",
+        "elevation_ft": 0,
+        "municipality": "Espiritu Santo Is.",
+        "province": "Sanma",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Luganville_Seaplane_Base"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.179473,
+          -15.377557
+        ]
+      },
+      "properties": {
+        "name": "Turtle Bay Airfield",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Closed",
+        "elevation_ft": 58,
+        "municipality": "Espiritu Santo Is.",
+        "province": "Sanma",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Turtle_Bay_Airfield"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.2458,
+          -15.5016
+        ]
+      },
+      "properties": {
+        "name": "Palikulo Bay Airfield",
+        "iata_code": "",
+        "icao_code": "",
+        "type": "Closed",
+        "elevation_ft": 43,
+        "municipality": "Espiritu Santo Is.",
+        "province": "Sanma",
+        "scheduled_service": "No",
+        "wikipedia_link": "https://en.wikipedia.org/wiki/Palikulo_Bay_Airfield"
       }
     }
   ]

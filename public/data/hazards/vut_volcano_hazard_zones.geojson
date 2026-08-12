@@ -3,110 +3,1302 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {
-        "name": "Ambae Manaro Red Hazard Exclusion Zone",
-        "risk": "Extreme Volcanic Ash & Lava Flow Risk",
-        "alert": "Red Alert",
-        "province": "Penama"
-      },
       "geometry": {
-        "type": "Polygon",
+        "type": "Point",
         "coordinates": [
-          [
-            [
-              167.75,
-              -15.42
-            ],
-            [
-              167.92,
-              -15.42
-            ],
-            [
-              167.92,
-              -15.34
-            ],
-            [
-              167.75,
-              -15.34
-            ],
-            [
-              167.75,
-              -15.42
-            ]
-          ]
+          169.42000000000002,
+          -19.564
         ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #1",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "6.40255e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Ambrym Central Caldera High Danger Zone",
-        "risk": "Toxic Gas & Volcanic Bomb Hazard",
-        "alert": "Orange Warning",
-        "province": "Malampa"
-      },
       "geometry": {
-        "type": "Polygon",
+        "type": "Point",
         "coordinates": [
-          [
-            [
-              168.05,
-              -16.28
-            ],
-            [
-              168.18,
-              -16.28
-            ],
-            [
-              168.18,
-              -16.2
-            ],
-            [
-              168.05,
-              -16.2
-            ],
-            [
-              168.05,
-              -16.28
-            ]
-          ]
+          169.42000000000002,
+          -19.555
         ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #2",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.08137e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Mount Yasur Crater 600m Exclusion Radius",
-        "risk": "Ejecta & Ash Fall Risk Zone",
-        "alert": "Yellow Warning",
-        "province": "Tafea"
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42000000000002,
+          -19.546
+        ]
       },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #3",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.42320e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42000000000002,
+          -19.537
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #4",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.35546e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42000000000002,
+          -19.528
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #5",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "7.49271e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42000000000002,
+          -19.519
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #6",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "7.96454e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42000000000002,
+          -19.51
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #7",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "6.74667e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42000000000002,
+          -19.501
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #8",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.28662e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.556
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #9",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.95210e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.547
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #10",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.01169e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.538
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #11",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.02715e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.529
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #12",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.76780e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.52
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #13",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.61360e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.511
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #14",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "2.32068e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.502
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #15",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.37158e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.429,
+          -19.493
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #16",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "2.94661e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.548
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #17",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "9.51445e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.539
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #18",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "7.15057e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.53
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #19",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.43266e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.521
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #20",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "2.69619e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.512
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #21",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.52932e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.503
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #22",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.62294e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.494
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #23",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "8.83108e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.43800000000002,
+          -19.485
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #24",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "4.40211e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.54
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #25",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.38502e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.531
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #26",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.23196e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.522
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #27",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.89303e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.513
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #28",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.45254e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.504
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #29",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.51636e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.495
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #30",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.73955e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.486
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #31",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "4.72065e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.477
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #32",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.69704e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.532
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #33",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.69121e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.523
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #34",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "8.11651e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.514
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #35",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.30649e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.505
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #36",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "8.47995e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.496
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #37",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.59190e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.487
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #38",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "4.29299e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.478
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #39",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.56246e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.456,
+          -19.469
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #40",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.20158e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.524
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #41",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "2.06294e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.515
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #42",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "5.05034e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.506
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #43",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.47563e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.497
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #44",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.13449e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.488
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #45",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "6.81659e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.479
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #46",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "6.18908e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.47
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #47",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "8.91772e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.465,
+          -19.461
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #48",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.44698e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.516000000000002
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #49",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "4.80857e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.507
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #50",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.18883e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.498
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #51",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "7.79689e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.489
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #52",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "7.00394e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.48
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #53",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.05620e+05",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.471
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #54",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "4.96437e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.462
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #55",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.77650e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.474,
+          -19.453
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #56",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "6.97380e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.483,
+          -19.508
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #57",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "4.47948e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.483,
+          -19.499
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #58",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.16154e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.483,
+          -19.49
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #59",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "1.92899e+04",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.483,
+          -19.481
+        ]
+      },
+      "properties": {
+        "name": "Tanna Island Affected Settlement #60",
+        "island": "Tanna Island",
+        "volcano": "Mount Yasur Volcanic Danger Zone",
+        "damage_assessment": "Possible Damage",
+        "facility_type": "Building (General / Default)",
+        "affected_area_m2": "3.06322e+03",
+        "assessment_sensor": "Sentinel-2",
+        "sensor_date": "20211022",
+        "validation_status": "Not yet field validated"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [
-              169.43,
-              -19.54
+              169.42,
+              -19.5
             ],
             [
-              169.46,
-              -19.54
+              169.48,
+              -19.5
             ],
             [
-              169.46,
-              -19.52
+              169.49,
+              -19.56
             ],
             [
-              169.43,
-              -19.52
+              169.41,
+              -19.56
             ],
             [
-              169.43,
-              -19.54
+              169.42,
+              -19.5
             ]
           ]
         ]
+      },
+      "properties": {
+        "name": "Mount Yasur Volcanic Ash Fall & Danger Exclusion Zone",
+        "volcano": "Mt. Yasur Volcano",
+        "island": "Tanna Island",
+        "province": "Tafea",
+        "alert_level": "Level 2 (Moderate Unrest)",
+        "hazard_type": "Volcanic Ash Fall & Ballistic Ejecta Hazard Zone",
+        "satellite_monitoring": "Sentinel-2 Disaster Assessment",
+        "affected_settlements_count": 60
       }
     }
   ]
