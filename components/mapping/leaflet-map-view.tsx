@@ -5,19 +5,10 @@ import {
   X,
   Tent,
   Users,
-  Shield,
-  CheckCircle2,
   Layers,
-  MapPin,
   Search,
   ChevronDown,
   ChevronUp,
-  Map as MapIcon,
-  Navigation,
-  ExternalLink,
-  Filter,
-  Eye,
-  EyeOff,
   Route,
   Plane,
   Anchor,
@@ -29,9 +20,8 @@ import {
   Download,
 } from "lucide-react";
 import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
-import { LAYERS, TILE_PROVIDERS, LayerConfig, TileProvider } from "./layers-config";
+import { LAYERS, TILE_PROVIDERS,  } from "./layers-config";
 
-const VANUATU_CENTER: [number, number] = [-16.3, 167.8];
 const VANUATU_BOUNDS: [[number, number], [number, number]] = [
   [-20.8, 165.5],
   [-12.6, 170.8],
