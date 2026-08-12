@@ -1,0 +1,250 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Efate Island",
+        "province": "Shefa",
+        "area_sqkm": 899
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.15,
+              -17.82
+            ],
+            [
+              168.58,
+              -17.82
+            ],
+            [
+              168.58,
+              -17.5
+            ],
+            [
+              168.15,
+              -17.5
+            ],
+            [
+              168.15,
+              -17.82
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Espiritu Santo Island",
+        "province": "Sanma",
+        "area_sqkm": 3955
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              166.6,
+              -15.65
+            ],
+            [
+              167.25,
+              -15.65
+            ],
+            [
+              167.25,
+              -14.9
+            ],
+            [
+              166.6,
+              -14.9
+            ],
+            [
+              166.6,
+              -15.65
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanna Island",
+        "province": "Tafea",
+        "area_sqkm": 550
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              169.18,
+              -19.62
+            ],
+            [
+              169.48,
+              -19.62
+            ],
+            [
+              169.48,
+              -19.35
+            ],
+            [
+              169.18,
+              -19.35
+            ],
+            [
+              169.18,
+              -19.62
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Malekula Island",
+        "province": "Malampa",
+        "area_sqkm": 2041
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.18,
+              -16.55
+            ],
+            [
+              167.52,
+              -16.55
+            ],
+            [
+              167.52,
+              -15.98
+            ],
+            [
+              167.18,
+              -15.98
+            ],
+            [
+              167.18,
+              -16.55
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ambae Island",
+        "province": "Penama",
+        "area_sqkm": 402
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.68,
+              -15.48
+            ],
+            [
+              167.98,
+              -15.48
+            ],
+            [
+              167.98,
+              -15.28
+            ],
+            [
+              167.68,
+              -15.28
+            ],
+            [
+              167.68,
+              -15.48
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pentecost Island",
+        "province": "Penama",
+        "area_sqkm": 490
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.12,
+              -16.02
+            ],
+            [
+              168.25,
+              -16.02
+            ],
+            [
+              168.25,
+              -15.6
+            ],
+            [
+              168.12,
+              -15.6
+            ],
+            [
+              168.12,
+              -16.02
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ambrym Island",
+        "province": "Malampa",
+        "area_sqkm": 677
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.92,
+              -16.32
+            ],
+            [
+              168.22,
+              -16.32
+            ],
+            [
+              168.22,
+              -16.18
+            ],
+            [
+              167.92,
+              -16.18
+            ],
+            [
+              167.92,
+              -16.32
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

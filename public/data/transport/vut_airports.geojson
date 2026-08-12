@@ -1,0 +1,176 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bauerfield International Airport (VLI)",
+        "code": "VLI",
+        "city": "Port Vila",
+        "island": "Efate",
+        "province": "Shefa",
+        "type": "International Airport",
+        "runway_m": 2600
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.32,
+          -17.699
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Santo Pekoa International Airport (SON)",
+        "code": "SON",
+        "city": "Luganville",
+        "island": "Espiritu Santo",
+        "province": "Sanma",
+        "type": "International Airport",
+        "runway_m": 2000
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.22,
+          -15.505
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Whitegrass International Airport (TAH)",
+        "code": "TAH",
+        "city": "Lenakel",
+        "island": "Tanna",
+        "province": "Tafea",
+        "type": "Regional Airport",
+        "runway_m": 1480
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.225,
+          -19.455
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup Airport (NUS)",
+        "code": "NUS",
+        "city": "Lakatoro",
+        "island": "Malekula",
+        "province": "Malampa",
+        "type": "Domestic Airstrip",
+        "runway_m": 950
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.399,
+          -16.082
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Craig Cove Airport (CCV)",
+        "code": "CCV",
+        "city": "Craig Cove",
+        "island": "Ambrym",
+        "province": "Malampa",
+        "type": "Domestic Airstrip",
+        "runway_m": 820
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.921,
+          -16.265
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Longana Airport (LOD)",
+        "code": "LOD",
+        "city": "Longana",
+        "island": "Ambae",
+        "province": "Penama",
+        "type": "Domestic Airstrip",
+        "runway_m": 780
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.967,
+          -15.305
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sola Airport (SLH)",
+        "code": "SLH",
+        "city": "Sola",
+        "island": "Vanua Lava",
+        "province": "Torba",
+        "type": "Domestic Airstrip",
+        "runway_m": 850
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.552,
+          -13.854
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ipota Airport (IPA)",
+        "code": "IPA",
+        "city": "Ipota",
+        "island": "Erromango",
+        "province": "Tafea",
+        "type": "Domestic Airstrip",
+        "runway_m": 900
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.006,
+          -18.81
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Linua Airstrip (TOH)",
+        "code": "TOH",
+        "city": "Linua",
+        "island": "Torres Islands",
+        "province": "Torba",
+        "type": "Remote Airstrip",
+        "runway_m": 700
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          166.636,
+          -13.257
+        ]
+      }
+    }
+  ]
+}

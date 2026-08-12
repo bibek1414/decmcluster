@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vila Central Hospital (VCH)",
+        "type": "National Referral Hospital",
+        "beds": 220,
+        "island": "Efate",
+        "province": "Shefa",
+        "emergency_phone": "112"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.322,
+          -17.742
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Northern Provincial Hospital",
+        "type": "Provincial Referral Hospital",
+        "beds": 110,
+        "island": "Espiritu Santo",
+        "province": "Sanma",
+        "emergency_phone": "36345"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.185,
+          -15.512
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lenakel Provincial Hospital",
+        "type": "Provincial Hospital",
+        "beds": 45,
+        "island": "Tanna",
+        "province": "Tafea",
+        "emergency_phone": "88624"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.27,
+          -19.525
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Norsup Regional Hospital",
+        "type": "Regional Hospital",
+        "beds": 50,
+        "island": "Malekula",
+        "province": "Malampa",
+        "emergency_phone": "48410"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.395,
+          -16.078
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lolowai Hospital",
+        "type": "District Hospital",
+        "beds": 30,
+        "island": "Ambae",
+        "province": "Penama",
+        "emergency_phone": "38330"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.975,
+          -15.285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sola Health Centre",
+        "type": "Health Centre",
+        "beds": 12,
+        "island": "Vanua Lava",
+        "province": "Torba",
+        "emergency_phone": "38510"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.55,
+          -13.85
+        ]
+      }
+    }
+  ]
+}

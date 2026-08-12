@@ -1,0 +1,125 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ec_name": "Freshwota School Shelter",
+        "compound_name": "Freshwota Primary Hall",
+        "province": "Shefa",
+        "capacity_hhs": 140,
+        "capacity_persons": 700,
+        "is_govt_approved": true,
+        "is_ec_owner_approved": true,
+        "status": "Active / Prepared"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.328,
+          -17.728
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ec_name": "Mele Community Centre",
+        "compound_name": "Mele Village Hall",
+        "province": "Shefa",
+        "capacity_hhs": 95,
+        "capacity_persons": 475,
+        "is_govt_approved": true,
+        "is_ec_owner_approved": true,
+        "status": "Active / Prepared"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.262,
+          -17.682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ec_name": "Luganville Youth Center",
+        "compound_name": "Luganville Municipal Complex",
+        "province": "Sanma",
+        "capacity_hhs": 110,
+        "capacity_persons": 550,
+        "is_govt_approved": true,
+        "is_ec_owner_approved": true,
+        "status": "Active / Prepared"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.182,
+          -15.508
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ec_name": "Lenakel Presbyterian Hall",
+        "compound_name": "Lenakel Parish Center",
+        "province": "Tafea",
+        "capacity_hhs": 80,
+        "capacity_persons": 400,
+        "is_govt_approved": false,
+        "is_ec_owner_approved": true,
+        "status": "Standby"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.272,
+          -19.528
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ec_name": "Lakatoro Cultural Centre",
+        "compound_name": "Lakatoro Provincial Hall",
+        "province": "Malampa",
+        "capacity_hhs": 60,
+        "capacity_persons": 300,
+        "is_govt_approved": true,
+        "is_ec_owner_approved": true,
+        "status": "Active / Prepared"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.422,
+          -16.098
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "ec_name": "Saratamata Community Hall",
+        "compound_name": "North Ambae Relief Hub",
+        "province": "Penama",
+        "capacity_hhs": 75,
+        "capacity_persons": 375,
+        "is_govt_approved": true,
+        "is_ec_owner_approved": true,
+        "status": "Active / Prepared"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.982,
+          -15.272
+        ]
+      }
+    }
+  ]
+}

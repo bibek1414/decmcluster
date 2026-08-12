@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Efate Rapid Assessment Zone 1",
+        "status": "Completed",
+        "team": "NDMO / DECM Cluster",
+        "date": "2026-02-10"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.3,
+          -17.71
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Santo Flood & Storm Damage Survey",
+        "status": "In Progress",
+        "team": "Red Cross / IOM",
+        "date": "2026-02-11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.2,
+          -15.48
+        ]
+      }
+    }
+  ]
+}

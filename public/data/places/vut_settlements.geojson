@@ -1,0 +1,158 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Port Vila",
+        "category": "Capital City",
+        "population": 51400,
+        "island": "Efate",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.32,
+          -17.733
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Luganville",
+        "category": "Provincial Town",
+        "population": 16300,
+        "island": "Espiritu Santo",
+        "province": "Sanma"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.18,
+          -15.51
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lenakel",
+        "category": "Township",
+        "population": 4200,
+        "island": "Tanna",
+        "province": "Tafea"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.268,
+          -19.532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lakatoro",
+        "category": "Provincial Center",
+        "population": 1800,
+        "island": "Malekula",
+        "province": "Malampa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.42,
+          -16.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saratamata",
+        "category": "Provincial Center",
+        "population": 1200,
+        "island": "Ambae",
+        "province": "Penama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.98,
+          -15.275
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sola",
+        "category": "Provincial Center",
+        "population": 1100,
+        "island": "Vanua Lava",
+        "province": "Torba"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.55,
+          -13.85
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mele Village",
+        "category": "Major Village",
+        "population": 3500,
+        "island": "Efate",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.26,
+          -17.685
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Port Olry",
+        "category": "Coastal Village",
+        "population": 2800,
+        "island": "Espiritu Santo",
+        "province": "Sanma"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.065,
+          -15.045
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Melsisi",
+        "category": "Coastal Settlement",
+        "population": 1500,
+        "island": "Pentecost",
+        "province": "Penama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.165,
+          -15.98
+        ]
+      }
+    }
+  ]
+}

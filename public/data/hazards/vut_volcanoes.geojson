@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Yasur Volcano",
+        "type": "Active Cinder Cone",
+        "elevation_m": 361,
+        "alert_level": "Level 2 (Unstable)",
+        "island": "Tanna",
+        "province": "Tafea"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.447,
+          -19.532
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Manaro Voui Volcano",
+        "type": "Active Caldera / Shield",
+        "elevation_m": 1496,
+        "alert_level": "Level 2 (Unrest)",
+        "island": "Ambae",
+        "province": "Penama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.835,
+          -15.38
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Benbow Volcano",
+        "type": "Active Pyroclastic Cone",
+        "elevation_m": 1160,
+        "alert_level": "Level 2 (Unstable)",
+        "island": "Ambrym",
+        "province": "Malampa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.115,
+          -16.245
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Marum Volcano",
+        "type": "Active Lava Lake Cone",
+        "elevation_m": 1270,
+        "alert_level": "Level 2 (Unstable)",
+        "island": "Ambrym",
+        "province": "Malampa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.13,
+          -16.255
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lopevi Volcano Island",
+        "type": "Active Stratovolcano",
+        "elevation_m": 1413,
+        "alert_level": "Level 1 (Normal)",
+        "island": "Lopevi",
+        "province": "Malampa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.344,
+          -16.507
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Gharat Volcano",
+        "type": "Active Stratovolcano",
+        "elevation_m": 797,
+        "alert_level": "Level 1 (Normal)",
+        "island": "Gaua",
+        "province": "Torba"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.5,
+          -14.27
+        ]
+      }
+    }
+  ]
+}

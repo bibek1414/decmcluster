@@ -2,20 +2,10 @@
 
 import { useState } from "react";
 import { Map } from "lucide-react";
-import SVGMapView from "./svg-map-view";
 import LeafletMapView from "./leaflet-map-view";
 import MapRegistry from "./map-registry";
 
-interface MapItem {
-  id: string;
-  type: "center" | "hazard" | "road" | "volcano";
-  title: string;
-  desc: string;
-  stats?: Record<string, string | number>;
-}
-
 export default function MappingClient() {
-  const [selectedItem, setSelectedItem] = useState<MapItem | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [selectedCoordinates, setSelectedCoordinates] = useState<{
     latitude: number;
@@ -36,16 +26,13 @@ export default function MappingClient() {
                 GIS & Spatial Mapping
               </h2>
               <p className="text-xs text-muted-foreground mt-1">
-                Interactive coordinates and evacuation shelter mapping
+                Interactive coordinates, evacuation shelter mapping, and Vanuatu spatial layers
               </p>
             </div>
           </div>
         </div>
 
-        {/* SVG Map View - Vanuatu Archipelago Overview */}
-        <SVGMapView onItemClick={setSelectedItem} selectedItem={selectedItem} />
-
-        {/* Leaflet Map View - Interactive EC Location Map */}
+        {/* Leaflet OpenStreetMap View - Interactive Spatial Map */}
         <LeafletMapView
           selectedProvince={selectedProvince}
           onProvinceChange={setSelectedProvince}

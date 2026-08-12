@@ -1,0 +1,107 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Malapoa College",
+        "level": "Secondary",
+        "students": 1200,
+        "island": "Efate",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.305,
+          -17.725
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Port Vila International School",
+        "level": "Primary & Secondary",
+        "students": 450,
+        "island": "Efate",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33,
+          -17.738
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Matevulu College",
+        "level": "Secondary Boarding School",
+        "students": 850,
+        "island": "Espiritu Santo",
+        "province": "Sanma"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.195,
+          -15.42
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ranwadi High School",
+        "level": "Secondary",
+        "students": 600,
+        "island": "Pentecost",
+        "province": "Penama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.18,
+          -15.82
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Onesua Presbyterian College",
+        "level": "Secondary Boarding",
+        "students": 700,
+        "island": "Efate",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.45,
+          -17.55
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tafea College",
+        "level": "Secondary",
+        "students": 650,
+        "island": "Tanna",
+        "province": "Tafea"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.275,
+          -19.535
+        ]
+      }
+    }
+  ]
+}

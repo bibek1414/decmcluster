@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Port Vila Mele Bay Coastal Tsunami Inundation Zone",
+        "elevation": "< 10m ASL",
+        "risk": "High Tsunami Inundation Zone",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.25,
+              -17.75
+            ],
+            [
+              168.33,
+              -17.75
+            ],
+            [
+              168.33,
+              -17.67
+            ],
+            [
+              168.25,
+              -17.67
+            ],
+            [
+              168.25,
+              -17.75
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Luganville Segond Channel Tsunami Inundation Line",
+        "elevation": "< 8m ASL",
+        "risk": "Moderate Coastal Surging",
+        "province": "Sanma"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.14,
+              -15.54
+            ],
+            [
+              167.22,
+              -15.54
+            ],
+            [
+              167.22,
+              -15.49
+            ],
+            [
+              167.14,
+              -15.49
+            ],
+            [
+              167.14,
+              -15.54
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

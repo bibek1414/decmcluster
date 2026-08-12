@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ambae Manaro Red Hazard Exclusion Zone",
+        "risk": "Extreme Volcanic Ash & Lava Flow Risk",
+        "alert": "Red Alert",
+        "province": "Penama"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.75,
+              -15.42
+            ],
+            [
+              167.92,
+              -15.42
+            ],
+            [
+              167.92,
+              -15.34
+            ],
+            [
+              167.75,
+              -15.34
+            ],
+            [
+              167.75,
+              -15.42
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ambrym Central Caldera High Danger Zone",
+        "risk": "Toxic Gas & Volcanic Bomb Hazard",
+        "alert": "Orange Warning",
+        "province": "Malampa"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.05,
+              -16.28
+            ],
+            [
+              168.18,
+              -16.28
+            ],
+            [
+              168.18,
+              -16.2
+            ],
+            [
+              168.05,
+              -16.2
+            ],
+            [
+              168.05,
+              -16.28
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mount Yasur Crater 600m Exclusion Radius",
+        "risk": "Ejecta & Ash Fall Risk Zone",
+        "alert": "Yellow Warning",
+        "province": "Tafea"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              169.43,
+              -19.54
+            ],
+            [
+              169.46,
+              -19.54
+            ],
+            [
+              169.46,
+              -19.52
+            ],
+            [
+              169.43,
+              -19.52
+            ],
+            [
+              169.43,
+              -19.54
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

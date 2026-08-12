@@ -1,0 +1,180 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Efate Urban (Port Vila)",
+        "province": "Shefa",
+        "code": "AC-101"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.28,
+              -17.77
+            ],
+            [
+              168.35,
+              -17.77
+            ],
+            [
+              168.35,
+              -17.7
+            ],
+            [
+              168.28,
+              -17.7
+            ],
+            [
+              168.28,
+              -17.77
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Efate Area Council",
+        "province": "Shefa",
+        "code": "AC-102"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.2,
+              -17.58
+            ],
+            [
+              168.52,
+              -17.58
+            ],
+            [
+              168.52,
+              -17.42
+            ],
+            [
+              168.2,
+              -17.42
+            ],
+            [
+              168.2,
+              -17.58
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Luganville Urban Council",
+        "province": "Sanma",
+        "code": "AC-201"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.14,
+              -15.54
+            ],
+            [
+              167.22,
+              -15.54
+            ],
+            [
+              167.22,
+              -15.48
+            ],
+            [
+              167.14,
+              -15.48
+            ],
+            [
+              167.14,
+              -15.54
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Tanna Area Council",
+        "province": "Tafea",
+        "code": "AC-501"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              169.2,
+              -19.58
+            ],
+            [
+              169.32,
+              -19.58
+            ],
+            [
+              169.32,
+              -19.42
+            ],
+            [
+              169.2,
+              -19.42
+            ],
+            [
+              169.2,
+              -19.58
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Central Malekula Council",
+        "province": "Malampa",
+        "code": "AC-301"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.35,
+              -16.18
+            ],
+            [
+              167.48,
+              -16.18
+            ],
+            [
+              167.48,
+              -16.05
+            ],
+            [
+              167.35,
+              -16.05
+            ],
+            [
+              167.35,
+              -16.18
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

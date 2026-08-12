@@ -1,0 +1,227 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "shefa",
+        "name": "Shefa Province",
+        "code": "VU-MAP-01",
+        "capital": "Port Vila",
+        "population": 104500
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168,
+              -17.9
+            ],
+            [
+              168.6,
+              -17.9
+            ],
+            [
+              168.6,
+              -17.3
+            ],
+            [
+              168,
+              -17.3
+            ],
+            [
+              168,
+              -17.9
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sanma",
+        "name": "Sanma Province",
+        "code": "VU-MAP-02",
+        "capital": "Luganville",
+        "population": 61300
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              166.5,
+              -15.8
+            ],
+            [
+              167.4,
+              -15.8
+            ],
+            [
+              167.4,
+              -14.8
+            ],
+            [
+              166.5,
+              -14.8
+            ],
+            [
+              166.5,
+              -15.8
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "malampa",
+        "name": "Malampa Province",
+        "code": "VU-MAP-03",
+        "capital": "Lakatoro",
+        "population": 42700
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.1,
+              -16.6
+            ],
+            [
+              168.3,
+              -16.6
+            ],
+            [
+              168.3,
+              -15.9
+            ],
+            [
+              167.1,
+              -15.9
+            ],
+            [
+              167.1,
+              -16.6
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "penama",
+        "name": "Penama Province",
+        "code": "VU-MAP-04",
+        "capital": "Saratamata",
+        "population": 35600
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              167.6,
+              -16.1
+            ],
+            [
+              168.4,
+              -16.1
+            ],
+            [
+              168.4,
+              -14.9
+            ],
+            [
+              167.6,
+              -14.9
+            ],
+            [
+              167.6,
+              -16.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "tafea",
+        "name": "Tafea Province",
+        "code": "VU-MAP-05",
+        "capital": "Isangel",
+        "population": 43200
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              168.9,
+              -20.3
+            ],
+            [
+              170.3,
+              -20.3
+            ],
+            [
+              170.3,
+              -18.6
+            ],
+            [
+              168.9,
+              -18.6
+            ],
+            [
+              168.9,
+              -20.3
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "torba",
+        "name": "Torba Province",
+        "code": "VU-MAP-06",
+        "capital": "Sola",
+        "population": 11400
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              166.4,
+              -14.4
+            ],
+            [
+              167.8,
+              -14.4
+            ],
+            [
+              167.8,
+              -13
+            ],
+            [
+              166.4,
+              -13
+            ],
+            [
+              166.4,
+              -14.4
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

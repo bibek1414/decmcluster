@@ -1,0 +1,231 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Efate Ring Road (Port Vila Coastal Loop)",
+        "type": "Primary Highway",
+        "province": "Shefa",
+        "surface": "Paved/Sealed",
+        "condition": "Good"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            168.32,
+            -17.74
+          ],
+          [
+            168.28,
+            -17.72
+          ],
+          [
+            168.25,
+            -17.68
+          ],
+          [
+            168.24,
+            -17.62
+          ],
+          [
+            168.29,
+            -17.55
+          ],
+          [
+            168.35,
+            -17.54
+          ],
+          [
+            168.45,
+            -17.56
+          ],
+          [
+            168.52,
+            -17.65
+          ],
+          [
+            168.48,
+            -17.72
+          ],
+          [
+            168.4,
+            -17.76
+          ],
+          [
+            168.32,
+            -17.74
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Santo Main East Coast Highway",
+        "type": "Primary Highway",
+        "province": "Sanma",
+        "surface": "Paved",
+        "condition": "Good"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            167.18,
+            -15.51
+          ],
+          [
+            167.195,
+            -15.42
+          ],
+          [
+            167.22,
+            -15.35
+          ],
+          [
+            167.21,
+            -15.22
+          ],
+          [
+            167.15,
+            -15.12
+          ],
+          [
+            167.065,
+            -15.045
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanna West Coast Highway",
+        "type": "Secondary Road",
+        "province": "Tafea",
+        "surface": "Gravel/Unpaved",
+        "condition": "Fair"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            169.225,
+            -19.455
+          ],
+          [
+            169.25,
+            -19.5
+          ],
+          [
+            169.27,
+            -19.53
+          ],
+          [
+            169.28,
+            -19.56
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tanna Cross Island Yasur Volcano Road",
+        "type": "Feeder Road",
+        "province": "Tafea",
+        "surface": "Volcanic Ash/Dirt",
+        "condition": "Requires 4WD"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            169.27,
+            -19.53
+          ],
+          [
+            169.34,
+            -19.52
+          ],
+          [
+            169.41,
+            -19.525
+          ],
+          [
+            169.445,
+            -19.53
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Malekula East Coast Trunk Road",
+        "type": "Secondary Road",
+        "province": "Malampa",
+        "surface": "Gravel",
+        "condition": "Fair"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            167.399,
+            -16.082
+          ],
+          [
+            167.42,
+            -16.1
+          ],
+          [
+            167.435,
+            -16.14
+          ],
+          [
+            167.45,
+            -16.25
+          ],
+          [
+            167.48,
+            -16.42
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pentecost Central Island Highway",
+        "type": "Secondary Road",
+        "province": "Penama",
+        "surface": "Gravel",
+        "condition": "Fair"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            168.18,
+            -15.3
+          ],
+          [
+            168.175,
+            -15.5
+          ],
+          [
+            168.165,
+            -15.82
+          ],
+          [
+            168.16,
+            -16
+          ]
+        ]
+      }
+    }
+  ]
+}

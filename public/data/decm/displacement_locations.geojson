@@ -1,0 +1,53 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "location_name": "Ambae Volcano Relocation Camp A",
+        "idps": 340,
+        "operation": "Manaro Eruption",
+        "province": "Penama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.95,
+          -15.26
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "location_name": "Santo Temporary Displacement Site",
+        "idps": 620,
+        "operation": "Cyclone Harold Displacement",
+        "province": "Sanma"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.17,
+          -15.495
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "location_name": "Port Vila Urban Informal Shelter Cluster",
+        "idps": 180,
+        "operation": "Cyclone Pam Emergency",
+        "province": "Shefa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.335,
+          -17.745
+        ]
+      }
+    }
+  ]
+}
