@@ -1,7 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Users, Trash2, X, Loader2, Pencil, Edit, BadgeCheck, BadgeX, Mail } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Users,
+  Trash2,
+  X,
+  Loader2,
+  Pencil,
+  Edit,
+  BadgeCheck,
+  BadgeX,
+  Mail,
+} from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import {
   useAdminUsers,
@@ -391,7 +403,7 @@ export default function UsersClient() {
                 <tbody className="divide-y divide-border/60 text-xs">
                   {usersList.map((item) => {
                     const fullName =
-                       `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
+                      `${item.first_name || ""} ${item.last_name || ""}`.trim() || item.email;
 
                     const renderAccessControlBadges = (userData: typeof item) => {
                       const roleLower = userData.role?.toLowerCase();

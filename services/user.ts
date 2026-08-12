@@ -135,7 +135,10 @@ export const userService = {
     return res.json();
   },
 
-  resendVerification: async (userId: number, token: string | null): Promise<{ message?: string }> => {
+  resendVerification: async (
+    userId: number,
+    token: string | null,
+  ): Promise<{ message?: string }> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const headers: Record<string, string> = {
       "Content-Type": "application/json",

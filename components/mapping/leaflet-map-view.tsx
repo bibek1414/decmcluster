@@ -25,7 +25,7 @@ import {
   Hospital,
   GraduationCap,
   Building2,
-  Home
+  Home,
 } from "lucide-react";
 import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
 import { LAYERS, TILE_PROVIDERS, LayerConfig, TileProvider } from "./layers-config";
@@ -73,7 +73,7 @@ export default function LeafletMapView({
 
   // 2. Interactive state
   const [enabledLayers, setEnabledLayers] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(LAYERS.map((l) => [l.id, l.defaultOn]))
+    Object.fromEntries(LAYERS.map((l) => [l.id, l.defaultOn])),
   );
   const [layerData, setLayerData] = useState<Record<string, any>>({});
   const [layerErrors, setLayerErrors] = useState<Record<string, string>>({});
@@ -258,7 +258,10 @@ export default function LeafletMapView({
 
         // Build popup HTML
         const rows = Object.entries(props)
-          .filter(([k, v]) => v !== null && v !== "" && v !== undefined && k !== "osm_id" && k !== "osm_type")
+          .filter(
+            ([k, v]) =>
+              v !== null && v !== "" && v !== undefined && k !== "osm_id" && k !== "osm_type",
+          )
           .slice(0, 10);
 
         let coordsText = "";
@@ -273,7 +276,7 @@ export default function LeafletMapView({
         const popupContent = `
           <div style="font-family: var(--font-sans, system-ui, sans-serif); min-width: 220px; max-width: 280px; padding: 2px;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0;">
-              <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: ${config.color || config.style?.color || '#2563eb'}; background: rgba(37, 99, 235, 0.08); padding: 2px 6px; border-radius: 4px;">
+              <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: ${config.color || config.style?.color || "#2563eb"}; background: rgba(37, 99, 235, 0.08); padding: 2px 6px; border-radius: 4px;">
                 ${config.name}
               </span>
               ${coordsText ? `<span style="font-size: 10px; color: #64748b; font-weight: 600;">${coordsText}</span>` : ""}
@@ -287,10 +290,10 @@ export default function LeafletMapView({
                   .map(
                     ([k, v]) => `
                   <tr>
-                    <td style="padding: 2px 4px; color: #64748b; font-weight: 600; text-transform: capitalize; border-top: 1px solid #f1f5f9; width: 45%;">${k.replaceAll('_', ' ')}</td>
+                    <td style="padding: 2px 4px; color: #64748b; font-weight: 600; text-transform: capitalize; border-top: 1px solid #f1f5f9; width: 45%;">${k.replaceAll("_", " ")}</td>
                     <td style="padding: 2px 4px; color: #1e293b; font-weight: 700; border-top: 1px solid #f1f5f9;">${safe(v)}</td>
                   </tr>
-                `
+                `,
                   )
                   .join("")}
               </tbody>
@@ -310,7 +313,8 @@ export default function LeafletMapView({
         if (geomType === "Point") {
           const [lng, lat] = feature.geometry.coordinates;
           const markerColor = config.color || config.style?.color || "#2563eb";
-          const radius = config.group === "DECM Operational" ? 7 : config.group === "Hazards" ? 8 : 6;
+          const radius =
+            config.group === "DECM Operational" ? 7 : config.group === "Hazards" ? 8 : 6;
 
           const marker = L.circleMarker([lat, lng], {
             radius,
@@ -329,7 +333,11 @@ export default function LeafletMapView({
           });
           layerGroup.addLayer(marker);
         } else {
-          const style = config.style || { color: config.color || "#2563eb", weight: 2, fillOpacity: 0.1 };
+          const style = config.style || {
+            color: config.color || "#2563eb",
+            weight: 2,
+            fillOpacity: 0.1,
+          };
           const geoJsonLayer = L.geoJSON(feature, {
             style: () => style,
             onEachFeature: (_: any, layer: any) => {
@@ -352,7 +360,7 @@ export default function LeafletMapView({
         Shefa: [-17.74, 168.32],
         Sanma: [-15.51, 167.18],
         Tafea: [-19.53, 169.27],
-        Malampa: [-16.10, 167.42],
+        Malampa: [-16.1, 167.42],
         Penama: [-15.28, 167.98],
         Torba: [-13.85, 167.55],
       };
@@ -370,7 +378,7 @@ export default function LeafletMapView({
   const totalLoadedFeatures = useMemo(() => {
     return LAYERS.filter((l) => enabledLayers[l.id]).reduce(
       (n, l) => n + (layerData[l.id]?.features?.length || 0),
-      0
+      0,
     );
   }, [enabledLayers, layerData]);
 
@@ -484,8 +492,6 @@ export default function LeafletMapView({
             </span>
           </div>
 
-
-
           {/* Layer Search Input */}
           <div className="relative">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -510,7 +516,8 @@ export default function LeafletMapView({
           <div className="space-y-3 max-h-[520px] overflow-y-auto pr-1">
             {groups.map((groupName) => {
               const matchingLayers = LAYERS.filter(
-                (l) => l.group === groupName && l.name.toLowerCase().includes(layerSearch.toLowerCase())
+                (l) =>
+                  l.group === groupName && l.name.toLowerCase().includes(layerSearch.toLowerCase()),
               );
               if (matchingLayers.length === 0) return null;
 
@@ -518,7 +525,10 @@ export default function LeafletMapView({
               const allEnabled = matchingLayers.every((l) => enabledLayers[l.id]);
 
               return (
-                <div key={groupName} className="rounded-lg border border-border/80 bg-background/50 overflow-hidden">
+                <div
+                  key={groupName}
+                  className="rounded-lg border border-border/80 bg-background/50 overflow-hidden"
+                >
                   <div className="w-full px-3 py-2 bg-muted/40 hover:bg-muted/80 transition-colors flex items-center justify-between">
                     <button
                       onClick={() => toggleGroupCollapse(groupName)}
@@ -572,8 +582,8 @@ export default function LeafletMapView({
                                 count !== undefined
                                   ? "bg-muted text-muted-foreground"
                                   : error
-                                  ? "bg-red-500/10 text-red-500"
-                                  : "bg-primary/10 text-primary animate-pulse"
+                                    ? "bg-red-500/10 text-red-500"
+                                    : "bg-primary/10 text-primary animate-pulse"
                               }`}
                             >
                               {count !== undefined ? count : error ? "!" : "..."}
@@ -591,7 +601,8 @@ export default function LeafletMapView({
           <div className="p-3 bg-muted/30 border border-border/60 rounded-lg text-[11px] text-muted-foreground space-y-1">
             <span className="font-bold text-foreground block">Data Governance</span>
             <p className="line-clamp-3">
-              Spatial layers harmonized from NDMO/VMGD, SPC Pacific Data Hub, OCHA COD, and OpenStreetMap.
+              Spatial layers harmonized from NDMO/VMGD, SPC Pacific Data Hub, OCHA COD, and
+              OpenStreetMap.
             </p>
           </div>
         </div>
@@ -646,13 +657,18 @@ export default function LeafletMapView({
           </div>
 
           {/* Leaflet Map Canvas Container */}
-          <div className="mt-4 relative w-full rounded-xl border border-border z-0 overflow-hidden" style={{ height: "600px" }}>
+          <div
+            className="mt-4 relative w-full rounded-xl border border-border z-0 overflow-hidden"
+            style={{ height: "600px" }}
+          >
             {(!mapLoaded || showLoading) && (
               <div className="absolute inset-0 flex items-center justify-center bg-card/75 backdrop-blur-[2px] rounded-xl z-[1000]">
                 <div className="flex flex-col items-center space-y-2 bg-popover px-5 py-3.5 rounded-xl border border-border shadow-md">
                   <div className="h-6 w-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                   <span className="text-xs font-semibold text-muted-foreground">
-                    {!mapLoaded ? "Initializing Google Maps Engine..." : "Updating Spatial Layers..."}
+                    {!mapLoaded
+                      ? "Initializing Google Maps Engine..."
+                      : "Updating Spatial Layers..."}
                   </span>
                 </div>
               </div>
