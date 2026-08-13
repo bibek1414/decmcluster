@@ -824,4 +824,105 @@ export const dynamicDataService = {
     }
     return res.json();
   },
+
+  fetchGenericFormRecords: async (
+    slug: string,
+    page: number = 1,
+    search: string = "",
+    token: string | null = null,
+    pageSize: number = 50,
+  ): Promise<PaginatedResponse<any>> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    let url = `${baseUrl}/api/${slug}/?page=${page}&page_size=${pageSize}`;
+    if (search.trim()) {
+      url += `&search=${encodeURIComponent(search)}`;
+    }
+    const res = await fetch(url, { headers: getHeaders(token) });
+    if (!res.ok) throw new Error(`Failed to fetch ${slug} records`);
+    const data = await res.json();
+    if (Array.isArray(data)) {
+      return {
+        count: data.length,
+        next: null,
+        previous: null,
+        results: data,
+      };
+    }
+    return data;
+  },
+
+  createGenericFormRecord: async (
+    slug: string,
+    fieldName: string,
+    token: string | null,
+  ): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/${slug}/`, {
+      method: "POST",
+      headers: getHeaders(token),
+      body: JSON.stringify({
+        field: { field_name: fieldName },
+        field_name: fieldName,
+      }),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to create record";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  updateGenericFormRecord: async (
+    slug: string,
+    id: number,
+    fieldName: string,
+    token: string | null,
+  ): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/${slug}/${id}/`, {
+      method: "PATCH",
+      headers: getHeaders(token),
+      body: JSON.stringify({
+        field: { field_name: fieldName },
+        field_name: fieldName,
+      }),
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to update record";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
+  },
+
+  deleteGenericFormRecord: async (
+    slug: string,
+    id: number,
+    token: string | null,
+  ): Promise<void> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const res = await fetch(`${baseUrl}/api/${slug}/${id}/`, {
+      method: "DELETE",
+      headers: getHeaders(token),
+    });
+    if (!res.ok) throw new Error("Failed to delete record");
+  },
 };
+

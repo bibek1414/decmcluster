@@ -13,6 +13,7 @@ import {
   Trash2,
   Upload,
   Edit,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -55,6 +56,31 @@ import {
 } from "./fields/village-assessment-form-fields";
 import { FIVEW_COLUMNS, FiveWFormFields } from "./fields/fivew-form-fields";
 
+const GENERIC_FORM_SLUGS = [
+  "durable-solution-relocation-survey",
+  "service-monitoring-tool-2026",
+  "displacement-tracking-matrix-form",
+  "rapid-assessment-form-area-council",
+  "community-level-damage-assessment-form",
+  "displacement-profile-phone-survey",
+  "damage-assessment-form-community-v2",
+];
+
+const GENERIC_COLUMNS = [{ key: "field_name", label: "Field Name", type: "string" }];
+
+const getGenericFieldName = (row: any) => {
+  if (!row) return "";
+  if (typeof row.field_name === "string" && row.field_name.trim()) return row.field_name;
+  if (row.field) {
+    if (typeof row.field === "string") return row.field;
+    if (typeof row.field === "object") {
+      return row.field.field_name || row.field.name || row.field.label || JSON.stringify(row.field);
+    }
+  }
+  if (typeof row.name === "string" && row.name.trim()) return row.name;
+  return "";
+};
+
 interface DynamicDataTableProps {
   slug: string;
   token: string | null;
@@ -62,16 +88,19 @@ interface DynamicDataTableProps {
 }
 
 export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps) {
+  const isGenericForm = GENERIC_FORM_SLUGS.includes(slug);
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
   const isFiveW = slug === "5w-response-data" || slug === "fivew";
-  const columns = isEvac
-    ? EVACUATION_CENTRE_COLUMNS
-    : isVillage
-      ? VILLAGE_ASSESSMENT_COLUMNS
-      : isFiveW
-        ? FIVEW_COLUMNS
-        : DISPLACEMENT_COLUMNS;
+  const columns = isGenericForm
+    ? GENERIC_COLUMNS
+    : isEvac
+      ? EVACUATION_CENTRE_COLUMNS
+      : isVillage
+        ? VILLAGE_ASSESSMENT_COLUMNS
+        : isFiveW
+          ? FIVEW_COLUMNS
+          : DISPLACEMENT_COLUMNS;
 
   const queryClient = useQueryClient();
 
@@ -177,6 +206,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const [isCreating, setIsCreating] = useState(false);
   const [editingRow, setEditingRow] = useState<any | null>(null);
   const [modalFormData, setModalFormData] = useState<any>({});
+  const [genericFieldName, setGenericFieldName] = useState("");
   const [activeModalTab, setActiveModalTab] = useState("general");
   const [isSubmittingModal, setIsSubmittingModal] = useState(false);
   const [rowToDelete, setRowToDelete] = useState<any | null>(null);
@@ -246,6 +276,35 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const handleModalSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmittingModal(true);
+
+    if (isGenericForm) {
+      if (!genericFieldName.trim()) {
+        toast.error("Field name is required");
+        setIsSubmittingModal(false);
+        return;
+      }
+      try {
+        if (isCreating) {
+          await createRecord.mutateAsync(genericFieldName.trim());
+          toast.success("Field name added successfully");
+          setIsCreating(false);
+        } else if (editingRow) {
+          await updateRecord.mutateAsync({
+            id: editingRow.id,
+            fields: genericFieldName.trim(),
+          });
+          toast.success("Field name updated successfully");
+          setEditingRow(null);
+        }
+        queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
+      } catch (error: any) {
+        toast.error(error.message || "Failed to save field name");
+      } finally {
+        setIsSubmittingModal(false);
+      }
+      return;
+    }
+
     try {
       if (isCreating) {
         await createRecord.mutateAsync(modalFormData);
@@ -270,6 +329,10 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const openModalEditor = (row: any) => {
     setIsCreating(false);
     setEditingRow(row);
+    if (isGenericForm) {
+      setGenericFieldName(getGenericFieldName(row));
+      return;
+    }
     const initialFields: any = {};
     columns.forEach((col) => {
       if (!col.readonly) {
@@ -285,6 +348,10 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const openCreateModal = () => {
     setIsCreating(true);
     setEditingRow(null);
+    if (isGenericForm) {
+      setGenericFieldName("");
+      return;
+    }
     const initialFields: any = {};
     columns.forEach((col) => {
       if (!col.readonly) {
@@ -401,29 +468,31 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search page/records..."
+              placeholder={isGenericForm ? "Search field names..." : "Search page/records..."}
               className="pl-9 h-9 w-full rounded-xl bg-background border-border shadow-none text-xs"
             />
           </div>
 
           {/* Filter Dropdowns */}
-          <div className="flex flex-wrap items-center gap-2">
-            <select
-              value={selectedProvinceFilter}
-              onChange={(e) => {
-                setSelectedProvinceFilter(e.target.value);
-                setPage(1);
-              }}
-              className="h-9 px-3 rounded-xl border border-border bg-background text-xs font-semibold focus:outline-none cursor-pointer"
-            >
-              <option value="">All Provinces</option>
-              {filterOptions.provinces.map((prov) => (
-                <option key={prov} value={prov}>
-                  {prov}
-                </option>
-              ))}
-            </select>
-          </div>
+          {!isGenericForm && (
+            <div className="flex flex-wrap items-center gap-2">
+              <select
+                value={selectedProvinceFilter}
+                onChange={(e) => {
+                  setSelectedProvinceFilter(e.target.value);
+                  setPage(1);
+                }}
+                className="h-9 px-3 rounded-xl border border-border bg-background text-xs font-semibold focus:outline-none cursor-pointer"
+              >
+                <option value="">All Provinces</option>
+                {filterOptions.provinces.map((prov) => (
+                  <option key={prov} value={prov}>
+                    {prov}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="flex items-center gap-2 ml-auto">
             {canEdit && (
@@ -434,11 +503,11 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                 className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl shadow-none"
               >
                 <Plus className="h-4 w-4" />
-                Add Record
+                {isGenericForm ? "Add Field Name" : "Add Record"}
               </Button>
             )}
 
-            {canEdit && (
+            {!isGenericForm && canEdit && (
               <>
                 {isEvac ? (
                   <Button
@@ -517,42 +586,44 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             )}
 
             {/* Export Dropdown */}
-            <div className="relative" ref={exportDropdownRef}>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={loadingExport}
-                onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
-                className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-green-50/45 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/60 dark:border-green-900/60 hover:bg-green-50 dark:hover:bg-green-950/40 shadow-none"
-              >
-                {loadingExport ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-green-600" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-                Export
-              </Button>
-              {isExportDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-72 bg-card border border-border rounded-xl z-40 p-3 animate-fadeIn shadow-none space-y-1">
-                  <div className="text-[10px] uppercase font-extrabold text-muted-foreground tracking-wider px-1 pb-2 border-b border-border">
-                    Export to Excel
+            {!isGenericForm && (
+              <div className="relative" ref={exportDropdownRef}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={loadingExport}
+                  onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
+                  className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-green-50/45 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/60 dark:border-green-900/60 hover:bg-green-50 dark:hover:bg-green-950/40 shadow-none"
+                >
+                  {loadingExport ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-green-600" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
+                  Export
+                </Button>
+                {isExportDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-72 bg-card border border-border rounded-xl z-40 p-3 animate-fadeIn shadow-none space-y-1">
+                    <div className="text-[10px] uppercase font-extrabold text-muted-foreground tracking-wider px-1 pb-2 border-b border-border">
+                      Export to Excel
+                    </div>
+                    <button
+                      onClick={performExport}
+                      className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
+                    >
+                      <span>
+                        Export (
+                        {selectedExportColumns.length === 0 ? "all" : selectedExportColumns.length}{" "}
+                        columns)
+                      </span>
+                      <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono text-muted-foreground">
+                        {count} rows
+                      </span>
+                    </button>
                   </div>
-                  <button
-                    onClick={performExport}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
-                  >
-                    <span>
-                      Export (
-                      {selectedExportColumns.length === 0 ? "all" : selectedExportColumns.length}{" "}
-                      columns)
-                    </span>
-                    <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono text-muted-foreground">
-                      {count} rows
-                    </span>
-                  </button>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -648,20 +719,29 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                       <TableCell
                         key={col.key}
                         onClick={(e) => {
-                          if (isEditing) {
+                          if (isEditing || isGenericForm) {
                             e.stopPropagation();
                             return;
                           }
                           handleInlineEditStart(row, col.key, col.readonly);
                         }}
                         className={`text-xs px-4 py-2 border-r border-border/40 max-w-[240px] truncate select-none ${
-                          !col.readonly && canEdit
+                          !col.readonly && canEdit && !isGenericForm
                             ? "cursor-cell hover:bg-muted/15 relative group"
                             : ""
                         }`}
-                        title={!col.readonly && canEdit ? "Click to edit cell" : col.label}
+                        title={!col.readonly && canEdit && !isGenericForm ? "Click to edit cell" : col.label}
                       >
-                        {isEditing ? (
+                        {isGenericForm && col.key === "field_name" ? (
+                          <div className="flex items-center gap-2">
+                            <div className="p-1 rounded-md bg-primary/10 text-primary">
+                              <FileText className="h-3.5 w-3.5" />
+                            </div>
+                            <span className="font-bold text-foreground text-xs font-mono">
+                              {getGenericFieldName(row) || "—"}
+                            </span>
+                          </div>
+                        ) : isEditing ? (
                           col.type === "boolean" ? (
                             <select
                               value={String(inlineEditValue)}
@@ -793,8 +873,8 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-foreground">Delete Record</DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground leading-relaxed mt-2">
-              Are you sure you want to delete this record (ID: {rowToDelete?.id}
-              )? This action cannot be undone.
+              Are you sure you want to delete this record 
+              ? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-end gap-2 pt-4 border-t border-border mt-2">
@@ -846,106 +926,122 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
 
           <div className="px-6 pt-4 space-y-4 pb-6">
             {/* Modal Tabs */}
-            {isEvac ? (
-              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                {[
-                  { key: "general", label: "General & Info" },
-                  { key: "contact", label: "Contacts & Agency" },
-                  { key: "capacity", label: "Capacity & Buildings" },
-                  { key: "readiness", label: "Facilities & Readiness" },
-                  { key: "water_sanitation", label: "WASH (Water & Sanitation)" },
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setActiveModalTab(tab.key)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                      activeModalTab === tab.key
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            ) : isVillage ? (
-              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                {[
-                  { key: "general", label: "General & Survey" },
-                  { key: "geography", label: "Geography" },
-                  { key: "key_informants", label: "Key Informants" },
-                  { key: "idp_statistics", label: "IDP & Returnees" },
-                  { key: "vulnerabilities_shelter", label: "Vulnerabilities & Shelter" },
-                  { key: "community_needs", label: "Community & Needs" },
-                  { key: "gps_submission", label: "GPS & Submission" },
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setActiveModalTab(tab.key)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                      activeModalTab === tab.key
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            ) : isFiveW ? (
-              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                {[
-                  { key: "org_admin", label: "Organization & Admin" },
-                  { key: "location_cluster", label: "Location & Cluster" },
-                  { key: "project_activity", label: "Project & Activity" },
-                  { key: "financial_modality", label: "Financial & Modality" },
-                  { key: "beneficiaries", label: "Beneficiaries & Reached" },
-                  { key: "indicators_sub", label: "Indicators & Sub-activities" },
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setActiveModalTab(tab.key)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                      activeModalTab === tab.key
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                {[
-                  { key: "general_displacement", label: "General Info" },
-                  { key: "geography", label: "Geography" },
-                  { key: "timeline", label: "Timeline" },
-                  { key: "demographics", label: "Demographics" },
-                  { key: "destination", label: "Origin & Destination" },
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => setActiveModalTab(tab.key)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                      activeModalTab === tab.key
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+            {!isGenericForm && (
+              <>
+                {isEvac ? (
+                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                    {[
+                      { key: "general", label: "General & Info" },
+                      { key: "contact", label: "Contacts & Agency" },
+                      { key: "capacity", label: "Capacity & Buildings" },
+                      { key: "readiness", label: "Facilities & Readiness" },
+                      { key: "water_sanitation", label: "WASH (Water & Sanitation)" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        onClick={() => setActiveModalTab(tab.key)}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                          activeModalTab === tab.key
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : isVillage ? (
+                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                    {[
+                      { key: "general", label: "General & Survey" },
+                      { key: "geography", label: "Geography" },
+                      { key: "key_informants", label: "Key Informants" },
+                      { key: "idp_statistics", label: "IDP & Returnees" },
+                      { key: "vulnerabilities_shelter", label: "Vulnerabilities & Shelter" },
+                      { key: "community_needs", label: "Community & Needs" },
+                      { key: "gps_submission", label: "GPS & Submission" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        onClick={() => setActiveModalTab(tab.key)}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                          activeModalTab === tab.key
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : isFiveW ? (
+                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                    {[
+                      { key: "org_admin", label: "Organization & Admin" },
+                      { key: "location_cluster", label: "Location & Cluster" },
+                      { key: "project_activity", label: "Project & Activity" },
+                      { key: "financial_modality", label: "Financial & Modality" },
+                      { key: "beneficiaries", label: "Beneficiaries & Reached" },
+                      { key: "indicators_sub", label: "Indicators & Sub-activities" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        onClick={() => setActiveModalTab(tab.key)}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                          activeModalTab === tab.key
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                    {[
+                      { key: "general_displacement", label: "General Info" },
+                      { key: "geography", label: "Geography" },
+                      { key: "timeline", label: "Timeline" },
+                      { key: "demographics", label: "Demographics" },
+                      { key: "destination", label: "Origin & Destination" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.key}
+                        type="button"
+                        onClick={() => setActiveModalTab(tab.key)}
+                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                          activeModalTab === tab.key
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
 
             {/* Modal Form */}
             <form onSubmit={handleModalSave} className="space-y-4">
-              {isEvac ? (
+              {isGenericForm ? (
+                <div className="space-y-2 py-2">
+                  <label className="block text-xs font-bold text-muted-foreground">Field Name</label>
+                  <Input
+                    value={genericFieldName}
+                    onChange={(e) => setGenericFieldName(e.target.value)}
+                    placeholder="Enter field name (e.g. household_count)..."
+                    className="w-full bg-background font-mono text-xs"
+                    required
+                    autoFocus
+                  />
+                </div>
+              ) : isEvac ? (
                 <EvacuationCentreFormFields
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}

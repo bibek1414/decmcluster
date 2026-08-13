@@ -38,12 +38,21 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
   const isFieldCoordinator = user?.role === "Field Coordinator";
   const canAdd = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
 
-  const isStatic =
-    slug === "displacement-tracking-matrix-form" ||
-    slug === "displacement-data" ||
-    slug === "evacuation-centre-assessment-form" ||
-    slug === "village-assessment" ||
-    slug === "5w-response-data";
+  const FORM_NAMES: Record<string, string> = {
+    "displacement-data": "Displacement Data",
+    "evacuation-centre-assessment-form": "Evacuation Centre Data",
+    "village-assessment": "Village Assessment Data",
+    "5w-response-data": "5W Response Data",
+    "durable-solution-relocation-survey": "Durable Solution & Relocation Survey",
+    "service-monitoring-tool-2026": "Service Monitoring Tool 2026",
+    "displacement-profile-phone-survey": "Displacement Profile - Phone Survey",
+    "displacement-tracking-matrix-form": "Displacement Tracking Matrix Form",
+    "rapid-assessment-form-area-council": "Rapid Assessment Form (Area Council)",
+    "damage-assessment-form-community-v2": "Damage Assessment Form (Community V2)",
+    "community-level-damage-assessment-form": "Community Level Damage Assessment Form",
+  };
+
+  const isStatic = !!FORM_NAMES[slug];
 
   // Queries
   const {
@@ -52,20 +61,9 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
     error: assessmentError,
   } = useAssessment(isStatic ? "" : slug);
 
-  const assessment = isStatic
-    ? {
-        name:
-          slug === "evacuation-centre-assessment-form"
-            ? "Evacuation Centre Data"
-            : slug === "displacement-tracking-matrix-form"
-              ? "Displacement Tracking Matrix Data"
-              : slug === "village-assessment"
-                ? "Village Assessment Data"
-                : slug === "5w-response-data"
-                  ? "5W Response Data"
-                  : "Displacement Data",
-      }
-    : fetchedAssessment;
+  const assessment = isStatic ? { name: FORM_NAMES[slug] } : fetchedAssessment;
+
+  const displayTitle = assessment?.name || slug;
 
   // Mutations
   const deleteAssessmentMutation = useDeleteAssessment();
@@ -108,13 +106,11 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
           router.push("/assement");
         },
         onError: (err: any) => {
-          toast.error(err.message || "Failed to delete");
+          toast.error(err.message || "Failed to delete assessment");
         },
       },
     );
   };
-
-  const displayTitle = (assessment?.name || "").replace(/\bForm\b/gi, "Data");
 
   return (
     <div className=" w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fadeIn">
@@ -128,11 +124,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
         </Link>
 
         <div className="space-y-4">
-          {slug === "evacuation-centre-assessment-form" ||
-          slug === "displacement-tracking-matrix-form" ||
-          slug === "village-assessment" ||
-          slug === "5w-response-data" ||
-          slug === "displacement-data" ? (
+          {isStatic ? (
             <DynamicDataTable slug={slug} token={token} canEdit={canAdd} />
           ) : (
             <Card className="p-12 border border-dashed border-border bg-card/50 flex flex-col items-center justify-center text-center space-y-3 rounded-2xl min-h-[300px]">

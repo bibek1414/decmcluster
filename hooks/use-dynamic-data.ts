@@ -7,6 +7,16 @@ import {
   FiveWActivityRecord,
 } from "@/services/dynamic-data";
 
+const GENERIC_FORM_SLUGS = [
+  "durable-solution-relocation-survey",
+  "service-monitoring-tool-2026",
+  "displacement-tracking-matrix-form",
+  "rapid-assessment-form-area-council",
+  "community-level-damage-assessment-form",
+  "displacement-profile-phone-survey",
+  "damage-assessment-form-community-v2",
+];
+
 export function useDynamicData(
   slug: string,
   page: number,
@@ -20,6 +30,7 @@ export function useDynamicData(
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
   const isFiveW = slug === "5w-response-data" || slug === "fivew";
+  const isGeneric = GENERIC_FORM_SLUGS.includes(slug);
 
   return useQuery({
     queryKey: [
@@ -34,7 +45,9 @@ export function useDynamicData(
       pageSize,
     ],
     queryFn: async () => {
-      if (isEvac) {
+      if (isGeneric) {
+        return dynamicDataService.fetchGenericFormRecords(slug, page, search, token, pageSize);
+      } else if (isEvac) {
         return dynamicDataService.fetchEvacuationCentres(
           page,
           search,
@@ -83,11 +96,18 @@ export function useCreateDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
   const isFiveW = slug === "5w-response-data" || slug === "fivew";
+  const isGeneric = GENERIC_FORM_SLUGS.includes(slug);
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (fields: any) => {
-      if (isEvac) {
+      if (isGeneric) {
+        const fieldName =
+          typeof fields === "string"
+            ? fields
+            : fields.field_name || fields.field?.field_name || fields.field || fields.name || "";
+        return dynamicDataService.createGenericFormRecord(slug, fieldName, token);
+      } else if (isEvac) {
         return dynamicDataService.createEvacuationCentre(fields, token);
       } else if (isVillage) {
         return dynamicDataService.createVillageAssessment(fields, token);
@@ -107,11 +127,18 @@ export function useUpdateDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
   const isFiveW = slug === "5w-response-data" || slug === "fivew";
+  const isGeneric = GENERIC_FORM_SLUGS.includes(slug);
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ id, fields }: { id: number; fields: any }) => {
-      if (isEvac) {
+      if (isGeneric) {
+        const fieldName =
+          typeof fields === "string"
+            ? fields
+            : fields.field_name || fields.field?.field_name || fields.field || fields.name || "";
+        return dynamicDataService.updateGenericFormRecord(slug, id, fieldName, token);
+      } else if (isEvac) {
         return dynamicDataService.updateEvacuationCentre(id, fields, token);
       } else if (isVillage) {
         return dynamicDataService.updateVillageAssessment(id, fields, token);
@@ -131,11 +158,14 @@ export function useDeleteDynamicRecord(slug: string, token: string | null) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
   const isFiveW = slug === "5w-response-data" || slug === "fivew";
+  const isGeneric = GENERIC_FORM_SLUGS.includes(slug);
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: number) => {
-      if (isEvac) {
+      if (isGeneric) {
+        return dynamicDataService.deleteGenericFormRecord(slug, id, token);
+      } else if (isEvac) {
         return dynamicDataService.deleteEvacuationCentre(id, token);
       } else if (isVillage) {
         return dynamicDataService.deleteVillageAssessment(id, token);
