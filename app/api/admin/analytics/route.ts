@@ -132,12 +132,18 @@ export async function GET(request: Request) {
     const property = `properties/${propertyId}`;
 
     const [
-      [overviewRes],
-      [trendRes],
-      [pagesRes],
-      [deviceRes],
-      [countryRes]
-    ] = await Promise.all([
+      overviewResResult,
+      trendResResult,
+      pagesResResult,
+      deviceResResult,
+      countryResResult,
+      realtimeOverviewResult,
+      realtimePagesResult,
+      realtimeDeviceResult,
+      realtimeCountryResult,
+      realtimeEventsResult,
+      realtimeSourcesResult,
+    ] = await Promise.allSettled([
       analyticsDataClient.runReport({
         property,
         dateRanges: [{ startDate, endDate: "today" }],
@@ -178,20 +184,90 @@ export async function GET(request: Request) {
         limit: 5,
         orderBys: [{ metric: { metricName: "activeUsers" }, desc: true }],
       }),
+      // Realtime Query 1: Overview
+      analyticsDataClient.runRealtimeReport({
+        property,
+        metrics: [{ name: "activeUsers" }, { name: "screenPageViews" }],
+      }),
+      // Realtime Query 2: Top Pages (using unifiedScreenName dimension)
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "unifiedScreenName" }],
+        metrics: [{ name: "screenPageViews" }, { name: "activeUsers" }],
+        limit: 10,
+      }),
+      // Realtime Query 3: Devices
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "deviceCategory" }],
+        metrics: [{ name: "activeUsers" }],
+      }),
+      // Realtime Query 4: Countries
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "country" }],
+        metrics: [{ name: "activeUsers" }],
+        limit: 5,
+      }),
+      // Realtime Query 5: Event Name Breakdown
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "eventName" }],
+        metrics: [{ name: "eventCount" }],
+        limit: 6,
+      }),
+      // Realtime Query 6: User Traffic Source
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "firstUserSource" }],
+        metrics: [{ name: "activeUsers" }],
+        limit: 5,
+      }),
     ]);
 
-    const overviewRow = overviewRes.rows?.[0]?.metricValues || [];
-    const activeUsers = parseInt(overviewRow[0]?.value || "0", 10);
-    const sessions = parseInt(overviewRow[1]?.value || "0", 10);
-    const pageViews = parseInt(overviewRow[2]?.value || "0", 10);
+    const overviewRes = overviewResResult.status === "fulfilled" ? overviewResResult.value[0] : null;
+    const trendRes = trendResResult.status === "fulfilled" ? trendResResult.value[0] : null;
+    const pagesRes = pagesResResult.status === "fulfilled" ? pagesResResult.value[0] : null;
+    const deviceRes = deviceResResult.status === "fulfilled" ? deviceResResult.value[0] : null;
+    const countryRes = countryResResult.status === "fulfilled" ? countryResResult.value[0] : null;
+
+    const realtimeOverview = realtimeOverviewResult.status === "fulfilled" ? realtimeOverviewResult.value[0] : null;
+    const realtimePages = realtimePagesResult.status === "fulfilled" ? realtimePagesResult.value[0] : null;
+    const realtimeDevice = realtimeDeviceResult.status === "fulfilled" ? realtimeDeviceResult.value[0] : null;
+    const realtimeCountry = realtimeCountryResult.status === "fulfilled" ? realtimeCountryResult.value[0] : null;
+    const realtimeEvents = realtimeEventsResult.status === "fulfilled" ? realtimeEventsResult.value[0] : null;
+    const realtimeSources = realtimeSourcesResult.status === "fulfilled" ? realtimeSourcesResult.value[0] : null;
+
+    // Realtime overview metrics (last 30 minutes)
+    const rtRow = realtimeOverview?.rows?.[0]?.metricValues || [];
+    const realtimeUsers = parseInt(rtRow[0]?.value || "0", 10);
+    const realtimeViews = parseInt(rtRow[1]?.value || "0", 10);
+
+    // Standard overview metrics
+    const overviewRow = overviewRes?.rows?.[0]?.metricValues || [];
+    let activeUsers = parseInt(overviewRow[0]?.value || "0", 10);
+    let sessions = parseInt(overviewRow[1]?.value || "0", 10);
+    let pageViews = parseInt(overviewRow[2]?.value || "0", 10);
     const avgSec = parseFloat(overviewRow[3]?.value || "0");
     const bounceVal = (parseFloat(overviewRow[4]?.value || "0") * 100).toFixed(1);
+
+    // If historical batch report hasn't processed today's events yet, use realtime numbers
+    if (activeUsers === 0 && realtimeUsers > 0) {
+      activeUsers = realtimeUsers;
+    }
+    if (pageViews === 0 && realtimeViews > 0) {
+      pageViews = realtimeViews;
+    }
+    if (sessions === 0 && realtimeUsers > 0) {
+      sessions = realtimeUsers;
+    }
 
     const minutes = Math.floor(avgSec / 60);
     const seconds = Math.floor(avgSec % 60);
     const avgSessionDuration = `${minutes}m ${seconds}s`;
 
-    const dailyTrends = (trendRes.rows || []).map((row) => {
+    // Daily Trends
+    let dailyTrends = (trendRes?.rows || []).map((row) => {
       const dStr = row.dimensionValues?.[0]?.value || "";
       const formattedDate =
         dStr.length === 8
@@ -204,18 +280,46 @@ export async function GET(request: Request) {
       };
     });
 
-    const topPages = (pagesRes.rows || []).map((row) => ({
+    if (dailyTrends.length === 0 && realtimeUsers > 0) {
+      const todayStr = new Date().toISOString().split("T")[0];
+      dailyTrends = [
+        {
+          date: todayStr,
+          activeUsers: realtimeUsers,
+          pageViews: realtimeViews || realtimeUsers,
+        },
+      ];
+    }
+
+    // Top Pages
+    let topPages = (pagesRes?.rows || []).map((row) => ({
       path: row.dimensionValues?.[0]?.value || "/",
       title: row.dimensionValues?.[1]?.value || "Untitled Page",
       views: parseInt(row.metricValues?.[0]?.value || "0", 10),
       users: parseInt(row.metricValues?.[1]?.value || "0", 10),
     }));
 
-    const totalDeviceUsers = (deviceRes.rows || []).reduce(
+    if (topPages.length === 0 && realtimePages?.rows?.length) {
+      topPages = realtimePages.rows.map((row) => {
+        const rawScreen = row.dimensionValues?.[0]?.value || "Homepage";
+        const views = parseInt(row.metricValues?.[0]?.value || "0", 10);
+        const users = parseInt(row.metricValues?.[1]?.value || "0", 10) || views;
+
+        return {
+          path: rawScreen.startsWith("/") ? rawScreen : "/",
+          title: rawScreen,
+          views,
+          users,
+        };
+      });
+    }
+
+    // Device Breakdown
+    const totalDeviceUsers = (deviceRes?.rows || []).reduce(
       (acc, r) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
       0
     );
-    const deviceBreakdown = (deviceRes.rows || []).map((row) => {
+    let deviceBreakdown = (deviceRes?.rows || []).map((row) => {
       const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
       const cat = row.dimensionValues?.[0]?.value || "Other";
       const capCat = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -226,16 +330,70 @@ export async function GET(request: Request) {
       };
     });
 
-    const totalCountryUsers = (countryRes.rows || []).reduce(
+    if (deviceBreakdown.length === 0 && realtimeDevice?.rows?.length) {
+      const totalRtUsers = realtimeDevice.rows.reduce(
+        (acc, r) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
+        0
+      );
+      deviceBreakdown = realtimeDevice.rows.map((row) => {
+        const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
+        const cat = row.dimensionValues?.[0]?.value || "Other";
+        const capCat = cat.charAt(0).toUpperCase() + cat.slice(1);
+        return {
+          category: capCat,
+          users: u,
+          percentage: totalRtUsers ? Math.round((u / totalRtUsers) * 100) : 0,
+        };
+      });
+    }
+
+    // Country Breakdown
+    const totalCountryUsers = (countryRes?.rows || []).reduce(
       (acc, r) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
       0
     );
-    const countryBreakdown = (countryRes.rows || []).map((row) => {
+    let countryBreakdown = (countryRes?.rows || []).map((row) => {
       const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
       return {
         country: row.dimensionValues?.[0]?.value || "Unknown",
         users: u,
         percentage: totalCountryUsers ? parseFloat(((u / totalCountryUsers) * 100).toFixed(1)) : 0,
+      };
+    });
+
+    if (countryBreakdown.length === 0 && realtimeCountry?.rows?.length) {
+      const totalRtCountries = realtimeCountry.rows.reduce(
+        (acc, r) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
+        0
+      );
+      countryBreakdown = realtimeCountry.rows.map((row) => {
+        const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
+        return {
+          country: row.dimensionValues?.[0]?.value || "Unknown",
+          users: u,
+          percentage: totalRtCountries ? parseFloat(((u / totalRtCountries) * 100).toFixed(1)) : 0,
+        };
+      });
+    }
+
+    // Top Events
+    const topEvents = (realtimeEvents?.rows || []).map((row: any) => ({
+      name: row.dimensionValues?.[0]?.value || "event",
+      count: parseInt(row.metricValues?.[0]?.value || "0", 10),
+    }));
+
+    // Traffic Sources
+    const totalSourceUsers = (realtimeSources?.rows || []).reduce(
+      (acc: number, r: any) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
+      0
+    );
+    const trafficSources = (realtimeSources?.rows || []).map((row: any) => {
+      const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
+      const src = row.dimensionValues?.[0]?.value || "Direct / (none)";
+      return {
+        source: src === "(direct)" || src === "(none)" || !src ? "Direct Traffic" : src,
+        users: u,
+        percentage: totalSourceUsers ? parseFloat(((u / totalSourceUsers) * 100).toFixed(1)) : 0,
       };
     });
 
@@ -249,11 +407,14 @@ export async function GET(request: Request) {
           pageViews,
           avgSessionDuration,
           bounceRate: `${bounceVal}%`,
+          realtimeUsers,
         },
         dailyTrends,
         topPages,
         deviceBreakdown,
         countryBreakdown,
+        topEvents,
+        trafficSources,
       },
     });
   } catch (error: any) {
@@ -262,7 +423,22 @@ export async function GET(request: Request) {
       configured: true,
       propertyId,
       error: error?.message || "Failed to query Google Analytics Data API",
-      data: getMockAnalyticsData(range),
+      data: {
+        overview: {
+          activeUsers: 0,
+          sessions: 0,
+          pageViews: 0,
+          avgSessionDuration: "0m 0s",
+          bounceRate: "0.0%",
+          realtimeUsers: 0,
+        },
+        dailyTrends: [],
+        topPages: [],
+        deviceBreakdown: [],
+        countryBreakdown: [],
+        topEvents: [],
+        trafficSources: [],
+      },
     });
   }
 }

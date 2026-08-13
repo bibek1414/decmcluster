@@ -14,6 +14,9 @@ import {
   FileText,
   AlertCircle,
   BarChart2,
+  MousePointerClick,
+  Compass,
+  Radio,
 } from "lucide-react";
 
 interface OverviewData {
@@ -22,6 +25,7 @@ interface OverviewData {
   pageViews: number;
   avgSessionDuration: string;
   bounceRate: string;
+  realtimeUsers?: number;
 }
 
 interface DailyTrend {
@@ -49,6 +53,17 @@ interface CountryItem {
   percentage: number;
 }
 
+interface EventItem {
+  name: string;
+  count: number;
+}
+
+interface SourceItem {
+  source: string;
+  users: number;
+  percentage: number;
+}
+
 interface AnalyticsPayload {
   configured: boolean;
   message?: string;
@@ -59,6 +74,8 @@ interface AnalyticsPayload {
     topPages: TopPage[];
     deviceBreakdown: DeviceItem[];
     countryBreakdown: CountryItem[];
+    topEvents?: EventItem[];
+    trafficSources?: SourceItem[];
   };
 }
 
@@ -106,9 +123,17 @@ export default function AnalyticsDashboardPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5 sm:pb-6">
         <div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
-            Web Analytics
-          </h1>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+              Web Analytics
+            </h1>
+            {(analytics?.data?.overview?.realtimeUsers ?? 0) > 0 && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+                <Radio className="w-3 h-3 text-slate-600 animate-pulse" />
+                {analytics?.data?.overview?.realtimeUsers} active now
+              </span>
+            )}
+          </div>
           <p className="text-slate-500 text-xs sm:text-sm mt-1">
             Real-time web traffic, user sessions, page impressions, and visitor demographics.
           </p>
@@ -473,6 +498,83 @@ export default function AnalyticsDashboardPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Secondary Metrics: Events & Traffic Channels */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Top Triggered Events Card */}
+        <div className="p-4 sm:p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <MousePointerClick className="w-4 h-4 text-slate-700" />
+              <h2 className="text-base font-bold text-slate-900">Top User Events</h2>
+            </div>
+            <span className="text-xs text-slate-400 font-medium">Event count</span>
+          </div>
+
+          <div className="space-y-2.5">
+            {loading ? (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                Loading events...
+              </div>
+            ) : analytics?.data?.topEvents?.length ? (
+              analytics.data.topEvents.map((ev, idx) => (
+                <div key={idx} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-100 last:border-0">
+                  <span className="font-mono text-slate-800 font-medium bg-slate-100 px-2 py-0.5 rounded">
+                    {ev.name}
+                  </span>
+                  <span className="font-semibold text-slate-900">
+                    {ev.count.toLocaleString()} counts
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                No event data recorded.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Traffic Sources Card */}
+        <div className="p-4 sm:p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <Compass className="w-4 h-4 text-slate-700" />
+              <h2 className="text-base font-bold text-slate-900">User Acquisition Sources</h2>
+            </div>
+            <span className="text-xs text-slate-400 font-medium font-mono">Channel</span>
+          </div>
+
+          <div className="space-y-3">
+            {loading ? (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                Loading acquisition sources...
+              </div>
+            ) : analytics?.data?.trafficSources?.length ? (
+              analytics.data.trafficSources.map((src, idx) => (
+                <div key={idx} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-slate-800">{src.source}</span>
+                    <span className="font-semibold text-slate-900">
+                      {src.users} users ({src.percentage}%)
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      style={{ width: `${Math.min(100, src.percentage)}%` }}
+                      className="h-full bg-slate-800 rounded-full"
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                No acquisition source data recorded.
+              </div>
+            )}
           </div>
         </div>
       </div>
