@@ -499,6 +499,17 @@ export default function LeafletMapView({
     setCollapsedGroups((prev) => ({ ...prev, [groupName]: !prev[groupName] }));
   };
 
+  const handleDownloadPdf = () => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.invalidateSize();
+    }
+    setTimeout(() => {
+      if (typeof window !== "undefined") {
+        window.print();
+      }
+    }, 200);
+  };
+
   const showLoading = statsLoading || locationsLoading;
 
   const activeLayerNames = LAYERS.filter((l) => enabledLayers[l.id]).map((l) => l.name);
@@ -509,19 +520,26 @@ export default function LeafletMapView({
 
   return (
     <div className="space-y-6">
-      {/* Printable Map CSS for 1-Page PDF Download */}
+      {/* Printable Map CSS for Strict 1-Page A4 PDF Download */}
       <style jsx global>{`
         @page {
           size: A4 landscape;
           margin: 0;
         }
         @media print {
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
           html, body {
-            height: 100% !important;
-            max-height: 100vh !important;
-            overflow: hidden !important;
+            background: #ffffff !important;
+            color: #0f172a !important;
             margin: 0 !important;
             padding: 0 !important;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
           }
           body * {
             visibility: hidden !important;
@@ -536,23 +554,53 @@ export default function LeafletMapView({
             top: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
+            max-width: 100vw !important;
             max-height: 100vh !important;
             margin: 0 !important;
-            padding: 12px 16px !important;
-            background: #ffffff !important;
+            padding: 8mm 10mm !important;
             box-sizing: border-box !important;
+            background: #ffffff !important;
+            z-index: 999999 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
             overflow: hidden !important;
             page-break-after: avoid !important;
+            page-break-before: avoid !important;
             page-break-inside: avoid !important;
             break-after: avoid !important;
             break-inside: avoid !important;
           }
-          #printable-vanuatu-map-canvas .map-frame {
-            height: calc(100vh - 50px) !important;
-            max-height: calc(100vh - 50px) !important;
-            margin-top: 0px !important;
-          }
           .no-print {
+            display: none !important;
+          }
+          .print-header {
+            display: block !important;
+            margin-bottom: 6px !important;
+            padding-bottom: 4px !important;
+            border-bottom: 1.5px solid #0f172a !important;
+            shrink: 0 !important;
+          }
+          #printable-vanuatu-map-canvas .map-frame {
+            flex: 1 !important;
+            height: calc(100vh - 75mm) !important;
+            max-height: calc(100vh - 75mm) !important;
+            width: 100% !important;
+            margin-top: 4px !important;
+            margin-bottom: 4px !important;
+            border: 1.5px solid #0f172a !important;
+            border-radius: 6px !important;
+            overflow: hidden !important;
+          }
+          .print-legend {
+            display: grid !important;
+            margin-top: 6px !important;
+            padding-top: 4px !important;
+            border-top: 1.5px solid #0f172a !important;
+            shrink: 0 !important;
+          }
+          .leaflet-control-zoom,
+          .leaflet-control-attribution {
             display: none !important;
           }
         }
@@ -692,6 +740,47 @@ export default function LeafletMapView({
           id="printable-vanuatu-map-canvas"
           className="order-1 lg:order-2 lg:col-span-8 xl:col-span-9 bg-card text-card-foreground rounded-xl border border-border p-4 shadow-xs flex flex-col justify-between"
         >
+          {/* Printable A4 Document Header (visible only during PDF print) */}
+          <div className="print-header hidden pb-3 border-b-2 border-slate-900">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm border border-emerald-900 shadow-xs shrink-0">
+                  🇻🇺
+                </div>
+                <div>
+                  <h1 className="text-base font-black text-slate-900 uppercase tracking-tight leading-none">
+                    Republic of Vanuatu — National DECM Cluster Portal
+                  </h1>
+                  <h2 className="text-xs font-bold text-emerald-800 mt-1">
+                    {selectedProvince
+                      ? `${selectedProvince} Province — Official Spatial GIS & Infrastructure Map`
+                      : "Official A4 Spatial Infrastructure & Evacuation Shelter Map"}
+                  </h2>
+                </div>
+              </div>
+              <div className="text-right text-[10px] text-slate-700 space-y-0.5 font-mono">
+                <div>
+                  <span className="font-bold">Format:</span> ISO A4 Landscape
+                </div>
+                <div>
+                  <span className="font-bold">CRS:</span> WGS 84 (EPSG:4326)
+                </div>
+                <div>
+                  <span className="font-bold">Generated:</span>{" "}
+                  {new Date().toLocaleDateString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </div>
+                <div>
+                  <span className="font-bold">Features Loaded:</span>{" "}
+                  {totalLoadedFeatures.toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Map Header Controls (Hidden during PDF print download) */}
           <div className="no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border">
             <div>
@@ -702,7 +791,7 @@ export default function LeafletMapView({
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5 font-medium">
-                Vanuatu EPSG:4326 GIS Coordinates & Spatial Layers
+                Vanuatu EPSG:4326 GIS Coordinates & Spatial Layers (A4 PDF Printable)
               </p>
             </div>
 
@@ -721,13 +810,9 @@ export default function LeafletMapView({
                 </button>
               )}
               <button
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.print();
-                  }
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors cursor-pointer shadow-xs"
-                title="Download or Print PDF Map of Vanuatu"
+                onClick={handleDownloadPdf}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-extrabold bg-emerald-600 text-white hover:bg-emerald-700 active:scale-95 rounded-lg transition-all cursor-pointer shadow-sm"
+                title="Download or Print A4 PDF Map of Vanuatu"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Download Map PDF</span>
@@ -757,6 +842,13 @@ export default function LeafletMapView({
             className="map-frame mt-4 relative w-full rounded-xl border border-border z-0 overflow-hidden"
             style={{ height: "600px" }}
           >
+            {/* North Compass Arrow Overlay for Cartographic Quality */}
+            <div className="absolute top-3 right-3 z-[400] bg-white/90 backdrop-blur-xs border border-slate-300 rounded-lg p-1.5 shadow-xs flex flex-col items-center justify-center pointer-events-none text-slate-900">
+              <div className="text-[10px] font-black leading-none">N</div>
+              <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[8px] border-b-red-600 my-0.5" />
+              <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[8px] border-t-slate-800" />
+            </div>
+
             {(!mapLoaded || showLoading) && (
               <div className="absolute inset-0 flex items-center justify-center bg-card/75 backdrop-blur-[2px] rounded-xl z-[1000]">
                 <div className="flex flex-col items-center space-y-2 bg-popover px-5 py-3.5 rounded-xl border border-border shadow-md">
@@ -772,8 +864,8 @@ export default function LeafletMapView({
             <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
           </div>
 
-          {/* Feature Legend Bar */}
-          <div className="mt-4 pt-3.5 border-t border-border flex flex-wrap items-center justify-between gap-3 text-xs">
+          {/* Feature Legend Bar (Screen Display) */}
+          <div className="no-print mt-4 pt-3.5 border-t border-border flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex flex-wrap items-center gap-4">
               <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
                 Map Legend:
@@ -804,14 +896,68 @@ export default function LeafletMapView({
             </div>
           </div>
 
-          {/* Map Sources & Vanuatu Disclaimer Footer */}
-          <div className="mt-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground/80 space-y-0.5">
+          {/* Map Sources & Vanuatu Disclaimer Footer (Screen Display) */}
+          <div className="no-print mt-3 pt-2.5 border-t border-border/60 text-[11px] text-muted-foreground/80 space-y-0.5">
             <p className="font-semibold text-muted-foreground">
               Map Sources: OpenStreetMap, HDX (HumData), Vanuatu NDMO / DECM Cluster, SPC Pacific Data Hub.
             </p>
             <p className="italic text-[10.5px]">
               The boundaries and names shown and the designations used on this map do not imply official endorsement or acceptance by the Government of Vanuatu or the DECM Cluster.
             </p>
+          </div>
+
+          {/* Printable A4 Document Legend & Summary (visible only during PDF print) */}
+          <div className="print-legend hidden grid-cols-3 gap-4 pt-3 border-t-2 border-slate-900 text-[10px]">
+            <div className="space-y-1">
+              <span className="font-extrabold text-slate-900 uppercase tracking-wider block">
+                Spatial Feature Legend
+              </span>
+              <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-slate-800 font-bold">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 shrink-0 inline-block border border-black" />
+                  Roads & Highways
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0 inline-block border border-black" />
+                  Airports & Strips
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 inline-block border border-black" />
+                  Evacuation Shelters
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-600 shrink-0 inline-block border border-black" />
+                  Health Facilities
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 inline-block border border-black" />
+                  Schools & Centres
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-900 shrink-0 inline-block border border-black" />
+                  Volcanic Hazards
+                </div>
+              </div>
+            </div>
+            <div className="space-y-1 border-l border-slate-300 pl-3">
+              <span className="font-extrabold text-slate-900 uppercase tracking-wider block">
+                Data Governance & Sources
+              </span>
+              <p className="text-slate-700 leading-tight">
+                Harmonized from OpenStreetMap, HDX (HumData), Vanuatu NDMO/VMGD, and SPC Pacific Data Hub.
+              </p>
+              <div className="text-[9px] font-bold text-slate-600 mt-1">
+                Scope: {selectedProvince || "All 6 Provinces"} | Classified Emergency Map
+              </div>
+            </div>
+            <div className="space-y-1 border-l border-slate-300 pl-3">
+              <span className="font-extrabold text-slate-900 uppercase tracking-wider block">
+                Official Disclaimer
+              </span>
+              <p className="text-[9px] text-slate-600 leading-tight italic">
+                Boundaries and names do not imply official endorsement by the Government of Vanuatu or DECM Cluster. Formatted for A4 Portable Map print.
+              </p>
+            </div>
           </div>
         </div>
       </div>
