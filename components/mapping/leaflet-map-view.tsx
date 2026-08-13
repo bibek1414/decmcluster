@@ -20,6 +20,7 @@ import {
   Download,
 } from "lucide-react";
 import { useEvacuationCentresStats, useEvacuationCentreLocations } from "@/hooks/use-dashboard";
+import { siteConfig } from "@/config/site";
 import { LAYERS, TILE_PROVIDERS,  } from "./layers-config";
 
 const VANUATU_BOUNDS: [[number, number], [number, number]] = [
@@ -90,7 +91,8 @@ export default function LeafletMapView({
       try {
         let fetchUrl = l.url;
         if (l.id === "evacuation_centres") {
-          fetchUrl = "https://api.decmcluster.org/api/evacuation-centres/location/";
+          const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+          fetchUrl = `${baseUrl}/api/evacuation-centres/location/`;
         }
 
         let r = await fetch(fetchUrl).catch(() => null);
@@ -102,8 +104,6 @@ export default function LeafletMapView({
 
         if (!r || !r.ok) throw new Error(`HTTP ${r?.status || 500}`);
         let j = await r.json();
-
-        // Normalize array from API (e.g. https://api.decmcluster.org/api/evacuation-centres/location/) into GeoJSON FeatureCollection
         if (Array.isArray(j)) {
           j = {
             type: "FeatureCollection",

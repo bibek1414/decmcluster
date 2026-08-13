@@ -11,8 +11,13 @@ interface PageProps {
 }
 
 export default async function VerifyEmailPage({ searchParams }: PageProps) {
-  const resolvedParams = await searchParams;
-  const token = resolvedParams?.token || "";
+  let token = "";
+  try {
+    const resolvedParams = searchParams ? await Promise.resolve(searchParams) : {};
+    token = resolvedParams?.token || "";
+  } catch (e) {
+    console.error("Failed to parse searchParams in verify-email page:", e);
+  }
 
   return (
     <Suspense

@@ -1,3 +1,5 @@
+"use client";
+
 import Script from "next/script";
 
 interface GoogleAnalyticsProps {
@@ -14,6 +16,9 @@ export default function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+        onError={(e) => {
+          console.warn("Google Analytics script blocked by firewall or ad-blocker.", e);
+        }}
       />
       <Script
         id="google-analytics"
