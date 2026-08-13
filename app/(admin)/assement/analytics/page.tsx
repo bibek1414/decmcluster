@@ -17,6 +17,8 @@ import {
   MousePointerClick,
   Compass,
   Radio,
+  Cpu,
+  MapPin,
 } from "lucide-react";
 
 interface OverviewData {
@@ -64,6 +66,18 @@ interface SourceItem {
   percentage: number;
 }
 
+interface CityItem {
+  city: string;
+  users: number;
+  percentage: number;
+}
+
+interface OSItem {
+  os: string;
+  users: number;
+  percentage: number;
+}
+
 interface AnalyticsPayload {
   configured: boolean;
   message?: string;
@@ -76,6 +90,8 @@ interface AnalyticsPayload {
     countryBreakdown: CountryItem[];
     topEvents?: EventItem[];
     trafficSources?: SourceItem[];
+    cityBreakdown?: CityItem[];
+    osBreakdown?: OSItem[];
   };
 }
 
@@ -289,49 +305,51 @@ export default function AnalyticsDashboardPage() {
         </div>
 
         {/* Bar Chart Visualization */}
-        <div className="h-48 flex items-end gap-1.5 sm:gap-2 pt-6 pb-2 px-1 sm:px-2 overflow-x-auto">
-          {loading ? (
-            <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
-              Loading traffic data...
-            </div>
-          ) : analytics?.data?.dailyTrends?.length ? (
-            analytics.data.dailyTrends.map((item, idx) => {
-              const viewHeight = Math.max(10, Math.round((item.pageViews / maxViews) * 100));
-              const userHeight = Math.max(6, Math.round((item.activeUsers / maxViews) * 100));
-              return (
-                <div
-                  key={idx}
-                  className="flex-1 min-w-[16px] sm:min-w-[20px] flex flex-col items-center gap-1.5 group relative"
-                >
-                  {/* Hover Tooltip */}
-                  <div className="absolute bottom-full mb-2 hidden group-hover:flex flex-col items-center bg-slate-900 text-white text-xs py-1.5 px-2.5 rounded-lg shadow-lg z-20 whitespace-nowrap pointer-events-none">
-                    <span className="font-semibold text-slate-200">{item.date}</span>
-                    <span>{item.pageViews} views</span>
-                    <span className="text-slate-300">{item.activeUsers} users</span>
-                  </div>
+        <div className="pt-10 pb-2 px-1 sm:px-2 overflow-x-auto">
+          <div className="h-44 flex items-end gap-1.5 sm:gap-2">
+            {loading ? (
+              <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
+                Loading traffic data...
+              </div>
+            ) : analytics?.data?.dailyTrends?.length ? (
+              analytics.data.dailyTrends.map((item, idx) => {
+                const viewHeight = Math.max(10, Math.round((item.pageViews / maxViews) * 100));
+                const userHeight = Math.max(6, Math.round((item.activeUsers / maxViews) * 100));
+                return (
+                  <div
+                    key={idx}
+                    className="flex-1 min-w-[24px] flex flex-col items-center gap-1.5 group relative"
+                  >
+                    {/* Hover Tooltip */}
+                    <div className="absolute bottom-full mb-1 hidden group-hover:flex flex-col items-center bg-slate-900 text-white text-[11px] py-1 px-2 rounded-md shadow-md z-30 whitespace-nowrap pointer-events-none">
+                      <span className="font-semibold text-slate-200">{item.date}</span>
+                      <span>{item.pageViews} views</span>
+                      <span className="text-slate-300">{item.activeUsers} users</span>
+                    </div>
 
-                  {/* Bars */}
-                  <div className="w-full flex items-end justify-center gap-0.5 sm:gap-1 h-36">
-                    <div
-                      style={{ height: `${viewHeight}%` }}
-                      className="w-full max-w-[12px] sm:max-w-[14px] bg-slate-900 rounded-t-xs group-hover:bg-slate-800 transition-all"
-                    />
-                    <div
-                      style={{ height: `${userHeight}%` }}
-                      className="w-full max-w-[12px] sm:max-w-[14px] bg-slate-300 rounded-t-xs group-hover:bg-slate-400 transition-all"
-                    />
+                    {/* Bars */}
+                    <div className="w-full flex items-end justify-center gap-0.5 sm:gap-1 h-32">
+                      <div
+                        style={{ height: `${viewHeight}%` }}
+                        className="w-full max-w-[12px] sm:max-w-[14px] bg-slate-900 rounded-t-xs group-hover:bg-slate-800 transition-all"
+                      />
+                      <div
+                        style={{ height: `${userHeight}%` }}
+                        className="w-full max-w-[12px] sm:max-w-[14px] bg-slate-300 rounded-t-xs group-hover:bg-slate-400 transition-all"
+                      />
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-mono truncate w-full text-center">
+                      {item.date.split("-").slice(1).join("/")}
+                    </span>
                   </div>
-                  <span className="text-[10px] text-slate-400 font-mono truncate w-full text-center">
-                    {item.date.split("-").slice(1).join("/")}
-                  </span>
-                </div>
-              );
-            })
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
-              No trend data available.
-            </div>
-          )}
+                );
+              })
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm">
+                No trend data available.
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -573,6 +591,84 @@ export default function AnalyticsDashboardPage() {
             ) : (
               <div className="py-4 text-center text-slate-400 text-xs">
                 No acquisition source data recorded.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Tertiary Section: OS & Cities */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Operating System Breakdown Card */}
+        <div className="p-4 sm:p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-slate-700" />
+              <h2 className="text-base font-bold text-slate-900">Operating Systems</h2>
+            </div>
+            <span className="text-xs text-slate-400 font-medium font-mono">Platform</span>
+          </div>
+
+          <div className="space-y-3">
+            {loading ? (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                Loading operating systems...
+              </div>
+            ) : analytics?.data?.osBreakdown?.length ? (
+              analytics.data.osBreakdown.map((item, idx) => (
+                <div key={idx} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-slate-800">{item.os}</span>
+                    <span className="font-semibold text-slate-900">
+                      {item.users} users ({item.percentage}%)
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      style={{ width: `${Math.min(100, item.percentage)}%` }}
+                      className="h-full bg-slate-700 rounded-full"
+                    />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                No operating system data recorded.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Top Cities Card */}
+        <div className="p-4 sm:p-6 rounded-xl bg-white border border-slate-200/80 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-slate-700" />
+              <h2 className="text-base font-bold text-slate-900">Visitor Cities</h2>
+            </div>
+            <span className="text-xs text-slate-400 font-medium font-mono">City</span>
+          </div>
+
+          <div className="space-y-2.5">
+            {loading ? (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                Loading visitor cities...
+              </div>
+            ) : analytics?.data?.cityBreakdown?.length ? (
+              analytics.data.cityBreakdown.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-100 last:border-0">
+                  <span className="font-medium text-slate-800 truncate max-w-[160px] sm:max-w-none">
+                    {item.city}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-slate-900">{item.users} users</span>
+                    <span className="text-slate-400 font-mono text-[11px]">({item.percentage}%)</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-4 text-center text-slate-400 text-xs">
+                No city data recorded.
               </div>
             )}
           </div>

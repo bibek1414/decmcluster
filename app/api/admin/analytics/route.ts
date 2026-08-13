@@ -143,6 +143,8 @@ export async function GET(request: Request) {
       realtimeCountryResult,
       realtimeEventsResult,
       realtimeSourcesResult,
+      realtimeCityResult,
+      realtimeOSResult,
     ] = await Promise.allSettled([
       analyticsDataClient.runReport({
         property,
@@ -219,7 +221,21 @@ export async function GET(request: Request) {
       // Realtime Query 6: User Traffic Source
       analyticsDataClient.runRealtimeReport({
         property,
-        dimensions: [{ name: "firstUserSource" }],
+        dimensions: [{ name: "sessionSource" }],
+        metrics: [{ name: "activeUsers" }],
+        limit: 5,
+      }),
+      // Realtime Query 7: Cities
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "city" }],
+        metrics: [{ name: "activeUsers" }],
+        limit: 5,
+      }),
+      // Realtime Query 8: Operating Systems
+      analyticsDataClient.runRealtimeReport({
+        property,
+        dimensions: [{ name: "operatingSystem" }],
         metrics: [{ name: "activeUsers" }],
         limit: 5,
       }),
@@ -237,6 +253,8 @@ export async function GET(request: Request) {
     const realtimeCountry = realtimeCountryResult.status === "fulfilled" ? realtimeCountryResult.value[0] : null;
     const realtimeEvents = realtimeEventsResult.status === "fulfilled" ? realtimeEventsResult.value[0] : null;
     const realtimeSources = realtimeSourcesResult.status === "fulfilled" ? realtimeSourcesResult.value[0] : null;
+    const realtimeCity = realtimeCityResult.status === "fulfilled" ? realtimeCityResult.value[0] : null;
+    const realtimeOS = realtimeOSResult.status === "fulfilled" ? realtimeOSResult.value[0] : null;
 
     // Realtime overview metrics (last 30 minutes)
     const rtRow = realtimeOverview?.rows?.[0]?.metricValues || [];
@@ -397,6 +415,36 @@ export async function GET(request: Request) {
       };
     });
 
+    // City Breakdown
+    const totalCityUsers = (realtimeCity?.rows || []).reduce(
+      (acc: number, r: any) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
+      0
+    );
+    const cityBreakdown = (realtimeCity?.rows || []).map((row: any) => {
+      const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
+      const rawCity = row.dimensionValues?.[0]?.value || "Unknown";
+      return {
+        city: rawCity === "(not set)" || !rawCity ? "Unknown City" : rawCity,
+        users: u,
+        percentage: totalCityUsers ? parseFloat(((u / totalCityUsers) * 100).toFixed(1)) : 0,
+      };
+    });
+
+    // OS Breakdown
+    const totalOSUsers = (realtimeOS?.rows || []).reduce(
+      (acc: number, r: any) => acc + parseInt(r.metricValues?.[0]?.value || "0", 10),
+      0
+    );
+    const osBreakdown = (realtimeOS?.rows || []).map((row: any) => {
+      const u = parseInt(row.metricValues?.[0]?.value || "0", 10);
+      const rawOS = row.dimensionValues?.[0]?.value || "Other";
+      return {
+        os: rawOS === "(not set)" || !rawOS ? "Other OS" : rawOS,
+        users: u,
+        percentage: totalOSUsers ? Math.round((u / totalOSUsers) * 100) : 0,
+      };
+    });
+
     return NextResponse.json({
       configured: true,
       propertyId,
@@ -415,6 +463,8 @@ export async function GET(request: Request) {
         countryBreakdown,
         topEvents,
         trafficSources,
+        cityBreakdown,
+        osBreakdown,
       },
     });
   } catch (error: any) {
