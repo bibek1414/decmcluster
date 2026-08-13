@@ -66,7 +66,9 @@ const GENERIC_FORM_SLUGS = [
   "damage-assessment-form-community-v2",
 ];
 
-const GENERIC_COLUMNS = [{ key: "field_name", label: "Field Name", type: "string" }];
+const GENERIC_COLUMNS = [
+  { key: "field_name", label: "Field Name", type: "string", readonly: false },
+];
 
 const getGenericFieldName = (row: any) => {
   if (!row) return "";
