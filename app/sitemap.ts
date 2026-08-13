@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // Use environment variable for the base URL in production, or fallback to a standard domain
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://decm-vanuatu.gov.vu";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.decmcluster.org";
 
   const routes = [
     { path: "", changeFrequency: "daily", priority: 1.0 },

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Providers from "@/providers";
+import GoogleAnalytics from "@/components/google-analytics";
 import "./globals.css";
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://decm-vanuatu.gov.vu";
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.decmcluster.org";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -44,7 +45,9 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <Providers>{children}</Providers>
+        <GoogleAnalytics />
       </body>
     </html>
   );
 }
+
