@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Volcanoes of Vanuatu</name>
+    <description>Active and extinct volcanoes in Vanuatu mapped with OpenStreetMap coordinates.</description>
+    
+    <Placemark>
+      <name>Ambae</name>
+      <description><![CDATA[
+        <h3>Ambae Volcano</h3>
+        <p><b>Elevation:</b> 1496 m (4908 ft)</p>
+        <p><b>Last Eruption:</b> 2017</p>
+        <p><b>Location:</b> 15.380°S 167.83°E</p>
+        <p><b>Type:</b> Active Shield / Caldera (Manaro Voui)</p>
+        <p><b>Island:</b> Ambae (Penama Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-15.38&mlon=167.83#map=12/-15.38/167.83">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>167.83,-15.38,1496</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Ambrym</name>
+      <description><![CDATA[
+        <h3>Ambrym Volcano</h3>
+        <p><b>Elevation:</b> 1334 m (4375 ft)</p>
+        <p><b>Last Eruption:</b> ongoing</p>
+        <p><b>Location:</b> 16.25°S 168.12°E</p>
+        <p><b>Type:</b> Active Caldera / Lava Lakes (Marum & Benbow)</p>
+        <p><b>Island:</b> Ambrym (Malampa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.25&mlon=168.12#map=12/-16.25/168.12">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.12,-16.25,1334</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Aneityum</name>
+      <description><![CDATA[
+        <h3>Aneityum Volcano</h3>
+        <p><b>Elevation:</b> 852 m (2795 ft)</p>
+        <p><b>Last Eruption:</b> Pleistocene</p>
+        <p><b>Location:</b> 20.20°S 169.83°E</p>
+        <p><b>Type:</b> Extinct Stratovolcano</p>
+        <p><b>Island:</b> Aneityum (Tafea Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-20.2&mlon=169.83#map=12/-20.2/169.83">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>169.83,-20.2,852</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>East Epi</name>
+      <description><![CDATA[
+        <h3>East Epi Volcano</h3>
+        <p><b>Elevation:</b> -34 m (-111 ft)</p>
+        <p><b>Last Eruption:</b> 2004</p>
+        <p><b>Location:</b> 16.68°S 168.37°E</p>
+        <p><b>Type:</b> Submarine Volcano</p>
+        <p><b>Island:</b> Epi Offshore (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.68&mlon=168.37#map=12/-16.68/168.37">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.37,-16.68,-34</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Eastern Gemini Seamount</name>
+      <description><![CDATA[
+        <h3>Eastern Gemini Seamount Volcano</h3>
+        <p><b>Elevation:</b> -80 m (-262 ft)</p>
+        <p><b>Last Eruption:</b> 1996</p>
+        <p><b>Location:</b> 20.98°S 170.29°E</p>
+        <p><b>Type:</b> Submarine Seamount</p>
+        <p><b>Island:</b> Coral Sea (Tafea Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-20.98&mlon=170.29#map=12/-20.98/170.29">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>170.29,-20.98,-80</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Futuna</name>
+      <description><![CDATA[
+        <h3>Futuna Volcano</h3>
+        <p><b>Elevation:</b> 666 m (2185 ft)</p>
+        <p><b>Last Eruption:</b> Pleistocene</p>
+        <p><b>Location:</b> 19.32°S 170.13°E</p>
+        <p><b>Type:</b> Extinct Volcano</p>
+        <p><b>Island:</b> Futuna (Tafea Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-19.32&mlon=170.13#map=12/-19.32/170.13">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>170.13,-19.32,666</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Gaua</name>
+      <description><![CDATA[
+        <h3>Gaua Volcano</h3>
+        <p><b>Elevation:</b> 979 m (2614 ft)</p>
+        <p><b>Last Eruption:</b> 1982</p>
+        <p><b>Location:</b> 14.27°S 167.50°E</p>
+        <p><b>Type:</b> Active Stratovolcano (Mt. Gharat)</p>
+        <p><b>Island:</b> Gaua (Torba Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-14.27&mlon=167.5#map=12/-14.27/167.5">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>167.5,-14.27,979</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Kutali</name>
+      <description><![CDATA[
+        <h3>Kutali Volcano</h3>
+        <p><b>Elevation:</b> 833 m (2733 ft)</p>
+        <p><b>Last Eruption:</b> Unknown</p>
+        <p><b>Location:</b> 16.73°S 168.28°E</p>
+        <p><b>Type:</b> Volcanic Complex</p>
+        <p><b>Island:</b> Epi (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.73&mlon=168.28#map=12/-16.73/168.28">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.28,-16.73,833</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Kuwae</name>
+      <description><![CDATA[
+        <h3>Kuwae Volcano</h3>
+        <p><b>Elevation:</b> -2 m (-7 ft)</p>
+        <p><b>Last Eruption:</b> 1974</p>
+        <p><b>Location:</b> 16.829°S 168.536°E</p>
+        <p><b>Type:</b> Submarine Caldera</p>
+        <p><b>Island:</b> Epi / Tongoa (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.829&mlon=168.536#map=12/-16.829/168.536">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.536,-16.829,-2</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Lopevi</name>
+      <description><![CDATA[
+        <h3>Lopevi Volcano</h3>
+        <p><b>Elevation:</b> 1413 m (4636 ft)</p>
+        <p><b>Last Eruption:</b> 2006</p>
+        <p><b>Location:</b> 16.50°S 168.34°E</p>
+        <p><b>Type:</b> Active Stratovolcano</p>
+        <p><b>Island:</b> Lopevi (Malampa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.5&mlon=168.34#map=12/-16.5/168.34">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.34,-16.5,1413</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Makura</name>
+      <description><![CDATA[
+        <h3>Makura Volcano</h3>
+        <p><b>Elevation:</b> 644 m (2113 ft)</p>
+        <p><b>Last Eruption:</b> Unknown</p>
+        <p><b>Location:</b> 17.0°S 168.5°E</p>
+        <p><b>Type:</b> Volcanic Island Rim</p>
+        <p><b>Island:</b> Makura (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-17&mlon=168.5#map=12/-17/168.5">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.5,-17,644</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Merelava</name>
+      <description><![CDATA[
+        <h3>Merelava Volcano</h3>
+        <p><b>Elevation:</b> 883 m (3373 ft)</p>
+        <p><b>Last Eruption:</b> 1606</p>
+        <p><b>Location:</b> 14.45°S 168.05°E</p>
+        <p><b>Type:</b> Dormant Stratovolcano</p>
+        <p><b>Island:</b> Merelava (Torba Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-14.45&mlon=168.05#map=12/-14.45/168.05">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.05,-14.45,883</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Mota Lava</name>
+      <description><![CDATA[
+        <h3>Mota Lava Volcano</h3>
+        <p><b>Elevation:</b> 411 m (1348 ft)</p>
+        <p><b>Last Eruption:</b> 300,000 BC</p>
+        <p><b>Location:</b> 13.7°S 167.65°E</p>
+        <p><b>Type:</b> Extinct Stratovolcano</p>
+        <p><b>Island:</b> Mota Lava (Torba Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-13.7&mlon=167.65#map=12/-13.7/167.65">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>167.65,-13.7,411</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>North Vate</name>
+      <description><![CDATA[
+        <h3>North Vate Volcano</h3>
+        <p><b>Elevation:</b> 594 m (1949 ft)</p>
+        <p><b>Last Eruption:</b> Holocene</p>
+        <p><b>Location:</b> 17.45°S 168.33°E</p>
+        <p><b>Type:</b> Volcanic Complex</p>
+        <p><b>Island:</b> Efate (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-17.45&mlon=168.33#map=12/-17.45/168.33">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.33,-17.45,594</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Traitor's Head</name>
+      <description><![CDATA[
+        <h3>Traitor's Head Volcano</h3>
+        <p><b>Elevation:</b> 837 m (2746 ft)</p>
+        <p><b>Last Eruption:</b> 1881</p>
+        <p><b>Location:</b> 18.75°S 168.33°E</p>
+        <p><b>Type:</b> Volcanic Complex</p>
+        <p><b>Island:</b> Erromango (Tafea Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-18.75&mlon=168.33#map=12/-18.75/168.33">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.33,-18.75,837</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Tavai Ruro</name>
+      <description><![CDATA[
+        <h3>Tavai Ruro Volcano</h3>
+        <p><b>Elevation:</b> 554 m (1818 ft)</p>
+        <p><b>Last Eruption:</b> Unknown</p>
+        <p><b>Location:</b> 16.80°S 168.43°E</p>
+        <p><b>Type:</b> Volcanic Cone</p>
+        <p><b>Island:</b> Tongoa (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.8&mlon=168.43#map=12/-16.8/168.43">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.43,-16.8,554</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Unnamed Caldera</name>
+      <description><![CDATA[
+        <h3>Unnamed Caldera Volcano</h3>
+        <p><b>Elevation:</b> 521 m (1709 ft)</p>
+        <p><b>Last Eruption:</b> Holocene</p>
+        <p><b>Location:</b> 16.992°S 168.592°E</p>
+        <p><b>Type:</b> Submarine / Island Caldera</p>
+        <p><b>Island:</b> Shepherd Islands (Shefa Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-16.992&mlon=168.592#map=12/-16.992/168.592">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>168.592,-16.992,521</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Ureparapara</name>
+      <description><![CDATA[
+        <h3>Ureparapara Volcano</h3>
+        <p><b>Elevation:</b> 764 m (2507 ft)</p>
+        <p><b>Last Eruption:</b> 476,000 BC</p>
+        <p><b>Location:</b> 13.54°S 167.33°E</p>
+        <p><b>Type:</b> Extinct Caldera Island</p>
+        <p><b>Island:</b> Ureparapara (Torba Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-13.54&mlon=167.33#map=12/-13.54/167.33">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>167.33,-13.54,764</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Vanua Lava</name>
+      <description><![CDATA[
+        <h3>Vanua Lava Volcano</h3>
+        <p><b>Elevation:</b> 921 m (3022 ft)</p>
+        <p><b>Last Eruption:</b> 1965</p>
+        <p><b>Location:</b> 13.80°S 167.47°E</p>
+        <p><b>Type:</b> Active Stratovolcano (Mt. Suretamatai)</p>
+        <p><b>Island:</b> Vanua Lava (Torba Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-13.8&mlon=167.47#map=12/-13.8/167.47">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>167.47,-13.8,921</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Vot Tande</name>
+      <description><![CDATA[
+        <h3>Vot Tande Volcano</h3>
+        <p><b>Elevation:</b> 64 m (210 ft)</p>
+        <p><b>Last Eruption:</b> 4 million years ago</p>
+        <p><b>Location:</b> 13.25°S 167.65°E</p>
+        <p><b>Type:</b> Extinct Volcanic Islet</p>
+        <p><b>Island:</b> Vot Tande (Torba Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-13.25&mlon=167.65#map=12/-13.25/167.65">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>167.65,-13.25,64</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Western Gemini Seamount</name>
+      <description><![CDATA[
+        <h3>Western Gemini Seamount Volcano</h3>
+        <p><b>Elevation:</b> -30 m (-98 ft)</p>
+        <p><b>Last Eruption:</b> Unknown</p>
+        <p><b>Location:</b> 21.0°S 170.05°E</p>
+        <p><b>Type:</b> Submarine Seamount</p>
+        <p><b>Island:</b> Coral Sea (Tafea Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-21&mlon=170.05#map=12/-21/170.05">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>170.05,-21,-30</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Yasur</name>
+      <description><![CDATA[
+        <h3>Yasur Volcano</h3>
+        <p><b>Elevation:</b> 405 m (1329 ft)</p>
+        <p><b>Last Eruption:</b> ongoing</p>
+        <p><b>Location:</b> 19.52°S 169.42°E</p>
+        <p><b>Type:</b> Active Cinder Cone (Mt. Yasur)</p>
+        <p><b>Island:</b> Tanna (Tafea Province)</p>
+        <p><a href="https://www.openstreetmap.org/?mlat=-19.52&mlon=169.42#map=12/-19.52/169.42">View on OpenStreetMap</a></p>
+      ]]></description>
+      <Point>
+        <coordinates>169.42,-19.52,405</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

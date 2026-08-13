@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Map } from "lucide-react";
 import LeafletMapView from "./leaflet-map-view";
 import MapRegistry from "./map-registry";
+import VolcanoesDataTable from "./volcanoes-data-table";
 
 export default function MappingClient() {
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
@@ -11,6 +12,11 @@ export default function MappingClient() {
     latitude: number;
     longitude: number;
   } | null>(null);
+
+  const handleSelectVolcano = (coords: { latitude: number; longitude: number }) => {
+    setSelectedCoordinates(coords);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="space-y-8 flex flex-col">
@@ -40,6 +46,9 @@ export default function MappingClient() {
           onCoordinatesChange={setSelectedCoordinates}
         />
       </div>
+
+      {/* Vanuatu Volcanoes Mapped Catalog & Downloadable Formats */}
+      <VolcanoesDataTable onSelectVolcano={handleSelectVolcano} />
 
       {/* Map Registry Catalog Below */}
       <MapRegistry />

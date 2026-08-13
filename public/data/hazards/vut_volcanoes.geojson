@@ -3,110 +3,552 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {
-        "name": "Mount Yasur Volcano",
-        "type": "Active Cinder Cone",
-        "elevation_m": 361,
-        "alert_level": "Level 2 (Unstable)",
-        "island": "Tanna",
-        "province": "Tafea"
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          169.447,
-          -19.532
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Manaro Voui Volcano",
-        "type": "Active Caldera / Shield",
-        "elevation_m": 1496,
-        "alert_level": "Level 2 (Unrest)",
-        "island": "Ambae",
-        "province": "Penama"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          167.835,
+          167.83,
           -15.38
         ]
+      },
+      "properties": {
+        "name": "Ambae",
+        "elevation_m": 1496,
+        "elevation_ft": 4908,
+        "location_dms": "15.380°S 167.83°E",
+        "latitude": -15.38,
+        "longitude": 167.83,
+        "last_eruption": "2017",
+        "type": "Active Shield / Caldera (Manaro Voui)",
+        "island": "Ambae",
+        "province": "Penama",
+        "status": "Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-15.38&mlon=167.83#map=12/-15.38/167.83",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-15.38,167.83"
       }
     },
     {
       "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.12,
+          -16.25
+        ]
+      },
       "properties": {
-        "name": "Mount Benbow Volcano",
-        "type": "Active Pyroclastic Cone",
-        "elevation_m": 1160,
-        "alert_level": "Level 2 (Unstable)",
+        "name": "Ambrym",
+        "elevation_m": 1334,
+        "elevation_ft": 4375,
+        "location_dms": "16.25°S 168.12°E",
+        "latitude": -16.25,
+        "longitude": 168.12,
+        "last_eruption": "ongoing",
+        "type": "Active Caldera / Lava Lakes (Marum & Benbow)",
         "island": "Ambrym",
-        "province": "Malampa"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          168.115,
-          -16.245
-        ]
+        "province": "Malampa",
+        "status": "Active (Ongoing)",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.25&mlon=168.12#map=12/-16.25/168.12",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.25,168.12"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Mount Marum Volcano",
-        "type": "Active Lava Lake Cone",
-        "elevation_m": 1270,
-        "alert_level": "Level 2 (Unstable)",
-        "island": "Ambrym",
-        "province": "Malampa"
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.13,
-          -16.255
+          169.83,
+          -20.2
         ]
+      },
+      "properties": {
+        "name": "Aneityum",
+        "elevation_m": 852,
+        "elevation_ft": 2795,
+        "location_dms": "20.20°S 169.83°E",
+        "latitude": -20.2,
+        "longitude": 169.83,
+        "last_eruption": "Pleistocene",
+        "type": "Extinct Stratovolcano",
+        "island": "Aneityum",
+        "province": "Tafea",
+        "status": "Extinct",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-20.2&mlon=169.83#map=12/-20.2/169.83",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-20.2,169.83"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Lopevi Volcano Island",
-        "type": "Active Stratovolcano",
-        "elevation_m": 1413,
-        "alert_level": "Level 1 (Normal)",
-        "island": "Lopevi",
-        "province": "Malampa"
-      },
       "geometry": {
         "type": "Point",
         "coordinates": [
-          168.344,
-          -16.507
+          168.37,
+          -16.68
         ]
+      },
+      "properties": {
+        "name": "East Epi",
+        "elevation_m": -34,
+        "elevation_ft": -111,
+        "location_dms": "16.68°S 168.37°E",
+        "latitude": -16.68,
+        "longitude": 168.37,
+        "last_eruption": "2004",
+        "type": "Submarine Volcano",
+        "island": "Epi Offshore",
+        "province": "Shefa",
+        "status": "Submarine Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.68&mlon=168.37#map=12/-16.68/168.37",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.68,168.37"
       }
     },
     {
       "type": "Feature",
-      "properties": {
-        "name": "Mount Gharat Volcano",
-        "type": "Active Stratovolcano",
-        "elevation_m": 797,
-        "alert_level": "Level 1 (Normal)",
-        "island": "Gaua",
-        "province": "Torba"
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          170.29,
+          -20.98
+        ]
       },
+      "properties": {
+        "name": "Eastern Gemini Seamount",
+        "elevation_m": -80,
+        "elevation_ft": -262,
+        "location_dms": "20.98°S 170.29°E",
+        "latitude": -20.98,
+        "longitude": 170.29,
+        "last_eruption": "1996",
+        "type": "Submarine Seamount",
+        "island": "Coral Sea",
+        "province": "Tafea",
+        "status": "Submarine Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-20.98&mlon=170.29#map=12/-20.98/170.29",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-20.98,170.29"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          170.13,
+          -19.32
+        ]
+      },
+      "properties": {
+        "name": "Futuna",
+        "elevation_m": 666,
+        "elevation_ft": 2185,
+        "location_dms": "19.32°S 170.13°E",
+        "latitude": -19.32,
+        "longitude": 170.13,
+        "last_eruption": "Pleistocene",
+        "type": "Extinct Volcano",
+        "island": "Futuna",
+        "province": "Tafea",
+        "status": "Extinct",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-19.32&mlon=170.13#map=12/-19.32/170.13",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-19.32,170.13"
+      }
+    },
+    {
+      "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
           167.5,
           -14.27
         ]
+      },
+      "properties": {
+        "name": "Gaua",
+        "elevation_m": 979,
+        "elevation_ft": 2614,
+        "location_dms": "14.27°S 167.50°E",
+        "latitude": -14.27,
+        "longitude": 167.5,
+        "last_eruption": "1982",
+        "type": "Active Stratovolcano (Mt. Gharat)",
+        "island": "Gaua",
+        "province": "Torba",
+        "status": "Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-14.27&mlon=167.5#map=12/-14.27/167.5",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-14.27,167.5"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.28,
+          -16.73
+        ]
+      },
+      "properties": {
+        "name": "Kutali",
+        "elevation_m": 833,
+        "elevation_ft": 2733,
+        "location_dms": "16.73°S 168.28°E",
+        "latitude": -16.73,
+        "longitude": 168.28,
+        "last_eruption": "Unknown",
+        "type": "Volcanic Complex",
+        "island": "Epi",
+        "province": "Shefa",
+        "status": "Inactive / Unknown",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.73&mlon=168.28#map=12/-16.73/168.28",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.73,168.28"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.536,
+          -16.829
+        ]
+      },
+      "properties": {
+        "name": "Kuwae",
+        "elevation_m": -2,
+        "elevation_ft": -7,
+        "location_dms": "16.829°S 168.536°E",
+        "latitude": -16.829,
+        "longitude": 168.536,
+        "last_eruption": "1974",
+        "type": "Submarine Caldera",
+        "island": "Epi / Tongoa",
+        "province": "Shefa",
+        "status": "Submarine Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.829&mlon=168.536#map=12/-16.829/168.536",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.829,168.536"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.34,
+          -16.5
+        ]
+      },
+      "properties": {
+        "name": "Lopevi",
+        "elevation_m": 1413,
+        "elevation_ft": 4636,
+        "location_dms": "16.50°S 168.34°E",
+        "latitude": -16.5,
+        "longitude": 168.34,
+        "last_eruption": "2006",
+        "type": "Active Stratovolcano",
+        "island": "Lopevi",
+        "province": "Malampa",
+        "status": "Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.5&mlon=168.34#map=12/-16.5/168.34",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.5,168.34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.5,
+          -17
+        ]
+      },
+      "properties": {
+        "name": "Makura",
+        "elevation_m": 644,
+        "elevation_ft": 2113,
+        "location_dms": "17.0°S 168.5°E",
+        "latitude": -17,
+        "longitude": 168.5,
+        "last_eruption": "Unknown",
+        "type": "Volcanic Island Rim",
+        "island": "Makura",
+        "province": "Shefa",
+        "status": "Extinct / Inactive",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-17&mlon=168.5#map=12/-17/168.5",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-17,168.5"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.05,
+          -14.45
+        ]
+      },
+      "properties": {
+        "name": "Merelava",
+        "elevation_m": 883,
+        "elevation_ft": 3373,
+        "location_dms": "14.45°S 168.05°E",
+        "latitude": -14.45,
+        "longitude": 168.05,
+        "last_eruption": "1606",
+        "type": "Dormant Stratovolcano",
+        "island": "Merelava",
+        "province": "Torba",
+        "status": "Dormant",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-14.45&mlon=168.05#map=12/-14.45/168.05",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-14.45,168.05"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.65,
+          -13.7
+        ]
+      },
+      "properties": {
+        "name": "Mota Lava",
+        "elevation_m": 411,
+        "elevation_ft": 1348,
+        "location_dms": "13.7°S 167.65°E",
+        "latitude": -13.7,
+        "longitude": 167.65,
+        "last_eruption": "300,000 BC",
+        "type": "Extinct Stratovolcano",
+        "island": "Mota Lava",
+        "province": "Torba",
+        "status": "Extinct",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-13.7&mlon=167.65#map=12/-13.7/167.65",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-13.7,167.65"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33,
+          -17.45
+        ]
+      },
+      "properties": {
+        "name": "North Vate",
+        "elevation_m": 594,
+        "elevation_ft": 1949,
+        "location_dms": "17.45°S 168.33°E",
+        "latitude": -17.45,
+        "longitude": 168.33,
+        "last_eruption": "Holocene",
+        "type": "Volcanic Complex",
+        "island": "Efate",
+        "province": "Shefa",
+        "status": "Holocene / Inactive",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-17.45&mlon=168.33#map=12/-17.45/168.33",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-17.45,168.33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.33,
+          -18.75
+        ]
+      },
+      "properties": {
+        "name": "Traitor's Head",
+        "elevation_m": 837,
+        "elevation_ft": 2746,
+        "location_dms": "18.75°S 168.33°E",
+        "latitude": -18.75,
+        "longitude": 168.33,
+        "last_eruption": "1881",
+        "type": "Volcanic Complex",
+        "island": "Erromango",
+        "province": "Tafea",
+        "status": "Historical Eruption",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-18.75&mlon=168.33#map=12/-18.75/168.33",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-18.75,168.33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.43,
+          -16.8
+        ]
+      },
+      "properties": {
+        "name": "Tavai Ruro",
+        "elevation_m": 554,
+        "elevation_ft": 1818,
+        "location_dms": "16.80°S 168.43°E",
+        "latitude": -16.8,
+        "longitude": 168.43,
+        "last_eruption": "Unknown",
+        "type": "Volcanic Cone",
+        "island": "Tongoa",
+        "province": "Shefa",
+        "status": "Inactive",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.8&mlon=168.43#map=12/-16.8/168.43",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.8,168.43"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          168.592,
+          -16.992
+        ]
+      },
+      "properties": {
+        "name": "Unnamed Caldera",
+        "elevation_m": 521,
+        "elevation_ft": 1709,
+        "location_dms": "16.992°S 168.592°E",
+        "latitude": -16.992,
+        "longitude": 168.592,
+        "last_eruption": "Holocene",
+        "type": "Submarine / Island Caldera",
+        "island": "Shepherd Islands",
+        "province": "Shefa",
+        "status": "Holocene",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-16.992&mlon=168.592#map=12/-16.992/168.592",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-16.992,168.592"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.33,
+          -13.54
+        ]
+      },
+      "properties": {
+        "name": "Ureparapara",
+        "elevation_m": 764,
+        "elevation_ft": 2507,
+        "location_dms": "13.54°S 167.33°E",
+        "latitude": -13.54,
+        "longitude": 167.33,
+        "last_eruption": "476,000 BC",
+        "type": "Extinct Caldera Island",
+        "island": "Ureparapara",
+        "province": "Torba",
+        "status": "Extinct",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-13.54&mlon=167.33#map=12/-13.54/167.33",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-13.54,167.33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.47,
+          -13.8
+        ]
+      },
+      "properties": {
+        "name": "Vanua Lava",
+        "elevation_m": 921,
+        "elevation_ft": 3022,
+        "location_dms": "13.80°S 167.47°E",
+        "latitude": -13.8,
+        "longitude": 167.47,
+        "last_eruption": "1965",
+        "type": "Active Stratovolcano (Mt. Suretamatai)",
+        "island": "Vanua Lava",
+        "province": "Torba",
+        "status": "Active",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-13.8&mlon=167.47#map=12/-13.8/167.47",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-13.8,167.47"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.65,
+          -13.25
+        ]
+      },
+      "properties": {
+        "name": "Vot Tande",
+        "elevation_m": 64,
+        "elevation_ft": 210,
+        "location_dms": "13.25°S 167.65°E",
+        "latitude": -13.25,
+        "longitude": 167.65,
+        "last_eruption": "4 million years ago",
+        "type": "Extinct Volcanic Islet",
+        "island": "Vot Tande",
+        "province": "Torba",
+        "status": "Extinct",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-13.25&mlon=167.65#map=12/-13.25/167.65",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-13.25,167.65"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          170.05,
+          -21
+        ]
+      },
+      "properties": {
+        "name": "Western Gemini Seamount",
+        "elevation_m": -30,
+        "elevation_ft": -98,
+        "location_dms": "21.0°S 170.05°E",
+        "latitude": -21,
+        "longitude": 170.05,
+        "last_eruption": "Unknown",
+        "type": "Submarine Seamount",
+        "island": "Coral Sea",
+        "province": "Tafea",
+        "status": "Submarine",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-21&mlon=170.05#map=12/-21/170.05",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-21,170.05"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          169.42,
+          -19.52
+        ]
+      },
+      "properties": {
+        "name": "Yasur",
+        "elevation_m": 405,
+        "elevation_ft": 1329,
+        "location_dms": "19.52°S 169.42°E",
+        "latitude": -19.52,
+        "longitude": 169.42,
+        "last_eruption": "ongoing",
+        "type": "Active Cinder Cone (Mt. Yasur)",
+        "island": "Tanna",
+        "province": "Tafea",
+        "status": "Active (Ongoing)",
+        "osm_url": "https://www.openstreetmap.org/?mlat=-19.52&mlon=169.42#map=12/-19.52/169.42",
+        "google_maps_url": "https://www.google.com/maps/search/?api=1&query=-19.52,169.42"
       }
     }
   ]

@@ -126,12 +126,12 @@ export const LAYERS: LayerConfig[] = [
   // Hazards
   {
     id: "volcanoes",
-    name: "Volcanoes",
+    name: "Volcanoes of Vanuatu",
     group: "Hazards",
     url: "/data/hazards/vut_volcanoes.geojson",
     type: "point",
-    defaultOn: false,
-    color: "#991b1b",
+    defaultOn: true,
+    color: "#dc2626",
   },
   {
     id: "volcano_hazard",
