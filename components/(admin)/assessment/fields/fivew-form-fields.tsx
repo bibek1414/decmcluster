@@ -78,12 +78,14 @@ interface FiveWFormFieldsProps {
   activeModalTab: string;
   modalFormData: any;
   setModalFormData: React.Dispatch<React.SetStateAction<any>>;
+  isCreating?: boolean;
 }
 
 export function FiveWFormFields({
   activeModalTab,
   modalFormData,
   setModalFormData,
+  isCreating,
 }: FiveWFormFieldsProps) {
   const fieldGroups: Record<string, string[]> = {
     org_admin: [
@@ -161,7 +163,10 @@ export function FiveWFormFields({
 
         return (
           <div key={col.key} className="space-y-1">
-            <label className="block text-xs font-bold text-muted-foreground">{col.label}</label>
+            <label className="block text-xs font-bold text-muted-foreground">
+              {col.label}
+              {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
+            </label>
             {col.type === "boolean" ? (
               <select
                 value={String(modalFormData[col.key] ?? "")}

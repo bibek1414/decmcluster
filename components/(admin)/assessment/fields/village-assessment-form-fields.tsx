@@ -138,12 +138,14 @@ interface VillageAssessmentFormFieldsProps {
   activeModalTab: string;
   modalFormData: any;
   setModalFormData: React.Dispatch<React.SetStateAction<any>>;
+  isCreating?: boolean;
 }
 
 export function VillageAssessmentFormFields({
   activeModalTab,
   modalFormData,
   setModalFormData,
+  isCreating,
 }: VillageAssessmentFormFieldsProps) {
   const fieldGroups: Record<string, string[]> = {
     general: [
@@ -285,7 +287,10 @@ export function VillageAssessmentFormFields({
 
         return (
           <div key={col.key} className="space-y-1">
-            <label className="block text-xs font-bold text-muted-foreground">{col.label}</label>
+            <label className="block text-xs font-bold text-muted-foreground">
+              {col.label}
+              {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
+            </label>
             {col.type === "boolean" ? (
               <select
                 value={String(modalFormData[col.key] ?? "")}

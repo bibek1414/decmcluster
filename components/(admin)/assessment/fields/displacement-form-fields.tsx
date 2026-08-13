@@ -54,12 +54,14 @@ interface DisplacementFormFieldsProps {
   activeModalTab: string;
   modalFormData: any;
   setModalFormData: React.Dispatch<React.SetStateAction<any>>;
+  isCreating?: boolean;
 }
 
 export function DisplacementFormFields({
   activeModalTab,
   modalFormData,
   setModalFormData,
+  isCreating,
 }: DisplacementFormFieldsProps) {
   const fieldGroups: Record<string, string[]> = {
     general_displacement: [
@@ -112,7 +114,10 @@ export function DisplacementFormFields({
 
         return (
           <div key={col.key} className="space-y-1">
-            <label className="block text-xs font-bold text-muted-foreground">{col.label}</label>
+            <label className="block text-xs font-bold text-muted-foreground">
+              {col.label}
+              {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
+            </label>
             {col.type === "number" ? (
               <Input
                 type="number"

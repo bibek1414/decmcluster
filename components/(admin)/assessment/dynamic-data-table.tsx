@@ -70,6 +70,76 @@ const GENERIC_COLUMNS = [
   { key: "field_name", label: "Field Name", type: "string", readonly: false },
 ];
 
+const EVAC_TABS = [
+  { key: "general", label: "General & Info" },
+  { key: "contact", label: "Contacts & Agency" },
+  { key: "capacity", label: "Capacity & Buildings" },
+  { key: "readiness", label: "Facilities & Readiness" },
+  { key: "water_sanitation", label: "WASH (Water & Sanitation)" },
+];
+
+const VILLAGE_TABS = [
+  { key: "general", label: "General & Survey" },
+  { key: "geography", label: "Geography" },
+  { key: "key_informants", label: "Key Informants" },
+  { key: "idp_statistics", label: "IDP & Returnees" },
+  { key: "vulnerabilities_shelter", label: "Vulnerabilities & Shelter" },
+  { key: "community_needs", label: "Community & Needs" },
+  { key: "gps_submission", label: "GPS & Submission" },
+];
+
+const FIVEW_TABS = [
+  { key: "org_admin", label: "Organization & Admin" },
+  { key: "location_cluster", label: "Location & Cluster" },
+  { key: "project_activity", label: "Project & Activity" },
+  { key: "financial_modality", label: "Financial & Modality" },
+  { key: "beneficiaries", label: "Beneficiaries & Reached" },
+  { key: "indicators_sub", label: "Indicators & Sub-activities" },
+];
+
+const DISPLACEMENT_TABS = [
+  { key: "general_displacement", label: "General Info" },
+  { key: "geography", label: "Geography" },
+  { key: "timeline", label: "Timeline" },
+  { key: "demographics", label: "Demographics" },
+  { key: "destination", label: "Origin & Destination" },
+];
+
+const EVAC_GROUPS: Record<string, string[]> = {
+  general: ["compound_name", "compound_function", "country", "province", "area_council", "island", "village", "latitude", "longitude"],
+  contact: ["primary_contact", "secondary_contact", "organization", "agency"],
+  capacity: ["no_of_buildings", "no_of_rooms", "internal_building_evacuee_capacity", "name_of_outside_temporary_shelter", "outside_temporary_shelter_capacity", "disaster_suitable_for", "enginerring_certified_cyclone_rating"],
+  readiness: ["is_ec_owner_approved", "is_ec_govt_approved", "first_aid_kit_availability", "first_aid_trained_person", "electricity_source", "kitchen_cooking_facilities", "laundry_facilities", "communication_back_up"],
+  water_sanitation: ["drinking_water_source", "washing_water_source", "water_storage_capacity_litres", "total_mens_toilet", "total_womens_toilet", "total_unisex_toilet", "total_disability_access_toilet", "total_mens_shower", "total_womens_shower", "total_unisex_shower", "total_disability_access_shower"],
+};
+
+const VILLAGE_GROUPS: Record<string, string[]> = {
+  general: ["survey_start", "survey_end", "survey_date", "enumerator_username", "device_id", "audit_file", "audit_url", "consent", "methodology_individual_ki", "methodology_group_ki", "methodology_direct_observation", "methodology_other", "data_collection_method"],
+  geography: ["province", "area_council", "village_name", "village_other", "village_condition", "assessment_date", "assessment_start_time", "enumerator1_name", "enumerator1_phone", "enumerator1_gender", "enumerator2_name", "enumerator2_phone", "enumerator2_gender"],
+  key_informants: ["ki1_name", "ki1_type", "ki1_gender", "ki1_age", "ki1_contact", "ki2_name", "ki2_type", "ki2_gender", "ki2_age", "ki2_contact", "ki3_name", "ki3_type", "ki3_gender", "ki3_age", "ki3_contact", "ki4_name", "ki4_type", "ki4_gender", "ki4_age", "ki4_contact", "ki5_name", "ki5_type", "ki5_gender", "ki5_age", "ki5_contact", "ki6_name", "ki6_type", "ki6_gender", "ki6_age", "ki6_contact"],
+  idp_statistics: ["idp_present", "idp_households_total", "idp_infant_male", "idp_infant_female", "idp_child_1_5_male", "idp_child_1_5_female", "idp_child_6_12_male", "idp_child_6_12_female", "idp_adolescent_male", "idp_adolescent_female", "idp_adult_male", "idp_adult_female", "idp_elderly_male", "idp_elderly_female", "idp_male_total", "idp_female_total", "idp_individuals_total", "returnees_present", "returnee_households_total", "returnee_individuals_total"],
+  vulnerabilities_shelter: ["pregnant_women_count", "female_headed_hh", "elderly_headed_hh", "male_headed_hh", "child_headed_hh", "pwd_total", "idp_pwd_total", "shelter_primary", "shelter_secondary", "displacement_shelter_type", "displaced_hh_estimated", "displacement_duration", "housing_type_pre_cyclone", "house_rebuild_duration", "rebuild_material_type", "house_cyclone_resilience", "remaining_idp_intention"],
+  community_needs: ["seasonal_worker_level", "community_participation", "cdccc_exists", "early_warning_received", "annual_population_displaced", "top_need_1", "top_need_2", "top_need_3"],
+  gps_submission: ["gps_latitude", "gps_longitude", "gps_altitude", "gps_precision", "record_id", "record_uuid", "submission_time", "validation_status", "submission_status", "submitted_by", "form_version", "record_index"],
+};
+
+const FIVEW_GROUPS: Record<string, string[]> = {
+  org_admin: ["donor", "donor_names", "reporting_org_name", "ro_code", "reporting_org_type", "other_ip_name", "ip_code", "ip_type", "reporting_month", "activity_status"],
+  location_cluster: ["state_abyei", "admin1_code", "province", "admin2_code", "location_evac_name", "cluster_name", "hrp_non_hrp"],
+  project_activity: ["project_number", "project_name", "activity", "indicator", "unit", "target"],
+  financial_modality: ["total_value", "new_beneficiaries", "is_mpc", "modality", "type_of_modality", "delivery_mechanism", "number_of_transfers", "value_ssp", "value_usd"],
+  beneficiaries: ["beneficiaries_type_under_18", "child_male_under_18", "child_female_under_18", "adult_male_18_60", "adult_female_18_60", "elderly_male_60_plus", "elderly_female_60_plus", "total_beneficiaries_reached", "people_with_disability", "boys_above_5", "girls_above_5", "boys_5_17", "girls_5_17", "men_18_59", "women_18_59", "men_60_plus", "women_60_plus", "total_reached_quarter"],
+  indicators_sub: ["comments", "contribute_hrp_aap", "hrp_aap_indicators", "activity_type", "sub_activity_type", "measurements", "achieved", "column1"],
+};
+
+const DISPLACEMENT_GROUPS: Record<string, string[]> = {
+  general_displacement: ["operation", "operation_code", "displacement_reason", "operation_status", "assessment_type"],
+  geography: ["admin0_name", "admin0_pcode", "admin1_name", "admin1_pcode", "admin2_name", "admin2_pcode", "admin_level"],
+  timeline: ["reporting_date", "reporting_year", "reporting_month", "round_number"],
+  demographics: ["num_present_idps", "males_number", "female_number", "total_vul_hhs", "males_number_0_4", "females_number_0_4", "males_number_5_17", "females_number_5_17", "males_number_18_59", "females_number_18_59", "males_number_60_plus", "females_number_60_plus"],
+  destination: ["idp_origin_admin1_name", "idp_origin_admin1_pcode", "idp_destination", "idp_destination_admin1_name", "idp_destination_admin1_pcode"],
+};
+
 const getGenericFieldName = (row: any) => {
   if (!row) return "";
   if (typeof row.field_name === "string" && row.field_name.trim()) return row.field_name;
@@ -103,6 +173,22 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
         : isFiveW
           ? FIVEW_COLUMNS
           : DISPLACEMENT_COLUMNS;
+
+  const currentTabs = isEvac
+    ? EVAC_TABS
+    : isVillage
+      ? VILLAGE_TABS
+      : isFiveW
+        ? FIVEW_TABS
+        : DISPLACEMENT_TABS;
+
+  const currentGroups = isEvac
+    ? EVAC_GROUPS
+    : isVillage
+      ? VILLAGE_GROUPS
+      : isFiveW
+        ? FIVEW_GROUPS
+        : DISPLACEMENT_GROUPS;
 
   const queryClient = useQueryClient();
 
@@ -307,6 +393,27 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       return;
     }
 
+    if (isCreating && !isGenericForm) {
+      const missingCol = columns.find((col) => {
+        if (col.readonly) return false;
+        const val = modalFormData[col.key];
+        return val === "" || val === null || val === undefined;
+      });
+      if (missingCol) {
+        let targetTab = activeModalTab;
+        for (const [tabKey, fields] of Object.entries(currentGroups)) {
+          if (fields.includes(missingCol.key)) {
+            targetTab = tabKey;
+            break;
+          }
+        }
+        setActiveModalTab(targetTab);
+        toast.error(`Please fill out compulsory field "${missingCol.label}". All fields are required when creating a record.`);
+        setIsSubmittingModal(false);
+        return;
+      }
+    }
+
     try {
       if (isCreating) {
         await createRecord.mutateAsync(modalFormData);
@@ -325,6 +432,26 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       toast.error(error.message || "Failed to save changes");
     } finally {
       setIsSubmittingModal(false);
+    }
+  };
+
+  const activeTabIndex = currentTabs.findIndex((t) => t.key === activeModalTab);
+
+  const handleNextTab = () => {
+    if (isCreating && !isGenericForm) {
+      const fieldsOnTab = currentGroups[activeModalTab] || [];
+      const missingFieldKey = fieldsOnTab.find((key) => {
+        const val = modalFormData[key];
+        return val === "" || val === null || val === undefined;
+      });
+      if (missingFieldKey) {
+        const col = columns.find((c) => c.key === missingFieldKey);
+        toast.error(`Please fill out compulsory field "${col?.label || missingFieldKey}" before proceeding.`);
+        return;
+      }
+    }
+    if (activeTabIndex < currentTabs.length - 1) {
+      setActiveModalTab(currentTabs[activeTabIndex + 1].key);
     }
   };
 
@@ -914,7 +1041,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           }
         }}
       >
-        <DialogContent className="max-w-3xl! w-full rounded-2xl border border-border bg-card shadow-none p-0 gap-0 overflow-hidden">
+        <DialogContent className="max-w-4xl! w-full rounded-2xl border border-border bg-card shadow-none p-0 gap-0 overflow-hidden">
           <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
             <DialogTitle className="text-base font-bold">
               {isCreating ? "Create New Record" : `Edit Record (ID: ${editingRow?.id})`}
@@ -929,104 +1056,36 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           <div className="px-6 pt-4 space-y-4 pb-6">
             {/* Modal Tabs */}
             {!isGenericForm && (
-              <>
-                {isEvac ? (
-                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                    {[
-                      { key: "general", label: "General & Info" },
-                      { key: "contact", label: "Contacts & Agency" },
-                      { key: "capacity", label: "Capacity & Buildings" },
-                      { key: "readiness", label: "Facilities & Readiness" },
-                      { key: "water_sanitation", label: "WASH (Water & Sanitation)" },
-                    ].map((tab) => (
-                      <button
-                        key={tab.key}
-                        type="button"
-                        onClick={() => setActiveModalTab(tab.key)}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                          activeModalTab === tab.key
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                        }`}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-                ) : isVillage ? (
-                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                    {[
-                      { key: "general", label: "General & Survey" },
-                      { key: "geography", label: "Geography" },
-                      { key: "key_informants", label: "Key Informants" },
-                      { key: "idp_statistics", label: "IDP & Returnees" },
-                      { key: "vulnerabilities_shelter", label: "Vulnerabilities & Shelter" },
-                      { key: "community_needs", label: "Community & Needs" },
-                      { key: "gps_submission", label: "GPS & Submission" },
-                    ].map((tab) => (
-                      <button
-                        key={tab.key}
-                        type="button"
-                        onClick={() => setActiveModalTab(tab.key)}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                          activeModalTab === tab.key
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                        }`}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-                ) : isFiveW ? (
-                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                    {[
-                      { key: "org_admin", label: "Organization & Admin" },
-                      { key: "location_cluster", label: "Location & Cluster" },
-                      { key: "project_activity", label: "Project & Activity" },
-                      { key: "financial_modality", label: "Financial & Modality" },
-                      { key: "beneficiaries", label: "Beneficiaries & Reached" },
-                      { key: "indicators_sub", label: "Indicators & Sub-activities" },
-                    ].map((tab) => (
-                      <button
-                        key={tab.key}
-                        type="button"
-                        onClick={() => setActiveModalTab(tab.key)}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                          activeModalTab === tab.key
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                        }`}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
-                    {[
-                      { key: "general_displacement", label: "General Info" },
-                      { key: "geography", label: "Geography" },
-                      { key: "timeline", label: "Timeline" },
-                      { key: "demographics", label: "Demographics" },
-                      { key: "destination", label: "Origin & Destination" },
-                    ].map((tab) => (
-                      <button
-                        key={tab.key}
-                        type="button"
-                        onClick={() => setActiveModalTab(tab.key)}
-                        className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
-                          activeModalTab === tab.key
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                        }`}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </>
+              <div className="flex flex-wrap gap-1.5 border-b border-border pb-3">
+                {currentTabs.map((tab, idx) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => {
+                      if (isCreating && idx > activeTabIndex) {
+                        const fieldsOnTab = currentGroups[activeModalTab] || [];
+                        const missingFieldKey = fieldsOnTab.find((key) => {
+                          const val = modalFormData[key];
+                          return val === "" || val === null || val === undefined;
+                        });
+                        if (missingFieldKey) {
+                          const col = columns.find((c) => c.key === missingFieldKey);
+                          toast.error(`Please fill out compulsory field "${col?.label || missingFieldKey}" before proceeding.`);
+                          return;
+                        }
+                      }
+                      setActiveModalTab(tab.key);
+                    }}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
+                      activeModalTab === tab.key
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             )}
 
             {/* Modal Form */}
@@ -1048,55 +1107,85 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
+                  isCreating={isCreating}
                 />
               ) : isVillage ? (
                 <VillageAssessmentFormFields
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
+                  isCreating={isCreating}
                 />
               ) : isFiveW ? (
                 <FiveWFormFields
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
+                  isCreating={isCreating}
                 />
               ) : (
                 <DisplacementFormFields
                   activeModalTab={activeModalTab}
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
+                  isCreating={isCreating}
                 />
               )}
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setEditingRow(null);
-                    setIsCreating(false);
-                  }}
-                  className="h-9 cursor-pointer rounded-xl shadow-none"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isSubmittingModal}
-                  className="h-9 font-bold cursor-pointer rounded-xl px-5 shadow-none"
-                >
-                  {isSubmittingModal ? (
-                    <>
-                      <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : isCreating ? (
-                    "Create Entry"
-                  ) : (
-                    "Save Changes"
+              <div className="flex items-center justify-between pt-3 border-t border-border">
+                <div className="flex items-center gap-2">
+                  {!isGenericForm && activeTabIndex > 0 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setActiveModalTab(currentTabs[activeTabIndex - 1].key)}
+                      className="h-9 font-semibold cursor-pointer rounded-xl shadow-none"
+                    >
+                      Previous
+                    </Button>
                   )}
-                </Button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingRow(null);
+                      setIsCreating(false);
+                    }}
+                    className="h-9 cursor-pointer rounded-xl shadow-none"
+                  >
+                    Cancel
+                  </Button>
+
+                  {!isGenericForm && activeTabIndex < currentTabs.length - 1 ? (
+                    <Button
+                      type="button"
+                      onClick={handleNextTab}
+                      className="h-9 font-bold cursor-pointer rounded-xl px-5 shadow-none"
+                    >
+                      Next
+                    </Button>
+                  ) : (
+                    <Button
+                      type="submit"
+                      disabled={isSubmittingModal}
+                      className="h-9 font-bold cursor-pointer rounded-xl px-5 shadow-none"
+                    >
+                      {isSubmittingModal ? (
+                        <>
+                          <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : isCreating ? (
+                        "Create Entry"
+                      ) : (
+                        "Save Changes"
+                      )}
+                    </Button>
+                  )}
+                </div>
               </div>
             </form>
           </div>
