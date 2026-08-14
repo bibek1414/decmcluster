@@ -109,12 +109,10 @@ export function sanitizeRecordPayload(fields: Record<string, any>): Record<strin
       key === "survey_end" ||
       key.endsWith("_at");
 
-    if (isDateField) {
-      if (val === "" || val === undefined || val === null) {
-        cleaned[key] = null;
-      } else if (typeof val === "string") {
-        cleaned[key] = formatDateISO(val);
-      }
+    if (val === "" || val === undefined) {
+      cleaned[key] = null;
+    } else if (isDateField && typeof val === "string") {
+      cleaned[key] = formatDateISO(val);
     }
   });
 
@@ -754,7 +752,28 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
       }
       queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
     } catch (error: any) {
-      toast.error(error.message || "Failed to save changes");
+      const msg = error?.message || "";
+      const fieldMatch = msg.match(/^([a-z0-9_]+):\s*(.*)/i);
+      if (fieldMatch) {
+        const fieldKey = fieldMatch[1];
+        const col = columns.find((c) => c.key === fieldKey);
+        const label = col?.label || fieldKey;
+
+        let targetTab = activeModalTab;
+        for (const [tabKey, fields] of Object.entries(currentGroups)) {
+          if (fields.includes(fieldKey)) {
+            targetTab = tabKey;
+            break;
+          }
+        }
+        setActiveModalTab(targetTab);
+        setFormErrors((prev) => ({
+          ...prev,
+          [fieldKey]: `${label} is required.`,
+        }));
+      } else {
+        toast.error(msg || "Failed to save changes");
+      }
     } finally {
       setIsSubmittingModal(false);
     }
