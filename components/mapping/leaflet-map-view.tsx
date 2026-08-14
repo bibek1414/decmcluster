@@ -744,17 +744,19 @@ export default function LeafletMapView({
           <div className="print-header hidden pb-3 border-b-2 border-slate-900">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-emerald-700 text-white font-extrabold flex items-center justify-center text-sm border border-emerald-900 shadow-xs shrink-0">
-                  🇻🇺
-                </div>
+                <img
+                  src="/decmlogo.jpeg"
+                  alt="DECM Cluster Logo"
+                  className="w-10 h-10 object-contain rounded-md border border-slate-200 shrink-0 bg-white p-0.5"
+                />
                 <div>
                   <h1 className="text-base font-black text-slate-900 uppercase tracking-tight leading-none">
-                    Republic of Vanuatu — National DECM Cluster Portal
+                    DECM Cluster Information and Data Portal
                   </h1>
                   <h2 className="text-xs font-bold text-emerald-800 mt-1">
                     {selectedProvince
                       ? `${selectedProvince} Province — Official Spatial GIS & Infrastructure Map`
-                      : "Official A4 Spatial Infrastructure & Evacuation Shelter Map"}
+                      : "Official Spatial Infrastructure & Evacuation Shelter Map"}
                   </h2>
                 </div>
               </div>
