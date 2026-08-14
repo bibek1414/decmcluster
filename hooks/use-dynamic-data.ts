@@ -26,6 +26,7 @@ export function useDynamicData(
   opFilter: string,
   token: string | null,
   pageSize: number = 50,
+  statusFilter?: string,
 ) {
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
@@ -43,10 +44,11 @@ export function useDynamicData(
       opFilter,
       token,
       pageSize,
+      statusFilter,
     ],
     queryFn: async () => {
       if (isGeneric) {
-        return dynamicDataService.fetchGenericFormRecords(slug, page, search, token, pageSize);
+        return dynamicDataService.fetchGenericFormRecords(slug, page, search, token, pageSize, statusFilter);
       } else if (isEvac) {
         return dynamicDataService.fetchEvacuationCentres(
           page,
@@ -56,6 +58,7 @@ export function useDynamicData(
           districtFilter,
           opFilter,
           pageSize,
+          statusFilter,
         );
       } else if (isVillage) {
         return dynamicDataService.fetchVillageAssessments(
@@ -66,6 +69,7 @@ export function useDynamicData(
           districtFilter,
           opFilter,
           pageSize,
+          statusFilter,
         );
       } else if (isFiveW) {
         return dynamicDataService.fetchFiveWActivities(
@@ -76,6 +80,7 @@ export function useDynamicData(
           districtFilter,
           opFilter,
           pageSize,
+          statusFilter,
         );
       } else {
         return dynamicDataService.fetchDisplacements(
@@ -86,6 +91,7 @@ export function useDynamicData(
           districtFilter,
           opFilter,
           pageSize,
+          statusFilter,
         );
       }
     },
@@ -190,6 +196,19 @@ export function useImportDynamicRecord(slug: string, token: string | null) {
       } else {
         return dynamicDataService.importDisplacements(file, token);
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
+    },
+  });
+}
+
+export function useVerifyDynamicRecord(slug: string, token: string | null) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      return dynamicDataService.verifyRecord(slug, id, token);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });

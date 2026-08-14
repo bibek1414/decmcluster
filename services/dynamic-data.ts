@@ -289,6 +289,7 @@ export const dynamicDataService = {
     district?: string,
     op?: string,
     pageSize: number = 50,
+    statusFilter?: string,
   ): Promise<PaginatedResponse<EvacuationCentreRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/evacuation-centres/?page=${page}&page_size=${pageSize}`;
@@ -303,6 +304,9 @@ export const dynamicDataService = {
     }
     if (op) {
       url += `&compound_function=${encodeURIComponent(op)}`;
+    }
+    if (statusFilter && statusFilter !== "all") {
+      url += `&status=${encodeURIComponent(statusFilter)}`;
     }
     const res = await fetch(url, { headers: getHeaders(token) });
     if (!res.ok) throw new Error("Failed to fetch evacuation centres data");
@@ -344,6 +348,7 @@ export const dynamicDataService = {
     district?: string,
     op?: string,
     pageSize: number = 50,
+    statusFilter?: string,
   ): Promise<PaginatedResponse<DisplacementRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/displacements/?page=${page}&page_size=${pageSize}`;
@@ -358,6 +363,9 @@ export const dynamicDataService = {
     }
     if (op) {
       url += `&operation=${encodeURIComponent(op)}`;
+    }
+    if (statusFilter && statusFilter !== "all") {
+      url += `&status=${encodeURIComponent(statusFilter)}`;
     }
     const res = await fetch(url, { headers: getHeaders(token) });
     if (!res.ok) throw new Error("Failed to fetch displacements data");
@@ -561,6 +569,7 @@ export const dynamicDataService = {
     district?: string,
     op?: string,
     pageSize: number = 50,
+    statusFilter?: string,
   ): Promise<PaginatedResponse<VillageAssessmentRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/village-assessments/?page=${page}&page_size=${pageSize}`;
@@ -575,6 +584,9 @@ export const dynamicDataService = {
     }
     if (op) {
       url += `&village_name=${encodeURIComponent(op)}`;
+    }
+    if (statusFilter && statusFilter !== "all") {
+      url += `&status=${encodeURIComponent(statusFilter)}`;
     }
     const res = await fetch(url, { headers: getHeaders(token) });
     if (!res.ok) throw new Error("Failed to fetch village assessments data");
@@ -697,6 +709,7 @@ export const dynamicDataService = {
     district?: string,
     op?: string,
     pageSize: number = 50,
+    statusFilter?: string,
   ): Promise<PaginatedResponse<FiveWActivityRecord>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/fivew/activities/?page=${page}&page_size=${pageSize}`;
@@ -711,6 +724,9 @@ export const dynamicDataService = {
     }
     if (op) {
       url += `&reporting_org_name=${encodeURIComponent(op)}`;
+    }
+    if (statusFilter && statusFilter !== "all") {
+      url += `&status=${encodeURIComponent(statusFilter)}`;
     }
     const res = await fetch(url, { headers: getHeaders(token) });
     if (!res.ok) throw new Error("Failed to fetch 5W response data");
@@ -831,11 +847,15 @@ export const dynamicDataService = {
     search: string = "",
     token: string | null = null,
     pageSize: number = 50,
+    statusFilter?: string,
   ): Promise<PaginatedResponse<any>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     let url = `${baseUrl}/api/${slug}/?page=${page}&page_size=${pageSize}`;
     if (search.trim()) {
       url += `&search=${encodeURIComponent(search)}`;
+    }
+    if (statusFilter && statusFilter !== "all") {
+      url += `&status=${encodeURIComponent(statusFilter)}`;
     }
     const res = await fetch(url, { headers: getHeaders(token) });
     if (!res.ok) throw new Error(`Failed to fetch ${slug} records`);
@@ -869,7 +889,6 @@ export const dynamicDataService = {
         ...(payload.data !== undefined ? { data: payload.data } : {}),
         ...(payload.field_name !== undefined ? { field_name: payload.field_name } : {}),
       };
-      // If neither field nor data nor field_name was explicitly passed, send payload as body
       if (!payload.field && !payload.data && !payload.field_name) {
         body = payload;
       }
@@ -952,6 +971,48 @@ export const dynamicDataService = {
       headers: getHeaders(token),
     });
     if (!res.ok) throw new Error("Failed to delete record");
+  },
+
+  verifyRecord: async (
+    slug: string,
+    id: number,
+    token: string | null,
+  ): Promise<any> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
+    const isVillage = slug === "village-assessment" || slug === "village-assessments";
+    const isFiveW = slug === "5w-response-data" || slug === "fivew";
+
+    const endpoint = isEvac
+      ? "evacuation-centres"
+      : isVillage
+      ? "village-assessments"
+      : isFiveW
+      ? "fivew/activities"
+      : slug === "displacement-data" || slug === "displacements"
+      ? "displacements"
+      : slug;
+
+    const res = await fetch(`${baseUrl}/api/${endpoint}/${id}/`, {
+      method: "PATCH",
+      headers: getHeaders(token),
+      body: JSON.stringify({ status: "verified" }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMsg = "Failed to verify record";
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed.detail) errorMsg = parsed.detail;
+        else if (typeof parsed === "object") {
+          const firstKey = Object.keys(parsed)[0];
+          errorMsg = `${firstKey}: ${parsed[firstKey]}`;
+        }
+      } catch (e) {}
+      throw new Error(errorMsg);
+    }
+    return res.json();
   },
 };
 

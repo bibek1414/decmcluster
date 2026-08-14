@@ -18,6 +18,9 @@ import {
   Settings,
   ListPlus,
   Layers,
+  CheckCircle2,
+  CheckCheck,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -48,6 +51,7 @@ import {
   useUpdateDynamicRecord,
   useDeleteDynamicRecord,
   useImportDynamicRecord,
+  useVerifyDynamicRecord,
 } from "@/hooks/use-dynamic-data";
 import {
   EVACUATION_CENTRE_COLUMNS,
@@ -319,6 +323,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const [selectedProvinceFilter, setSelectedProvinceFilter] = useState("");
   const [selectedDistrictFilter, setSelectedDistrictFilter] = useState("");
   const [selectedOpFilter, setSelectedOpFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   // Debounce search input to avoid spamming server
   useEffect(() => {
@@ -339,12 +344,36 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     selectedOpFilter,
     token,
     50,
+    statusFilter,
   );
 
   const createRecord = useCreateDynamicRecord(slug, token);
   const updateRecord = useUpdateDynamicRecord(slug, token);
   const deleteRecord = useDeleteDynamicRecord(slug, token);
   const importRecord = useImportDynamicRecord(slug, token);
+  const verifyRecord = useVerifyDynamicRecord(slug, token);
+
+  const handleVerifySingle = async (id: number) => {
+    try {
+      await verifyRecord.mutateAsync(id);
+      toast.success(`Record #${id} verified successfully and merged into Live Data`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to verify record");
+    }
+  };
+
+  const handleVerifyBatch = async () => {
+    if (selectedRowIds.length === 0) return;
+    let countSuccess = 0;
+    for (const id of selectedRowIds) {
+      try {
+        await verifyRecord.mutateAsync(id);
+        countSuccess++;
+      } catch (err) {}
+    }
+    toast.success(`${countSuccess} record(s) verified and merged into Live Data`);
+    setSelectedRowIds([]);
+  };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isImporting, setIsImporting] = useState(false);
@@ -902,7 +931,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   return (
     <Card className="border border-border bg-card/65 backdrop-blur-sm rounded-2xl overflow-hidden shadow-none animate-fadeIn">
       {/* Table Actions Header */}
-      <div className="p-4 border-b border-border flex flex-col gap-4 bg-muted/20">
+      <div className="p-4 border-b border-border flex flex-col gap-3 bg-muted/20">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative min-w-[200px] flex-1 max-w-xs">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -945,6 +974,25 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
               >
                 <SlidersHorizontal className="h-4 w-4" />
                 Manage Fields
+              </Button>
+            )}
+
+            {canEdit && (
+              <Button
+                variant={statusFilter === "unverified" ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setStatusFilter(statusFilter === "unverified" ? "all" : "unverified");
+                  setPage(1);
+                }}
+                className={`h-9 gap-1.5 font-bold cursor-pointer rounded-xl shadow-none ${
+                  statusFilter === "unverified"
+                    ? "bg-amber-600 hover:bg-amber-700 text-white"
+                    : "bg-amber-50/50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-900/60 hover:bg-amber-100 dark:hover:bg-amber-950/40"
+                }`}
+              >
+                <CheckCircle2 className="h-4 w-4" />
+                Unverified Data
               </Button>
             )}
 
@@ -1022,12 +1070,12 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                     <Button
                       variant="outline"
                       size="sm"
-                      disabled={isImporting}
                       onClick={() => fileInputRef.current?.click()}
+                      disabled={isImporting}
                       className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-blue-50/45 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 border-blue-200/60 dark:border-blue-900/60 hover:bg-blue-50 dark:hover:bg-blue-950/40 shadow-none"
                     >
                       {isImporting ? (
-                        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                        <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         <Upload className="h-4 w-4" />
                       )}
@@ -1038,65 +1086,80 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
               </>
             )}
 
-            {/* Export Dropdown */}
-            {!isGenericForm && (
-              <div className="relative" ref={exportDropdownRef}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={loadingExport}
-                  onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
-                  className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-green-50/45 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200/60 dark:border-green-900/60 hover:bg-green-50 dark:hover:bg-green-950/40 shadow-none"
-                >
-                  {loadingExport ? (
-                    <Loader2 className="h-4 w-4 animate-spin text-green-600" />
-                  ) : (
-                    <Download className="h-4 w-4" />
-                  )}
-                  Export
-                </Button>
-                {isExportDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-72 bg-card border border-border rounded-xl z-40 p-3 animate-fadeIn shadow-none space-y-1">
-                    <div className="text-[10px] uppercase font-extrabold text-muted-foreground tracking-wider px-1 pb-2 border-b border-border">
-                      Export to Excel
-                    </div>
-                    <button
-                      onClick={performExport}
-                      className="w-full text-left px-3 py-2 text-xs font-semibold text-foreground hover:bg-muted/40 rounded-lg transition-colors cursor-pointer flex items-center justify-between"
-                    >
-                      <span>
-                        Export (
-                        {selectedExportColumns.length === 0 ? "all" : selectedExportColumns.length}{" "}
-                        columns)
-                      </span>
-                      <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono text-muted-foreground">
-                        {count} rows
-                      </span>
-                    </button>
+            {/* Export dropdown */}
+            <div className="relative" ref={exportDropdownRef}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsExportDropdownOpen(!isExportDropdownOpen)}
+                className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl border-border bg-background shadow-none"
+              >
+                <Download className="h-4 w-4" />
+                Export
+              </Button>
+              {isExportDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card shadow-xl p-1.5 z-30 animate-fadeIn">
+                  <div className="px-2 py-1.5 text-[11px] font-bold text-muted-foreground border-b border-border">
+                    {selectedExportColumns.length > 0
+                      ? `Exporting ${selectedExportColumns.length} selected columns`
+                      : "Exporting all columns"}
                   </div>
-                )}
-              </div>
-            )}
+                  <button
+                    onClick={() => {
+                      setIsExportDropdownOpen(false);
+                      performExport();
+                    }}
+                    disabled={loadingExport}
+                    className="w-full text-left px-2 py-2 text-xs font-semibold hover:bg-muted rounded-lg transition-colors flex items-center justify-between cursor-pointer"
+                  >
+                    <span>Download Excel (.xlsx)</span>
+                    {loadingExport && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Unverified Queue Banner */}
+        {statusFilter === "unverified" && (
+          <div className="bg-amber-500/10 border border-amber-500/25 px-4 py-2.5 rounded-xl flex items-center justify-between text-xs text-amber-700 dark:text-amber-300">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-amber-500" />
+              <span>
+                <strong>Viewing Unverified Data Queue.</strong> Review, edit, and click <strong>"Verify"</strong> to merge records into the live database.
+              </span>
+            </div>
+            {selectedRowIds.length > 0 && canEdit && (
+              <Button
+                size="sm"
+                onClick={handleVerifyBatch}
+                disabled={verifyRecord.isPending}
+                className="h-7 px-3 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white gap-1 rounded-lg cursor-pointer shadow-none"
+              >
+                {verifyRecord.isPending ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <CheckCheck className="h-3.5 w-3.5" />
+                )}
+                Verify Selected ({selectedRowIds.length})
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Table grid */}
-      <div className="w-full overflow-x-auto relative min-h-[300px]">
+      {/* Main Table Area */}
+      <div className="overflow-x-auto relative">
         {isLoading && (
-          <div className="absolute inset-0 bg-background/50 flex flex-col items-center justify-center z-10">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            <p className="text-xs text-muted-foreground font-semibold mt-3">Loading records...</p>
+          <div className="flex items-center justify-center p-12 text-center h-[300px]">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         )}
 
-        {isError && (
-          <div className="flex flex-col items-center justify-center p-12 text-center h-[300px]">
-            <X className="h-8 w-8 text-rose-500 mb-2" />
-            <p className="text-xs font-bold text-foreground">Failed to load data</p>
-            <p className="text-[10px] text-muted-foreground mt-1">
-              Please check your connection and credentials.
-            </p>
+        {!isLoading && isError && (
+          <div className="p-8 text-center text-rose-500 text-xs font-bold">
+            Failed to load records. Please try again.
           </div>
         )}
 
@@ -1105,7 +1168,9 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             <Download className="h-8 w-8 text-muted-foreground/30 mb-2 animate-pulse" />
             <p className="text-xs font-bold text-foreground">No records found</p>
             <p className="text-[10px] text-muted-foreground mt-1 max-w-xs">
-              No dynamic data records matched your current query or filter configuration.
+              {statusFilter === "unverified"
+                ? "There are no unverified data records pending verification."
+                : "No dynamic data records matched your current query or filter configuration."}
             </p>
           </div>
         ) : null}
@@ -1144,7 +1209,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   );
                 })}
                 {canEdit && (
-                  <TableHead className="w-20 text-center text-xs font-extrabold text-muted-foreground">
+                  <TableHead className="w-24 text-center text-xs font-extrabold text-muted-foreground">
                     Actions
                   </TableHead>
                 )}
@@ -1254,6 +1319,21 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   {canEdit && (
                     <TableCell className="text-center p-2">
                       <div className="flex items-center justify-center gap-1">
+                        {(row.status === "unverified" || statusFilter === "unverified" || !row.status) && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleVerifySingle(row.id);
+                            }}
+                            disabled={verifyRecord.isPending}
+                            className="h-7 w-7 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 rounded-md shadow-none cursor-pointer"
+                            title="Verify record & merge to Live Data"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="icon"
