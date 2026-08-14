@@ -63,6 +63,8 @@ interface DisplacementFormFieldsProps {
   modalFormData: any;
   setModalFormData: React.Dispatch<React.SetStateAction<any>>;
   isCreating?: boolean;
+  formErrors?: Record<string, string>;
+  setFormErrors?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
 export function DisplacementFormFields({
@@ -70,6 +72,8 @@ export function DisplacementFormFields({
   modalFormData,
   setModalFormData,
   isCreating,
+  formErrors,
+  setFormErrors,
 }: DisplacementFormFieldsProps) {
   const fieldGroups: Record<string, string[]> = {
     general_displacement: [
@@ -121,6 +125,17 @@ export function DisplacementFormFields({
         if (!col) return null;
 
         const isDateField = col.type === "date" || col.key.includes("date");
+        const fieldError = formErrors?.[col.key];
+
+        const clearError = () => {
+          if (fieldError && setFormErrors) {
+            setFormErrors((prev) => {
+              const copy = { ...prev };
+              delete copy[col.key];
+              return copy;
+            });
+          }
+        };
 
         return (
           <div key={col.key} className="space-y-1">
@@ -132,12 +147,15 @@ export function DisplacementFormFields({
               <select
                 value={modalFormData[col.key] ?? ""}
                 onChange={(e) => {
+                  clearError();
                   setModalFormData((prev: any) => ({
                     ...prev,
                     [col.key]: e.target.value,
                   }));
                 }}
-                className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer"
+                className={`w-full h-9 rounded-xl border bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer ${
+                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : "border-input"
+                }`}
               >
                 <option value="">-- Select Option --</option>
                 {(col as any).options?.map((opt: any) => (
@@ -151,13 +169,16 @@ export function DisplacementFormFields({
                 type="number"
                 value={modalFormData[col.key] ?? ""}
                 onChange={(e) => {
+                  clearError();
                   const val = e.target.value;
                   setModalFormData((prev: any) => ({
                     ...prev,
                     [col.key]: val === "" ? "" : Number(val),
                   }));
                 }}
-                className="w-full bg-background shadow-none text-xs"
+                className={`w-full bg-background shadow-none text-xs ${
+                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : ""
+                }`}
               />
             ) : isDateField ? (
               <Input
@@ -168,6 +189,7 @@ export function DisplacementFormFields({
                     : ""
                 }
                 onChange={(e) => {
+                  clearError();
                   const val = e.target.value;
                   setModalFormData((prev: any) => {
                     const updated = {
@@ -184,20 +206,30 @@ export function DisplacementFormFields({
                     return updated;
                   });
                 }}
-                className="w-full bg-background shadow-none text-xs font-mono"
+                className={`w-full bg-background shadow-none text-xs font-mono ${
+                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : ""
+                }`}
               />
             ) : (
               <Input
                 type="text"
                 value={modalFormData[col.key] ?? ""}
                 onChange={(e) => {
+                  clearError();
                   setModalFormData((prev: any) => ({
                     ...prev,
                     [col.key]: e.target.value,
                   }));
                 }}
-                className="w-full bg-background shadow-none text-xs"
+                className={`w-full bg-background shadow-none text-xs ${
+                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : ""
+                }`}
               />
+            )}
+            {fieldError && (
+              <p className="text-[10px] font-bold text-rose-500 mt-0.5 animate-fadeIn">
+                {fieldError}
+              </p>
             )}
           </div>
         );

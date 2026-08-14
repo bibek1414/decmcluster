@@ -63,6 +63,7 @@ import {
   VillageAssessmentFormFields,
 } from "./fields/village-assessment-form-fields";
 import { FIVEW_COLUMNS, FiveWFormFields } from "./fields/fivew-form-fields";
+import { getSchemaForSlug, validateTabFields } from "@/lib/schemas/assessment-schemas";
 
 const GENERIC_FORM_SLUGS = [
   "durable-solution-relocation-survey",
@@ -319,11 +320,12 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  // Filters State
+  // Filters & Form Errors State
   const [selectedProvinceFilter, setSelectedProvinceFilter] = useState("");
   const [selectedDistrictFilter, setSelectedDistrictFilter] = useState("");
   const [selectedOpFilter, setSelectedOpFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Debounce search input to avoid spamming server
   useEffect(() => {
@@ -717,23 +719,23 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     }
 
     if (isCreating && !isGenericForm) {
-      const missingCol = columns.find((col) => {
-        if (col.readonly) return false;
-        const val = cleanedFormData[col.key];
-        return val === "" || val === null || val === undefined;
-      });
-      if (missingCol) {
-        let targetTab = activeModalTab;
-        for (const [tabKey, fields] of Object.entries(currentGroups)) {
-          if (fields.includes(missingCol.key)) {
-            targetTab = tabKey;
-            break;
+      const schema = getSchemaForSlug(slug);
+      if (schema) {
+        const errors = validateTabFields(schema, cleanedFormData);
+        if (Object.keys(errors).length > 0) {
+          const firstMissingKey = Object.keys(errors)[0];
+          let targetTab = activeModalTab;
+          for (const [tabKey, fields] of Object.entries(currentGroups)) {
+            if (fields.includes(firstMissingKey)) {
+              targetTab = tabKey;
+              break;
+            }
           }
+          setActiveModalTab(targetTab);
+          setFormErrors(errors);
+          setIsSubmittingModal(false);
+          return;
         }
-        setActiveModalTab(targetTab);
-        toast.error(`Please fill out compulsory field "${missingCol.label}". All fields are required when creating a record.`);
-        setIsSubmittingModal(false);
-        return;
       }
     }
 
@@ -762,17 +764,17 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
 
   const handleNextTab = () => {
     if (isCreating && !isGenericForm) {
-      const fieldsOnTab = currentGroups[activeModalTab] || [];
-      const missingFieldKey = fieldsOnTab.find((key) => {
-        const val = modalFormData[key];
-        return val === "" || val === null || val === undefined;
-      });
-      if (missingFieldKey) {
-        const col = columns.find((c) => c.key === missingFieldKey);
-        toast.error(`Please fill out compulsory field "${col?.label || missingFieldKey}" before proceeding.`);
-        return;
+      const schema = getSchemaForSlug(slug);
+      if (schema) {
+        const fieldsOnTab = currentGroups[activeModalTab] || [];
+        const errors = validateTabFields(schema, modalFormData, fieldsOnTab);
+        if (Object.keys(errors).length > 0) {
+          setFormErrors((prev) => ({ ...prev, ...errors }));
+          return;
+        }
       }
     }
+    setFormErrors({});
     if (activeTabIndex < currentTabs.length - 1) {
       setActiveModalTab(currentTabs[activeTabIndex + 1].key);
     }
@@ -781,6 +783,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const openModalEditor = (row: any) => {
     setIsCreating(false);
     setEditingRow(row);
+    setFormErrors({});
     if (isGenericForm) {
       setGenericFieldName(getGenericFieldName(row));
       const initialFields: Record<string, any> = {};
@@ -809,6 +812,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const openCreateModal = () => {
     setIsCreating(true);
     setEditingRow(null);
+    setFormErrors({});
     if (isGenericForm) {
       setGenericFieldName("");
       const initialFields: Record<string, any> = {};
@@ -1664,18 +1668,18 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                     key={tab.key}
                     type="button"
                     onClick={() => {
-                      if (isCreating && idx > activeTabIndex) {
-                        const fieldsOnTab = currentGroups[activeModalTab] || [];
-                        const missingFieldKey = fieldsOnTab.find((key) => {
-                          const val = modalFormData[key];
-                          return val === "" || val === null || val === undefined;
-                        });
-                        if (missingFieldKey) {
-                          const col = columns.find((c) => c.key === missingFieldKey);
-                          toast.error(`Please fill out compulsory field "${col?.label || missingFieldKey}" before proceeding.`);
-                          return;
+                      if (isCreating && !isGenericForm && idx > activeTabIndex) {
+                        const schema = getSchemaForSlug(slug);
+                        if (schema) {
+                          const fieldsOnTab = currentGroups[activeModalTab] || [];
+                          const errors = validateTabFields(schema, modalFormData, fieldsOnTab);
+                          if (Object.keys(errors).length > 0) {
+                            setFormErrors((prev) => ({ ...prev, ...errors }));
+                            return;
+                          }
                         }
                       }
+                      setFormErrors({});
                       setActiveModalTab(tab.key);
                     }}
                     className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
@@ -1816,6 +1820,8 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
                   isCreating={isCreating}
+                  formErrors={formErrors}
+                  setFormErrors={setFormErrors}
                 />
               ) : isVillage ? (
                 <VillageAssessmentFormFields
@@ -1823,6 +1829,8 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
                   isCreating={isCreating}
+                  formErrors={formErrors}
+                  setFormErrors={setFormErrors}
                 />
               ) : isFiveW ? (
                 <FiveWFormFields
@@ -1830,6 +1838,8 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
                   isCreating={isCreating}
+                  formErrors={formErrors}
+                  setFormErrors={setFormErrors}
                 />
               ) : (
                 <DisplacementFormFields
@@ -1837,6 +1847,8 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   modalFormData={modalFormData}
                   setModalFormData={setModalFormData}
                   isCreating={isCreating}
+                  formErrors={formErrors}
+                  setFormErrors={setFormErrors}
                 />
               )}
 
