@@ -124,23 +124,7 @@ export default function AssessmentDetailClient({ slug }: AssessmentDetailClientP
         </Link>
 
         <div className="space-y-4">
-          {isStatic ? (
-            <DynamicDataTable slug={slug} token={token} canEdit={canAdd} />
-          ) : (
-            <Card className="p-12 border border-dashed border-border bg-card/50 flex flex-col items-center justify-center text-center space-y-3 rounded-2xl min-h-[300px]">
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-muted text-muted-foreground">
-                <SlidersHorizontal className="h-5 w-5" />
-              </div>
-              <div className="space-y-1 max-w-sm">
-                <h3 className="text-sm font-bold text-foreground">
-                  No data records available for now
-                </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Interactive database tables are currently not configured for this form.
-                </p>
-              </div>
-            </Card>
-          )}
+          <DynamicDataTable slug={slug} token={token} canEdit={canAdd} />
         </div>
       </div>
 

@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input";
 
 export const VILLAGE_ASSESSMENT_COLUMNS = [
   { key: "id", label: "ID", type: "number", readonly: true },
-  { key: "survey_start", label: "Survey Start", type: "text" },
-  { key: "survey_end", label: "Survey End", type: "text" },
-  { key: "survey_date", label: "Survey Date", type: "text" },
+  { key: "survey_start", label: "Survey Start (YYYY-MM-DD)", type: "date" },
+  { key: "survey_end", label: "Survey End (YYYY-MM-DD)", type: "date" },
+  { key: "survey_date", label: "Survey Date (YYYY-MM-DD)", type: "date" },
   { key: "enumerator_username", label: "Enumerator Username", type: "text" },
   { key: "device_id", label: "Device ID", type: "text" },
   { key: "audit_file", label: "Audit File", type: "text" },
@@ -52,7 +52,7 @@ export const VILLAGE_ASSESSMENT_COLUMNS = [
   { key: "ki6_contact", label: "KI6 Contact", type: "text" },
 
   // Assessment & Enumerators
-  { key: "assessment_date", label: "Assessment Date", type: "text" },
+  { key: "assessment_date", label: "Assessment Date (YYYY-MM-DD)", type: "date" },
   { key: "assessment_start_time", label: "Assessment Start Time", type: "text" },
   { key: "enumerator1_name", label: "Enumerator 1 Name", type: "text" },
   { key: "enumerator1_phone", label: "Enumerator 1 Phone", type: "text" },
@@ -318,7 +318,24 @@ export function VillageAssessmentFormFields({
                     [col.key]: val === "" ? null : Number(val),
                   }));
                 }}
-                className="w-full bg-background shadow-none"
+                className="w-full bg-background shadow-none text-xs"
+              />
+            ) : col.type === "date" || col.key.includes("date") || col.key === "survey_start" || col.key === "survey_end" ? (
+              <Input
+                type="date"
+                value={
+                  modalFormData[col.key]
+                    ? String(modalFormData[col.key]).split("T")[0]
+                    : ""
+                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setModalFormData((prev: any) => ({
+                    ...prev,
+                    [col.key]: val ? val : null,
+                  }));
+                }}
+                className="w-full bg-background shadow-none text-xs font-mono"
               />
             ) : (
               <Input
@@ -330,7 +347,7 @@ export function VillageAssessmentFormFields({
                     [col.key]: e.target.value,
                   }));
                 }}
-                className="w-full bg-background shadow-none"
+                className="w-full bg-background shadow-none text-xs"
               />
             )}
           </div>

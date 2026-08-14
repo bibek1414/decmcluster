@@ -853,17 +853,32 @@ export const dynamicDataService = {
 
   createGenericFormRecord: async (
     slug: string,
-    fieldName: string,
+    payload: string | { field?: any; data?: any; field_name?: string; [key: string]: any },
     token: string | null,
   ): Promise<any> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    let body: any;
+    if (typeof payload === "string") {
+      body = {
+        field: { field_name: payload },
+        field_name: payload,
+      };
+    } else {
+      body = {
+        ...(payload.field !== undefined ? { field: payload.field } : {}),
+        ...(payload.data !== undefined ? { data: payload.data } : {}),
+        ...(payload.field_name !== undefined ? { field_name: payload.field_name } : {}),
+      };
+      // If neither field nor data nor field_name was explicitly passed, send payload as body
+      if (!payload.field && !payload.data && !payload.field_name) {
+        body = payload;
+      }
+    }
+
     const res = await fetch(`${baseUrl}/api/${slug}/`, {
       method: "POST",
       headers: getHeaders(token),
-      body: JSON.stringify({
-        field: { field_name: fieldName },
-        field_name: fieldName,
-      }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) {
       const errorText = await res.text();
@@ -884,17 +899,31 @@ export const dynamicDataService = {
   updateGenericFormRecord: async (
     slug: string,
     id: number,
-    fieldName: string,
+    payload: string | { field?: any; data?: any; field_name?: string; [key: string]: any },
     token: string | null,
   ): Promise<any> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+    let body: any;
+    if (typeof payload === "string") {
+      body = {
+        field: { field_name: payload },
+        field_name: payload,
+      };
+    } else {
+      body = {
+        ...(payload.field !== undefined ? { field: payload.field } : {}),
+        ...(payload.data !== undefined ? { data: payload.data } : {}),
+        ...(payload.field_name !== undefined ? { field_name: payload.field_name } : {}),
+      };
+      if (!payload.field && !payload.data && !payload.field_name) {
+        body = payload;
+      }
+    }
+
     const res = await fetch(`${baseUrl}/api/${slug}/${id}/`, {
       method: "PATCH",
       headers: getHeaders(token),
-      body: JSON.stringify({
-        field: { field_name: fieldName },
-        field_name: fieldName,
-      }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) {
       const errorText = await res.text();

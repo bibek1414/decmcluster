@@ -102,11 +102,7 @@ export function useCreateDynamicRecord(slug: string, token: string | null) {
   return useMutation({
     mutationFn: async (fields: any) => {
       if (isGeneric) {
-        const fieldName =
-          typeof fields === "string"
-            ? fields
-            : fields.field_name || fields.field?.field_name || fields.field || fields.name || "";
-        return dynamicDataService.createGenericFormRecord(slug, fieldName, token);
+        return dynamicDataService.createGenericFormRecord(slug, fields, token);
       } else if (isEvac) {
         return dynamicDataService.createEvacuationCentre(fields, token);
       } else if (isVillage) {
@@ -133,11 +129,7 @@ export function useUpdateDynamicRecord(slug: string, token: string | null) {
   return useMutation({
     mutationFn: async ({ id, fields }: { id: number; fields: any }) => {
       if (isGeneric) {
-        const fieldName =
-          typeof fields === "string"
-            ? fields
-            : fields.field_name || fields.field?.field_name || fields.field || fields.name || "";
-        return dynamicDataService.updateGenericFormRecord(slug, id, fieldName, token);
+        return dynamicDataService.updateGenericFormRecord(slug, id, fields, token);
       } else if (isEvac) {
         return dynamicDataService.updateEvacuationCentre(id, fields, token);
       } else if (isVillage) {

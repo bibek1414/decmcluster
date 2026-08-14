@@ -13,7 +13,7 @@ export const DISPLACEMENT_COLUMNS = [
   { key: "admin2_pcode", label: "District Pcode (Admin2)", type: "text" },
   { key: "admin_level", label: "Admin Level", type: "number" },
   { key: "num_present_idps", label: "No. of Present IDPs", type: "number" },
-  { key: "reporting_date", label: "Reporting Date", type: "text" },
+  { key: "reporting_date", label: "Reporting Date (YYYY-MM-DD)", type: "date" },
   { key: "reporting_year", label: "Reporting Year", type: "number" },
   { key: "reporting_month", label: "Reporting Month", type: "number" },
   { key: "round_number", label: "Round Number", type: "number" },
@@ -112,6 +112,8 @@ export function DisplacementFormFields({
         const col = DISPLACEMENT_COLUMNS.find((c) => c.key === fieldKey);
         if (!col) return null;
 
+        const isDateField = col.type === "date" || col.key.includes("date");
+
         return (
           <div key={col.key} className="space-y-1">
             <label className="block text-xs font-bold text-muted-foreground">
@@ -129,7 +131,34 @@ export function DisplacementFormFields({
                     [col.key]: val === "" ? "" : Number(val),
                   }));
                 }}
-                className="w-full bg-background shadow-none"
+                className="w-full bg-background shadow-none text-xs"
+              />
+            ) : isDateField ? (
+              <Input
+                type="date"
+                value={
+                  modalFormData[col.key]
+                    ? String(modalFormData[col.key]).split("T")[0]
+                    : ""
+                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setModalFormData((prev: any) => {
+                    const updated = {
+                      ...prev,
+                      [col.key]: val ? val : null,
+                    };
+                    if (col.key === "reporting_date" && val) {
+                      const parts = val.split("-");
+                      if (parts.length === 3) {
+                        updated.reporting_year = Number(parts[0]);
+                        updated.reporting_month = Number(parts[1]);
+                      }
+                    }
+                    return updated;
+                  });
+                }}
+                className="w-full bg-background shadow-none text-xs font-mono"
               />
             ) : (
               <Input
@@ -141,7 +170,7 @@ export function DisplacementFormFields({
                     [col.key]: e.target.value,
                   }));
                 }}
-                className="w-full bg-background shadow-none"
+                className="w-full bg-background shadow-none text-xs"
               />
             )}
           </div>

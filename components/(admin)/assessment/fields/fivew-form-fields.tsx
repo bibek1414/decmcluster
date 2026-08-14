@@ -194,7 +194,24 @@ export function FiveWFormFields({
                     [col.key]: val === "" ? null : Number(val),
                   }));
                 }}
-                className="w-full bg-background shadow-none"
+                className="w-full bg-background shadow-none text-xs"
+              />
+            ) : col.type === "date" || col.key.includes("date") ? (
+              <Input
+                type="date"
+                value={
+                  modalFormData[col.key]
+                    ? String(modalFormData[col.key]).split("T")[0]
+                    : ""
+                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setModalFormData((prev: any) => ({
+                    ...prev,
+                    [col.key]: val ? val : null,
+                  }));
+                }}
+                className="w-full bg-background shadow-none text-xs font-mono"
               />
             ) : (
               <Input
@@ -206,7 +223,7 @@ export function FiveWFormFields({
                     [col.key]: e.target.value,
                   }));
                 }}
-                className="w-full bg-background shadow-none"
+                className="w-full bg-background shadow-none text-xs"
               />
             )}
           </div>

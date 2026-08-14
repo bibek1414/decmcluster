@@ -14,6 +14,10 @@ import {
   Upload,
   Edit,
   FileText,
+  SlidersHorizontal,
+  Settings,
+  ListPlus,
+  Layers,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -69,6 +73,129 @@ const GENERIC_FORM_SLUGS = [
 const GENERIC_COLUMNS = [
   { key: "field_name", label: "Field Name", type: "string", readonly: false },
 ];
+
+export function formatDateISO(val: any): string | null {
+  if (!val || typeof val !== "string" || !val.trim()) return null;
+  const str = val.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  if (str.includes("T")) {
+    const part = str.split("T")[0];
+    if (/^\d{4}-\d{2}-\d{2}$/.test(part)) return part;
+  }
+  const d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+  return str;
+}
+
+export function sanitizeRecordPayload(fields: Record<string, any>): Record<string, any> {
+  if (!fields || typeof fields !== "object") return fields;
+  const cleaned: Record<string, any> = { ...fields };
+
+  Object.keys(cleaned).forEach((key) => {
+    const val = cleaned[key];
+    const isDateField =
+      key.toLowerCase().includes("date") ||
+      key === "survey_start" ||
+      key === "survey_end" ||
+      key.endsWith("_at");
+
+    if (isDateField) {
+      if (val === "" || val === undefined || val === null) {
+        cleaned[key] = null;
+      } else if (typeof val === "string") {
+        cleaned[key] = formatDateISO(val);
+      }
+    }
+  });
+
+  return cleaned;
+}
+
+export interface DynamicColumnDef {
+  key: string;
+  label: string;
+  type: string;
+  options?: string[];
+  readonly?: boolean;
+}
+
+function computeGenericColumns(results: any[]): DynamicColumnDef[] {
+  const fieldDefsMap = new Map<string, DynamicColumnDef>();
+
+  results.forEach((row) => {
+    if (row.field) {
+      if (Array.isArray(row.field.fields)) {
+        row.field.fields.forEach((f: any) => {
+          if (f && f.key) {
+            fieldDefsMap.set(f.key, {
+              key: f.key,
+              label: f.label || f.key,
+              type: f.type || "string",
+              options: f.options,
+              readonly: false,
+            });
+          }
+        });
+      } else if (Array.isArray(row.field)) {
+        row.field.forEach((f: any) => {
+          if (typeof f === "object" && f.key) {
+            fieldDefsMap.set(f.key, {
+              key: f.key,
+              label: f.label || f.key,
+              type: f.type || "string",
+              options: f.options,
+              readonly: false,
+            });
+          }
+        });
+      } else if (typeof row.field === "object") {
+        Object.entries(row.field).forEach(([k, v]: [string, any]) => {
+          if (k !== "field_name" && typeof v === "object" && v !== null && (v.label || v.type)) {
+            fieldDefsMap.set(k, {
+              key: k,
+              label: v.label || k,
+              type: v.type || "string",
+              options: v.options,
+              readonly: false,
+            });
+          }
+        });
+      }
+    }
+
+    if (row.data && typeof row.data === "object" && !Array.isArray(row.data)) {
+      Object.keys(row.data).forEach((k) => {
+        if (!fieldDefsMap.has(k)) {
+          const val = row.data[k];
+          let type = "string";
+          if (typeof val === "number") type = "number";
+          if (typeof val === "boolean") type = "boolean";
+          fieldDefsMap.set(k, {
+            key: k,
+            label: k.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+            type,
+            readonly: false,
+          });
+        }
+      });
+    }
+  });
+
+  if (fieldDefsMap.size > 0) {
+    const dynamicCols = Array.from(fieldDefsMap.values());
+    return [{ key: "id", label: "S.N.", type: "number", readonly: true }, ...dynamicCols];
+  }
+
+  return [
+    { key: "id", label: "S.N.", type: "number", readonly: true },
+    { key: "field_name", label: "Field Name", type: "string", readonly: false },
+  ];
+}
 
 const EVAC_TABS = [
   { key: "general", label: "General & Info" },
@@ -164,15 +291,6 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const isEvac = slug === "evacuation-centre-assessment-form" || slug === "evacuation-centre-data";
   const isVillage = slug === "village-assessment" || slug === "village-assessments";
   const isFiveW = slug === "5w-response-data" || slug === "fivew";
-  const columns = isGenericForm
-    ? GENERIC_COLUMNS
-    : isEvac
-      ? EVACUATION_CENTRE_COLUMNS
-      : isVillage
-        ? VILLAGE_ASSESSMENT_COLUMNS
-        : isFiveW
-          ? FIVEW_COLUMNS
-          : DISPLACEMENT_COLUMNS;
 
   const currentTabs = isEvac
     ? EVAC_TABS
@@ -316,6 +434,118 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   }, []);
 
   const results = data?.results || [];
+
+  const genericColumns = useMemo(() => {
+    if (!isGenericForm) return [];
+    return computeGenericColumns(results);
+  }, [isGenericForm, results]);
+
+  const columns = isGenericForm
+    ? genericColumns
+    : isEvac
+      ? EVACUATION_CENTRE_COLUMNS
+      : isVillage
+        ? VILLAGE_ASSESSMENT_COLUMNS
+        : isFiveW
+          ? FIVEW_COLUMNS
+          : DISPLACEMENT_COLUMNS;
+
+  // Manage Form Fields state (schema definitions: field JSONField)
+  const [isManageFieldsOpen, setIsManageFieldsOpen] = useState(false);
+  const [fieldSchemaList, setFieldSchemaList] = useState<DynamicColumnDef[]>([]);
+  const [newFieldKey, setNewFieldKey] = useState("");
+  const [newFieldLabel, setNewFieldLabel] = useState("");
+  const [newFieldType, setNewFieldType] = useState<"string" | "number" | "select" | "boolean">("string");
+  const [newFieldOptions, setNewFieldOptions] = useState("");
+  const [isKeyCustomized, setIsKeyCustomized] = useState(false);
+
+  useEffect(() => {
+    if (isGenericForm) {
+      const dynamicFieldsOnly = genericColumns.filter(
+        (c) => c.key !== "id" && c.key !== "field_name",
+      );
+      if (dynamicFieldsOnly.length > 0) {
+        setFieldSchemaList(dynamicFieldsOnly);
+      }
+    }
+  }, [isGenericForm, genericColumns]);
+
+  const handleLabelChange = (val: string) => {
+    setNewFieldLabel(val);
+    if (!isKeyCustomized) {
+      const slugified = val
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+      setNewFieldKey(slugified);
+    }
+  };
+
+  const handleKeyChange = (val: string) => {
+    setNewFieldKey(val);
+    setIsKeyCustomized(true);
+  };
+
+  const handleAddFieldSchema = () => {
+    const label = newFieldLabel.trim();
+    const key =
+      newFieldKey.trim() || label.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+    if (!label && !key) {
+      toast.error("Please enter a field label");
+      return;
+    }
+    if (fieldSchemaList.some((f) => f.key === key)) {
+      toast.error("Field key already exists in schema");
+      return;
+    }
+    const newCol: DynamicColumnDef = {
+      key,
+      label: label || key,
+      type: newFieldType,
+      options:
+        newFieldType === "select"
+          ? newFieldOptions
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : undefined,
+      readonly: false,
+    };
+    setFieldSchemaList([...fieldSchemaList, newCol]);
+    setNewFieldKey("");
+    setNewFieldLabel("");
+    setNewFieldType("string");
+    setNewFieldOptions("");
+    setIsKeyCustomized(false);
+    toast.success(`Field "${newCol.label}" added to schema list`);
+  };
+
+  const handleRemoveFieldSchema = (keyToRemove: string) => {
+    setFieldSchemaList(fieldSchemaList.filter((f) => f.key !== keyToRemove));
+    toast.info("Field removed from schema list");
+  };
+
+  const handleSaveFormSchema = async () => {
+    try {
+      if (results.length > 0 && results[0]?.id) {
+        await updateRecord.mutateAsync({
+          id: results[0].id,
+          fields: { field: { fields: fieldSchemaList } },
+        });
+      } else {
+        await createRecord.mutateAsync({
+          field: { fields: fieldSchemaList },
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
+      toast.success("Form field schema saved successfully");
+      setIsManageFieldsOpen(false);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to save field schema");
+    }
+  };
+
   const count = data?.count || 0;
   const hasNext = !!data?.next;
   const hasPrev = !!data?.previous;
@@ -325,7 +555,10 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const handleInlineEditStart = (row: any, key: string, readonly?: boolean) => {
     if (!canEdit || readonly) return;
     setEditingCell({ rowId: row.id, key });
-    setInlineEditValue(row[colKeyFor(key)] ?? row[key] ?? "");
+    const curVal = isGenericForm
+      ? (row.data?.[key] ?? row[key] ?? row.field?.[key] ?? "")
+      : (row[colKeyFor(key)] ?? row[key] ?? "");
+    setInlineEditValue(curVal);
   };
 
   const colKeyFor = (k: string) => k;
@@ -336,7 +569,12 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     const column = columns.find((c) => c.key === key);
 
     let parsedVal = inlineEditValue;
-    if (column?.type === "number") {
+    const isDateField =
+      column?.type === "date" || key.toLowerCase().includes("date") || key === "survey_start" || key === "survey_end";
+
+    if (isDateField) {
+      parsedVal = formatDateISO(inlineEditValue);
+    } else if (column?.type === "number") {
       parsedVal = inlineEditValue === "" ? null : Number(inlineEditValue);
     } else if (column?.type === "boolean") {
       if (inlineEditValue === "true") parsedVal = true;
@@ -349,10 +587,30 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     setEditingCell(null);
 
     try {
-      await updateRecord.mutateAsync({
-        id: rowId,
-        fields: { [key]: parsedVal },
-      });
+      if (isGenericForm) {
+        const row = results.find((r: any) => r.id === rowId);
+        if (key === "field_name") {
+          await updateRecord.mutateAsync({
+            id: rowId,
+            fields: String(parsedVal),
+          });
+        } else {
+          const updatedData = sanitizeRecordPayload({
+            ...(row?.data || {}),
+            [key]: parsedVal,
+          });
+          await updateRecord.mutateAsync({
+            id: rowId,
+            fields: { data: updatedData },
+          });
+        }
+      } else {
+        const cleanedFields = sanitizeRecordPayload({ [key]: parsedVal });
+        await updateRecord.mutateAsync({
+          id: rowId,
+          fields: cleanedFields,
+        });
+      }
       queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
       toast.success("Field updated successfully");
     } catch (error: any) {
@@ -365,28 +623,64 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     e.preventDefault();
     setIsSubmittingModal(true);
 
+    const cleanedFormData = sanitizeRecordPayload(modalFormData);
+
     if (isGenericForm) {
-      if (!genericFieldName.trim()) {
-        toast.error("Field name is required");
-        setIsSubmittingModal(false);
+      const activeFields =
+        fieldSchemaList.length > 0
+          ? fieldSchemaList
+          : genericColumns.filter((c) => c.key !== "id" && c.key !== "field_name");
+
+      if (activeFields.length === 0) {
+        if (!genericFieldName.trim()) {
+          toast.error("Field name is required");
+          setIsSubmittingModal(false);
+          return;
+        }
+        try {
+          if (isCreating) {
+            await createRecord.mutateAsync(genericFieldName.trim());
+            toast.success("Field name added successfully");
+            setIsCreating(false);
+          } else if (editingRow) {
+            await updateRecord.mutateAsync({
+              id: editingRow.id,
+              fields: genericFieldName.trim(),
+            });
+            toast.success("Field name updated successfully");
+            setEditingRow(null);
+          }
+          queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
+        } catch (error: any) {
+          toast.error(error.message || "Failed to save field name");
+        } finally {
+          setIsSubmittingModal(false);
+        }
         return;
       }
+
       try {
+        const payload = {
+          field: { fields: activeFields },
+          data: cleanedFormData,
+          ...(genericFieldName ? { field_name: genericFieldName } : {}),
+        };
+
         if (isCreating) {
-          await createRecord.mutateAsync(genericFieldName.trim());
-          toast.success("Field name added successfully");
+          await createRecord.mutateAsync(payload);
+          toast.success("Data entry created successfully");
           setIsCreating(false);
         } else if (editingRow) {
           await updateRecord.mutateAsync({
             id: editingRow.id,
-            fields: genericFieldName.trim(),
+            fields: payload,
           });
-          toast.success("Field name updated successfully");
+          toast.success("Data entry updated successfully");
           setEditingRow(null);
         }
         queryClient.invalidateQueries({ queryKey: ["dynamic-data"] });
       } catch (error: any) {
-        toast.error(error.message || "Failed to save field name");
+        toast.error(error.message || "Failed to save data entry");
       } finally {
         setIsSubmittingModal(false);
       }
@@ -396,7 +690,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     if (isCreating && !isGenericForm) {
       const missingCol = columns.find((col) => {
         if (col.readonly) return false;
-        const val = modalFormData[col.key];
+        const val = cleanedFormData[col.key];
         return val === "" || val === null || val === undefined;
       });
       if (missingCol) {
@@ -416,13 +710,13 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
 
     try {
       if (isCreating) {
-        await createRecord.mutateAsync(modalFormData);
+        await createRecord.mutateAsync(cleanedFormData);
         toast.success("Record created successfully");
         setIsCreating(false);
       } else if (editingRow) {
         await updateRecord.mutateAsync({
           id: editingRow.id,
-          fields: modalFormData,
+          fields: cleanedFormData,
         });
         toast.success("Record updated successfully");
         setEditingRow(null);
@@ -460,6 +754,15 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     setEditingRow(row);
     if (isGenericForm) {
       setGenericFieldName(getGenericFieldName(row));
+      const initialFields: Record<string, any> = {};
+      const activeFields =
+        fieldSchemaList.length > 0
+          ? fieldSchemaList
+          : genericColumns.filter((c) => c.key !== "id" && c.key !== "field_name");
+      activeFields.forEach((col) => {
+        initialFields[col.key] = row.data?.[col.key] ?? row[col.key] ?? "";
+      });
+      setModalFormData(initialFields);
       return;
     }
     const initialFields: any = {};
@@ -479,6 +782,15 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     setEditingRow(null);
     if (isGenericForm) {
       setGenericFieldName("");
+      const initialFields: Record<string, any> = {};
+      const activeFields =
+        fieldSchemaList.length > 0
+          ? fieldSchemaList
+          : genericColumns.filter((c) => c.key !== "id" && c.key !== "field_name");
+      activeFields.forEach((col) => {
+        initialFields[col.key] = col.type === "boolean" ? false : "";
+      });
+      setModalFormData(initialFields);
       return;
     }
     const initialFields: any = {};
@@ -624,6 +936,18 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
           )}
 
           <div className="flex items-center gap-2 ml-auto">
+            {canEdit && isGenericForm && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsManageFieldsOpen(true)}
+                className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl bg-purple-50/45 dark:bg-purple-950/20 text-purple-700 dark:text-purple-400 border-purple-200/60 dark:border-purple-900/60 hover:bg-purple-50 dark:hover:bg-purple-950/40 shadow-none"
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+                Manage Fields
+              </Button>
+            )}
+
             {canEdit && (
               <Button
                 variant="default"
@@ -632,7 +956,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                 className="h-9 gap-1.5 font-bold cursor-pointer rounded-xl shadow-none"
               >
                 <Plus className="h-4 w-4" />
-                {isGenericForm ? "Add Field Name" : "Add Record"}
+                {isGenericForm ? "Add Record / Entry" : "Add Record"}
               </Button>
             )}
 
@@ -842,24 +1166,30 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   </TableCell>
                   {columns.map((col) => {
                     const isEditing = editingCell?.rowId === row.id && editingCell?.key === col.key;
-                    const value = row[col.key];
+                    const value = isGenericForm
+                      ? col.key === "id"
+                        ? (page - 1) * 50 + index + 1
+                        : col.key === "field_name"
+                        ? getGenericFieldName(row)
+                        : row.data?.[col.key] ?? row[col.key] ?? row.field?.[col.key]
+                      : row[col.key];
 
                     return (
                       <TableCell
                         key={col.key}
                         onClick={(e) => {
-                          if (isEditing || isGenericForm) {
+                          if (isEditing) {
                             e.stopPropagation();
                             return;
                           }
                           handleInlineEditStart(row, col.key, col.readonly);
                         }}
                         className={`text-xs px-4 py-2 border-r border-border/40 max-w-[240px] truncate select-none ${
-                          !col.readonly && canEdit && !isGenericForm
+                          !col.readonly && canEdit
                             ? "cursor-cell hover:bg-muted/15 relative group"
                             : ""
                         }`}
-                        title={!col.readonly && canEdit && !isGenericForm ? "Click to edit cell" : col.label}
+                        title={!col.readonly && canEdit ? "Click to edit cell" : col.label}
                       >
                         {isGenericForm && col.key === "field_name" ? (
                           <div className="flex items-center gap-2">
@@ -1031,6 +1361,183 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
         </DialogContent>
       </Dialog>
 
+      {/* Manage Dynamic Form Fields Modal */}
+      <Dialog open={isManageFieldsOpen} onOpenChange={setIsManageFieldsOpen}>
+        <DialogContent className="max-w-2xl! w-full rounded-2xl border border-border bg-card shadow-2xl p-6 space-y-5">
+          <DialogHeader className="flex flex-row items-start gap-3.5 space-y-0 pb-3 border-b border-border">
+            <div className="p-2.5 rounded-xl bg-primary/10 text-primary border border-primary/20 shrink-0">
+              <SlidersHorizontal className="h-5 w-5" />
+            </div>
+            <div>
+              <DialogTitle className="text-base font-bold text-foreground">
+                Manage Dynamic Form Fields & Schema
+              </DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground leading-relaxed mt-0.5">
+                Configure form field definitions for this assessment. Defined fields automatically generate dynamic table headers and data submission inputs.
+              </DialogDescription>
+            </div>
+          </DialogHeader>
+
+          {/* Add New Field Form Card */}
+          <div className="bg-muted/20 border border-border/80 p-4.5 rounded-2xl space-y-3.5 shadow-xs">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <Plus className="h-3.5 w-3.5 text-primary" />
+                Add New Field Definition
+              </h4>
+              <span className="text-[10px] text-muted-foreground font-medium">
+                Auto-generates snake_case key
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="space-y-1">
+                <label className="block text-[11px] font-bold text-muted-foreground">
+                  Field Label <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  value={newFieldLabel}
+                  onChange={(e) => handleLabelChange(e.target.value)}
+                  placeholder="e.g. Total Households Affected"
+                  className="h-9 text-xs bg-background rounded-xl border-border/80 focus:border-primary"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-[11px] font-bold text-muted-foreground">
+                  Field Key (snake_case)
+                </label>
+                <Input
+                  value={newFieldKey}
+                  onChange={(e) => handleKeyChange(e.target.value)}
+                  placeholder="e.g. households_affected"
+                  className="h-9 text-xs font-mono bg-background rounded-xl border-border/80"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-[11px] font-bold text-muted-foreground">
+                  Field Type
+                </label>
+                <select
+                  value={newFieldType}
+                  onChange={(e: any) => setNewFieldType(e.target.value)}
+                  className="w-full h-9 px-3 rounded-xl border border-border/80 bg-background text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+                >
+                  <option value="string">Text (String)</option>
+                  <option value="number">Number</option>
+                  <option value="select">Dropdown Select</option>
+                  <option value="boolean">Yes / No (Boolean)</option>
+                </select>
+              </div>
+              {newFieldType === "select" && (
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold text-muted-foreground">
+                    Select Options (comma-separated)
+                  </label>
+                  <Input
+                    value={newFieldOptions}
+                    onChange={(e) => setNewFieldOptions(e.target.value)}
+                    placeholder="e.g. Mild, Moderate, Severe"
+                    className="h-9 text-xs bg-background rounded-xl border-border/80"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleAddFieldSchema}
+                className="h-8.5 px-4 text-xs font-bold gap-1.5 rounded-xl cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 shadow-none"
+              >
+                <Plus className="h-4 w-4" />
+                Add Field
+              </Button>
+            </div>
+          </div>
+
+          {/* Configured Fields List */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+                Configured Form Fields ({fieldSchemaList.length})
+              </h4>
+            </div>
+
+            {fieldSchemaList.length === 0 ? (
+              <div className="p-6 border border-dashed border-border rounded-2xl text-center bg-card/40 space-y-1.5">
+                <ListPlus className="h-7 w-7 text-muted-foreground/40 mx-auto" />
+                <p className="text-xs font-bold text-foreground">No dynamic fields defined yet</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Fill out the field label above and click <strong>"Add Field"</strong> to start building your form schema.
+                </p>
+              </div>
+            ) : (
+              <div className="max-h-52 overflow-y-auto space-y-2 pr-1">
+                {fieldSchemaList.map((field) => (
+                  <div
+                    key={field.key}
+                    className="flex items-center justify-between p-3 bg-card border border-border rounded-xl text-xs shadow-2xs hover:border-border/80 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="font-bold text-foreground">{field.label}</span>
+                      <span className="text-[10px] font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded-md border border-border/60">
+                        {field.key}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border ${
+                          field.type === "number"
+                            ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                            : field.type === "select"
+                            ? "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                            : field.type === "boolean"
+                            ? "bg-purple-500/10 text-purple-600 border-purple-500/20"
+                            : "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                        }`}
+                      >
+                        {field.type}
+                      </span>
+                      {field.options && field.options.length > 0 && (
+                        <span className="text-[10px] text-muted-foreground italic">
+                          Options: {field.options.join(", ")}
+                        </span>
+                      )}
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemoveFieldSchema(field.key)}
+                      className="h-7 w-7 text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg cursor-pointer shrink-0"
+                      title="Remove field"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-border">
+            <Button
+              variant="outline"
+              onClick={() => setIsManageFieldsOpen(false)}
+              className="h-9 font-semibold rounded-xl cursor-pointer shadow-none"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveFormSchema}
+              className="h-9 font-bold cursor-pointer rounded-xl bg-primary text-primary-foreground shadow-none"
+            >
+              Save Schema Configuration
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Full Record Edit/Create Modal — Shadcn Dialog (ESC closes natively) */}
       <Dialog
         open={!!(editingRow || isCreating)}
@@ -1044,12 +1551,12 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
         <DialogContent className="max-w-4xl! w-full rounded-2xl border border-border bg-card shadow-none p-0 gap-0 overflow-hidden">
           <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
             <DialogTitle className="text-base font-bold">
-              {isCreating ? "Create New Record" : `Edit Record (ID: ${editingRow?.id})`}
+              {isCreating ? "Create New Entry" : `Edit Entry (ID: ${editingRow?.id})`}
             </DialogTitle>
             <DialogDescription className="text-[11px] text-muted-foreground font-semibold mt-0.5">
               {isCreating
-                ? "Fill in the fields to register a new entry."
-                : "Update specific categories of this record. Save to apply."}
+                ? "Fill in the form response fields to register a new entry."
+                : "Update specific response fields of this record. Save to apply."}
             </DialogDescription>
           </DialogHeader>
 
@@ -1091,16 +1598,122 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             {/* Modal Form */}
             <form onSubmit={handleModalSave} className="space-y-4">
               {isGenericForm ? (
-                <div className="space-y-2 py-2">
-                  <label className="block text-xs font-bold text-muted-foreground">Field Name</label>
-                  <Input
-                    value={genericFieldName}
-                    onChange={(e) => setGenericFieldName(e.target.value)}
-                    placeholder="Enter field name (e.g. household_count)..."
-                    className="w-full bg-background font-mono text-xs"
-                    required
-                    autoFocus
-                  />
+                <div className="space-y-4 py-2">
+                  {fieldSchemaList.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {fieldSchemaList.map((col) => (
+                        <div key={col.key} className="space-y-1">
+                          <label className="block text-xs font-bold text-muted-foreground">
+                            {col.label}
+                          </label>
+                          {col.type === "select" ? (
+                            <select
+                              value={modalFormData[col.key] ?? ""}
+                              onChange={(e) =>
+                                setModalFormData({ ...modalFormData, [col.key]: e.target.value })
+                              }
+                              className="w-full h-9 px-3 rounded-xl border border-border bg-background text-xs font-semibold focus:outline-none"
+                            >
+                              <option value="">-- Select {col.label} --</option>
+                              {col.options?.map((opt) => (
+                                <option key={opt} value={opt}>
+                                  {opt}
+                                </option>
+                              ))}
+                            </select>
+                          ) : col.type === "boolean" ? (
+                            <select
+                              value={String(modalFormData[col.key] ?? "false")}
+                              onChange={(e) =>
+                                setModalFormData({
+                                  ...modalFormData,
+                                  [col.key]: e.target.value === "true",
+                                })
+                              }
+                              className="w-full h-9 px-3 rounded-xl border border-border bg-background text-xs font-semibold focus:outline-none"
+                            >
+                              <option value="false">False / No</option>
+                              <option value="true">True / Yes</option>
+                            </select>
+                          ) : col.type === "number" ? (
+                            <Input
+                              type="number"
+                              value={modalFormData[col.key] ?? ""}
+                              onChange={(e) =>
+                                setModalFormData({
+                                  ...modalFormData,
+                                  [col.key]:
+                                    e.target.value === "" ? "" : Number(e.target.value),
+                                })
+                              }
+                              placeholder={`Enter ${col.label.toLowerCase()}...`}
+                              className="w-full bg-background text-xs"
+                            />
+                          ) : col.type === "date" || col.key.includes("date") ? (
+                            <Input
+                              type="date"
+                              value={
+                                modalFormData[col.key]
+                                  ? String(modalFormData[col.key]).split("T")[0]
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setModalFormData((prev: any) => {
+                                  const updated = {
+                                    ...prev,
+                                    [col.key]: val ? val : null,
+                                  };
+                                  if (col.key === "reporting_date" && val) {
+                                    const parts = val.split("-");
+                                    if (parts.length === 3) {
+                                      updated.reporting_year = Number(parts[0]);
+                                      updated.reporting_month = Number(parts[1]);
+                                    }
+                                  }
+                                  return updated;
+                                });
+                              }}
+                              className="w-full bg-background text-xs font-mono"
+                            />
+                          ) : (
+                            <Input
+                              type="text"
+                              value={modalFormData[col.key] ?? ""}
+                              onChange={(e) =>
+                                setModalFormData({
+                                  ...modalFormData,
+                                  [col.key]: e.target.value,
+                                })
+                              }
+                              placeholder={`Enter ${col.label.toLowerCase()}...`}
+                              className="w-full bg-background text-xs"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <label className="block text-xs font-bold text-muted-foreground">
+                        Field Name / Label
+                      </label>
+                      <Input
+                        value={genericFieldName}
+                        onChange={(e) => setGenericFieldName(e.target.value)}
+                        placeholder="Enter field name (e.g. household_count)..."
+                        className="w-full bg-background font-mono text-xs"
+                        required
+                        autoFocus
+                      />
+                      <div className="p-3 bg-muted/30 border border-border rounded-xl text-xs text-muted-foreground flex items-center gap-2">
+                        <SlidersHorizontal className="h-4 w-4 text-primary shrink-0" />
+                        <span>
+                          Tip: Click <strong>"Manage Fields"</strong> on the main table to define custom dynamic form schemas.
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : isEvac ? (
                 <EvacuationCentreFormFields
