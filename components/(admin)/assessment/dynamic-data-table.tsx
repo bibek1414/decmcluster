@@ -63,7 +63,7 @@ import {
   VillageAssessmentFormFields,
 } from "./fields/village-assessment-form-fields";
 import { FIVEW_COLUMNS, FiveWFormFields } from "./fields/fivew-form-fields";
-import { getSchemaForSlug, validateTabFields } from "@/lib/schemas/assessment-schemas";
+import { validateTabFields } from "@/lib/schemas/assessment-schemas";
 
 const GENERIC_FORM_SLUGS = [
   "durable-solution-relocation-survey",
@@ -719,7 +719,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     }
 
     if (isCreating && !isGenericForm) {
-      const errors = validateTabFields(columns, cleanedFormData);
+      const errors = validateTabFields(slug, columns, cleanedFormData);
       if (Object.keys(errors).length > 0) {
         const firstMissingKey = Object.keys(errors)[0];
         let targetTab = activeModalTab;
@@ -762,7 +762,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
   const handleNextTab = () => {
     if (isCreating && !isGenericForm) {
       const fieldsOnTab = currentGroups[activeModalTab] || [];
-      const errors = validateTabFields(columns, modalFormData, fieldsOnTab);
+      const errors = validateTabFields(slug, columns, modalFormData, fieldsOnTab);
       if (Object.keys(errors).length > 0) {
         setFormErrors((prev) => ({ ...prev, ...errors }));
         return;
@@ -1664,7 +1664,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                     onClick={() => {
                       if (isCreating && !isGenericForm && idx > activeTabIndex) {
                         const fieldsOnTab = currentGroups[activeModalTab] || [];
-                        const errors = validateTabFields(columns, modalFormData, fieldsOnTab);
+                        const errors = validateTabFields(slug, columns, modalFormData, fieldsOnTab);
                         if (Object.keys(errors).length > 0) {
                           setFormErrors((prev) => ({ ...prev, ...errors }));
                           return;

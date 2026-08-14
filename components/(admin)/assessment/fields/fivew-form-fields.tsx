@@ -182,7 +182,10 @@ export function FiveWFormFields({
           <div key={col.key} className="space-y-1">
             <label className="block text-xs font-bold text-muted-foreground">
               {col.label}
-              {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
+              {isCreating &&
+                (col.key === "activity_name" || col.key === "reporting_organization") && (
+                  <span className="text-rose-500 font-bold ml-0.5">*</span>
+                )}
             </label>
             {col.type === "select" || (col as any).options ? (
               <select
