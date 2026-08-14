@@ -979,14 +979,14 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
 
             {canEdit && (
               <Button
-                variant={statusFilter === "unverified" ? "default" : "outline"}
+                variant={statusFilter.toLowerCase() === "unverified" ? "default" : "outline"}
                 size="sm"
                 onClick={() => {
-                  setStatusFilter(statusFilter === "unverified" ? "all" : "unverified");
+                  setStatusFilter(statusFilter.toLowerCase() === "unverified" ? "all" : "Unverified");
                   setPage(1);
                 }}
                 className={`h-9 gap-1.5 font-bold cursor-pointer rounded-xl shadow-none ${
-                  statusFilter === "unverified"
+                  statusFilter.toLowerCase() === "unverified"
                     ? "bg-amber-600 hover:bg-amber-700 text-white"
                     : "bg-amber-50/50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border-amber-200/80 dark:border-amber-900/60 hover:bg-amber-100 dark:hover:bg-amber-950/40"
                 }`}
@@ -1122,7 +1122,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
         </div>
 
         {/* Unverified Queue Banner */}
-        {statusFilter === "unverified" && (
+        {statusFilter.toLowerCase() === "unverified" && (
           <div className="bg-amber-500/10 border border-amber-500/25 px-4 py-2.5 rounded-xl flex items-center justify-between text-xs text-amber-700 dark:text-amber-300">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-amber-500" />
@@ -1168,7 +1168,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
             <Download className="h-8 w-8 text-muted-foreground/30 mb-2 animate-pulse" />
             <p className="text-xs font-bold text-foreground">No records found</p>
             <p className="text-[10px] text-muted-foreground mt-1 max-w-xs">
-              {statusFilter === "unverified"
+              {statusFilter.toLowerCase() === "unverified"
                 ? "There are no unverified data records pending verification."
                 : "No dynamic data records matched your current query or filter configuration."}
             </p>
@@ -1319,7 +1319,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   {canEdit && (
                     <TableCell className="text-center p-2">
                       <div className="flex items-center justify-center gap-1">
-                        {(row.status === "unverified" || statusFilter === "unverified" || !row.status) && (
+                        {(row.status?.toLowerCase() === "unverified" || statusFilter.toLowerCase() === "unverified" || !row.status) && (
                           <Button
                             variant="ghost"
                             size="icon"
