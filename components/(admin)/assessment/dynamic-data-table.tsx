@@ -63,7 +63,7 @@ import {
   VillageAssessmentFormFields,
 } from "./fields/village-assessment-form-fields";
 import { FIVEW_COLUMNS, FiveWFormFields } from "./fields/fivew-form-fields";
-import { validateTabFields } from "@/lib/schemas/assessment-schemas";
+import { getSchemaForSlug, validateTabFields } from "@/lib/schemas/assessment-schemas";
 
 const GENERIC_FORM_SLUGS = [
   "durable-solution-relocation-survey",
@@ -719,20 +719,23 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
     }
 
     if (isCreating && !isGenericForm) {
-      const errors = validateTabFields(slug, columns, cleanedFormData);
-      if (Object.keys(errors).length > 0) {
-        const firstMissingKey = Object.keys(errors)[0];
-        let targetTab = activeModalTab;
-        for (const [tabKey, fields] of Object.entries(currentGroups)) {
-          if (fields.includes(firstMissingKey)) {
-            targetTab = tabKey;
-            break;
+      const schema = getSchemaForSlug(slug);
+      if (schema) {
+        const errors = validateTabFields(schema, cleanedFormData);
+        if (Object.keys(errors).length > 0) {
+          const firstMissingKey = Object.keys(errors)[0];
+          let targetTab = activeModalTab;
+          for (const [tabKey, fields] of Object.entries(currentGroups)) {
+            if (fields.includes(firstMissingKey)) {
+              targetTab = tabKey;
+              break;
+            }
           }
+          setActiveModalTab(targetTab);
+          setFormErrors(errors);
+          setIsSubmittingModal(false);
+          return;
         }
-        setActiveModalTab(targetTab);
-        setFormErrors(errors);
-        setIsSubmittingModal(false);
-        return;
       }
     }
 
@@ -761,11 +764,14 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
 
   const handleNextTab = () => {
     if (isCreating && !isGenericForm) {
-      const fieldsOnTab = currentGroups[activeModalTab] || [];
-      const errors = validateTabFields(slug, columns, modalFormData, fieldsOnTab);
-      if (Object.keys(errors).length > 0) {
-        setFormErrors((prev) => ({ ...prev, ...errors }));
-        return;
+      const schema = getSchemaForSlug(slug);
+      if (schema) {
+        const fieldsOnTab = currentGroups[activeModalTab] || [];
+        const errors = validateTabFields(schema, modalFormData, fieldsOnTab, columns);
+        if (Object.keys(errors).length > 0) {
+          setFormErrors((prev) => ({ ...prev, ...errors }));
+          return;
+        }
       }
     }
     setFormErrors({});
@@ -1663,11 +1669,14 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                     type="button"
                     onClick={() => {
                       if (isCreating && !isGenericForm && idx > activeTabIndex) {
-                        const fieldsOnTab = currentGroups[activeModalTab] || [];
-                        const errors = validateTabFields(slug, columns, modalFormData, fieldsOnTab);
-                        if (Object.keys(errors).length > 0) {
-                          setFormErrors((prev) => ({ ...prev, ...errors }));
-                          return;
+                        const schema = getSchemaForSlug(slug);
+                        if (schema) {
+                          const fieldsOnTab = currentGroups[activeModalTab] || [];
+                          const errors = validateTabFields(schema, modalFormData, fieldsOnTab, columns);
+                          if (Object.keys(errors).length > 0) {
+                            setFormErrors((prev) => ({ ...prev, ...errors }));
+                            return;
+                          }
                         }
                       }
                       setFormErrors({});

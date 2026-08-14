@@ -305,9 +305,7 @@ export function VillageAssessmentFormFields({
           <div key={col.key} className="space-y-1">
             <label className="block text-xs font-bold text-muted-foreground">
               {col.label}
-              {isCreating && col.key === "village_name" && (
-                <span className="text-rose-500 font-bold ml-0.5">*</span>
-              )}
+              {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
             </label>
             {col.type === "select" || (col as any).options ? (
               <select
@@ -392,7 +390,7 @@ export function VillageAssessmentFormFields({
               />
             )}
             {fieldError && (
-              <p className="text-[11px] font-medium text-rose-500 mt-1 animate-fadeIn">
+              <p className="text-[11px] font-semibold text-rose-500 mt-1 animate-fadeIn">
                 {fieldError}
               </p>
             )}

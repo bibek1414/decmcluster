@@ -182,10 +182,7 @@ export function FiveWFormFields({
           <div key={col.key} className="space-y-1">
             <label className="block text-xs font-bold text-muted-foreground">
               {col.label}
-              {isCreating &&
-                (col.key === "activity_name" || col.key === "reporting_organization") && (
-                  <span className="text-rose-500 font-bold ml-0.5">*</span>
-                )}
+              {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
             </label>
             {col.type === "select" || (col as any).options ? (
               <select
@@ -214,7 +211,7 @@ export function FiveWFormFields({
                   const val = e.target.value;
                   setModalFormData((prev: any) => ({
                     ...prev,
-                    [col.key]: val === "true" ? true : val === "false" ? false : null,
+                    [col.key]: val === "true" ? true : val === "false" ? false : "",
                   }));
                 }}
                 className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
@@ -270,7 +267,7 @@ export function FiveWFormFields({
               />
             )}
             {fieldError && (
-              <p className="text-[11px] font-medium text-rose-500 mt-1 animate-fadeIn">
+              <p className="text-[11px] font-semibold text-rose-500 mt-1 animate-fadeIn">
                 {fieldError}
               </p>
             )}
