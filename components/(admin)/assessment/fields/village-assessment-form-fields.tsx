@@ -291,7 +291,25 @@ export function VillageAssessmentFormFields({
               {col.label}
               {isCreating && <span className="text-rose-500 font-bold ml-0.5">*</span>}
             </label>
-            {col.type === "boolean" ? (
+            {col.type === "select" || (col as any).options ? (
+              <select
+                value={modalFormData[col.key] ?? ""}
+                onChange={(e) => {
+                  setModalFormData((prev: any) => ({
+                    ...prev,
+                    [col.key]: e.target.value,
+                  }));
+                }}
+                className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer"
+              >
+                <option value="">-- Select Option --</option>
+                {(col as any).options?.map((opt: any) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : col.type === "boolean" ? (
               <select
                 value={String(modalFormData[col.key] ?? "")}
                 onChange={(e) => {

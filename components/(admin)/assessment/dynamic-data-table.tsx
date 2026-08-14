@@ -977,7 +977,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
               </Button>
             )}
 
-            {canEdit && (
+            {!isGenericForm && canEdit && (
               <Button
                 variant={statusFilter.toLowerCase() === "unverified" ? "default" : "outline"}
                 size="sm"
@@ -1278,6 +1278,21 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                               <option value="true">True</option>
                               <option value="false">False</option>
                             </select>
+                          ) : col.type === "select" || (col as any).options ? (
+                            <select
+                              value={String(inlineEditValue ?? "")}
+                              onChange={(e) => setInlineEditValue(e.target.value)}
+                              onBlur={handleInlineEditSave}
+                              autoFocus
+                              className="w-full h-7 rounded border border-ring bg-background text-[11px] focus:outline-none"
+                            >
+                              <option value="">-- Select --</option>
+                              {(col as any).options?.map((opt: any) => (
+                                <option key={opt.value} value={opt.value}>
+                                  {opt.label}
+                                </option>
+                              ))}
+                            </select>
                           ) : (
                             <input
                               type={col.type === "number" ? "number" : "text"}
@@ -1319,7 +1334,7 @@ export function DynamicDataTable({ slug, token, canEdit }: DynamicDataTableProps
                   {canEdit && (
                     <TableCell className="text-center p-2">
                       <div className="flex items-center justify-center gap-1">
-                        {(row.status?.toLowerCase() === "unverified" || statusFilter.toLowerCase() === "unverified" || !row.status) && (
+                        {!isGenericForm && (row.status?.toLowerCase() === "unverified" || statusFilter.toLowerCase() === "unverified") && (
                           <Button
                             variant="ghost"
                             size="icon"
