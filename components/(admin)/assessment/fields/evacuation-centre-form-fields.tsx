@@ -192,9 +192,7 @@ export function EvacuationCentreFormFields({
                     [col.key]: e.target.value,
                   }));
                 }}
-                className={`w-full h-9 rounded-xl border bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer ${
-                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : "border-input"
-                }`}
+                className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none cursor-pointer"
               >
                 <option value="">-- Select Option --</option>
                 {(col as any).options?.map((opt: any) => (
@@ -214,9 +212,7 @@ export function EvacuationCentreFormFields({
                     [col.key]: val === "true" ? true : val === "false" ? false : "",
                   }));
                 }}
-                className={`w-full h-9 rounded-xl border bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none ${
-                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : "border-input"
-                }`}
+                className="w-full h-9 rounded-xl border border-input bg-background px-3 text-xs focus:border-ring focus:ring-1 focus:ring-ring focus:outline-none"
               >
                 <option value="">-- Blank/Null --</option>
                 <option value="true">True / Approved</option>
@@ -234,9 +230,7 @@ export function EvacuationCentreFormFields({
                     [col.key]: val === "" ? "" : Number(val),
                   }));
                 }}
-                className={`w-full bg-background shadow-none text-xs ${
-                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : ""
-                }`}
+                className="w-full bg-background shadow-none text-xs"
               />
             ) : col.type === "date" || col.key.includes("date") ? (
               <Input
@@ -254,9 +248,7 @@ export function EvacuationCentreFormFields({
                     [col.key]: val ? val : null,
                   }));
                 }}
-                className={`w-full bg-background shadow-none text-xs font-mono ${
-                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : ""
-                }`}
+                className="w-full bg-background shadow-none text-xs font-mono"
               />
             ) : (
               <Input
@@ -269,13 +261,11 @@ export function EvacuationCentreFormFields({
                     [col.key]: e.target.value,
                   }));
                 }}
-                className={`w-full bg-background shadow-none text-xs ${
-                  fieldError ? "border-rose-500 ring-1 ring-rose-500" : ""
-                }`}
+                className="w-full bg-background shadow-none text-xs"
               />
             )}
             {fieldError && (
-              <p className="text-[10px] font-bold text-rose-500 mt-0.5 animate-fadeIn">
+              <p className="text-[11px] font-medium text-rose-500 mt-1 animate-fadeIn">
                 {fieldError}
               </p>
             )}
