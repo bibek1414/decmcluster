@@ -25,6 +25,8 @@ import {
   Heading3,
   Heading4,
   Pilcrow,
+  Check,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +36,8 @@ interface RichTextEditorProps {
   placeholder?: string;
   className?: string;
   minHeight?: string;
+  maxHeight?: string;
+  height?: string;
   disabled?: boolean;
 }
 
@@ -43,11 +47,22 @@ export function RichTextEditor({
   placeholder = "Write your email content here...",
   className,
   minHeight = "300px",
+  maxHeight = "500px",
+  height,
   disabled = false,
 }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const savedRangeRef = useRef<Range | null>(null);
+  const existingAnchorRef = useRef<HTMLAnchorElement | null>(null);
   const [activeFormats, setActiveFormats] = useState<Record<string, boolean>>({});
   const isUpdatingRef = useRef(false);
+
+  // Inline Link Editor States
+  const [showLinkInput, setShowLinkInput] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkText, setLinkText] = useState("");
+  const [selectedText, setSelectedText] = useState("");
+  const [isEditingExistingLink, setIsEditingExistingLink] = useState(false);
 
   useEffect(() => {
     if (editorRef.current && !isUpdatingRef.current) {
@@ -73,6 +88,19 @@ export function RichTextEditor({
   const updateActiveFormats = () => {
     if (typeof window === "undefined" || !document) return;
     try {
+      let isLink = false;
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        let node: Node | null = sel.getRangeAt(0).commonAncestorContainer;
+        while (node && node !== editorRef.current) {
+          if (node.nodeName === "A") {
+            isLink = true;
+            break;
+          }
+          node = node.parentNode;
+        }
+      }
+
       setActiveFormats({
         bold: document.queryCommandState("bold"),
         italic: document.queryCommandState("italic"),
@@ -84,18 +112,19 @@ export function RichTextEditor({
         justifyCenter: document.queryCommandState("justifyCenter"),
         justifyRight: document.queryCommandState("justifyRight"),
         justifyFull: document.queryCommandState("justifyFull"),
+        link: isLink,
       });
     } catch {
       // Ignore queryCommandState errors if selection is out of focus
     }
   };
 
-  const executeCommand = (command: string, value: string | null = null) => {
+  const executeCommand = (command: string, val: string | null = null) => {
     if (disabled) return;
     if (editorRef.current) {
       editorRef.current.focus();
     }
-    document.execCommand(command, false, value ?? undefined);
+    document.execCommand(command, false, val ?? undefined);
     handleInput();
   };
 
@@ -107,16 +136,190 @@ export function RichTextEditor({
     }
   };
 
-  const handleInsertLink = () => {
+  // Open inline link popover bar without window.prompt
+  const handleOpenLinkInput = () => {
     if (disabled) return;
-    const url = prompt("Enter link URL (e.g. https://example.com):");
-    if (url) {
-      executeCommand("createLink", url);
+
+    if (showLinkInput) {
+      handleCloseLinkInput();
+      return;
     }
+
+    const sel = window.getSelection();
+    let range: Range | null = null;
+    if (sel && sel.rangeCount > 0) {
+      const r = sel.getRangeAt(0);
+      if (editorRef.current && editorRef.current.contains(r.commonAncestorContainer)) {
+        range = r.cloneRange();
+      }
+    }
+
+    savedRangeRef.current = range;
+    const txt = range ? range.toString() : "";
+    setSelectedText(txt);
+
+    let existingAnchor: HTMLAnchorElement | null = null;
+    if (range) {
+      let node: Node | null = range.commonAncestorContainer;
+      while (node && node !== editorRef.current) {
+        if (node.nodeName === "A") {
+          existingAnchor = node as HTMLAnchorElement;
+          break;
+        }
+        node = node.parentNode;
+      }
+    }
+
+    existingAnchorRef.current = existingAnchor;
+
+    if (existingAnchor) {
+      setLinkUrl(existingAnchor.getAttribute("href") || "");
+      setLinkText(existingAnchor.textContent || txt);
+      setIsEditingExistingLink(true);
+    } else {
+      setLinkUrl("");
+      setLinkText(txt);
+      setIsEditingExistingLink(false);
+    }
+
+    setShowLinkInput(true);
+  };
+
+  const handleCloseLinkInput = () => {
+    setShowLinkInput(false);
+    setLinkUrl("");
+    setLinkText("");
+    setSelectedText("");
+    setIsEditingExistingLink(false);
+    existingAnchorRef.current = null;
+  };
+
+  const handleApplyLink = () => {
+    if (disabled) return;
+
+    let url = linkUrl.trim();
+    if (!url) {
+      if (isEditingExistingLink) {
+        handleRemoveLink();
+      } else {
+        handleCloseLinkInput();
+      }
+      return;
+    }
+
+    if (
+      !/^https?:\/\//i.test(url) &&
+      !url.startsWith("mailto:") &&
+      !url.startsWith("tel:") &&
+      !url.startsWith("#") &&
+      !url.startsWith("/")
+    ) {
+      url = `https://${url}`;
+    }
+
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+
+    // Case 1: Editing an existing link element directly
+    if (existingAnchorRef.current && editorRef.current?.contains(existingAnchorRef.current)) {
+      existingAnchorRef.current.setAttribute("href", url);
+      existingAnchorRef.current.setAttribute("target", "_blank");
+      existingAnchorRef.current.setAttribute("rel", "noopener noreferrer");
+      existingAnchorRef.current.className = "text-primary underline";
+      if (linkText.trim() && linkText.trim() !== existingAnchorRef.current.textContent) {
+        existingAnchorRef.current.textContent = linkText.trim();
+      }
+    }
+    // Case 2: Selected text range exists
+    else if (savedRangeRef.current && !savedRangeRef.current.collapsed) {
+      try {
+        const range = savedRangeRef.current;
+        const extracted = range.extractContents();
+        const a = document.createElement("a");
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.className = "text-primary underline";
+
+        const textOverride = linkText.trim();
+        if (textOverride && textOverride !== selectedText) {
+          a.textContent = textOverride;
+        } else if (extracted.textContent && extracted.textContent.length > 0) {
+          a.appendChild(extracted);
+        } else {
+          a.textContent = textOverride || url;
+        }
+
+        range.insertNode(a);
+
+        // Position selection caret right after inserted link
+        const sel = window.getSelection();
+        if (sel) {
+          const newRange = document.createRange();
+          newRange.setStartAfter(a);
+          newRange.setEndAfter(a);
+          sel.removeAllRanges();
+          sel.addRange(newRange);
+        }
+      } catch {
+        const sel = window.getSelection();
+        if (sel && savedRangeRef.current) {
+          sel.removeAllRanges();
+          sel.addRange(savedRangeRef.current);
+        }
+        document.execCommand("createLink", false, url);
+      }
+    }
+    // Case 3: No text selected (collapsed selection range)
+    else {
+      const textToInsert = linkText.trim() || url;
+      const a = document.createElement("a");
+      a.href = url;
+      a.textContent = textToInsert;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.className = "text-primary underline";
+
+      if (savedRangeRef.current) {
+        savedRangeRef.current.insertNode(a);
+        const sel = window.getSelection();
+        if (sel) {
+          const newRange = document.createRange();
+          newRange.setStartAfter(a);
+          newRange.setEndAfter(a);
+          sel.removeAllRanges();
+          sel.addRange(newRange);
+        }
+      } else if (editorRef.current) {
+        editorRef.current.appendChild(a);
+      }
+    }
+
+    handleInput();
+    handleCloseLinkInput();
   };
 
   const handleRemoveLink = () => {
-    executeCommand("unlink");
+    if (disabled) return;
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+
+    if (existingAnchorRef.current && editorRef.current?.contains(existingAnchorRef.current)) {
+      const textNode = document.createTextNode(existingAnchorRef.current.textContent || "");
+      existingAnchorRef.current.parentNode?.replaceChild(textNode, existingAnchorRef.current);
+    } else {
+      const sel = window.getSelection();
+      if (sel && savedRangeRef.current) {
+        sel.removeAllRanges();
+        sel.addRange(savedRangeRef.current);
+      }
+      document.execCommand("unlink");
+    }
+
+    handleInput();
+    handleCloseLinkInput();
   };
 
   return (
@@ -126,9 +329,10 @@ export function RichTextEditor({
         disabled && "opacity-60 pointer-events-none bg-muted/30",
         className
       )}
+      style={height ? { height } : undefined}
     >
       {/* Clean Toolbar Header */}
-      <div className="flex flex-wrap items-center gap-1 border-b border-border bg-muted/30 p-1.5 text-xs">
+      <div className="flex flex-wrap items-center gap-1 border-b border-border bg-muted/30 p-1.5 text-xs shrink-0">
         {/* Headings */}
         <div className="flex items-center gap-0.5 pr-1.5 border-r border-border">
           <button
@@ -323,9 +527,12 @@ export function RichTextEditor({
         <div className="flex items-center gap-0.5 pl-1.5">
           <button
             type="button"
-            onClick={handleInsertLink}
-            title="Insert Link"
-            className="p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            onClick={handleOpenLinkInput}
+            title="Insert / Edit Link"
+            className={cn(
+              "p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer",
+              (activeFormats.link || showLinkInput) && "bg-primary/15 text-primary font-semibold"
+            )}
           >
             <LinkIcon className="w-4 h-4" />
           </button>
@@ -367,16 +574,95 @@ export function RichTextEditor({
         </div>
       </div>
 
-      {/* Editor Body */}
-      <div className="relative flex-1 bg-background">
+      {/* Inline Link Input Bar (replaces window.prompt) */}
+      {showLinkInput && (
+        <div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/40 px-3 py-2 text-xs shrink-0 transition-all animate-in fade-in slide-in-from-top-1">
+          <div className="flex items-center gap-1.5 text-muted-foreground shrink-0 font-medium">
+            <LinkIcon className="w-3.5 h-3.5 text-primary" />
+            <span>Link URL:</span>
+          </div>
+          <input
+            type="url"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            placeholder="https://example.com"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleApplyLink();
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                handleCloseLinkInput();
+              }
+            }}
+            autoFocus
+            className="flex-1 min-w-[180px] px-2.5 py-1 text-xs rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            type="text"
+            value={linkText}
+            onChange={(e) => setLinkText(e.target.value)}
+            placeholder="Display text"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleApplyLink();
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                handleCloseLinkInput();
+              }
+            }}
+            className="w-40 px-2.5 py-1 text-xs rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={handleApplyLink}
+              title="Apply Link"
+              className="flex items-center gap-1 px-2.5 py-1 rounded bg-primary text-primary-foreground font-semibold text-xs hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>Apply</span>
+            </button>
+            {isEditingExistingLink && (
+              <button
+                type="button"
+                onClick={handleRemoveLink}
+                title="Remove Link"
+                className="flex items-center gap-1 px-2 py-1 rounded bg-destructive/10 text-destructive font-medium text-xs hover:bg-destructive/20 transition-colors cursor-pointer"
+              >
+                <Unlink className="w-3.5 h-3.5" />
+                <span>Unlink</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleCloseLinkInput}
+              title="Cancel"
+              className="p-1 rounded text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Editor Body with Overflow Scrolling */}
+      <div
+        className="relative flex-1 bg-background overflow-y-auto"
+        style={{
+          minHeight: height ? undefined : minHeight,
+          maxHeight: height ? undefined : maxHeight,
+        }}
+      >
         <div
           ref={editorRef}
           contentEditable={!disabled}
           onInput={handleInput}
           onKeyUp={updateActiveFormats}
           onMouseUp={updateActiveFormats}
-          style={{ minHeight }}
-          className="prose dark:prose-invert max-w-none p-4 text-sm focus:outline-none overflow-y-auto leading-relaxed [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-bold [&_h3]:text-base [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary/50 [&_blockquote]:pl-3 [&_blockquote]:italic [&_pre]:bg-muted [&_pre]:p-3 [&_pre]:rounded-lg [&_a]:text-primary [&_a]:underline"
+          style={{ minHeight: height ? "100%" : minHeight }}
+          className="prose dark:prose-invert max-w-none p-4 text-sm focus:outline-none overflow-y-auto leading-relaxed [&_h1]:text-xl [&_h1]:font-bold [&_h2]:text-lg [&_h2]:font-bold [&_h3]:text-base [&_h3]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary/50 [&_blockquote]:pl-3 [&_blockquote]:italic [&_pre]:bg-muted [&_pre]:p-3 [&_pre]:rounded-lg [&_a]:text-primary [&_a]:underline font-normal"
         />
         {!value && (
           <div
@@ -390,3 +676,5 @@ export function RichTextEditor({
     </div>
   );
 }
+
+
