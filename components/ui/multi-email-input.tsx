@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Mail, X, Plus, AlertCircle, Users, Check, Trash2, UserCheck, CheckCheck } from "lucide-react";
+import React, { useState, useMemo } from "react";
+import { Mail, X, Plus, AlertCircle, Users, Check, Trash2, UserCheck, CheckCheck, MinusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -122,47 +122,76 @@ export function MultiEmailInput({
     onChange([]);
   };
 
-  const handleSelectSingleEmail = (email: string) => {
+  const handleToggleSingleEmail = (email: string) => {
     const cleanEmail = email.trim().toLowerCase();
-    if (!emails.includes(cleanEmail)) {
+    if (emails.includes(cleanEmail)) {
+      onChange(emails.filter((e) => e !== cleanEmail));
+    } else {
       onChange([...emails, cleanEmail]);
     }
   };
 
-  // Select all subscribers helper
-  const handleSelectAllSubscribers = () => {
-    const subscriberEmails = subscribersList
+  // Filtered subscribers
+  const filteredSubscribers = useMemo(
+    () =>
+      subscribersList.filter((s) =>
+        s.email.toLowerCase().includes(modalSearch.toLowerCase())
+      ),
+    [subscribersList, modalSearch]
+  );
+
+  // Filtered system users
+  const filteredSystemUsers = useMemo(
+    () =>
+      systemUsersList.filter(
+        (u) =>
+          u.email.toLowerCase().includes(modalSearch.toLowerCase()) ||
+          (u.name && u.name.toLowerCase().includes(modalSearch.toLowerCase())) ||
+          (u.role && u.role.toLowerCase().includes(modalSearch.toLowerCase()))
+      ),
+    [systemUsersList, modalSearch]
+  );
+
+  // Check if all filtered subscribers are selected
+  const areAllFilteredSubscribersSelected = useMemo(() => {
+    if (filteredSubscribers.length === 0) return false;
+    return filteredSubscribers.every((s) => emails.includes(s.email.trim().toLowerCase()));
+  }, [filteredSubscribers, emails]);
+
+  // Toggle select/deselect all subscribers
+  const handleToggleAllSubscribers = () => {
+    const subscriberEmails = filteredSubscribers
       .filter((s) => s.is_subscribed !== false)
       .map((s) => s.email.trim().toLowerCase())
       .filter((e) => validateEmail(e));
 
-    const combined = Array.from(new Set([...emails, ...subscriberEmails]));
-    onChange(combined);
+    if (areAllFilteredSubscribersSelected) {
+      onChange(emails.filter((e) => !subscriberEmails.includes(e)));
+    } else {
+      const combined = Array.from(new Set([...emails, ...subscriberEmails]));
+      onChange(combined);
+    }
   };
 
-  // Select all system users helper
-  const handleSelectAllSystemUsers = () => {
-    const userEmails = systemUsersList
+  // Check if all filtered system users are selected
+  const areAllFilteredSystemUsersSelected = useMemo(() => {
+    if (filteredSystemUsers.length === 0) return false;
+    return filteredSystemUsers.every((u) => emails.includes(u.email.trim().toLowerCase()));
+  }, [filteredSystemUsers, emails]);
+
+  // Toggle select/deselect all system users
+  const handleToggleAllSystemUsers = () => {
+    const userEmails = filteredSystemUsers
       .map((u) => u.email.trim().toLowerCase())
       .filter((e) => validateEmail(e));
 
-    const combined = Array.from(new Set([...emails, ...userEmails]));
-    onChange(combined);
+    if (areAllFilteredSystemUsersSelected) {
+      onChange(emails.filter((e) => !userEmails.includes(e)));
+    } else {
+      const combined = Array.from(new Set([...emails, ...userEmails]));
+      onChange(combined);
+    }
   };
-
-  // Filtered subscribers
-  const filteredSubscribers = subscribersList.filter(
-    (s) =>
-      s.email.toLowerCase().includes(modalSearch.toLowerCase())
-  );
-
-  // Filtered system users
-  const filteredSystemUsers = systemUsersList.filter(
-    (u) =>
-      u.email.toLowerCase().includes(modalSearch.toLowerCase()) ||
-      (u.name && u.name.toLowerCase().includes(modalSearch.toLowerCase())) ||
-      (u.role && u.role.toLowerCase().includes(modalSearch.toLowerCase()))
-  );
 
   const openModal = (tab: "subscribers" | "systemUsers") => {
     setActiveTab(tab);
@@ -199,7 +228,7 @@ export function MultiEmailInput({
               className="text-[11px] font-semibold gap-1 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/30 cursor-pointer"
             >
               <UserCheck className="w-3 h-3" />
-              <span>Add Subscribers</span>
+              <span>Select Subscribers</span>
             </Button>
           )}
 
@@ -212,7 +241,7 @@ export function MultiEmailInput({
               className="text-[11px] font-semibold gap-1 text-primary hover:text-primary hover:bg-primary/10 cursor-pointer"
             >
               <Users className="w-3 h-3" />
-              <span>Add System Users</span>
+              <span>Select System Users</span>
             </Button>
           )}
 
@@ -345,7 +374,7 @@ export function MultiEmailInput({
                 )}
               >
                 <UserCheck className="w-3.5 h-3.5" />
-                <span>Newsletter Subscribers ({subscribersList.length})</span>
+                <span>Subscribers ({subscribersList.length})</span>
               </button>
 
               <button
@@ -390,13 +419,27 @@ export function MultiEmailInput({
                     {filteredSubscribers.length > 0 && (
                       <Button
                         type="button"
-                        variant="outline"
+                        variant={areAllFilteredSubscribersSelected ? "secondary" : "outline"}
                         size="xs"
-                        onClick={handleSelectAllSubscribers}
-                        className="text-[11px] font-bold gap-1 text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30 cursor-pointer"
+                        onClick={handleToggleAllSubscribers}
+                        className={cn(
+                          "text-[11px] font-bold gap-1 cursor-pointer",
+                          areAllFilteredSubscribersSelected
+                            ? "text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                            : "text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+                        )}
                       >
-                        <CheckCheck className="w-3.5 h-3.5" />
-                        Select All Subscribers
+                        {areAllFilteredSubscribersSelected ? (
+                          <>
+                            <MinusCircle className="w-3.5 h-3.5" />
+                            Deselect All
+                          </>
+                        ) : (
+                          <>
+                            <CheckCheck className="w-3.5 h-3.5" />
+                            Select All Subscribers
+                          </>
+                        )}
                       </Button>
                     )}
                   </div>
@@ -417,9 +460,9 @@ export function MultiEmailInput({
                         return (
                           <div
                             key={sub.email}
-                            onClick={() => handleSelectSingleEmail(sub.email)}
+                            onClick={() => handleToggleSingleEmail(sub.email)}
                             className={cn(
-                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer",
+                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer select-none",
                               isAdded
                                 ? "bg-emerald-500/10 border-emerald-500/30 text-foreground"
                                 : "bg-background border-border hover:bg-muted/50"
@@ -432,7 +475,7 @@ export function MultiEmailInput({
                               </span>
                             </div>
                             {isAdded ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full shrink-0">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full shrink-0 border border-emerald-500/20">
                                 <Check className="w-3 h-3" />
                                 Added
                               </span>
@@ -463,13 +506,27 @@ export function MultiEmailInput({
                     {filteredSystemUsers.length > 0 && (
                       <Button
                         type="button"
-                        variant="outline"
+                        variant={areAllFilteredSystemUsersSelected ? "secondary" : "outline"}
                         size="xs"
-                        onClick={handleSelectAllSystemUsers}
-                        className="text-[11px] font-bold gap-1 cursor-pointer"
+                        onClick={handleToggleAllSystemUsers}
+                        className={cn(
+                          "text-[11px] font-bold gap-1 cursor-pointer",
+                          areAllFilteredSystemUsersSelected
+                            ? "text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                            : ""
+                        )}
                       >
-                        <CheckCheck className="w-3.5 h-3.5" />
-                        Select All Users
+                        {areAllFilteredSystemUsersSelected ? (
+                          <>
+                            <MinusCircle className="w-3.5 h-3.5" />
+                            Deselect All
+                          </>
+                        ) : (
+                          <>
+                            <CheckCheck className="w-3.5 h-3.5" />
+                            Select All Users
+                          </>
+                        )}
                       </Button>
                     )}
                   </div>
@@ -490,9 +547,9 @@ export function MultiEmailInput({
                         return (
                           <div
                             key={user.email}
-                            onClick={() => handleSelectSingleEmail(user.email)}
+                            onClick={() => handleToggleSingleEmail(user.email)}
                             className={cn(
-                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer",
+                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer select-none",
                               isAdded
                                 ? "bg-primary/10 border-primary/30 text-foreground"
                                 : "bg-background border-border hover:bg-muted/50"
@@ -507,7 +564,7 @@ export function MultiEmailInput({
                               )}
                             </div>
                             {isAdded ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full shrink-0 border border-primary/20">
                                 <Check className="w-3 h-3" />
                                 Added
                               </span>
@@ -532,7 +589,10 @@ export function MultiEmailInput({
             </div>
 
             {/* Modal Footer */}
-            <div className="p-3 border-t border-border bg-muted/20 flex justify-end">
+            <div className="p-3 border-t border-border bg-muted/20 flex items-center justify-between">
+              <span className="text-[11px] text-muted-foreground font-medium">
+                {emails.length} total address{emails.length === 1 ? "" : "es"} selected
+              </span>
               <Button
                 type="button"
                 variant="default"
