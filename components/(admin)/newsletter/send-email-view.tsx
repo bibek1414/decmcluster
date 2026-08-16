@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { newsletterService } from "@/services/newsletter";
@@ -162,6 +163,22 @@ export function SendEmailView() {
             )}
           </Button>
         </div>
+      </div>
+
+      {/* Tab Quick Links */}
+      <div className="flex items-center gap-2 border-b border-border pb-3">
+        <Link
+          href="/assement/newsletter/subscribers"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent transition-colors"
+        >
+          Subscribers List
+        </Link>
+        <Link
+          href="/assement/newsletter/send-email"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-primary text-primary-foreground border border-primary shadow-xs transition-colors"
+        >
+          Send Email
+        </Link>
       </div>
 
       {/* Main Grid: Form vs Live Inbox Preview */}
