@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Mail, UserX, Loader2, CheckCircle2, RefreshCw } from "lucide-react";
+import { Mail, UserX, Loader2, CheckCircle2, RefreshCw, ChevronLeft } from "lucide-react";
 import { useUnsubscribeNewsletter, useSubscribeNewsletter } from "@/hooks/use-newsletter";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,7 @@ function UnsubscribeContent() {
               </p>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 space-y-2.5">
               <Button
                 type="button"
                 variant="outline"
@@ -109,6 +110,12 @@ function UnsubscribeContent() {
                     Changed your mind? Resubscribe
                   </>
                 )}
+              </Button>
+
+              <Button asChild variant="ghost" className="w-full text-xs font-bold gap-1.5 h-10 cursor-pointer shadow-none">
+                <Link href="/">
+                  <ChevronLeft className="w-4 h-4" /> Back to DECM Cluster
+                </Link>
               </Button>
             </div>
           </div>
@@ -152,6 +159,15 @@ function UnsubscribeContent() {
                 </>
               )}
             </Button>
+
+            <div className="pt-1 text-center">
+              <Link
+                href="/"
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" /> Back to DECM Cluster
+              </Link>
+            </div>
           </form>
         )}
       </div>
@@ -172,3 +188,4 @@ export default function UnsubscribeForm() {
     </Suspense>
   );
 }
+
