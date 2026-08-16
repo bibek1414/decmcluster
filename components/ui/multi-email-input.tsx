@@ -24,6 +24,7 @@ interface MultiEmailInputProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  sendToAllSubscribers?: boolean;
 
   // System Users
   onFetchSystemUsers?: () => void;
@@ -44,6 +45,7 @@ export function MultiEmailInput({
   placeholder = "Enter email address and press Enter or Comma...",
   className,
   disabled = false,
+  sendToAllSubscribers = false,
   onFetchSystemUsers,
   isLoadingSystemUsers = false,
   systemUsersList = [],
@@ -261,75 +263,87 @@ export function MultiEmailInput({
         </div>
       </div>
 
-      {/* Input container box with tags */}
-      <div
-        className={cn(
-          "min-h-[90px] p-2.5 rounded-xl border border-border bg-card text-card-foreground transition-all focus-within:border-primary/60 flex flex-wrap items-start gap-1.5",
-          disabled && "opacity-60 pointer-events-none bg-muted/30"
-        )}
-      >
-        {/* Render Email Tags */}
-        {emails.map((email, idx) => {
-          const isValid = validateEmail(email);
-          return (
-            <div
-              key={`${email}-${idx}`}
-              className={cn(
-                "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all animate-fadeIn",
-                isValid
-                  ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15"
-                  : "bg-rose-500/10 text-rose-600 border-rose-500/30 dark:text-rose-400"
-              )}
-            >
-              {!isValid && <AlertCircle className="w-3 h-3 text-rose-500 shrink-0" />}
-              <span className="truncate max-w-[240px]">{email}</span>
-              <button
-                type="button"
-                onClick={() => removeEmail(idx)}
-                disabled={disabled}
-                className="hover:bg-primary/20 rounded-full p-0.5 transition-colors cursor-pointer text-muted-foreground hover:text-foreground"
-                title="Remove email"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          );
-        })}
-
-        {/* Text Input */}
-        <div className="flex-1 min-w-[200px] flex items-center gap-1 my-0.5">
-          <Input
-            type="text"
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value);
-              setErrorMsg(null);
-            }}
-            onKeyDown={handleKeyDown}
-            onPaste={handlePaste}
-            onBlur={() => {
-              if (inputValue.trim()) {
-                addEmails(inputValue);
-              }
-            }}
-            placeholder={emails.length === 0 ? placeholder : "Add another email..."}
-            disabled={disabled}
-            className="border-none shadow-none focus-visible:ring-0 focus-visible:border-none p-0 h-7 text-xs bg-transparent"
-          />
-          {inputValue.trim().length > 0 && (
-            <Button
-              type="button"
-              variant="secondary"
-              size="xs"
-              onClick={() => addEmails(inputValue)}
-              className="shrink-0 text-[10px] font-bold h-6 px-2 cursor-pointer"
-            >
-              <Plus className="w-3 h-3" />
-              <span>Add</span>
-            </Button>
-          )}
+      {/* Input container box with tags or All Subscribers Banner */}
+      {sendToAllSubscribers ? (
+        <div className="min-h-[60px] p-3 rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 text-emerald-900 dark:text-emerald-300 flex items-center gap-3">
+          <UserCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <div className="text-xs">
+            <p className="font-bold">Sending broadcast to all active newsletter subscribers</p>
+            <p className="text-[11px] text-muted-foreground font-medium">
+              Recipient input is disabled because this message will be delivered to all active subscribers.
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          className={cn(
+            "min-h-[90px] p-2.5 rounded-xl border border-border bg-card text-card-foreground transition-all focus-within:border-primary/60 flex flex-wrap items-start gap-1.5",
+            disabled && "opacity-60 pointer-events-none bg-muted/30"
+          )}
+        >
+          {/* Render Email Tags */}
+          {emails.map((email, idx) => {
+            const isValid = validateEmail(email);
+            return (
+              <div
+                key={`${email}-${idx}`}
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all animate-fadeIn",
+                  isValid
+                    ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15"
+                    : "bg-rose-500/10 text-rose-600 border-rose-500/30 dark:text-rose-400"
+                )}
+              >
+                {!isValid && <AlertCircle className="w-3 h-3 text-rose-500 shrink-0" />}
+                <span className="truncate max-w-[240px]">{email}</span>
+                <button
+                  type="button"
+                  onClick={() => removeEmail(idx)}
+                  disabled={disabled}
+                  className="hover:bg-primary/20 rounded-full p-0.5 transition-colors cursor-pointer text-muted-foreground hover:text-foreground"
+                  title="Remove email"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            );
+          })}
+
+          {/* Text Input */}
+          <div className="flex-1 min-w-[200px] flex items-center gap-1 my-0.5">
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setErrorMsg(null);
+              }}
+              onKeyDown={handleKeyDown}
+              onPaste={handlePaste}
+              onBlur={() => {
+                if (inputValue.trim()) {
+                  addEmails(inputValue);
+                }
+              }}
+              placeholder={emails.length === 0 ? placeholder : "Add another email..."}
+              disabled={disabled}
+              className="border-none shadow-none focus-visible:ring-0 focus-visible:border-none p-0 h-7 text-xs bg-transparent"
+            />
+            {inputValue.trim().length > 0 && (
+              <Button
+                type="button"
+                variant="secondary"
+                size="xs"
+                onClick={() => addEmails(inputValue)}
+                className="shrink-0 text-[10px] font-bold h-6 px-2 cursor-pointer"
+              >
+                <Plus className="w-3 h-3" />
+                <span>Add</span>
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       {errorMsg && (
         <p className="text-[11px] font-semibold text-rose-500 flex items-center gap-1 animate-fadeIn">

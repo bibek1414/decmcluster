@@ -22,6 +22,7 @@ import {
   Eye,
   Info,
   ShieldCheck,
+  Users,
 } from "lucide-react";
 
 export function SendEmailView() {
@@ -29,6 +30,7 @@ export function SendEmailView() {
   const [subject, setSubject] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const [body, setBody] = useState("");
+  const [sendToAllSubscribers, setSendToAllSubscribers] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   // Query system users for email quick-select
@@ -38,7 +40,7 @@ export function SendEmailView() {
     refetch: refetchSystemUsers,
   } = useQuery({
     queryKey: ["system-users-for-newsletter", token],
-    queryFn: () => userService.list(1, token, ""),
+    queryFn: () => userService.list(1, token, "", 1000),
     enabled: false,
   });
 
@@ -73,8 +75,10 @@ export function SendEmailView() {
       if (!subject.trim()) {
         throw new Error("Subject line is required.");
       }
-      if (emails.length === 0) {
-        throw new Error("Please add at least one recipient email address.");
+      if (!sendToAllSubscribers && emails.length === 0) {
+        throw new Error(
+          "Please add recipient email address(es) or select 'Send to all active newsletter subscribers'."
+        );
       }
       if (!body.trim()) {
         throw new Error("Email body content cannot be empty.");
@@ -84,19 +88,20 @@ export function SendEmailView() {
         {
           subject: subject.trim(),
           body: body.trim(),
-          emails: emails,
+          emails: sendToAllSubscribers ? [] : emails,
         },
         token
       );
     },
     onSuccess: (data) => {
-      const sentCount = data?.sent_count ?? emails.length;
+      const sentCount = data?.sent_count ?? (sendToAllSubscribers ? "all subscribers" : emails.length);
       toast.success(
         data?.message || `Newsletter successfully sent to ${sentCount} recipient(s)!`
       );
       setSubject("");
       setEmails([]);
       setBody("");
+      setSendToAllSubscribers(false);
       setShowConfirmModal(false);
     },
     onError: (err: any) => {
@@ -111,8 +116,10 @@ export function SendEmailView() {
       toast.error("Please enter a subject line.");
       return;
     }
-    if (emails.length === 0) {
-      toast.error("Please add at least one recipient email address.");
+    if (!sendToAllSubscribers && emails.length === 0) {
+      toast.error(
+        "Please add recipient email address(es) or check 'Send to all active newsletter subscribers'."
+      );
       return;
     }
     if (!body.trim()) {
@@ -128,6 +135,7 @@ export function SendEmailView() {
       setSubject("");
       setEmails([]);
       setBody("");
+      setSendToAllSubscribers(false);
     }
   };
 
@@ -226,12 +234,32 @@ export function SendEmailView() {
             />
           </div>
 
-          {/* Recipient Emails */}
-          <div className="space-y-1.5">
+          {/* Recipient Emails & Send to All Subscribers option */}
+          <div className="space-y-3">
+            {/* Checkbox Toggle to send to all active subscribers */}
+            <div className="p-3 rounded-xl border border-border bg-card hover:bg-muted/20 transition-colors">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={sendToAllSubscribers}
+                  onChange={(e) => setSendToAllSubscribers(e.target.checked)}
+                  disabled={sendEmailMutation.isPending}
+                  className="h-4 w-4 rounded border-input text-primary focus:ring-ring accent-primary cursor-pointer shrink-0"
+                />
+                <div className="flex items-center gap-2 text-xs">
+                  <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span className="font-bold text-foreground">
+                    Send to all active newsletter subscribers
+                  </span>
+                </div>
+              </label>
+            </div>
+
             <MultiEmailInput
               emails={emails}
               onChange={setEmails}
-              disabled={sendEmailMutation.isPending}
+              disabled={sendEmailMutation.isPending || sendToAllSubscribers}
+              sendToAllSubscribers={sendToAllSubscribers}
               onFetchSystemUsers={() => refetchSystemUsers()}
               isLoadingSystemUsers={isLoadingSystemUsers}
               systemUsersList={systemUsersList}
@@ -312,7 +340,11 @@ export function SendEmailView() {
               {/* To field */}
               <div className="p-2 rounded-lg bg-muted/30 border border-border text-xs">
                 <span className="text-[11px] text-muted-foreground font-medium">To: </span>
-                {emails.length > 0 ? (
+                {sendToAllSubscribers ? (
+                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                    All Active Newsletter Subscribers
+                  </span>
+                ) : emails.length > 0 ? (
                   <span className="text-[11px] font-semibold text-foreground">
                     {emails.slice(0, 3).join(", ")}
                     {emails.length > 3 ? ` +${emails.length - 3} more` : ""}
@@ -378,9 +410,15 @@ export function SendEmailView() {
                 <span className="text-muted-foreground font-medium">Subject:</span>
                 <span className="font-semibold text-foreground truncate max-w-[200px]">{subject}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center gap-2">
                 <span className="text-muted-foreground font-medium">Recipients:</span>
-                <span className="font-semibold text-primary">{emails.length} address(es)</span>
+                {sendToAllSubscribers ? (
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 text-xs">
+                    All Active Newsletter Subscribers
+                  </span>
+                ) : (
+                  <span className="font-semibold text-primary">{emails.length} address(es)</span>
+                )}
               </div>
             </div>
 
