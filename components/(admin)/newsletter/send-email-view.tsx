@@ -341,8 +341,19 @@ export function SendEmailView() {
             </div>
 
             {/* Footer */}
-            <div className="pt-2 border-t border-border text-[10px] text-muted-foreground text-center">
-              DECM Cluster Information System
+            <div className="pt-2.5 border-t border-border text-[10px] text-muted-foreground text-center space-y-1">
+              <p className="font-semibold">DECM Cluster Information System</p>
+              <p className="text-[9px] text-muted-foreground/80">
+                To unsubscribe from future newsletter updates,{" "}
+                <a
+                  href="/newsletter/unsubscribe"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary underline hover:text-primary/80"
+                >
+                  click here to unsubscribe
+                </a>.
+              </p>
             </div>
           </div>
         </div>

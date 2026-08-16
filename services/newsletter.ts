@@ -69,6 +69,68 @@ export const newsletterService = {
     return responseData;
   },
 
+  // Public endpoint for unsubscribing
+  unsubscribe: async (email: string): Promise<NewsletterSubscription | { message: string }> => {
+    const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
+
+    // First try POST /api/newsletter/unsubscribe/
+    try {
+      const res = await fetch(`${baseUrl}/api/newsletter/unsubscribe/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ email, is_subscribed: false }),
+      });
+
+      if (res.ok) {
+        return res.json();
+      }
+    } catch {}
+
+    // Fallback: POST /api/newsletter/ with is_subscribed: false
+    const res = await fetch(`${baseUrl}/api/newsletter/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ email, is_subscribed: false }),
+    });
+
+    const contentType = res.headers.get("content-type");
+    let responseData: any = null;
+    if (contentType && contentType.includes("application/json")) {
+      responseData = await res.json();
+    } else {
+      responseData = await res.text();
+    }
+
+    if (!res.ok) {
+      let errorMessage = "Failed to process unsubscribe request.";
+      if (responseData && typeof responseData === "object") {
+        if (responseData.detail) errorMessage = responseData.detail;
+        else if (responseData.email) {
+          errorMessage = Array.isArray(responseData.email)
+            ? responseData.email.join(", ")
+            : responseData.email;
+        } else {
+          const firstKey = Object.keys(responseData)[0];
+          if (firstKey) {
+            const val = responseData[firstKey];
+            errorMessage = `${firstKey}: ${Array.isArray(val) ? val.join(", ") : val}`;
+          }
+        }
+      } else if (typeof responseData === "string" && responseData.length < 150) {
+        errorMessage = responseData;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return responseData;
+  },
+
   // Admin endpoint: List subscribers with pagination and search
   list: async (
     page: number = 1,

@@ -68,3 +68,16 @@ export function useDeleteNewsletterSubscriber() {
     },
   });
 }
+
+/**
+ * Hook to unsubscribe an email address from the newsletter.
+ */
+export function useUnsubscribeNewsletter() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (email: string) => newsletterService.unsubscribe(email),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-newsletter-subscribers"] });
+    },
+  });
+}
