@@ -17,6 +17,7 @@ import {
   Wrench,
   Archive,
   BarChart3,
+  Mail,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -277,6 +278,18 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
                 >
                   <Users className="h-4 w-4 shrink-0" />
                   <span>User Management</span>
+                </Link>
+                <Link
+                  href="/assement/newsletter/send-email"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                    pathname?.startsWith("/assement/newsletter") || pathname?.startsWith("/newsletter")
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                  }`}
+                >
+                  <Mail className="h-4 w-4 shrink-0" />
+                  <span>Send Email</span>
                 </Link>
               </div>
             )}
