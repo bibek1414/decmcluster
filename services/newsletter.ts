@@ -73,10 +73,14 @@ export const newsletterService = {
   list: async (
     page: number = 1,
     token: string | null = null,
-    search?: string
+    search?: string,
+    pageSize?: number
   ): Promise<PaginatedNewsletterResponse> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
     const params = new URLSearchParams({ page: page.toString() });
+    if (pageSize) {
+      params.append("page_size", pageSize.toString());
+    }
     if (search && search.trim()) {
       params.append("search", search.trim());
     }

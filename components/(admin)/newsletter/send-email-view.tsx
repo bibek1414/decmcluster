@@ -49,6 +49,24 @@ export function SendEmailView() {
       role: u.role,
     })) || [];
 
+  // Query newsletter subscribers for email quick-select
+  const {
+    data: subscribersData,
+    isLoading: isLoadingSubscribers,
+    refetch: refetchSubscribers,
+  } = useQuery({
+    queryKey: ["subscribers-for-newsletter", token],
+    queryFn: () => newsletterService.list(1, token, "", 1000),
+    enabled: false,
+  });
+
+  const subscribersList =
+    subscribersData?.results?.map((s) => ({
+      email: s.email,
+      is_subscribed: s.is_subscribed,
+      created_at: s.created_at,
+    })) || [];
+
   // Mutation to send newsletter email
   const sendEmailMutation = useMutation({
     mutationFn: async () => {
@@ -217,6 +235,9 @@ export function SendEmailView() {
               onFetchSystemUsers={() => refetchSystemUsers()}
               isLoadingSystemUsers={isLoadingSystemUsers}
               systemUsersList={systemUsersList}
+              onFetchSubscribers={() => refetchSubscribers()}
+              isLoadingSubscribers={isLoadingSubscribers}
+              subscribersList={subscribersList}
             />
           </div>
 

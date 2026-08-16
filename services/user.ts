@@ -5,11 +5,12 @@ import { PaginatedResponse } from "@/types/assessment-registry";
 export const userService = {
   list: async (
     page: number = 1,
-    token: string | null,
+    token: string | null = null,
     search?: string,
+    pageSize: number = 10,
   ): Promise<PaginatedResponse<UserData>> => {
     const baseUrl = siteConfig.apiUrl.replace(/\/$/, "");
-    let url = `${baseUrl}/api/account/users/?page=${page}&page_size=10`;
+    let url = `${baseUrl}/api/account/users/?page=${page}&page_size=${pageSize}`;
     if (search && search.trim() !== "") {
       url += `&search=${encodeURIComponent(search)}`;
     }

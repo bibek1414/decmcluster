@@ -1,10 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { Mail, X, Plus, AlertCircle, Users, Check, Trash2 } from "lucide-react";
+import { Mail, X, Plus, AlertCircle, Users, Check, Trash2, UserCheck, CheckCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+export interface SubscriberItem {
+  email: string;
+  is_subscribed?: boolean;
+  created_at?: string;
+}
+
+export interface SystemUserItem {
+  email: string;
+  name?: string;
+  role?: string;
+}
 
 interface MultiEmailInputProps {
   emails: string[];
@@ -12,9 +24,16 @@ interface MultiEmailInputProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+
+  // System Users
   onFetchSystemUsers?: () => void;
   isLoadingSystemUsers?: boolean;
-  systemUsersList?: { email: string; name?: string; role?: string }[];
+  systemUsersList?: SystemUserItem[];
+
+  // Subscribers
+  onFetchSubscribers?: () => void;
+  isLoadingSubscribers?: boolean;
+  subscribersList?: SubscriberItem[];
 }
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -28,11 +47,15 @@ export function MultiEmailInput({
   onFetchSystemUsers,
   isLoadingSystemUsers = false,
   systemUsersList = [],
+  onFetchSubscribers,
+  isLoadingSubscribers = false,
+  subscribersList = [],
 }: MultiEmailInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [showUserModal, setShowUserModal] = useState(false);
-  const [userSearch, setUserSearch] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<"subscribers" | "systemUsers">("subscribers");
+  const [modalSearch, setModalSearch] = useState("");
 
   const validateEmail = (email: string) => {
     return EMAIL_REGEX.test(email.trim());
@@ -78,7 +101,6 @@ export function MultiEmailInput({
       e.preventDefault();
       addEmails(inputValue);
     } else if (e.key === "Backspace" && !inputValue && emails.length > 0) {
-      // Remove last tag on backspace if input is empty
       removeEmail(emails.length - 1);
     }
   };
@@ -100,32 +122,63 @@ export function MultiEmailInput({
     onChange([]);
   };
 
-  const handleSelectUser = (email: string) => {
+  const handleSelectSingleEmail = (email: string) => {
     const cleanEmail = email.trim().toLowerCase();
     if (!emails.includes(cleanEmail)) {
       onChange([...emails, cleanEmail]);
     }
   };
 
+  // Select all subscribers helper
+  const handleSelectAllSubscribers = () => {
+    const subscriberEmails = subscribersList
+      .filter((s) => s.is_subscribed !== false)
+      .map((s) => s.email.trim().toLowerCase())
+      .filter((e) => validateEmail(e));
+
+    const combined = Array.from(new Set([...emails, ...subscriberEmails]));
+    onChange(combined);
+  };
+
+  // Select all system users helper
   const handleSelectAllSystemUsers = () => {
     const userEmails = systemUsersList
       .map((u) => u.email.trim().toLowerCase())
       .filter((e) => validateEmail(e));
+
     const combined = Array.from(new Set([...emails, ...userEmails]));
     onChange(combined);
   };
 
+  // Filtered subscribers
+  const filteredSubscribers = subscribersList.filter(
+    (s) =>
+      s.email.toLowerCase().includes(modalSearch.toLowerCase())
+  );
+
+  // Filtered system users
   const filteredSystemUsers = systemUsersList.filter(
     (u) =>
-      u.email.toLowerCase().includes(userSearch.toLowerCase()) ||
-      (u.name && u.name.toLowerCase().includes(userSearch.toLowerCase())) ||
-      (u.role && u.role.toLowerCase().includes(userSearch.toLowerCase()))
+      u.email.toLowerCase().includes(modalSearch.toLowerCase()) ||
+      (u.name && u.name.toLowerCase().includes(modalSearch.toLowerCase())) ||
+      (u.role && u.role.toLowerCase().includes(modalSearch.toLowerCase()))
   );
+
+  const openModal = (tab: "subscribers" | "systemUsers") => {
+    setActiveTab(tab);
+    setModalSearch("");
+    setShowModal(true);
+    if (tab === "subscribers" && onFetchSubscribers) {
+      onFetchSubscribers();
+    } else if (tab === "systemUsers" && onFetchSystemUsers) {
+      onFetchSystemUsers();
+    }
+  };
 
   return (
     <div className={cn("space-y-2", className)}>
       {/* Top Bar / Controls */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
             <Mail className="w-3.5 h-3.5 text-primary" />
@@ -136,16 +189,26 @@ export function MultiEmailInput({
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {onFetchSubscribers && (
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              onClick={() => openModal("subscribers")}
+              className="text-[11px] font-semibold gap-1 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/30 cursor-pointer"
+            >
+              <UserCheck className="w-3 h-3" />
+              <span>Add Subscribers</span>
+            </Button>
+          )}
+
           {onFetchSystemUsers && (
             <Button
               type="button"
               variant="outline"
               size="xs"
-              onClick={() => {
-                onFetchSystemUsers();
-                setShowUserModal(true);
-              }}
+              onClick={() => openModal("systemUsers")}
               className="text-[11px] font-semibold gap-1 text-primary hover:text-primary hover:bg-primary/10 cursor-pointer"
             >
               <Users className="w-3 h-3" />
@@ -247,113 +310,234 @@ export function MultiEmailInput({
       )}
 
       <p className="text-[11px] text-muted-foreground">
-        Tip: You can paste multiple emails separated by commas, spaces, or newlines.
+        Tip: You can select subscribers or system users, or paste multiple emails separated by commas/newlines.
       </p>
 
-      {/* System Users Modal / Dialog */}
-      {showUserModal && (
+      {/* Quick Selection Modal */}
+      {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fadeIn">
           <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-xl overflow-hidden flex flex-col max-h-[85vh]">
+            {/* Modal Header */}
             <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-primary" />
-                <h3 className="text-sm font-bold text-foreground">Select System Users</h3>
-              </div>
+              <h3 className="text-sm font-bold text-foreground">Select Email Recipients</h3>
               <button
                 type="button"
-                onClick={() => setShowUserModal(false)}
+                onClick={() => setShowModal(false)}
                 className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
+            {/* Tabs */}
+            <div className="flex items-center border-b border-border bg-muted/20 px-4 pt-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("subscribers");
+                  if (onFetchSubscribers) onFetchSubscribers();
+                }}
+                className={cn(
+                  "px-3.5 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
+                  activeTab === "subscribers"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <UserCheck className="w-3.5 h-3.5" />
+                <span>Newsletter Subscribers ({subscribersList.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("systemUsers");
+                  if (onFetchSystemUsers) onFetchSystemUsers();
+                }}
+                className={cn(
+                  "px-3.5 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
+                  activeTab === "systemUsers"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span>System Users ({systemUsersList.length})</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
             <div className="p-4 space-y-3 flex-1 overflow-y-auto">
               <Input
                 type="text"
-                placeholder="Search users by name, email, or role..."
-                value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
+                placeholder={
+                  activeTab === "subscribers"
+                    ? "Search subscribers by email..."
+                    : "Search users by name, email, or role..."
+                }
+                value={modalSearch}
+                onChange={(e) => setModalSearch(e.target.value)}
                 className="text-xs"
               />
 
-              <div className="flex items-center justify-between pt-1">
-                <span className="text-[11px] font-semibold text-muted-foreground">
-                  Found {filteredSystemUsers.length} user(s)
-                </span>
-                {filteredSystemUsers.length > 0 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="xs"
-                    onClick={handleSelectAllSystemUsers}
-                    className="text-[11px] font-bold cursor-pointer"
-                  >
-                    Select All Users
-                  </Button>
-                )}
-              </div>
+              {activeTab === "subscribers" ? (
+                /* Newsletter Subscribers Content */
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] font-semibold text-muted-foreground">
+                      Showing {filteredSubscribers.length} subscriber(s)
+                    </span>
+                    {filteredSubscribers.length > 0 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="xs"
+                        onClick={handleSelectAllSubscribers}
+                        className="text-[11px] font-bold gap-1 text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30 cursor-pointer"
+                      >
+                        <CheckCheck className="w-3.5 h-3.5" />
+                        Select All Subscribers
+                      </Button>
+                    )}
+                  </div>
 
-              {isLoadingSystemUsers ? (
-                <div className="py-8 text-center text-xs text-muted-foreground animate-pulse">
-                  Loading system users...
-                </div>
-              ) : filteredSystemUsers.length === 0 ? (
-                <div className="py-8 text-center text-xs text-muted-foreground">
-                  No matching system users found.
+                  {isLoadingSubscribers ? (
+                    <div className="py-8 text-center text-xs text-muted-foreground animate-pulse">
+                      Loading subscribers list...
+                    </div>
+                  ) : filteredSubscribers.length === 0 ? (
+                    <div className="py-8 text-center text-xs text-muted-foreground">
+                      No matching subscribers found.
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
+                      {filteredSubscribers.map((sub) => {
+                        const cleanEmail = sub.email.trim().toLowerCase();
+                        const isAdded = emails.includes(cleanEmail);
+                        return (
+                          <div
+                            key={sub.email}
+                            onClick={() => handleSelectSingleEmail(sub.email)}
+                            className={cn(
+                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer",
+                              isAdded
+                                ? "bg-emerald-500/10 border-emerald-500/30 text-foreground"
+                                : "bg-background border-border hover:bg-muted/50"
+                            )}
+                          >
+                            <div className="min-w-0 pr-2">
+                              <p className="font-bold text-foreground truncate">{sub.email}</p>
+                              <span className="text-[10px] text-muted-foreground">
+                                {sub.is_subscribed !== false ? "Subscribed" : "Unsubscribed"}
+                              </span>
+                            </div>
+                            {isAdded ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full shrink-0">
+                                <Check className="w-3 h-3" />
+                                Added
+                              </span>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="xs"
+                                className="text-[10px] font-bold h-6 px-2 shrink-0 cursor-pointer"
+                              >
+                                <Plus className="w-3 h-3" />
+                                Add
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
-                  {filteredSystemUsers.map((user) => {
-                    const isAdded = emails.includes(user.email.toLowerCase());
-                    return (
-                      <div
-                        key={user.email}
-                        onClick={() => handleSelectUser(user.email)}
-                        className={cn(
-                          "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer",
-                          isAdded
-                            ? "bg-primary/10 border-primary/30 text-foreground"
-                            : "bg-background border-border hover:bg-muted/50"
-                        )}
+                /* System Users Content */
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] font-semibold text-muted-foreground">
+                      Showing {filteredSystemUsers.length} user(s)
+                    </span>
+                    {filteredSystemUsers.length > 0 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="xs"
+                        onClick={handleSelectAllSystemUsers}
+                        className="text-[11px] font-bold gap-1 cursor-pointer"
                       >
-                        <div className="min-w-0 pr-2">
-                          <p className="font-bold text-foreground truncate">{user.email}</p>
-                          {(user.name || user.role) && (
-                            <p className="text-[10px] text-muted-foreground truncate">
-                              {user.name} {user.role ? `• ${user.role}` : ""}
-                            </p>
-                          )}
-                        </div>
-                        {isAdded ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
-                            <Check className="w-3 h-3" />
-                            Added
-                          </span>
-                        ) : (
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            size="xs"
-                            className="text-[10px] font-bold h-6 px-2 shrink-0 cursor-pointer"
+                        <CheckCheck className="w-3.5 h-3.5" />
+                        Select All Users
+                      </Button>
+                    )}
+                  </div>
+
+                  {isLoadingSystemUsers ? (
+                    <div className="py-8 text-center text-xs text-muted-foreground animate-pulse">
+                      Loading system users...
+                    </div>
+                  ) : filteredSystemUsers.length === 0 ? (
+                    <div className="py-8 text-center text-xs text-muted-foreground">
+                      No matching system users found.
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
+                      {filteredSystemUsers.map((user) => {
+                        const cleanEmail = user.email.trim().toLowerCase();
+                        const isAdded = emails.includes(cleanEmail);
+                        return (
+                          <div
+                            key={user.email}
+                            onClick={() => handleSelectSingleEmail(user.email)}
+                            className={cn(
+                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer",
+                              isAdded
+                                ? "bg-primary/10 border-primary/30 text-foreground"
+                                : "bg-background border-border hover:bg-muted/50"
+                            )}
                           >
-                            <Plus className="w-3 h-3" />
-                            Add
-                          </Button>
-                        )}
-                      </div>
-                    );
-                  })}
+                            <div className="min-w-0 pr-2">
+                              <p className="font-bold text-foreground truncate">{user.email}</p>
+                              {(user.name || user.role) && (
+                                <p className="text-[10px] text-muted-foreground truncate">
+                                  {user.name} {user.role ? `• ${user.role}` : ""}
+                                </p>
+                              )}
+                            </div>
+                            {isAdded ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
+                                <Check className="w-3 h-3" />
+                                Added
+                              </span>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="xs"
+                                className="text-[10px] font-bold h-6 px-2 shrink-0 cursor-pointer"
+                              >
+                                <Plus className="w-3 h-3" />
+                                Add
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
+            {/* Modal Footer */}
             <div className="p-3 border-t border-border bg-muted/20 flex justify-end">
               <Button
                 type="button"
                 variant="default"
                 size="sm"
-                onClick={() => setShowUserModal(false)}
+                onClick={() => setShowModal(false)}
                 className="text-xs font-bold cursor-pointer"
               >
                 Done
