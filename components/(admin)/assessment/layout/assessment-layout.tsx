@@ -155,7 +155,9 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
                     !pathname.startsWith("/assement/sops") &&
                     !pathname.startsWith("/assement/situational-reports") &&
                     !pathname.startsWith("/assement/users") &&
-                    !pathname.startsWith("/assement/tools"))
+                    !pathname.startsWith("/assement/tools") &&
+                    !pathname.startsWith("/assement/newsletter") &&
+                    !pathname.startsWith("/newsletter"))
                     ? "bg-primary text-primary-foreground border-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                 }`}
