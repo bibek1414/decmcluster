@@ -23,8 +23,257 @@ import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 
+interface SidebarContentProps {
+  onCloseMobileMenu?: () => void;
+}
+
+function SidebarContent({ onCloseMobileMenu }: SidebarContentProps) {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isSuperAdmin = user?.role === "Superadmin";
+  const isDataEnumerator = user?.role === "Data Enumerator";
+  const isFieldCoordinator = user?.role === "Field Coordinator";
+  const ac = user?.access_control || [];
+  const normalizedAc = ac.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
+
+  const showMeetingMinutes = isSuperAdmin || normalizedAc.includes("meeting-minutes");
+  const showSops = isSuperAdmin || normalizedAc.includes("sops");
+  const showTools = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
+  const showSituationalReports = isSuperAdmin || normalizedAc.includes("situational-reports");
+  const showUserManagement = isSuperAdmin;
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
+
+  const handleNavClick = () => {
+    if (onCloseMobileMenu) {
+      onCloseMobileMenu();
+    }
+  };
+
+  return (
+    <div className="h-full flex flex-col justify-between p-5">
+      <div className="space-y-6">
+        {/* Logo and Brand */}
+        <div className="flex items-center gap-3 pb-4 border-b border-border">
+          <Logo className="w-10 h-10" />
+          <div className="min-w-0">
+            <h2 className="text-xs font-extrabold text-foreground leading-tight tracking-tight uppercase">
+              DECM Cluster
+            </h2>
+            <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
+              Admin Portal
+            </p>
+          </div>
+        </div>
+
+        {/* Navigation Groups */}
+        <div className="space-y-5">
+          {/* Database Group */}
+          <div className="space-y-1.5">
+            <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+              Database
+            </p>
+            <Link
+              href="/assement"
+              onClick={handleNavClick}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname === "/assement" ||
+                (pathname?.startsWith("/assement/") &&
+                  !pathname.startsWith("/assement/archives") &&
+                  !pathname.startsWith("/assement/analytics") &&
+                  !pathname.startsWith("/assement/meeting-minutes") &&
+                  !pathname.startsWith("/assement/sops") &&
+                  !pathname.startsWith("/assement/situational-reports") &&
+                  !pathname.startsWith("/assement/users") &&
+                  !pathname.startsWith("/assement/tools") &&
+                  !pathname.startsWith("/assement/newsletter") &&
+                  !pathname.startsWith("/newsletter"))
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <ClipboardList className="h-4 w-4 shrink-0" />
+              <span>Displacement Data</span>
+            </Link>
+            <Link
+              href="/assement/archives"
+              onClick={handleNavClick}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname?.startsWith("/assement/archives")
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <Archive className="h-4 w-4 shrink-0" />
+              <span>Archives</span>
+            </Link>
+          </div>
+
+          {/* Coordination Group */}
+          {(showMeetingMinutes || showSops || showTools) && (
+            <div className="space-y-1.5">
+              <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                Coordination
+              </p>
+              {showMeetingMinutes && (
+                <Link
+                  href="/assement/meeting-minutes"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                    pathname?.startsWith("/assement/meeting-minutes")
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                  }`}
+                >
+                  <FileText className="h-4 w-4 shrink-0" />
+                  <span>Meeting Minutes</span>
+                </Link>
+              )}
+              {showSops && (
+                <Link
+                  href="/assement/sops"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                    pathname?.startsWith("/assement/sops")
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                  }`}
+                >
+                  <BookOpen className="h-4 w-4 shrink-0" />
+                  <span>SOPs</span>
+                </Link>
+              )}
+              {showTools && (
+                <Link
+                  href="/assement/tools"
+                  onClick={handleNavClick}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                    pathname?.startsWith("/assement/tools")
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                  }`}
+                >
+                  <Wrench className="h-4 w-4 shrink-0" />
+                  <span>IM tools</span>
+                </Link>
+              )}
+            </div>
+          )}
+
+          {/* Reports & Analytics Group */}
+          <div className="space-y-1.5">
+            <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+              Reports & Analytics
+            </p>
+            <Link
+              href="/assement/analytics"
+              onClick={handleNavClick}
+              className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                pathname?.startsWith("/assement/analytics")
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+              }`}
+            >
+              <BarChart3 className="h-4 w-4 shrink-0" />
+              <span>Analytics Dashboard</span>
+            </Link>
+            {showSituationalReports && (
+              <Link
+                href="/assement/situational-reports"
+                onClick={handleNavClick}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                  pathname?.startsWith("/assement/situational-reports")
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                }`}
+              >
+                <FileSpreadsheet className="h-4 w-4 shrink-0" />
+                <span>Situational Reports</span>
+              </Link>
+            )}
+          </div>
+
+          {/* System Group */}
+          {showUserManagement && (
+            <div className="space-y-1.5">
+              <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+                System
+              </p>
+              <Link
+                href="/assement/users"
+                onClick={handleNavClick}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                  pathname?.startsWith("/assement/users")
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                }`}
+              >
+                <Users className="h-4 w-4 shrink-0" />
+                <span>User Management</span>
+              </Link>
+              <Link
+                href="/assement/newsletter/send-email"
+                onClick={handleNavClick}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                  pathname?.startsWith("/assement/newsletter") || pathname?.startsWith("/newsletter")
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                }`}
+              >
+                <Mail className="h-4 w-4 shrink-0" />
+                <span>Send Email</span>
+              </Link>
+            </div>
+          )}
+
+          {/* Live Portal Link */}
+          <div className="pt-2 border-t border-border/40">
+            <Link
+              href="/dashboard"
+              onClick={handleNavClick}
+              className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent cursor-pointer"
+            >
+              <Home className="h-4 w-4 shrink-0" />
+              <span>Go to Live Portal</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* User profile & Logout */}
+      <div className="pt-4 border-t border-border space-y-3">
+        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-muted/40 border border-border">
+          <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary/10 text-primary shrink-0">
+            <ShieldAlert className="h-4 w-4" />
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-xs font-bold text-foreground">{user?.email}</p>
+            <p className="truncate text-[10px] text-muted-foreground font-semibold">
+              {user?.role}
+            </p>
+          </div>
+        </div>
+
+        <Button
+          onClick={handleLogout}
+          variant="outline"
+          className="w-full text-xs font-bold gap-1.5 h-9 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-border cursor-pointer"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          Logout
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function AssessmentLayout({ children }: { children: React.ReactNode }) {
-  const { isLoggedIn, isLoading, user, logout } = useAuth();
+  const { isLoggedIn, isLoading, user } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -102,241 +351,6 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
     return null; // Redirects via useEffect
   }
 
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-  };
-
-  const SidebarContent = () => {
-    const isSuperAdmin = user?.role === "Superadmin";
-    const isDataEnumerator = user?.role === "Data Enumerator";
-    const isFieldCoordinator = user?.role === "Field Coordinator";
-    const ac = user?.access_control || [];
-    const normalizedAc = ac.map((item: string) => item.toLowerCase().replace(/_/g, "-"));
-
-    const showMeetingMinutes = isSuperAdmin || normalizedAc.includes("meeting-minutes");
-    const showSops = isSuperAdmin || normalizedAc.includes("sops");
-    const showTools = isSuperAdmin || isDataEnumerator || isFieldCoordinator;
-    const showSituationalReports = isSuperAdmin || normalizedAc.includes("situational-reports");
-    const showUserManagement = isSuperAdmin;
-
-    return (
-      <div className="h-full flex flex-col justify-between p-5">
-        <div className="space-y-6">
-          {/* Logo and Brand */}
-          <div className="flex items-center gap-3 pb-4 border-b border-border">
-            <Logo className="w-10 h-10" />
-            <div className="min-w-0">
-              <h2 className="text-xs font-extrabold text-foreground leading-tight tracking-tight uppercase">
-                DECM Cluster
-              </h2>
-              <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
-                Admin Portal
-              </p>
-            </div>
-          </div>
-
-          {/* Navigation Groups */}
-          <div className="space-y-5">
-            {/* Database Group */}
-            <div className="space-y-1.5">
-              <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                Database
-              </p>
-              <Link
-                href="/assement"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  pathname === "/assement" ||
-                  (pathname?.startsWith("/assement/") &&
-                    !pathname.startsWith("/assement/archives") &&
-                    !pathname.startsWith("/assement/analytics") &&
-                    !pathname.startsWith("/assement/meeting-minutes") &&
-                    !pathname.startsWith("/assement/sops") &&
-                    !pathname.startsWith("/assement/situational-reports") &&
-                    !pathname.startsWith("/assement/users") &&
-                    !pathname.startsWith("/assement/tools") &&
-                    !pathname.startsWith("/assement/newsletter") &&
-                    !pathname.startsWith("/newsletter"))
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                }`}
-              >
-                <ClipboardList className="h-4 w-4 shrink-0" />
-                <span>Displacement Data</span>
-              </Link>
-              <Link
-                href="/assement/archives"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  pathname?.startsWith("/assement/archives")
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                }`}
-              >
-                <Archive className="h-4 w-4 shrink-0" />
-                <span>Archives</span>
-              </Link>
-            </div>
-
-            {/* Coordination Group */}
-            {(showMeetingMinutes || showSops || showTools) && (
-              <div className="space-y-1.5">
-                <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                  Coordination
-                </p>
-                {showMeetingMinutes && (
-                  <Link
-                    href="/assement/meeting-minutes"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname?.startsWith("/assement/meeting-minutes")
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                    }`}
-                  >
-                    <FileText className="h-4 w-4 shrink-0" />
-                    <span>Meeting Minutes</span>
-                  </Link>
-                )}
-                {showSops && (
-                  <Link
-                    href="/assement/sops"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname?.startsWith("/assement/sops")
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                    }`}
-                  >
-                    <BookOpen className="h-4 w-4 shrink-0" />
-                    <span>SOPs</span>
-                  </Link>
-                )}
-                {showTools && (
-                  <Link
-                    href="/assement/tools"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                      pathname?.startsWith("/assement/tools")
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                    }`}
-                  >
-                    <Wrench className="h-4 w-4 shrink-0" />
-                    <span>IM tools</span>
-                  </Link>
-                )}
-              </div>
-            )}
-
-            {/* Reports & Analytics Group */}
-            <div className="space-y-1.5">
-              <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                Reports & Analytics
-              </p>
-              <Link
-                href="/assement/analytics"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  pathname?.startsWith("/assement/analytics")
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                }`}
-              >
-                <BarChart3 className="h-4 w-4 shrink-0" />
-                <span>Analytics Dashboard</span>
-              </Link>
-              {showSituationalReports && (
-                <Link
-                  href="/assement/situational-reports"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                    pathname?.startsWith("/assement/situational-reports")
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                  }`}
-                >
-                  <FileSpreadsheet className="h-4 w-4 shrink-0" />
-                  <span>Situational Reports</span>
-                </Link>
-              )}
-            </div>
-
-            {/* System Group */}
-            {showUserManagement && (
-              <div className="space-y-1.5">
-                <p className="px-3 text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
-                  System
-                </p>
-                <Link
-                  href="/assement/users"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                    pathname?.startsWith("/assement/users")
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                  }`}
-                >
-                  <Users className="h-4 w-4 shrink-0" />
-                  <span>User Management</span>
-                </Link>
-                <Link
-                  href="/assement/newsletter/send-email"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                    pathname?.startsWith("/assement/newsletter") || pathname?.startsWith("/newsletter")
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
-                  }`}
-                >
-                  <Mail className="h-4 w-4 shrink-0" />
-                  <span>Send Email</span>
-                </Link>
-              </div>
-            )}
-
-            {/* Live Portal Link */}
-            <div className="pt-2 border-t border-border/40">
-              <Link
-                href="/dashboard"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent cursor-pointer"
-              >
-                <Home className="h-4 w-4 shrink-0" />
-                <span>Go to Live Portal</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* User profile & Logout */}
-        <div className="pt-4 border-t border-border space-y-3">
-          <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-muted/40 border border-border">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-primary/10 text-primary shrink-0">
-              <ShieldAlert className="h-4 w-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-bold text-foreground">{user?.email}</p>
-              <p className="truncate text-[10px] text-muted-foreground font-semibold">
-                {user?.role}
-              </p>
-            </div>
-          </div>
-
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="w-full text-xs font-bold gap-1.5 h-9 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/20 border-border cursor-pointer"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Logout
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="flex min-h-screen bg-background text-foreground font-sans">
       {/* Desktop Sidebar */}
@@ -374,7 +388,7 @@ export function AssessmentLayout({ children }: { children: React.ReactNode }) {
             />
             {/* Sidebar content drawer */}
             <aside className="relative flex-1 max-w-[280px] w-full bg-card h-full border-r border-border flex flex-col animate-slideRight">
-              <SidebarContent />
+              <SidebarContent onCloseMobileMenu={() => setIsMobileMenuOpen(false)} />
             </aside>
           </div>
         )}
