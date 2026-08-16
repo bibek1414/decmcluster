@@ -211,11 +211,11 @@ export function MultiEmailInput({
       {/* Top Bar / Controls */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-primary" />
+          <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+            <Mail className="w-3.5 h-3.5 text-muted-foreground" />
             <span>Recipient Emails</span>
           </span>
-          <span className="text-[11px] font-semibold text-muted-foreground px-2 py-0.5 rounded-full bg-muted border border-border">
+          <span className="text-[11px] font-medium text-muted-foreground px-2 py-0.5 rounded-full bg-muted border border-border">
             {emails.length} {emails.length === 1 ? "email" : "emails"}
           </span>
         </div>
@@ -227,9 +227,9 @@ export function MultiEmailInput({
               variant="outline"
               size="xs"
               onClick={() => openModal("subscribers")}
-              className="text-[11px] font-semibold gap-1 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/30 cursor-pointer"
+              className="text-[11px] font-semibold gap-1 cursor-pointer"
             >
-              <UserCheck className="w-3 h-3" />
+              <UserCheck className="w-3 h-3 text-muted-foreground" />
               <span>Select Subscribers</span>
             </Button>
           )}
@@ -240,9 +240,9 @@ export function MultiEmailInput({
               variant="outline"
               size="xs"
               onClick={() => openModal("systemUsers")}
-              className="text-[11px] font-semibold gap-1 text-primary hover:text-primary hover:bg-primary/10 cursor-pointer"
+              className="text-[11px] font-semibold gap-1 cursor-pointer"
             >
-              <Users className="w-3 h-3" />
+              <Users className="w-3 h-3 text-muted-foreground" />
               <span>Select System Users</span>
             </Button>
           )}
@@ -254,7 +254,7 @@ export function MultiEmailInput({
               size="xs"
               onClick={handleClearAll}
               disabled={disabled}
-              className="text-[11px] font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 gap-1 cursor-pointer"
+              className="text-[11px] font-semibold text-muted-foreground hover:text-foreground hover:bg-muted gap-1 cursor-pointer"
             >
               <Trash2 className="w-3 h-3" />
               <span>Clear All</span>
@@ -265,11 +265,11 @@ export function MultiEmailInput({
 
       {/* Input container box with tags or All Subscribers Banner */}
       {sendToAllSubscribers ? (
-        <div className="min-h-[60px] p-3 rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-950/20 text-emerald-900 dark:text-emerald-300 flex items-center gap-3">
-          <UserCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <div className="min-h-[52px] p-3 rounded-xl border border-border bg-muted/30 text-foreground flex items-center gap-3">
+          <UserCheck className="w-4 h-4 text-foreground shrink-0" />
           <div className="text-xs">
-            <p className="font-bold">Sending broadcast to all active newsletter subscribers</p>
-            <p className="text-[11px] text-muted-foreground font-medium">
+            <p className="font-semibold text-foreground">Sending broadcast to all active newsletter subscribers</p>
+            <p className="text-[11px] text-muted-foreground">
               Recipient input is disabled because this message will be delivered to all active subscribers.
             </p>
           </div>
@@ -277,7 +277,7 @@ export function MultiEmailInput({
       ) : (
         <div
           className={cn(
-            "min-h-[90px] p-2.5 rounded-xl border border-border bg-card text-card-foreground transition-all focus-within:border-primary/60 flex flex-wrap items-start gap-1.5",
+            "min-h-[90px] p-2.5 rounded-xl border border-border bg-card text-card-foreground transition-all focus-within:border-border flex flex-wrap items-start gap-1.5",
             disabled && "opacity-60 pointer-events-none bg-muted/30"
           )}
         >
@@ -288,10 +288,10 @@ export function MultiEmailInput({
               <div
                 key={`${email}-${idx}`}
                 className={cn(
-                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border transition-all animate-fadeIn",
+                  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all animate-fadeIn",
                   isValid
-                    ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15"
-                    : "bg-rose-500/10 text-rose-600 border-rose-500/30 dark:text-rose-400"
+                    ? "bg-muted text-foreground border-border"
+                    : "bg-muted text-foreground border-border"
                 )}
               >
                 {!isValid && <AlertCircle className="w-3 h-3 text-rose-500 shrink-0" />}
@@ -300,7 +300,7 @@ export function MultiEmailInput({
                   type="button"
                   onClick={() => removeEmail(idx)}
                   disabled={disabled}
-                  className="hover:bg-primary/20 rounded-full p-0.5 transition-colors cursor-pointer text-muted-foreground hover:text-foreground"
+                  className="hover:bg-muted-foreground/10 rounded-full p-0.5 transition-colors cursor-pointer text-muted-foreground hover:text-foreground"
                   title="Remove email"
                 >
                   <X className="w-3 h-3" />
@@ -335,7 +335,7 @@ export function MultiEmailInput({
                 variant="secondary"
                 size="xs"
                 onClick={() => addEmails(inputValue)}
-                className="shrink-0 text-[10px] font-bold h-6 px-2 cursor-pointer"
+                className="shrink-0 text-[10px] font-semibold h-6 px-2 cursor-pointer"
               >
                 <Plus className="w-3 h-3" />
                 <span>Add</span>
@@ -346,7 +346,7 @@ export function MultiEmailInput({
       )}
 
       {errorMsg && (
-        <p className="text-[11px] font-semibold text-rose-500 flex items-center gap-1 animate-fadeIn">
+        <p className="text-[11px] font-medium text-rose-500 flex items-center gap-1 animate-fadeIn">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{errorMsg}</span>
         </p>
@@ -381,9 +381,9 @@ export function MultiEmailInput({
                   if (onFetchSubscribers) onFetchSubscribers();
                 }}
                 className={cn(
-                  "px-3.5 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
                   activeTab === "subscribers"
-                    ? "border-primary text-primary"
+                    ? "border-foreground text-foreground font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -398,9 +398,9 @@ export function MultiEmailInput({
                   if (onFetchSystemUsers) onFetchSystemUsers();
                 }}
                 className={cn(
-                  "px-3.5 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
                   activeTab === "systemUsers"
-                    ? "border-primary text-primary"
+                    ? "border-foreground text-foreground font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -427,21 +427,16 @@ export function MultiEmailInput({
                 /* Newsletter Subscribers Content */
                 <div className="space-y-3">
                   <div className="flex items-center justify-between pt-1">
-                    <span className="text-[11px] font-semibold text-muted-foreground">
+                    <span className="text-[11px] font-medium text-muted-foreground">
                       Showing {filteredSubscribers.length} subscriber(s)
                     </span>
                     {filteredSubscribers.length > 0 && (
                       <Button
                         type="button"
-                        variant={areAllFilteredSubscribersSelected ? "secondary" : "outline"}
+                        variant="outline"
                         size="xs"
                         onClick={handleToggleAllSubscribers}
-                        className={cn(
-                          "text-[11px] font-bold gap-1 cursor-pointer",
-                          areAllFilteredSubscribersSelected
-                            ? "text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-                            : "text-emerald-600 border-emerald-200 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
-                        )}
+                        className="text-[11px] font-semibold gap-1 cursor-pointer"
                       >
                         {areAllFilteredSubscribersSelected ? (
                           <>
@@ -478,18 +473,18 @@ export function MultiEmailInput({
                             className={cn(
                               "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer select-none",
                               isAdded
-                                ? "bg-emerald-500/10 border-emerald-500/30 text-foreground"
-                                : "bg-background border-border hover:bg-muted/50"
+                                ? "bg-muted border-border font-semibold text-foreground"
+                                : "bg-background border-border hover:bg-muted/50 text-foreground"
                             )}
                           >
                             <div className="min-w-0 pr-2">
-                              <p className="font-bold text-foreground truncate">{sub.email}</p>
+                              <p className="font-semibold text-foreground truncate">{sub.email}</p>
                               <span className="text-[10px] text-muted-foreground">
                                 {sub.is_subscribed !== false ? "Subscribed" : "Unsubscribed"}
                               </span>
                             </div>
                             {isAdded ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full shrink-0 border border-emerald-500/20">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-foreground bg-muted-foreground/10 px-2.5 py-1 rounded-full shrink-0 border border-border">
                                 <Check className="w-3 h-3" />
                                 Added
                               </span>
@@ -498,7 +493,7 @@ export function MultiEmailInput({
                                 type="button"
                                 variant="secondary"
                                 size="xs"
-                                className="text-[10px] font-bold h-6 px-2 shrink-0 cursor-pointer"
+                                className="text-[10px] font-semibold h-6 px-2 shrink-0 cursor-pointer"
                               >
                                 <Plus className="w-3 h-3" />
                                 Add
@@ -514,21 +509,16 @@ export function MultiEmailInput({
                 /* System Users Content */
                 <div className="space-y-3">
                   <div className="flex items-center justify-between pt-1">
-                    <span className="text-[11px] font-semibold text-muted-foreground">
+                    <span className="text-[11px] font-medium text-muted-foreground">
                       Showing {filteredSystemUsers.length} user(s)
                     </span>
                     {filteredSystemUsers.length > 0 && (
                       <Button
                         type="button"
-                        variant={areAllFilteredSystemUsersSelected ? "secondary" : "outline"}
+                        variant="outline"
                         size="xs"
                         onClick={handleToggleAllSystemUsers}
-                        className={cn(
-                          "text-[11px] font-bold gap-1 cursor-pointer",
-                          areAllFilteredSystemUsersSelected
-                            ? "text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
-                            : ""
-                        )}
+                        className="text-[11px] font-semibold gap-1 cursor-pointer"
                       >
                         {areAllFilteredSystemUsersSelected ? (
                           <>
@@ -565,12 +555,12 @@ export function MultiEmailInput({
                             className={cn(
                               "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer select-none",
                               isAdded
-                                ? "bg-primary/10 border-primary/30 text-foreground"
-                                : "bg-background border-border hover:bg-muted/50"
+                                ? "bg-muted border-border font-semibold text-foreground"
+                                : "bg-background border-border hover:bg-muted/50 text-foreground"
                             )}
                           >
                             <div className="min-w-0 pr-2">
-                              <p className="font-bold text-foreground truncate">{user.email}</p>
+                              <p className="font-semibold text-foreground truncate">{user.email}</p>
                               {(user.name || user.role) && (
                                 <p className="text-[10px] text-muted-foreground truncate">
                                   {user.name} {user.role ? `• ${user.role}` : ""}
@@ -578,7 +568,7 @@ export function MultiEmailInput({
                               )}
                             </div>
                             {isAdded ? (
-                              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-full shrink-0 border border-primary/20">
+                              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-foreground bg-muted-foreground/10 px-2.5 py-1 rounded-full shrink-0 border border-border">
                                 <Check className="w-3 h-3" />
                                 Added
                               </span>
@@ -587,7 +577,7 @@ export function MultiEmailInput({
                                 type="button"
                                 variant="secondary"
                                 size="xs"
-                                className="text-[10px] font-bold h-6 px-2 shrink-0 cursor-pointer"
+                                className="text-[10px] font-semibold h-6 px-2 shrink-0 cursor-pointer"
                               >
                                 <Plus className="w-3 h-3" />
                                 Add
@@ -612,7 +602,7 @@ export function MultiEmailInput({
                 variant="default"
                 size="sm"
                 onClick={() => setShowModal(false)}
-                className="text-xs font-bold cursor-pointer"
+                className="text-xs font-semibold cursor-pointer"
               >
                 Done
               </Button>

@@ -21,7 +21,6 @@ import {
   CheckCircle2,
   Eye,
   Info,
-  ShieldCheck,
   Users,
 } from "lucide-react";
 
@@ -145,7 +144,7 @@ export function SendEmailView() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-border">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Mail className="w-5 h-5 text-primary" />
+            <Mail className="w-5 h-5 text-muted-foreground" />
             <h1 className="text-xl font-bold text-foreground tracking-tight">
               Send Email Newsletter
             </h1>
@@ -195,13 +194,13 @@ export function SendEmailView() {
       <div className="flex items-center gap-2 border-b border-border pb-3">
         <Link
           href="/assement/newsletter/subscribers"
-          className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent transition-colors"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent transition-colors"
         >
           Subscribers List
         </Link>
         <Link
           href="/assement/newsletter/send-email"
-          className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-primary text-primary-foreground border border-primary shadow-xs transition-colors"
+          className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-muted text-foreground border border-border transition-colors"
         >
           Send Email
         </Link>
@@ -213,9 +212,9 @@ export function SendEmailView() {
         <form onSubmit={handleFormSubmit} className="lg:col-span-7 space-y-5">
           {/* Subject Line */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground flex items-center justify-between">
+            <label className="text-xs font-semibold text-foreground flex items-center justify-between">
               <span className="flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-primary" />
+                <FileText className="w-3.5 h-3.5 text-muted-foreground" />
                 Subject Line <span className="text-rose-500">*</span>
               </span>
               <span className="text-[11px] text-muted-foreground font-normal">
@@ -229,7 +228,7 @@ export function SendEmailView() {
               placeholder="Enter email subject line..."
               disabled={sendEmailMutation.isPending}
               maxLength={150}
-              className="text-xs py-2 px-3 bg-card border-border focus-visible:ring-primary/20"
+              className="text-xs py-2 px-3 bg-card border-border focus-visible:ring-1 focus-visible:ring-ring"
               required
             />
           </div>
@@ -247,8 +246,8 @@ export function SendEmailView() {
                   className="h-4 w-4 rounded border-input text-primary focus:ring-ring accent-primary cursor-pointer shrink-0"
                 />
                 <div className="flex items-center gap-2 text-xs">
-                  <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span className="font-bold text-foreground">
+                  <Users className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <span className="font-semibold text-foreground">
                     Send to all active newsletter subscribers
                   </span>
                 </div>
@@ -271,8 +270,8 @@ export function SendEmailView() {
 
           {/* Email Body */}
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-primary" />
+            <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-muted-foreground" />
               Email Body <span className="text-rose-500">*</span>
             </label>
 
@@ -286,9 +285,7 @@ export function SendEmailView() {
           </div>
 
           {/* Action Footer */}
-          <div className="pt-3 flex items-center justify-between border-t border-border">
-          
-
+          <div className="pt-3 flex items-center justify-end border-t border-border">
             <Button
               type="submit"
               variant="default"
@@ -314,8 +311,8 @@ export function SendEmailView() {
         {/* Live Preview Column */}
         <div className="lg:col-span-5 space-y-3 sticky top-20">
           <div className="flex items-center justify-between px-0.5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Eye className="w-3.5 h-3.5 text-primary" />
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+              <Eye className="w-3.5 h-3.5 text-muted-foreground" />
               Live Inbox Preview
             </h3>
           </div>
@@ -341,7 +338,7 @@ export function SendEmailView() {
               <div className="p-2 rounded-lg bg-muted/30 border border-border text-xs">
                 <span className="text-[11px] text-muted-foreground font-medium">To: </span>
                 {sendToAllSubscribers ? (
-                  <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                  <span className="text-[11px] font-semibold text-foreground">
                     All Active Newsletter Subscribers
                   </span>
                 ) : emails.length > 0 ? (
@@ -366,7 +363,7 @@ export function SendEmailView() {
                 />
               ) : (
                 <div className="py-12 text-center text-muted-foreground space-y-1.5">
-                  <Info className="w-6 h-6 mx-auto opacity-40 text-primary" />
+                  <Info className="w-6 h-6 mx-auto opacity-40 text-muted-foreground" />
                   <p className="text-xs">No email content typed yet.</p>
                 </div>
               )}
@@ -374,14 +371,14 @@ export function SendEmailView() {
 
             {/* Footer */}
             <div className="pt-2.5 border-t border-border text-[10px] text-muted-foreground text-center space-y-1">
-              <p className="font-semibold">DECM Cluster Information System</p>
-              <p className="text-[9px] text-muted-foreground/80">
+              <p className="font-medium text-foreground">DECM Cluster Information System</p>
+              <p className="text-[9px] text-muted-foreground">
                 To unsubscribe from future newsletter updates,{" "}
                 <a
                   href="/newsletter/unsubscribe"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-primary underline hover:text-primary/80"
+                  className="underline hover:text-foreground"
                 >
                   click here to unsubscribe
                 </a>.
@@ -396,8 +393,8 @@ export function SendEmailView() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
           <div className="bg-card border border-border rounded-xl w-full max-w-md p-5 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                <AlertTriangle className="w-5 h-5" />
+              <div className="p-2 rounded-lg bg-muted border border-border text-foreground">
+                <AlertTriangle className="w-5 h-5 text-amber-500" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-foreground">Confirm Send</h3>
@@ -413,11 +410,11 @@ export function SendEmailView() {
               <div className="flex justify-between items-center gap-2">
                 <span className="text-muted-foreground font-medium">Recipients:</span>
                 {sendToAllSubscribers ? (
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400 text-xs">
+                  <span className="font-semibold text-foreground text-xs">
                     All Active Newsletter Subscribers
                   </span>
                 ) : (
-                  <span className="font-semibold text-primary">{emails.length} address(es)</span>
+                  <span className="font-semibold text-foreground">{emails.length} address(es)</span>
                 )}
               </div>
             </div>
