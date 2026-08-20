@@ -7,6 +7,7 @@ import {
   Home,
   LayoutDashboard,
   Map,
+  Database,
   ClipboardList,
   FileText,
   BookOpen,
@@ -49,6 +50,12 @@ export default function Navigation() {
       path: "/dashboard",
     },
     { id: "mapping", label: "Mapping", icon: Map, path: "/mapping" },
+    {
+      id: "datasets",
+      label: "Datasets",
+      icon: Database,
+      path: "/datasets",
+    },
     {
       id: "assessments",
       label: "Assessments",

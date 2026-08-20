@@ -5,7 +5,7 @@ import { Tent, Database, Map, PieChart, FileCheck, Download } from "lucide-react
 export default function OverviewSection() {
   const quickLinks = [
     { label: "EC Tracking", icon: Tent, path: "/dashboard" },
-    { label: "Data Registry", icon: Database, path: "/assessments-tools" },
+    { label: "Datasets", icon: Database, path: "/datasets" },
     { label: "GIS Mapping", icon: Map, path: "/mapping" },
     { label: "Analysis", icon: PieChart, path: "/dashboard" },
     { label: "SOPs", icon: FileCheck, path: "/sops" },
