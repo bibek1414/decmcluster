@@ -19,6 +19,7 @@ import {
   BarChart3,
   Mail,
   Send,
+  Contact,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
@@ -244,6 +245,19 @@ function SidebarContent({ onCloseMobileMenu }: SidebarContentProps) {
               >
                 <Send className="h-4 w-4 shrink-0" />
                 <span>Send Newsletter</span>
+              </Link>
+              <Link
+                href="/assement/newsletter/contacts"
+                onClick={handleNavClick}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                  pathname?.startsWith("/assement/newsletter/contacts") ||
+                  pathname?.startsWith("/newsletter/contacts")
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                }`}
+              >
+                <Contact className="h-4 w-4 shrink-0" />
+                <span>Cluster Contact List</span>
               </Link>
             </div>
           )}

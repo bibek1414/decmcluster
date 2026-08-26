@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { newsletterService } from "@/services/newsletter";
@@ -26,11 +27,31 @@ import {
 
 export function SendEmailView() {
   const { token, user } = useAuth();
+  const searchParams = useSearchParams();
   const [subject, setSubject] = useState("");
   const [emails, setEmails] = useState<string[]>([]);
   const [body, setBody] = useState("");
   const [sendToAllSubscribers, setSendToAllSubscribers] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  // Preload emails from cluster contacts or caller
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("decm_newsletter_recipient_emails");
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setEmails((prev) => Array.from(new Set([...prev, ...parsed])));
+            toast.info(`Preloaded ${parsed.length} recipient email(s) from Cluster Contacts.`);
+          }
+        } catch {
+          // ignore
+        }
+        sessionStorage.removeItem("decm_newsletter_recipient_emails");
+      }
+    }
+  }, [searchParams]);
 
   // Query system users for email quick-select
   const {
@@ -208,6 +229,12 @@ export function SendEmailView() {
             className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-muted text-foreground border border-border transition-all shadow-2xs"
           >
             Send Email
+          </Link>
+          <Link
+            href="/assement/newsletter/contacts"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 border border-transparent transition-all"
+          >
+            Cluster Contact List
           </Link>
         </div>
       </div>

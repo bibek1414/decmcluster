@@ -194,6 +194,12 @@ export function SubscribersView() {
           >
             Send Email
           </Link>
+          <Link
+            href="/assement/newsletter/contacts"
+            className="px-3.5 py-1.5 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent transition-colors"
+          >
+            Cluster Contact List
+          </Link>
         </div>
 
         {/* Search Bar */}

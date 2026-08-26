@@ -1,10 +1,28 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { Mail, X, Plus, AlertCircle, Users, Check, Trash2, UserCheck, CheckCheck, MinusCircle } from "lucide-react";
+import {
+  Mail,
+  X,
+  Plus,
+  AlertCircle,
+  Users,
+  Check,
+  Trash2,
+  UserCheck,
+  CheckCheck,
+  MinusCircle,
+  Building2,
+  Contact,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  CLUSTER_CONTACTS,
+  formatDisplayName,
+  getOrganizationBadgeClass,
+} from "@/lib/data/cluster-contacts";
 
 export interface SubscriberItem {
   email: string;
@@ -56,7 +74,7 @@ export function MultiEmailInput({
   const [inputValue, setInputValue] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<"subscribers" | "systemUsers">("subscribers");
+  const [activeTab, setActiveTab] = useState<"subscribers" | "systemUsers" | "clusterContacts">("clusterContacts");
   const [modalSearch, setModalSearch] = useState("");
 
   const validateEmail = (email: string) => {
@@ -154,6 +172,18 @@ export function MultiEmailInput({
     [systemUsersList, modalSearch]
   );
 
+  // Filtered cluster contacts
+  const filteredClusterContacts = useMemo(
+    () =>
+      CLUSTER_CONTACTS.filter(
+        (c) =>
+          c.email.toLowerCase().includes(modalSearch.toLowerCase()) ||
+          c.name.toLowerCase().includes(modalSearch.toLowerCase()) ||
+          c.organization.toLowerCase().includes(modalSearch.toLowerCase())
+      ),
+    [modalSearch]
+  );
+
   // Check if all filtered subscribers are selected
   const areAllFilteredSubscribersSelected = useMemo(() => {
     if (filteredSubscribers.length === 0) return false;
@@ -195,7 +225,27 @@ export function MultiEmailInput({
     }
   };
 
-  const openModal = (tab: "subscribers" | "systemUsers") => {
+  // Check if all filtered cluster contacts are selected
+  const areAllFilteredClusterContactsSelected = useMemo(() => {
+    if (filteredClusterContacts.length === 0) return false;
+    return filteredClusterContacts.every((c) => emails.includes(c.email.trim().toLowerCase()));
+  }, [filteredClusterContacts, emails]);
+
+  // Toggle select/deselect all cluster contacts
+  const handleToggleAllClusterContacts = () => {
+    const contactEmails = filteredClusterContacts
+      .map((c) => c.email.trim().toLowerCase())
+      .filter((e) => validateEmail(e));
+
+    if (areAllFilteredClusterContactsSelected) {
+      onChange(emails.filter((e) => !contactEmails.includes(e)));
+    } else {
+      const combined = Array.from(new Set([...emails, ...contactEmails]));
+      onChange(combined);
+    }
+  };
+
+  const openModal = (tab: "subscribers" | "systemUsers" | "clusterContacts") => {
     setActiveTab(tab);
     setModalSearch("");
     setShowModal(true);
@@ -221,6 +271,17 @@ export function MultiEmailInput({
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
+          <Button
+            type="button"
+            variant="outline"
+            size="xs"
+            onClick={() => openModal("clusterContacts")}
+            className="text-[11px] font-semibold gap-1 cursor-pointer bg-primary/5 text-primary border-primary/20 hover:bg-primary/10"
+          >
+            <Contact className="w-3 h-3 text-primary" />
+            <span>Cluster Contacts ({CLUSTER_CONTACTS.length})</span>
+          </Button>
+
           {onFetchSubscribers && (
             <Button
               type="button"
@@ -373,7 +434,23 @@ export function MultiEmailInput({
             </div>
 
             {/* Tabs */}
-            <div className="flex items-center border-b border-border bg-muted/20 px-4 pt-2 gap-2">
+            <div className="flex items-center border-b border-border bg-muted/20 px-4 pt-2 gap-2 overflow-x-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("clusterContacts");
+                }}
+                className={cn(
+                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5 shrink-0",
+                  activeTab === "clusterContacts"
+                    ? "border-primary text-primary font-bold"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <Contact className="w-3.5 h-3.5" />
+                <span>Cluster Contacts ({CLUSTER_CONTACTS.length})</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
@@ -381,9 +458,9 @@ export function MultiEmailInput({
                   if (onFetchSubscribers) onFetchSubscribers();
                 }}
                 className={cn(
-                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5 shrink-0",
                   activeTab === "subscribers"
-                    ? "border-foreground text-foreground font-bold"
+                    ? "border-primary text-primary font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -398,9 +475,9 @@ export function MultiEmailInput({
                   if (onFetchSystemUsers) onFetchSystemUsers();
                 }}
                 className={cn(
-                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5",
+                  "px-3.5 py-2 text-xs font-semibold border-b-2 transition-all cursor-pointer flex items-center gap-1.5 shrink-0",
                   activeTab === "systemUsers"
-                    ? "border-foreground text-foreground font-bold"
+                    ? "border-primary text-primary font-bold"
                     : "border-transparent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -414,7 +491,9 @@ export function MultiEmailInput({
               <Input
                 type="text"
                 placeholder={
-                  activeTab === "subscribers"
+                  activeTab === "clusterContacts"
+                    ? "Search cluster contacts by name, email, org..."
+                    : activeTab === "subscribers"
                     ? "Search subscribers by email..."
                     : "Search users by name, email, or role..."
                 }
@@ -423,7 +502,94 @@ export function MultiEmailInput({
                 className="text-xs"
               />
 
-              {activeTab === "subscribers" ? (
+              {activeTab === "clusterContacts" ? (
+                /* Cluster Contacts Content */
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[11px] font-medium text-muted-foreground">
+                      Showing {filteredClusterContacts.length} contact(s)
+                    </span>
+                    {filteredClusterContacts.length > 0 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="xs"
+                        onClick={handleToggleAllClusterContacts}
+                        className="text-[11px] font-semibold gap-1 cursor-pointer"
+                      >
+                        {areAllFilteredClusterContactsSelected ? (
+                          <>
+                            <MinusCircle className="w-3.5 h-3.5" />
+                            Deselect All
+                          </>
+                        ) : (
+                          <>
+                            <CheckCheck className="w-3.5 h-3.5" />
+                            Select All Contacts
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+
+                  {filteredClusterContacts.length === 0 ? (
+                    <div className="py-8 text-center text-xs text-muted-foreground">
+                      No matching cluster contacts found.
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1">
+                      {filteredClusterContacts.map((contact) => {
+                        const cleanEmail = contact.email.trim().toLowerCase();
+                        const isAdded = emails.includes(cleanEmail);
+                        const displayName = formatDisplayName(contact);
+                        return (
+                          <div
+                            key={contact.id}
+                            onClick={() => handleToggleSingleEmail(contact.email)}
+                            className={cn(
+                              "flex items-center justify-between p-2.5 rounded-xl border text-xs transition-all cursor-pointer select-none",
+                              isAdded
+                                ? "bg-muted border-border font-semibold text-foreground"
+                                : "bg-background border-border hover:bg-muted/50 text-foreground"
+                            )}
+                          >
+                            <div className="min-w-0 pr-2 space-y-0.5">
+                              <p className="font-semibold text-foreground truncate">{displayName}</p>
+                              <p className="font-mono text-[11px] text-muted-foreground truncate">
+                                {contact.email}
+                              </p>
+                              <span
+                                className={cn(
+                                  "inline-flex items-center px-2 py-0.2 rounded-full text-[9px] font-semibold border mt-0.5",
+                                  getOrganizationBadgeClass(contact.organization)
+                                )}
+                              >
+                                {contact.organization}
+                              </span>
+                            </div>
+                            {isAdded ? (
+                              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-foreground bg-muted-foreground/10 px-2.5 py-1 rounded-full shrink-0 border border-border">
+                                <Check className="w-3 h-3" />
+                                Added
+                              </span>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="xs"
+                                className="text-[10px] font-semibold h-6 px-2 shrink-0 cursor-pointer"
+                              >
+                                <Plus className="w-3 h-3" />
+                                Add
+                              </Button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ) : activeTab === "subscribers" ? (
                 /* Newsletter Subscribers Content */
                 <div className="space-y-3">
                   <div className="flex items-center justify-between pt-1">
