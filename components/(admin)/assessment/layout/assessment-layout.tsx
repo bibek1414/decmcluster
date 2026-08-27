@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   ClipboardList,
   Home,
@@ -33,6 +33,8 @@ function SidebarContent({ onCloseMobileMenu }: SidebarContentProps) {
   const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const modeParam = searchParams.get("mode");
 
   const isSuperAdmin = user?.role === "Superadmin";
   const isDataEnumerator = user?.role === "Data Enumerator";
@@ -223,9 +225,7 @@ function SidebarContent({ onCloseMobileMenu }: SidebarContentProps) {
                 onClick={handleNavClick}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
                   pathname?.startsWith("/assement/newsletter/subscribers") ||
-                  pathname?.startsWith("/newsletter/subscribers") ||
-                  pathname === "/assement/newsletter" ||
-                  pathname === "/newsletter"
+                  pathname?.startsWith("/newsletter/subscribers")
                     ? "bg-primary text-primary-foreground border-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                 }`}
@@ -234,17 +234,32 @@ function SidebarContent({ onCloseMobileMenu }: SidebarContentProps) {
                 <span>Newsletter Subscribers</span>
               </Link>
               <Link
-                href="/assement/newsletter/send-email"
+                href="/assement/newsletter/send-email?mode=newsletter"
                 onClick={handleNavClick}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
-                  pathname?.startsWith("/assement/newsletter/send-email") ||
-                  pathname?.startsWith("/newsletter/send-email")
+                  (pathname?.startsWith("/assement/newsletter/send-email") ||
+                    pathname?.startsWith("/newsletter/send-email")) &&
+                  modeParam !== "cluster_contacts"
                     ? "bg-primary text-primary-foreground border-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
                 }`}
               >
                 <Send className="h-4 w-4 shrink-0" />
                 <span>Send Newsletter</span>
+              </Link>
+              <Link
+                href="/assement/newsletter/send-email?mode=cluster_contacts"
+                onClick={handleNavClick}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-150 border cursor-pointer ${
+                  (pathname?.startsWith("/assement/newsletter/send-email") ||
+                    pathname?.startsWith("/newsletter/send-email")) &&
+                  modeParam === "cluster_contacts"
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border-transparent"
+                }`}
+              >
+                <Send className="h-4 w-4 shrink-0" />
+                <span>Send Cluster Contact Email</span>
               </Link>
               <Link
                 href="/assement/newsletter/contacts"

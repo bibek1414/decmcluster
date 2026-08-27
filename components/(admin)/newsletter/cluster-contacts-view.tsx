@@ -1,27 +1,31 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Mail,
   Search,
   Users,
   Copy,
   Check,
   Send,
-  Download,
-  Building2,
   Filter,
   CheckSquare,
   Square,
-  ExternalLink,
-  ShieldCheck,
+  Plus,
+  Loader2,
+  X,
   RefreshCw,
+  UserPlus,
 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { useDebounce } from "@/hooks/use-debounce";
 import {
-  CLUSTER_CONTACTS,
-  ClusterContact,
+  useClusterContacts,
+  useCreateClusterContact,
+} from "@/hooks/use-cluster-contacts";
+import { ClusterContactItem } from "@/types/cluster-contact";
+import {
   formatDisplayName,
   getOrganizationBadgeClass,
 } from "@/lib/data/cluster-contacts";
@@ -33,44 +37,57 @@ import { toast } from "sonner";
 
 export function ClusterContactsView() {
   const router = useRouter();
+  const { token } = useAuth();
+
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 400);
   const [selectedOrg, setSelectedOrg] = useState<string>("ALL");
   const [selectedEmails, setSelectedEmails] = useState<string[]>([]);
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
-  const [copiedAll, setCopiedAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
 
-  // Extract unique organizations for filter dropdown
+  // Reset pagination when debounced search query changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
+
+  // Add Contact Modal State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newOrganization, setNewOrganization] = useState("");
+
+  // Custom Hooks with debounced backend search
+  const {
+    data: contactsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetching,
+  } = useClusterContacts(currentPage, token, debouncedSearch, pageSize);
+
+  const createContactMutation = useCreateClusterContact();
+
+  const contactsList: ClusterContactItem[] = contactsData?.results || [];
+  const totalCount = contactsData?.count || 0;
+  const totalPages = Math.ceil(totalCount / pageSize) || 1;
+
+  // Extract unique organizations from loaded contacts for quick filter
   const organizations = useMemo(() => {
     const orgSet = new Set<string>();
-    CLUSTER_CONTACTS.forEach((c) => {
+    contactsList.forEach((c) => {
       if (c.organization) orgSet.add(c.organization);
     });
     return Array.from(orgSet).sort();
-  }, []);
+  }, [contactsList]);
 
-  // Filter contacts by search query & organization
-  const filteredContacts = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    return CLUSTER_CONTACTS.filter((c) => {
-      const matchesOrg = selectedOrg === "ALL" || c.organization === selectedOrg;
-      if (!matchesOrg) return false;
-
-      if (!q) return true;
-      const nameMatch = c.name.toLowerCase().includes(q);
-      const emailMatch = c.email.toLowerCase().includes(q);
-      const orgMatch = c.organization.toLowerCase().includes(q);
-      return nameMatch || emailMatch || orgMatch;
-    });
-  }, [searchQuery, selectedOrg]);
-
-  // Pagination calculation
-  const totalPages = Math.ceil(filteredContacts.length / pageSize) || 1;
+  // Filter local contacts list by selected organization if chosen
   const paginatedContacts = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return filteredContacts.slice(start, start + pageSize);
-  }, [filteredContacts, currentPage, pageSize]);
+    if (selectedOrg === "ALL") return contactsList;
+    return contactsList.filter((c) => c.organization === selectedOrg);
+  }, [contactsList, selectedOrg]);
 
   // Handlers
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +97,6 @@ export function ClusterContactsView() {
 
   const handleOrgChange = (org: string) => {
     setSelectedOrg(org);
-    setCurrentPage(1);
   };
 
   const handleToggleSelect = (email: string) => {
@@ -97,11 +113,6 @@ export function ClusterContactsView() {
     } else {
       setSelectedEmails((prev) => Array.from(new Set([...prev, ...pageEmails])));
     }
-  };
-
-  const handleSelectAllFiltered = () => {
-    setSelectedEmails(filteredContacts.map((c) => c.email));
-    toast.success(`Selected all ${filteredContacts.length} contacts.`);
   };
 
   const handleClearSelection = () => {
@@ -125,50 +136,48 @@ export function ClusterContactsView() {
     toast.success(`Copied ${selectedEmails.length} email addresses to clipboard.`);
   };
 
-  const handleCopyAll = () => {
-    const allEmails = filteredContacts.map((c) => c.email).join(", ");
-    navigator.clipboard.writeText(allEmails);
-    setCopiedAll(true);
-    toast.success(`Copied all ${filteredContacts.length} email addresses.`);
-    setTimeout(() => setCopiedAll(false), 2000);
-  };
-
-  const handleExportCSV = () => {
-    const headers = ["ID,Name,Email,Organization"];
-    const rows = filteredContacts.map(
-      (c) =>
-        `"${c.id}","${c.name.replace(/"/g, '""')}","${c.email}","${c.organization.replace(/"/g, '""')}"`
-    );
-    const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `decm_cluster_contacts_${new Date().toISOString().slice(0, 10)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    toast.success("CSV export downloaded.");
-  };
-
   const handleSendEmailToSelected = () => {
-    const targets = selectedEmails.length > 0 ? selectedEmails : filteredContacts.map((c) => c.email);
-    // Store in sessionStorage or query param for send email page
+    const targets = selectedEmails.length > 0 ? selectedEmails : paginatedContacts.map((c) => c.email);
     if (typeof window !== "undefined") {
       sessionStorage.setItem("decm_newsletter_recipient_emails", JSON.stringify(targets));
     }
-    router.push("/assement/newsletter/send-email?source=cluster_contacts");
+    router.push("/assement/newsletter/send-email?mode=cluster_contacts");
   };
 
-  // Stats
-  const totalCount = CLUSTER_CONTACTS.length;
-  const govCount = CLUSTER_CONTACTS.filter((c) => c.organization.includes("Gov") || c.organization.includes("NDMO")).length;
-  const unCount = CLUSTER_CONTACTS.filter(
-    (c) =>
-      c.organization.includes("UN") ||
-      c.organization.includes("WHO") ||
-      c.organization.includes("WFP") ||
-      c.organization.includes("IOM")
-  ).length;
+  const handleAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEmail.trim()) {
+      toast.error("Email address is required.");
+      return;
+    }
+    if (!newOrganization.trim()) {
+      toast.error("Organization is required.");
+      return;
+    }
+
+    createContactMutation.mutate(
+      {
+        payload: {
+          name: newName.trim(),
+          email: newEmail.trim(),
+          organization: newOrganization.trim(),
+        },
+        token,
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(`Cluster contact "${data.name || data.email}" created successfully!`);
+          setShowAddModal(false);
+          setNewName("");
+          setNewEmail("");
+          setNewOrganization("");
+        },
+        onError: (err: any) => {
+          toast.error(err.message || "Failed to create cluster contact.");
+        },
+      }
+    );
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 animate-fadeIn">
@@ -194,36 +203,37 @@ export function ClusterContactsView() {
             </div>
           </div>
 
-          {/* Top Quick Actions */}
+          {/* Top Actions */}
           <div className="flex items-center flex-wrap gap-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={handleExportCSV}
+              onClick={() => refetch()}
+              disabled={isFetching}
               className="text-xs font-semibold gap-1.5 rounded-xl cursor-pointer hover:bg-muted"
             >
-              <Download className="w-3.5 h-3.5" />
-              Export CSV
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopyAll}
-              className="text-xs font-semibold gap-1.5 rounded-xl cursor-pointer hover:bg-muted"
-            >
-              {copiedAll ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-              Copy All ({filteredContacts.length})
+              <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? "animate-spin" : ""}`} />
+              Refresh
             </Button>
 
             <Button
               type="button"
               variant="default"
               size="sm"
-              onClick={handleSendEmailToSelected}
+              onClick={() => setShowAddModal(true)}
               className="text-xs font-semibold gap-1.5 rounded-xl shadow-xs cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              Add Contact
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleSendEmailToSelected}
+              className="text-xs font-semibold gap-1.5 rounded-xl cursor-pointer hover:bg-muted"
             >
               <Send className="w-3.5 h-3.5" />
               {selectedEmails.length > 0
@@ -256,45 +266,6 @@ export function ClusterContactsView() {
         </div>
       </div>
 
-      {/* Summary KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1">
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span className="text-xs font-semibold">Total Contacts</span>
-            <Users className="w-4 h-4 text-primary" />
-          </div>
-          <p className="text-2xl font-bold text-foreground">{totalCount}</p>
-          <p className="text-[11px] text-muted-foreground">DECM Cluster roster</p>
-        </div>
-
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1">
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span className="text-xs font-semibold">Gov & NDMO</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          </div>
-          <p className="text-2xl font-bold text-foreground">{govCount}</p>
-          <p className="text-[11px] text-muted-foreground">Vanuatu Government focal points</p>
-        </div>
-
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1">
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span className="text-xs font-semibold">UN & Multilateral</span>
-            <Building2 className="w-4 h-4 text-sky-500" />
-          </div>
-          <p className="text-2xl font-bold text-foreground">{unCount}</p>
-          <p className="text-[11px] text-muted-foreground">UNICEF, UNDP, WHO, WFP, IOM</p>
-        </div>
-
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1">
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span className="text-xs font-semibold">Partner Orgs</span>
-            <Building2 className="w-4 h-4 text-violet-500" />
-          </div>
-          <p className="text-2xl font-bold text-foreground">{organizations.length}</p>
-          <p className="text-[11px] text-muted-foreground">Active participating agencies</p>
-        </div>
-      </div>
-
       {/* Main Table Card */}
       <div className="bg-card border border-border rounded-2xl shadow-xs overflow-hidden">
         {/* Search, Filter & Batch Toolbar */}
@@ -322,24 +293,23 @@ export function ClusterContactsView() {
             </div>
 
             {/* Organization Dropdown Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-              <select
-                value={selectedOrg}
-                onChange={(e) => handleOrgChange(e.target.value)}
-                className="text-xs bg-background border border-border rounded-xl px-3 py-2 text-foreground font-medium focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer max-w-[240px]"
-              >
-                <option value="ALL">All Organizations ({totalCount})</option>
-                {organizations.map((org) => {
-                  const count = CLUSTER_CONTACTS.filter((c) => c.organization === org).length;
-                  return (
+            {organizations.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Filter className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                <select
+                  value={selectedOrg}
+                  onChange={(e) => handleOrgChange(e.target.value)}
+                  className="text-xs bg-background border border-border rounded-xl px-3 py-2 text-foreground font-medium focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer max-w-[240px]"
+                >
+                  <option value="ALL">All Organizations</option>
+                  {organizations.map((org) => (
                     <option key={org} value={org}>
-                      {org} ({count})
+                      {org}
                     </option>
-                  );
-                })}
-              </select>
-            </div>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Batch Selection Banner */}
@@ -350,13 +320,6 @@ export function ClusterContactsView() {
                 <span className="font-semibold text-primary">
                   {selectedEmails.length} contact{selectedEmails.length > 1 ? "s" : ""} selected
                 </span>
-                <button
-                  type="button"
-                  onClick={handleSelectAllFiltered}
-                  className="text-[11px] underline text-primary hover:text-primary/80 font-medium ml-2 cursor-pointer"
-                >
-                  Select all {filteredContacts.length} in current view
-                </button>
               </div>
 
               <div className="flex items-center gap-2">
@@ -365,7 +328,7 @@ export function ClusterContactsView() {
                   variant="outline"
                   size="sm"
                   onClick={handleCopySelected}
-                  className="h-7 text-xs font-semibold gap-1 rounded-lg bg-background"
+                  className="h-7 text-xs font-semibold gap-1 rounded-lg bg-background cursor-pointer"
                 >
                   <Copy className="w-3 h-3" />
                   Copy Selected
@@ -375,7 +338,7 @@ export function ClusterContactsView() {
                   variant="default"
                   size="sm"
                   onClick={handleSendEmailToSelected}
-                  className="h-7 text-xs font-semibold gap-1 rounded-lg"
+                  className="h-7 text-xs font-semibold gap-1 rounded-lg cursor-pointer"
                 >
                   <Send className="w-3 h-3" />
                   Email Selected
@@ -392,8 +355,26 @@ export function ClusterContactsView() {
           )}
         </div>
 
-        {/* Contacts Table */}
-        {filteredContacts.length === 0 ? (
+        {/* Loading / Error / Contacts Table */}
+        {isLoading ? (
+          <div className="p-12 text-center text-xs text-muted-foreground flex flex-col items-center justify-center gap-2">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            <span>Loading cluster contacts list...</span>
+          </div>
+        ) : isError ? (
+          <div className="p-8 text-center text-xs text-rose-500 space-y-2">
+            <p>Error loading cluster contacts: {(error as any)?.message || "Unknown error"}</p>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => refetch()}
+              className="text-xs rounded-xl"
+            >
+              Try Again
+            </Button>
+          </div>
+        ) : paginatedContacts.length === 0 ? (
           <div className="p-8">
             <EmptyState
               title="No contacts found"
@@ -469,9 +450,9 @@ export function ClusterContactsView() {
                           </div>
                           <div>
                             <p className="font-semibold text-foreground">{displayName}</p>
-                            {contact.name && (
+                            {contact.name && contact.email && (
                               <p className="text-[10px] text-muted-foreground font-normal">
-                                {contact.email.split("@")[1]}
+                                {contact.email.includes("@") ? contact.email.split("@")[1] : contact.email}
                               </p>
                             )}
                           </div>
@@ -527,7 +508,7 @@ export function ClusterContactsView() {
                                   JSON.stringify([contact.email])
                                 );
                               }
-                              router.push("/assement/newsletter/send-email?source=cluster_contacts");
+                              router.push("/assement/newsletter/send-email?mode=cluster_contacts");
                             }}
                             className="h-7 px-2 text-[11px] font-semibold gap-1 text-primary hover:text-primary hover:bg-primary/10 rounded-lg cursor-pointer"
                           >
@@ -545,7 +526,7 @@ export function ClusterContactsView() {
         )}
 
         {/* Footer with Pagination */}
-        {filteredContacts.length > 0 && (
+        {totalCount > 0 && (
           <div className="p-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
             <div className="flex items-center gap-2 text-muted-foreground">
               <span>Showing</span>
@@ -562,7 +543,7 @@ export function ClusterContactsView() {
                 <option value={50}>50</option>
                 <option value={100}>100</option>
               </select>
-              <span>of {filteredContacts.length} contacts</span>
+              <span>of {totalCount} contacts</span>
             </div>
 
             <Pagination
@@ -574,6 +555,108 @@ export function ClusterContactsView() {
           </div>
         )}
       </div>
+
+      {/* Add New Cluster Contact Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-card border border-border rounded-2xl w-full max-w-md p-6 space-y-5 shadow-xl">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary border border-primary/20">
+                  <UserPlus className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-foreground">Add Cluster Contact</h3>
+                  <p className="text-xs text-muted-foreground">Create a new focal point in the cluster contact roster.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddModal(false)}
+                className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Contact Name <span className="text-muted-foreground font-normal">(Optional)</span>
+                </label>
+                <Input
+                  type="text"
+                  placeholder="e.g. John Doe"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  className="text-xs"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Email Address <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="email"
+                  placeholder="e.g. john.doe@organization.org"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                  required
+                  className="text-xs"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">
+                  Organization / Agency <span className="text-rose-500">*</span>
+                </label>
+                <Input
+                  type="text"
+                  placeholder="e.g. UNICEF, Red Cross, NDMO, etc."
+                  value={newOrganization}
+                  onChange={(e) => setNewOrganization(e.target.value)}
+                  required
+                  className="text-xs"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowAddModal(false)}
+                  disabled={createContactMutation.isPending}
+                  className="text-xs font-semibold rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  type="submit"
+                  variant="default"
+                  size="sm"
+                  disabled={createContactMutation.isPending}
+                  className="text-xs font-semibold gap-1.5 rounded-xl cursor-pointer shadow-xs"
+                >
+                  {createContactMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-3.5 h-3.5" />
+                      Create Contact
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

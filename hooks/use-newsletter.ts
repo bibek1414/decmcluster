@@ -3,6 +3,7 @@ import { newsletterService } from "@/services/newsletter";
 import {
   PaginatedNewsletterResponse,
   UpdateNewsletterPayload,
+  SendEmailPayload,
 } from "@/types/newsletter";
 
 /**
@@ -76,6 +77,25 @@ export function useUnsubscribeNewsletter() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (email: string) => newsletterService.unsubscribe(email),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-newsletter-subscribers"] });
+    },
+  });
+}
+
+/**
+ * Hook to send email broadcast to newsletter subscribers.
+ */
+export function useSendNewsletterEmail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      payload,
+      token,
+    }: {
+      payload: SendEmailPayload;
+      token: string | null;
+    }) => newsletterService.sendEmail(payload, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-newsletter-subscribers"] });
     },
