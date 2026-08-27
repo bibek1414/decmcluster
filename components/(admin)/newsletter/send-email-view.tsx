@@ -53,10 +53,18 @@ export function SendEmailView() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const modeParam = searchParams.get("mode");
+      const targetParam = searchParams.get("target");
+
       if (modeParam === "cluster_contacts") {
         setDispatchMode("cluster_contacts");
+        if (targetParam === "all") {
+          setSendToAllClusterContacts(true);
+        }
       } else {
         setDispatchMode("newsletter");
+        if (targetParam === "all") {
+          setSendToAllSubscribers(true);
+        }
       }
 
       const stored = sessionStorage.getItem("decm_newsletter_recipient_emails");
@@ -66,6 +74,7 @@ export function SendEmailView() {
           if (Array.isArray(parsed) && parsed.length > 0) {
             setEmails((prev) => Array.from(new Set([...prev, ...parsed])));
             setDispatchMode("cluster_contacts");
+            setSendToAllClusterContacts(false);
             toast.info(`Preloaded ${parsed.length} recipient email(s) from Cluster Contacts.`);
           }
         } catch {

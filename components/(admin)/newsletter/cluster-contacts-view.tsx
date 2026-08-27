@@ -137,11 +137,14 @@ export function ClusterContactsView() {
   };
 
   const handleSendEmailToSelected = () => {
-    const targets = selectedEmails.length > 0 ? selectedEmails : paginatedContacts.map((c) => c.email);
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("decm_newsletter_recipient_emails", JSON.stringify(targets));
+    if (selectedEmails.length > 0) {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("decm_newsletter_recipient_emails", JSON.stringify(selectedEmails));
+      }
+      router.push("/assement/newsletter/send-email?mode=cluster_contacts");
+    } else {
+      router.push("/assement/newsletter/send-email?mode=cluster_contacts&target=all");
     }
-    router.push("/assement/newsletter/send-email?mode=cluster_contacts");
   };
 
   const handleAddSubmit = (e: React.FormEvent) => {
