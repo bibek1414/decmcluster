@@ -522,11 +522,11 @@ export function SendEmailView() {
                         className="w-full max-w-[560px] bg-white dark:bg-card rounded-xl border border-[#eaecf0] dark:border-border shadow-xs overflow-hidden text-left"
                       >
                         <tbody>
-                          {/* Header image using /image.png */}
+                          
                           <tr>
                             <td className="p-0 bg-[#1e3a8a] overflow-hidden rounded-t-xl">
                               <img
-                                src="/image.png"
+                                src="/email-image.jpeg"
                                 alt="DECM Cluster Newsletter Header"
                                 className="w-full max-w-[560px] h-auto block object-cover rounded-t-xl"
                               />
